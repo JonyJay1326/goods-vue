@@ -2,20 +2,20 @@
   <div class="erp-goods-list">
     <el-row :gutter="10" class="gl-row01">
       <el-col :span="1">
-        <div class="label-title first-title">品牌名</div>
+        <div class=" first-title">品牌名</div>
       </el-col>
       <el-col :span="4">
-        <el-select v-model="value" placeholder="请选择">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        <el-select v-model="brandNameValue" placeholder="请选择">
+          <el-option v-for="item in brandName" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
       </el-col>
       <el-col :span="2">
-        <div class="label-title">搜索条件</div>
+        <div class="other-title">搜索条件</div>
       </el-col>
       <el-col :span="6">
         <el-input placeholder="请输入内容" v-model="searchCondition">
-          <el-select v-model="searchConditionSelect" slot="prepend" placeholder="商品名" class='search-condition-select'>
+          <el-select v-model="searchConditionSelect" slot="prepend" placeholder="" class='search-condition-select' style="color:#263238;">
             <el-option label="餐厅名" value="1"></el-option>
             <el-option label="订单号" value="2"></el-option>
             <el-option label="用户电话" value="3"></el-option>
@@ -23,18 +23,18 @@
         </el-input>
       </el-col>
       <el-col :span="2">
-        <div class="label-title">业务类型</div>
+        <div class="other-title">业务类型</div>
       </el-col>
       <el-col :span="7" class='business-type'>
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="Type01Value" placeholder="请选择">
           <el-option v-for="item in Type01" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="Type02Value" placeholder="请选择">
           <el-option v-for="item in Type02" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
-        <el-select v-model="value" placeholder="请选择">
+        <el-select v-model="Type03Value" placeholder="请选择">
           <el-option v-for="item in Type03" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -42,10 +42,10 @@
     </el-row>
     <el-row :gutter="0" class="gl-row02">
       <el-col :span="1">
-        <div class="label-title first-title">语言</div>
+        <div class=" first-title">语言</div>
       </el-col>
       <el-col :span="10">
-        <el-checkbox-group v-model="checkLangList">
+        <el-checkbox-group v-model="checkLangList" @change="changeLangList">
           <el-checkbox label="全部"></el-checkbox>
           <el-checkbox label="中文"></el-checkbox>
           <el-checkbox label="韩文"></el-checkbox>
@@ -56,7 +56,7 @@
     </el-row>
     <el-row :gutter="0" class="gl-row03">
       <el-col :span="1">
-        <div class="label-title first-title">状态</div>
+        <div class=" first-title">状态</div>
       </el-col>
       <el-col :span="10">
         <el-checkbox-group v-model="checkStatusList">
@@ -70,11 +70,11 @@
     </el-row>
     <el-row :gutter="10" class="gl-row04">
       <el-col :span="1">
-        <div class="label-title first-title">操作日期</div>
+        <div class="first-title">操作日期</div>
       </el-col>
       <el-col :span="2">
-        <el-select v-model="value" placeholder="请选择">
-          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+        <el-select v-model="actionDateValue" placeholder="请选择">
+          <el-option v-for="item in actionDate" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
       </el-col>
@@ -95,7 +95,7 @@
       <el-table :data="tableData" stripe style="width: 100%">
         <el-table-column prop="brandName" label="品牌名">
         </el-table-column>
-        <el-table-column prop="spuId" label="SPU ID" >
+        <el-table-column prop="spuId" label="SPU ID">
         </el-table-column>
         <el-table-column prop="brandType" label="品牌类型">
         </el-table-column>
@@ -126,14 +126,67 @@
 export default {
   data() {
     return {
+      brandNameValue: '中国',
+      brandName: [{
+        value: '选项1',
+        label: '中国'
+      }, {
+        value: '选项2',
+        label: '日本'
+      }, {
+        value: '选项3',
+        label: '韩国'
+      }],
+
       searchCondition: "条件",
-      searchConditionSelect: '',
+      searchConditionSelect: '商品名',
       checkLangList: ["全部"],
       checkStatusList: ["全部"],
-      Type01: [],
-      Type02: [],
-      Type03: [],
+      Type01: [{
+        value: '选项1',
+        label: '中国'
+      }, {
+        value: '选项2',
+        label: '日本'
+      }, {
+        value: '选项3',
+        label: '韩国'
+      }],
+      Type02: [{
+        value: '选项1',
+        label: '中国'
+      }, {
+        value: '选项2',
+        label: '日本'
+      }, {
+        value: '选项3',
+        label: '韩国'
+      }],
+      Type03: [{
+        value: '选项1',
+        label: '中国'
+      }, {
+        value: '选项2',
+        label: '日本'
+      }, {
+        value: '选项3',
+        label: '韩国'
+      }],
+      Type01Value: '',
+      Type02Value: '',
+      Type03Value: '',
 
+      actionDateValue: '创建日期',
+      actionDate: [{
+        value: '选项1',
+        label: '创建日期'
+      }, {
+        value: '选项2',
+        label: '日本'
+      }, {
+        value: '选项3',
+        label: '韩国'
+      }],
       pickerOptions2: {
         shortcuts: [{
           text: '今天',
@@ -227,6 +280,19 @@ export default {
       let checkedCount = value.length;
       this.checkAll = checkedCount === this.cities.length;
       this.isIndeterminate = checkedCount > 0 && checkedCount < this.languages.length;
+    },
+    seeDetail(){
+
+    },
+    doReview(){
+
+    },
+    changeLangList(event){
+        // console.log(event)
+        // console.log(this.checkLangList)
+        if(event.indexOf("全部")!=-1){
+              this.checkLangList=["全部"]
+        }
     }
   }
 }
