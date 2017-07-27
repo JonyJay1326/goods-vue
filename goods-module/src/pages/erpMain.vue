@@ -13,7 +13,9 @@
     <el-tree node-key="id" :data="data" :default-expanded-keys="[0,1]" :props="defaultProps" accordion @node-click="handleNodeClick">
     </el-tree>
     <div class='erp-mian-content'>
-      <router-view></router-view>
+      <keep-alive>
+        <router-view></router-view>
+      </keep-alive>
     </div>
   </div>
 </template>

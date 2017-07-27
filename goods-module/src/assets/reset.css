@@ -22,6 +22,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+	letter-spacing: 0;
 	/* vertical-align: baseline; */
 }
 /* HTML5 display-role reset for older browsers */
