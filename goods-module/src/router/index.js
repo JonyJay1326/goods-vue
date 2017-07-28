@@ -17,12 +17,12 @@ export default new Router({
         component: require('../pages/goodsList')
       },
       {
-        path: 'goodsdetails',
-        component: require('../pages/goodsDetails')
+        path: 'goodsEdit',
+        component: require('../pages/goodsEdit')
       },
       {
-        path: 'goodsdetailsedit',
-        component: require('../pages/goodsDetailsEdit')
+        path: 'goodsReview',
+        component: require('../pages/goodsReview')
       }
     ]
   }, {

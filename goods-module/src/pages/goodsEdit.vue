@@ -1,6 +1,6 @@
 <template>
-  <div class="erp-addgoods">
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+  <div class="goodsEdit">
+      <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="基础信息" name="first">
         <header>品牌信息</header>
         <table border="0" cellspacing="0" cellpadding="0" class="erp-brand-info">
@@ -8,17 +8,11 @@
             <tr class="tr-1">
               <td class="info-title">品牌名</td>
               <td>
-                <el-select v-model="brandNameValue" placeholder="请选择">
-                  <el-option v-for="item in brandName" :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-                </el-select>
+                <span>小米</span>
               </td>
               <td class="info-title">品牌类目</td>
               <td>
-                <el-select v-model="brandCategoryValue" placeholder="请选择">
-                  <el-option v-for="item in brandCategory" :key="item.value" :label="item.label" :value="item.value">
-                  </el-option>
-                </el-select>
+                <span>xxxxxxxxxxxx---</span>
               </td>
               <td class="info-title">类目code</td>
               <td>
@@ -436,6 +430,7 @@
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data() {
@@ -585,9 +580,9 @@ export default {
 
   }
 }
-
 </script>
+
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style lang="scss">
-@import "../assets/scss/addGoods.scss"
+<style lang="scss" scoped>
+@import "../assets/scss/goodsEdit.scss";
 </style>

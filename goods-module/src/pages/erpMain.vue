@@ -39,6 +39,11 @@ export default {
         }, {
           id: 6,
           label: '商品审核',
+          class:'goodsReview'
+        },{
+          id:7,
+          label:'商品编辑',
+          class:'goodsEdit'
         }]
       }, {
         id: 2,

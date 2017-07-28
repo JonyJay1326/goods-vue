@@ -311,10 +311,14 @@ export default {
   },
   methods: {
     seeDetail() {
-
+      this.$router.push({
+        path:'/index/goodsEdit'
+      })
     },
     doReview() {
-
+       this.$router.push({
+        path:'/index/goodsReview'
+      }) 
     },
     /**
      * checkbox 逻辑
