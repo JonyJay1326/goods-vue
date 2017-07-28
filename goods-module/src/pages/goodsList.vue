@@ -45,12 +45,9 @@
         <div class=" first-title">语言</div>
       </el-col>
       <el-col :span="10">
-        <el-checkbox-group v-model="checkLangList" @change="changeLangList">
-          <el-checkbox label="全部"></el-checkbox>
-          <el-checkbox label="中文"></el-checkbox>
-          <el-checkbox label="韩文"></el-checkbox>
-          <el-checkbox label="英文"></el-checkbox>
-          <el-checkbox label="日文"></el-checkbox>
+        <el-checkbox-group v-model="checkLangList">
+          <el-checkbox label="全部" :checked="checkedAll" @change="handleCheckAll"></el-checkbox>
+          <el-checkbox :value="item.id" :label="item.value" :checked="item.checked" v-for="item in checkLists" @change="handleCheck"></el-checkbox>
         </el-checkbox-group>
       </el-col>
     </el-row>
@@ -60,11 +57,8 @@
       </el-col>
       <el-col :span="10">
         <el-checkbox-group v-model="checkStatusList">
-          <el-checkbox label="全部"></el-checkbox>
-          <el-checkbox label="草稿"></el-checkbox>
-          <el-checkbox label="已提交审核"></el-checkbox>
-          <el-checkbox label="审核成功"></el-checkbox>
-          <el-checkbox label="审核失败"></el-checkbox>
+          <el-checkbox label="全部" :checked="checkedAllStatus" @change="handleCheckAllStatus"></el-checkbox>
+          <el-checkbox :value="item.id" :label="item.value" :checked="item.checked" v-for="item in checkListsStatus" @change="handleCheckStatus"></el-checkbox>
         </el-checkbox-group>
       </el-col>
     </el-row>
@@ -126,6 +120,52 @@
 export default {
   data() {
     return {
+      // 语言
+      checkedAll: true,
+      checkLangList: [],
+      checkLists: [{
+        id: "1",
+        checked: false,
+        value: "中文"
+      }, {
+        id: "2",
+        checked: false,
+        value: "韩文"
+      }, {
+        id: "3",
+        checked: false,
+        value: "英文"
+      }, {
+        id: "4",
+        checked: false,
+        value: "日文"
+      }],
+
+      // 状态
+      checkedAllStatus: true,
+      checkStatusList: [],
+      checkListsStatus: [{
+          id: "1",
+          checked: false,
+          value: "草稿"
+        },
+        {
+          id: "2",
+          checked: false,
+          value: "已提交审核"
+        },
+        {
+          id: "3",
+          checked: false,
+          value: "审核成功"
+        },
+        {
+          id: "4",
+          checked: false,
+          value: "审核失败"
+
+        }
+      ],
       brandNameValue: '中国',
       brandName: [{
         value: '选项1',
@@ -140,8 +180,6 @@ export default {
 
       searchCondition: "条件",
       searchConditionSelect: '商品名',
-      checkLangList: ["全部"],
-      checkStatusList: ["全部"],
       Type01: [{
         value: '选项1',
         label: '中国'
@@ -272,28 +310,57 @@ export default {
     }
   },
   methods: {
-    CheckAllChangeLang(event) {
-      this.checkedLang = event.target.checked ? languagesOptions : [];
-      this.isIndeterminate = false;
-    },
-    handleCheckedCitiesChange(value) {
-      let checkedCount = value.length;
-      this.checkAll = checkedCount === this.cities.length;
-      this.isIndeterminate = checkedCount > 0 && checkedCount < this.languages.length;
-    },
-    seeDetail(){
+    seeDetail() {
 
     },
-    doReview(){
+    doReview() {
 
     },
-    changeLangList(event){
-        // console.log(event)
-        // console.log(this.checkLangList)
-        if(event.indexOf("全部")!=-1){
-              this.checkLangList=["全部"]
-        }
-    }
+    /**
+     * checkbox 逻辑
+     */
+    handleCheck(event) {
+      console.log(event);
+      if (this.checkedAll) {
+        this.checkedAll = !this.checkedAll;
+        this.checkLangList = [];
+        console.log(event);
+        this.checkLangList.push(event.srcElement.defaultValue)
+      } else if (this.checkLangList.length == 0) {
+        this.checkedAll = !this.checkedAll;
+        this.checkLangList = ["全部"];
+      }
+    },
+    handleCheckAll() {
+      this.checkedAll = !this.checkedAll;
+      if (this.checkedAll) {
+        this.checkLangList = ["全部"];
+      } else if (this.checkLangList.length == 0) {
+        this.checkedAll = !this.checkedAll;
+        this.checkLangList = ["全部"];
+      }
+    },
+    handleCheckStatus(event) {
+      if (this.checkedAllStatus) {
+        this.checkedAllStatus = !this.checkedAllStatus;
+        this.checkStatusList = [];
+        console.log(event);
+        this.checkStatusList.push(event.srcElement.defaultValue)
+      } else if (this.checkStatusList.length == 0) {
+        this.checkedAllStatus = !this.checkedAllStatus;
+        this.checkStatusList = ["全部"];
+      }
+    },
+    handleCheckAllStatus() {
+      this.checkedAllStatus = !this.checkedAllStatus;
+      if (this.checkedAllStatus) {
+        this.checkStatusList = ["全部"];
+      } else if (this.checkStatusList.length == 0) {
+        this.checkedAllStatus = !this.checkedAllStatus;
+        this.checkStatusList = ["全部"];
+      }
+
+    },
   }
 }
 
