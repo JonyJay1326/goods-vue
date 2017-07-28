@@ -22,7 +22,7 @@ export default new Router({
       },
       {
         path: 'goodsReview',
-        component: require('../pages/goodsReview')
+        component: require('../pages/goodsEdit')
       }
     ]
   }, {

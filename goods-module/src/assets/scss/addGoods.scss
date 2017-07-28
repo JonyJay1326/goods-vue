@@ -330,7 +330,7 @@
   color: #263238;
   letter-spacing: 0;
   background-image: linear-gradient(-180deg, #FFFFFF 0%, #EFEFEF 100%);
-  border: 1px solid #C8D2D7;
+  border: 1px solid #C8D2D7!important;
   border-radius: 4px;
   height: 26px;
   width: 66px;
@@ -343,7 +343,9 @@
     color: #263238;
   }
 }
-
+.add-sku-btn:visited,.add-sku-btn:active,.add-sku-btn:hover{
+  border: 1px solid #C8D2D7!important;
+}
 .apply_btn {
   float: right;
   margin-top: 6px;
@@ -395,7 +397,7 @@
       font-size: 13px;
       color: #546E7A;
       letter-spacing: 0;
-      text-align: left;
+      text-align: center;
       padding: 0px 10px;
       .el-row {
         line-height: 32px;
@@ -413,5 +415,6 @@
     font-size: 13px;
     color: #263238;
     letter-spacing: 0;
+    border-bottom:1px solid #CADEE7;
   }
 }

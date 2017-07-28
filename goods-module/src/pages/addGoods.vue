@@ -222,7 +222,7 @@
                     <el-input v-model="JapaneseOptionValue" placeholder="Japanese"></el-input>
                   </el-col>
                   <i class="el-icon-search" @click="openSearchBox"></i>
-                  <el-button type="pr" class='add-sku-btn' icon="plus">添加</el-button>
+                  <el-button type="button" class='add-sku-btn' icon="plus">添加</el-button>
                 </el-row>
               </td>
             </tr>
@@ -426,7 +426,7 @@
           <el-input placeholder=""></el-input>
         </el-col>
         <el-col :span="4">
-          <el-button class='add-sku-btn' icon="plus">添加</el-button>
+          <el-button type="button" class='add-sku-btn' icon="plus">添加</el-button>
         </el-col>
       </el-row>
       <div class="erp-addoption-btns">
