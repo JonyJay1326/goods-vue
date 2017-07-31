@@ -203,6 +203,7 @@
 .erp-goods-pic {
   width: 100%;
   border: 1px solid #CADEE7;
+  margin-bottom: 200px;
   td {
     padding: 28px 52px 35px;
     .img-content {
@@ -287,7 +288,7 @@
       border-right: 1px solid #CADEE7;
       // border-top: 1px solid #ECEFF1;
     }
-    .opiont_name {
+    .option_name {
       padding: 0px 20px;
       width: 40%;
       li {
@@ -311,7 +312,7 @@
         color:#90a4ae;
         font-size:16px;
       }
-      i:hover{
+      .el-icon-search:hover,.el-icon-delete2:hover{
         color:#1e7eb4;
       }
     }
@@ -328,7 +329,7 @@
       border-bottom: 1px solid #CADEE7;
     }
   }
-  .add-sku-option {
+  .add-sku-option,.added-sku-option{
     height: 52px;
     ul {
       li {

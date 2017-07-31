@@ -428,7 +428,7 @@ export default {
         value: '韩国',
         label: '韩国'
       }],
-      currencyValue: '',
+      currencyValue: '人民币',
       //产地
       originPlace: [{
         value: '中国',
@@ -440,7 +440,7 @@ export default {
         value: '韩国',
         label: '韩国'
       }],
-      originPlaceValue: '',
+      originPlaceValue: '中国',
       // 商品保质期限
       goodsShelfLife: '365',
       // 类目

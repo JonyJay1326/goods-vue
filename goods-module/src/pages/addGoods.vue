@@ -161,10 +161,6 @@
             </tr>
           </tbody>
         </table>
-        <div class="erp-addgoods-btns">
-          <el-button type="primary">保存</el-button>
-          <el-button>重置</el-button>
-        </div>
       </el-tab-pane>
       <el-tab-pane label="SKU信息" name="second">
         <div class="sku-item">
@@ -180,7 +176,7 @@
           </el-select>
         </div>
         <header>添加SKU
-          <el-button type="button" class="apply_btn">应用</el-button>
+          <el-button type="button" class="apply_btn" @click="applyToBuild">应用</el-button>
         </header>
         <table border="0" cellspacing="0" cellpadding="0" class="erp-add-sku">
           <thead>
@@ -191,7 +187,7 @@
           </thead>
           <tbody>
             <tr class="add-sku-option">
-              <td class="opiont_name">
+              <td class="option_name">
                 <el-row :gutter="10">
                   <el-col :span="6">
                     <el-input v-model="KoreanOptionName" placeholder="Korean"></el-input>
@@ -226,39 +222,39 @@
                 </el-row>
               </td>
             </tr>
-            <tr class="add-sku-option">
-              <td class="opiont_name">
+            <tr class="added-sku-option" v-for="(item,index) in addSkuOptionLine">
+              <td class="option_name">
                 <el-row :gutter="10">
                   <el-col :span="6">
-                    <el-input v-model="KoreanOptionName" placeholder="Korean"></el-input>
+                    <el-input v-model="item.KoreanOptionName" placeholder="Korean"></el-input>
                   </el-col>
                   <el-col :span="6">
-                    <el-input v-model="ChineseOptionName" placeholder="Chinese"></el-input>
+                    <el-input v-model="item.ChineseOptionName" placeholder="Chinese"></el-input>
                   </el-col>
                   <el-col :span="6">
-                    <el-input v-model="EnglishOptionName" placeholder="English"></el-input>
+                    <el-input v-model="item.EnglishOptionName" placeholder="English"></el-input>
                   </el-col>
                   <el-col :span="6">
-                    <el-input v-model="JapaneseOptionName" placeholder="Japanese"></el-input>
+                    <el-input v-model="item.JapaneseOptionName" placeholder="Japanese"></el-input>
                   </el-col>
                 </el-row>
               </td>
               <td class="option_value">
                 <el-row :gutter="10">
                   <el-col :span="5">
-                    <el-input v-model="KoreanOptionValue" placeholder="Korean"></el-input>
+                    <el-input v-model="item.KoreanOptionValue" placeholder="Korean"></el-input>
                   </el-col>
                   <el-col :span="5">
-                    <el-input v-model="ChineseOptionValue" placeholder="Chinese"></el-input>
+                    <el-input v-model="item.ChineseOptionValue" placeholder="Chinese"></el-input>
                   </el-col>
                   <el-col :span="5">
-                    <el-input v-model="EnglishOptionValue" placeholder="English"></el-input>
+                    <el-input v-model="item.EnglishOptionValue" placeholder="English"></el-input>
                   </el-col>
                   <el-col :span="5">
-                    <el-input v-model="JapaneseOptionValue" placeholder="Japanese"></el-input>
+                    <el-input v-model="item.JapaneseOptionValue" placeholder="Japanese"></el-input>
                   </el-col>
                   <i class="el-icon-search" @click="openSearchBox"></i>
-                  <i class="el-icon-delete2" @click="delSkuOption"></i>
+                  <i class="el-icon-delete2" @click="delSkuOption(index)"></i>
                 </el-row>
               </td>
             </tr>
@@ -268,8 +264,7 @@
         <table border="0" cellspacing="0" cellpadding="0" class="erp-sku-info">
           <thead>
             <tr>
-              <th style="text-align:center">颜色</th>
-              <th style="text-align:center">型号</th>
+              <th style="text-align:center" v-for="item in optionObj">{{item}}</th>
               <th>UPC</th>
               <th>CR code</th>
               <th>HS code</th>
@@ -348,7 +343,6 @@
         </table>
         <div class="erp-addsku-btns">
           <el-button type="primary">保存</el-button>
-          <el-button>重置</el-button>
         </div>
       </el-tab-pane>
     </el-tabs>
@@ -358,7 +352,7 @@
       <h4>option 名字</h4>
       <el-row :gutter="20" class="option-search">
         <el-col :span="14">
-          <el-select v-model="optionNameValue" placeholder="请选择">
+          <el-select v-model="optionNameValue" placeholder="请选择" class="selectOptionName">
             <el-option v-for="item in optionName" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
@@ -369,7 +363,7 @@
         </el-col>
       </el-row>
       <h4>option 信息</h4>
-      <el-row :gutter="10" class="option-info" >
+      <el-row :gutter="10" class="option-info">
         <el-col :span="6" v-for="item in optionInfoItem">
           <div class="option-info-item" @click="chooseOptionItem($event)">{{item.info}}</div>
         </el-col>
@@ -405,16 +399,20 @@
         </el-col>
       </el-row>
       <div class="erp-addoption-btns">
-        <el-button type="primary">保存</el-button>
+        <el-button type="primary" @click="saveOptionInfo">保存</el-button>
         <el-button>重置</el-button>
       </div>
     </div>
+    <div id="mask"></div>
   </div>
 </template>
 <script>
 export default {
   data() {
     return {
+      // 遮罩层
+      maskBox: false,
+
       activeName: 'first',
       // 品牌名
       brandName: [{
@@ -463,7 +461,7 @@ export default {
         value: '选项3',
         label: '韩国'
       }],
-      currencyValue: '',
+      currencyValue: '人民币',
       //产地
       originPlace: [{
         value: '选项1',
@@ -475,7 +473,7 @@ export default {
         value: '选项3',
         label: '韩国'
       }],
-      originPlaceValue: '',
+      originPlaceValue: '中国',
       // 商品保质期限
       goodsShelfLife: '365',
       // 类目
@@ -511,38 +509,51 @@ export default {
       EnglishOptionValue: '',
       JapaneseOptionValue: '',
       // 搜索option列表
-      optionInfoItem:[{
-        info:"100/100/100/Ja"
-      },{
-        info:"100/100/100/Ja"
-      },{
-        info:"100/100/100/Ja"
-      },{
-        info:"100/100/100/Ja"
-      },{
-        info:"100/100/100/Ja"
-      },{
-        info:"100/100/100/Ja"
+      optionInfoItem: [{
+        info: "100/100/100/Ja"
+      }, {
+        info: "100/100/100/Ja"
+      }, {
+        info: "100/100/100/Ja"
+      }, {
+        info: "100/100/100/Ja"
+      }, {
+        info: "100/100/100/Ja"
+      }, {
+        info: "100/100/100/Ja"
       }],
-
-      skuWidth:'',
-      skuHeight:'',
-      skuPrice:'',
-      skuWeight:'',
-      skuLength:'',
+      //sku属性选择
+      addSkuOptionLine: [{
+        KoreanOptionName: '1',
+        ChineseOptionName: '2',
+        EnglishOptionName: '3',
+        JapaneseOptionName: '4',
+        KoreanOptionValue: '5',
+        ChineseOptionValue: '6',
+        EnglishOptionValue: '7',
+        JapaneseOptionValue: '8'
+      }],
+      skuWidth: '',
+      skuHeight: '',
+      skuPrice: '',
+      skuWeight: '',
+      skuLength: '',
       skuAddedOption: [
-        { optionValue01:'黑色',optionValue02:'大',UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' },
-        { optionValue01:'白色',optionValue02:'中',UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' },
-        { optionValue01:'蓝色',optionValue02:'小',UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' }
+        { optionValue01: '黑色', optionValue02: '大', UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' },
+        { optionValue01: '白色', optionValue02: '中', UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' },
+        { optionValue01: '蓝色', optionValue02: '小', UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' }
       ],
       searchBarValue: '',
       optionNameValue: '',
+      // add sku
+      optionObj: {},
+
       optionName: [{
-        value: '选项1',
-        label: '颜色'
+        value: '颜色/color/yanse/yan',
+        label: '颜色/color/yanse/yan'
       }, {
-        value: '选项2',
-        label: '尺寸'
+        value: '尺寸/size/chicun/chi',
+        label: '尺寸/size/chicun/chi'
       }],
       showSearchBox: false,
     }
@@ -576,66 +587,99 @@ export default {
     searchOptionName() {
 
     },
-    delSkuOption() {
-      this.dialogVisible = true;
+    // 删除sku属性行
+    delSkuOption(index) {
+      this.addSkuOptionLine.splice(index, 1);
     },
     handleClose(done) {
       done();
     },
     // 添加option信息
     addOptionToLsits() {
-      let defaultOption=["Kr","Cn","En","Ja"];
-      let addOption=[];
-      let addStr='';
-      let html='';
-      $('.option-add').find('input').each(function(index,el) {
+      let defaultOption = ["Kr", "Cn", "En", "Ja"];
+      let addOption = [];
+      let addStr = '';
+      let html = '';
+      $('.option-add').find('input').each(function(index, el) {
         $(this).data('default', defaultOption[index]);
-        ($(this).val())?addOption.push($(this).val()):addOption.push($(this).data('default'));
+        ($(this).val()) ? addOption.push($(this).val()): addOption.push($(this).data('default'));
       });
-      addStr=addOption.join('/');
-      this.optionInfoItem.push({info:addStr})
+      addStr = addOption.join('/');
+      this.optionInfoItem.push({ info: addStr })
     },
     // 选择option信息
-    chooseOptionItem(event){
+    chooseOptionItem(event) {
       $('.active-option.option-info-item').removeClass('active-option')
       event.currentTarget.setAttribute('class', 'active-option option-info-item');
     },
+    // 保存option信息
+    saveOptionInfo() {
+      console.log(1)
+      if (this.optionNameValue && $('.option-info').find('.active-option.option-info-item')) {
+        let optionArr = this.optionNameValue.split('/');
+        let valueArr = $('.option-info').find('.active-option.option-info-item').text().split("/");
+        this.addSkuOptionLine.push({
+          KoreanOptionName: optionArr[0],
+          ChineseOptionName: optionArr[1],
+          EnglishOptionName: optionArr[2],
+          JapaneseOptionName: optionArr[3],
+          KoreanOptionValue: valueArr[0],
+          ChineseOptionValue: valueArr[1],
+          EnglishOptionValue: valueArr[2],
+          JapaneseOptionValue: valueArr[3]
+        });
+        this.showSearchBox = false;
+      }
+    },
+    // 应用sku，生成sku信息
+    applyToBuild() {
+      let that = this;
+      this.optionObj = [];
+      $('.added-sku-option').each(function(index, el) {
+        let obj = {};
+        let item = $(this).find('.option_name').find('.el-col').first().next().find('input');
+        let value = $(this).find('.option_value').find('.el-col').first().next().find('input');
+        if (that.optionNameArr.indexOf(item) != -1) {
+          obj.name = item.val();
+          obj.value = [].push(value);
+          optionObj.push(obj);
+        } else {
+          obj
+        }
+      });
+      console.log(that.optionNameArr)
+      console.log(that.optionValueArr)
+    }
   },
   watch: {
-    chooseOptionItem:function(){
-      console.log(111)
-    },
-    addOptionToLsits:function(){
-      console.log(1)
-    },
     // 批量输入
     skuPrice: function() {
-      let that=this;
-      $('.price-value').each(function(){
+      let that = this;
+      $('.price-value').each(function() {
         $(this).find('input').val(that.skuPrice)
       })
     },
     skuLength: function() {
-      let that=this;
-      $('.length-value').each(function(){
+      let that = this;
+      $('.length-value').each(function() {
         $(this).find('input').val(that.skuLength)
       })
     },
     skuHeight: function() {
-      let that=this;
-      $('.height-value').each(function(){
+      let that = this;
+      $('.height-value').each(function() {
         $(this).find('input').val(that.skuHeight)
       })
     },
     skuWeight: function() {
-      let that=this;
-      $('.weight-value').each(function(){
+      let that = this;
+      $('.weight-value').each(function() {
         $(this).find('input').val(that.skuWeight)
       })
     },
     skuWidth: function() {
-      let that=this;
-      $('.width-value').each(function(){
+      let that = this;
+      $('.width-value').each(function() {
         $(this).find('input').val(that.skuWidth)
       })
     },
