@@ -264,7 +264,7 @@
         <table border="0" cellspacing="0" cellpadding="0" class="erp-sku-info">
           <thead>
             <tr>
-              <th style="text-align:center" v-for="item in optionObj">{{item}}</th>
+              <th style="text-align:center" v-for="item in optionObj">{{item.name}}</th>
               <th>UPC</th>
               <th>CR code</th>
               <th>HS code</th>
@@ -546,7 +546,10 @@ export default {
       searchBarValue: '',
       optionNameValue: '',
       // add sku
-      optionObj: {},
+      optionObj: [
+        { name: 'size', value: ["big", "middle", "small"] },
+        { name: 'color', value: ["red", "blue", "green"] }
+      ],
 
       optionName: [{
         value: '颜色/color/yanse/yan',
@@ -639,13 +642,8 @@ export default {
         let obj = {};
         let item = $(this).find('.option_name').find('.el-col').first().next().find('input');
         let value = $(this).find('.option_value').find('.el-col').first().next().find('input');
-        if (that.optionNameArr.indexOf(item) != -1) {
-          obj.name = item.val();
-          obj.value = [].push(value);
-          optionObj.push(obj);
-        } else {
-          obj
-        }
+
+        console.log(optionObj)
       });
       console.log(that.optionNameArr)
       console.log(that.optionValueArr)
