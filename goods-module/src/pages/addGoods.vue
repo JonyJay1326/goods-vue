@@ -226,6 +226,42 @@
                 </el-row>
               </td>
             </tr>
+            <tr class="add-sku-option">
+              <td class="opiont_name">
+                <el-row :gutter="10">
+                  <el-col :span="6">
+                    <el-input v-model="KoreanOptionName" placeholder="Korean"></el-input>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-input v-model="ChineseOptionName" placeholder="Chinese"></el-input>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-input v-model="EnglishOptionName" placeholder="English"></el-input>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-input v-model="JapaneseOptionName" placeholder="Japanese"></el-input>
+                  </el-col>
+                </el-row>
+              </td>
+              <td class="option_value">
+                <el-row :gutter="10">
+                  <el-col :span="5">
+                    <el-input v-model="KoreanOptionValue" placeholder="Korean"></el-input>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-input v-model="ChineseOptionValue" placeholder="Chinese"></el-input>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-input v-model="EnglishOptionValue" placeholder="English"></el-input>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-input v-model="JapaneseOptionValue" placeholder="Japanese"></el-input>
+                  </el-col>
+                  <i class="el-icon-search" @click="openSearchBox"></i>
+                  <i class="el-icon-delete2" @click="delSkuOption"></i>
+                </el-row>
+              </td>
+            </tr>
           </tbody>
         </table>
         <header>SKU信息</header>
@@ -241,7 +277,7 @@
                 <el-row :gutter="10">
                   <el-col :span="10"><span>价格</span></el-col>
                   <el-col :span="14">
-                    <el-input v-model="skuLength" :length="skuLength" placeholder="批量输入"></el-input>
+                    <el-input v-model="skuPrice" placeholder="批量输入"></el-input>
                   </el-col>
                 </el-row>
               </th>
@@ -249,7 +285,7 @@
                 <el-row :gutter="10">
                   <el-col :span="10"><span>长(cm)</span></el-col>
                   <el-col :span="14">
-                    <el-input v-model="skuLength" :length="skuLength" placeholder="批量输入"></el-input>
+                    <el-input v-model="skuLength" placeholder="批量输入"></el-input>
                   </el-col>
                 </el-row>
               </th>
@@ -257,7 +293,7 @@
                 <el-row :gutter="10">
                   <el-col :span="10"><span>宽(cm)</span></el-col>
                   <el-col :span="14">
-                    <el-input v-model="skuWide" placeholder="批量输入"></el-input>
+                    <el-input v-model="skuWidth" placeholder="批量输入"></el-input>
                   </el-col>
                 </el-row>
               </th>
@@ -280,60 +316,32 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>黑色</td>
-              <td>型号</td>
+            <tr v-for="item in skuAddedOption">
+              <td>{{item.optionValue01}}</td>
+              <td>{{item.optionValue02}}</td>
               <td>
-                <el-input placeholder=""></el-input>
+                <el-input placeholder="" v-model="item.UPCvalue" class="upc-value"></el-input>
               </td>
               <td>
-                <el-input placeholder=""></el-input>
+                <el-input placeholder="" v-model="item.CRcodevalue" class="cr-code-value"></el-input>
               </td>
               <td>
-                <el-input placeholder=""></el-input>
+                <el-input placeholder="" v-model="item.Hscodevalue" class="hs-code-value"></el-input>
               </td>
               <td>
-                <el-input placeholder=""></el-input>
+                <el-input placeholder="" v-model="item.pricevalue" class="price-value"></el-input>
               </td>
               <td>
-                <el-input placeholder=""></el-input>
+                <el-input placeholder="" v-model="item.lengthvalue" class="length-value"></el-input>
               </td>
               <td>
-                <el-input placeholder=""></el-input>
+                <el-input placeholder="" v-model="item.widthvalue" class="width-value"></el-input>
               </td>
               <td>
-                <el-input placeholder=""></el-input>
+                <el-input placeholder="" v-model="item.heightvalue" class="height-value"></el-input>
               </td>
               <td>
-                <el-input placeholder=""></el-input>
-              </td>
-            </tr>
-            <tr>
-              <td>黑色</td>
-              <td>型号</td>
-              <td>
-                <el-input placeholder=""></el-input>
-              </td>
-              <td>
-                <el-input placeholder=""></el-input>
-              </td>
-              <td>
-                <el-input placeholder=""></el-input>
-              </td>
-              <td>
-                <el-input placeholder=""></el-input>
-              </td>
-              <td>
-                <el-input placeholder=""></el-input>
-              </td>
-              <td>
-                <el-input placeholder=""></el-input>
-              </td>
-              <td>
-                <el-input placeholder=""></el-input>
-              </td>
-              <td>
-                <el-input placeholder=""></el-input>
+                <el-input placeholder="" v-model="item.weightvalue" class="weight-value"></el-input>
               </td>
             </tr>
           </tbody>
@@ -361,42 +369,9 @@
         </el-col>
       </el-row>
       <h4>option 信息</h4>
-      <el-row :gutter="10" class="option-info">
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
-        </el-col>
-        <el-col :span="6">
-          <div class="option-info-item">100/100/en/JPA</div>
+      <el-row :gutter="10" class="option-info" >
+        <el-col :span="6" v-for="item in optionInfoItem">
+          <div class="option-info-item" @click="chooseOptionItem($event)">{{item.info}}</div>
         </el-col>
       </el-row>
       <h4>添加 option</h4>
@@ -426,7 +401,7 @@
           <el-input placeholder=""></el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="button" class='add-sku-btn' icon="plus">添加</el-button>
+          <el-button type="button" class='add-sku-btn' icon="plus" @click="addOptionToLsits">添加</el-button>
         </el-col>
       </el-row>
       <div class="erp-addoption-btns">
@@ -535,12 +510,31 @@ export default {
       ChineseOptionValue: '',
       EnglishOptionValue: '',
       JapaneseOptionValue: '',
+      // 搜索option列表
+      optionInfoItem:[{
+        info:"100/100/100/Ja"
+      },{
+        info:"100/100/100/Ja"
+      },{
+        info:"100/100/100/Ja"
+      },{
+        info:"100/100/100/Ja"
+      },{
+        info:"100/100/100/Ja"
+      },{
+        info:"100/100/100/Ja"
+      }],
 
-      skuLength: '',
-      skuWeight: '',
-      skuHeight: '',
-      skuWide: '',
-
+      skuWidth:'',
+      skuHeight:'',
+      skuPrice:'',
+      skuWeight:'',
+      skuLength:'',
+      skuAddedOption: [
+        { optionValue01:'黑色',optionValue02:'大',UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' },
+        { optionValue01:'白色',optionValue02:'中',UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' },
+        { optionValue01:'蓝色',optionValue02:'小',UPCvalue: '', CRcodevalue: '', Hscodevalue: '', pricevalue: '', lengthvalue: '', widthvalue: '', heightvalue: '', weightvalue: '' }
+      ],
       searchBarValue: '',
       optionNameValue: '',
       optionName: [{
@@ -567,10 +561,10 @@ export default {
      * 语言选择，input toggle
      */
     toggleCheck(event) {
-      (event.indexOf("中文")!=-1)?this.cnLanguage=false:this.cnLanguage=true;
-      (event.indexOf("英文")!=-1)?this.enLanguage=false:this.enLanguage=true;
-      (event.indexOf("韩文")!=-1)?this.krLanguage=false:this.krLanguage=true;
-      (event.indexOf("日文")!=-1)?this.jaLanguage=false:this.jaLanguage=true;
+      (event.indexOf("中文") != -1) ? this.cnLanguage = false: this.cnLanguage = true;
+      (event.indexOf("英文") != -1) ? this.enLanguage = false: this.enLanguage = true;
+      (event.indexOf("韩文") != -1) ? this.krLanguage = false: this.krLanguage = true;
+      (event.indexOf("日文") != -1) ? this.jaLanguage = false: this.jaLanguage = true;
     },
 
     openSearchBox() {
@@ -581,9 +575,71 @@ export default {
     },
     searchOptionName() {
 
-    }
-
-  }
+    },
+    delSkuOption() {
+      this.dialogVisible = true;
+    },
+    handleClose(done) {
+      done();
+    },
+    // 添加option信息
+    addOptionToLsits() {
+      let defaultOption=["Kr","Cn","En","Ja"];
+      let addOption=[];
+      let addStr='';
+      let html='';
+      $('.option-add').find('input').each(function(index,el) {
+        $(this).data('default', defaultOption[index]);
+        ($(this).val())?addOption.push($(this).val()):addOption.push($(this).data('default'));
+      });
+      addStr=addOption.join('/');
+      this.optionInfoItem.push({info:addStr})
+    },
+    // 选择option信息
+    chooseOptionItem(event){
+      $('.active-option.option-info-item').removeClass('active-option')
+      event.currentTarget.setAttribute('class', 'active-option option-info-item');
+    },
+  },
+  watch: {
+    chooseOptionItem:function(){
+      console.log(111)
+    },
+    addOptionToLsits:function(){
+      console.log(1)
+    },
+    // 批量输入
+    skuPrice: function() {
+      let that=this;
+      $('.price-value').each(function(){
+        $(this).find('input').val(that.skuPrice)
+      })
+    },
+    skuLength: function() {
+      let that=this;
+      $('.length-value').each(function(){
+        $(this).find('input').val(that.skuLength)
+      })
+    },
+    skuHeight: function() {
+      let that=this;
+      $('.height-value').each(function(){
+        $(this).find('input').val(that.skuHeight)
+      })
+    },
+    skuWeight: function() {
+      let that=this;
+      $('.weight-value').each(function(){
+        $(this).find('input').val(that.skuWeight)
+      })
+    },
+    skuWidth: function() {
+      let that=this;
+      $('.width-value').each(function(){
+        $(this).find('input').val(that.skuWidth)
+      })
+    },
+  },
 }
 
 </script>

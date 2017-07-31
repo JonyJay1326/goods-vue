@@ -10,7 +10,12 @@
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 0px 30px;
+  .option-info{
+    height:206px;
+    overflow:auto;
+  }
   .option-info-item {
+    cursor:pointer;
     font-size: 14px;
     color: #263238;
     letter-spacing: 0;
@@ -41,6 +46,7 @@
     color: #546E7A;
     font-size: 14px;
     margin-top: 25px;
+    cursor:pointer;
   }
   .el-row {
     background-color: #F6F9FA;
@@ -279,7 +285,7 @@
 
     td {
       border-right: 1px solid #CADEE7;
-      border-top: 1px solid #ECEFF1;
+      // border-top: 1px solid #ECEFF1;
     }
     .opiont_name {
       padding: 0px 20px;
@@ -294,8 +300,19 @@
       padding: 0px 20px;
       width: 60%;
       .el-icon-search {
-        padding: 0px 20px;
+        padding: 0px 20px 0px 10px;
         cursor: pointer;
+        color:#90a4ae;
+        font-size:18px;
+      }
+      
+      .el-icon-delete2{
+        cursor: pointer;
+        color:#90a4ae;
+        font-size:16px;
+      }
+      i:hover{
+        color:#1e7eb4;
       }
     }
   }
@@ -312,7 +329,7 @@
     }
   }
   .add-sku-option {
-    height: 95px;
+    height: 52px;
     ul {
       li {
         float: left;
@@ -417,4 +434,10 @@
     letter-spacing: 0;
     border-bottom:1px solid #CADEE7;
   }
+}
+.option-info-item.active-option{
+  background: #FF9100;
+  color: #FFFFFF;
+  border:none;
+  height:42px;
 }
