@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>出入库管理</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.1/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css"/>
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css?v=2017072401">
+    <style type="text/css">
+        .pink1 {
+            position: absolute;
+            top: 32px;left: 0;
+        }
+        .pink2 {
+            position: absolute;
+            top: 64px;left: 0;
+        }
+        .pink3 {
+            position: absolute;
+            top:32px;left:144px;
+        }
+        .pink4 {
+            position: absolute;
+            top:64px;left:144px;
+        }
+        .insert-wrap{
+            box-sizing: border-box;
+            margin: -1px -1px -1px 72px;
+        }
+        @media (max-width:1680px ) {
+            .insert-wrap{
+                box-sizing: border-box;
+                margin: -1px -1px -1px 65px;
+            }
+        }
+        .insert-wrap thead tr>th{
+            background: #eee;
+        }
+        .insert-wrap thead tr>th{
+            font-size:1.4rem;font-weight:600;
+        }
+        .insert-wrap tbody td.sum{
+            font-size:1.4rem;
+            font-weight:600;
+            text-align:left;
+        }
+        .insert-wrap tbody tr:last-child>td{
+            background: #eee;
+        }
+        td.padding0{padding: 0!important;}
+        .th-wrap th{
+            padding: 5px;
+            white-space: nowrap;
+        }
+        .td-wrap td{
+            padding: 4px;
+            white-space: nowrap;
+        }
+        .button-wrap . {
+            position: relative;
+            padding: 4px 0
+        }
+        .a-btn{
+            background: #EC2D64;
+            width:100px;border: none;
+            height:30px;color:white;
+            font-size: 1.45rem;
+            cursor: pointer;
+            line-height: 30px;
+            text-align: center;
+        }
+        .a-btn:hover{
+            text-decoration: none;
+            color: white;
+        }
+        .button-hide{
+            background: none;
+            border:none;
+        }
+        .download{
+            width:100%;
+            position:absolute;
+            top:32px;right:0;
+            z-index:999;
+            background: white;
+            border: 1px solid #cecaca;
+            text-align: center;
+        }
+        .download li{
+            height: 35px;
+            line-height: 35px;
+        }
+        select,input,button,.td-confirm{border-radius: 0px}
+    </style>
+</head>
+
+<body>
+<div class="rk-wrap" id="rk-wrap">
+    <div class="enter-line">
+        <form action="" method="post" id="thisform">
+        <div class="row">
+            <div class="col-15">
+                <input type="text" name="bill_id" :value="bill_id" placeholder="<{$Think.lang.出入库单号}>">
+            </div>
+            <div class="col-15">
+                <input type="text" name="link_bill_id" :value="link_bill_id" placeholder="<{$Think.lang.B5C采购/销售单号}>">
+            </div>            
+            <div class="col-15 rk-nowrap">
+                <input type="text" name="GSKU" :value="GSKU" placeholder="<{$Think.lang.SKUID/条形码}>">
+            </div>
+            <div class="col-15">
+                <input type="text" name="other_code" :value="other_code" placeholder="<{$Think.lang.关联单据号}>">
+            </div>
+            <div class="col-15 rk-nowrap">
+                <input type="text" name="batch" :value="batch" placeholder="<{$Think.lang.采购批次号}>">
+            </div>
+        </div>
+        <div style="height: 10px;"></div>
+        <div class="row">
+            <div class="col-15">
+                <select name="bill_type" v-model="bill_type">
+                    <option value="" ><{$Think.lang.收发类别}></option>
+                    <option   v-for="o in outgo" :value="o.CD" >{{o.CD_VAL}}</option>
+                </select>
+            </div>
+            <div class="col-15">
+                <select name="house_list_model" v-model="house_list_model">
+                    <option value="" ><{$Think.lang.所有仓库}></option>
+                    <option v-for="house in house_list"  :value="house.CD" >{{house.warehouse}}</option>
+                </select>
+            </div>
+            <div class="col-15">
+                <input class="Wdate" type="text" :value="bill_date_ation" name="bill_date_ation"  onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.单据起始日期}>"  />
+            </div>
+            <div class="col-15">
+                <input class="Wdate" type="text" :value="bill_date_end" name="bill_date_end"  onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.单据结束日期}>"/>
+            </div>
+            <div class="col-15">
+                <div class="row">
+                    <div class="col-50">
+                        <button type="submit" class="btn button-pink-by"><{$Think.lang.查询}></button>
+                    </div>
+                    <div class="col-50">
+                        <button type="button" @click="reset" name="reset" class="button-black-by"><{$Think.lang.重置}></button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-20"></div>
+        </div>
+        </form>
+
+    </div>
+    <div class="button-wrap" style="height:36px">
+        <div class="row">
+            <div class="col-50 pos">
+                    <span>
+                        <button type="button" name="int" class="button-pink"><{$Think.lang.入库}></button>
+                        <a href="<{:U('inventory_details','outgo=storage')}>"  class="a-btn hide"><{$Think.lang.手工入库}></a>
+                        <a href="javascript:void(0)"  class="a-btn hide" onchange="$('#upload').submit();">
+
+                            <form id="upload" action="/index.php?m=stock&s=import_bill" method="post" enctype="multipart/form-data">
+                                <p onclick="$('#expe').click()"><{$Think.lang.Excel入库}></p>
+		                        <p style="display: none"><input type="file" name="expe" id="expe" @change="loading_excel">
+                                    <input type="hidden" name="outgo_state" value=""></p>
+                            </form>
+                        </a>
+                    </span>
+                    <span>
+                        <button type="button" name="out" class="button-pink"><{$Think.lang.出库}></button>
+                        <a href="<{:U('inventory_details','outgo=outgoing')}>"  class="a-btn hide"><{$Think.lang.手工出库}></a>
+                        <a href="javascript:void(0)"  class="a-btn hide" onchange="$('#upload_out').submit();">
+
+                            <form id="upload_out" action="/index.php?m=stock&s=import_bill" method="post" enctype="multipart/form-data">
+                                <p onclick="$('#expe_out').click()"><{$Think.lang.Excel出库}></p>
+		                        <p style="display: none"><input type="file" name="expe" id="expe_out" @change="loading_excel_out">
+                                    <input type="hidden" name="outgo_state" value="-"></p>
+                            </form>
+                        </a>
+                    </span>
+            </div>
+            <div class="col-50 text-r pos" style="padding: 4px 0">
+                <span id="download" class="inline-block" @mouseover="down = 1"  @mouseout="down = 0" style="height: 50px;position: relative;width: 150px;">
+                        <button class="btn btn-pink button-pink"    ><{$Think.lang.下载模板}><img src="../Public/images/u35.png" alt=""  class="sortDown">
+                        <ul class="download " v-show='down' v-cloak style="width: 99px;left: 30px;">
+                            <li><a href="<{:U('Stock/download',array('name'=>'outgo.xlsx'))}>"><{$Think.lang.出入库模板}></a></li>
+                        </ul>
+                        </button>
+                    </span>
+
+                <button type="button" name="reset" class="button-gray "><{$Think.lang.批量确认}></button>
+                <button type="button" name="reset" class="button-gray "><{$Think.lang.批量打印}></button>
+            </div>
+        </div>
+    </div>
+    <div class="rk-tabel">
+        <table class="tabel table table-border table-bordered table-bg">
+            <thead class="th-wrap text-c">
+                <tr>
+                    <th width="30"><{$Think.lang.序号}></th>
+                    <th width="30"></th>
+                    <th width="30">
+                        <label>
+                            <input type="checkbox">
+                        </label>
+                    </th>
+                    <th width="180"><{$Think.lang.出入库单号}></th>
+                    <th width="180"><{$Think.lang.B5C单号}></th>
+                    <!--<th width="180"><{$Think.lang.关联单号}></th>-->
+                    <th width="180"><{$Think.lang.关联批次号}></th>
+                    <th width="180"><{$Think.lang.渠道}></th>
+                    <th width="150"><{$Think.lang.仓库}></th>
+                    <th width="150" style="text-align: center"><{$Think.lang.收发类别}></th>
+                    <th width="150" style="text-align: center"><{$Think.lang.出入库规则}></th>
+                    <th width="150" style="text-align: center"><{$Think.lang.总件数}></th>
+                    <!--<th width="180"><{$Think.lang.单据日期}></th>-->
+                    <!--<th width="100"><{$Think.lang.库管员}></th>-->
+                    <th width="100"><{$Think.lang.单据状态}></th>
+                    <th width="100"><{$Think.lang.提交人}></th>
+                    <th width="100"><{$Think.lang.提交时间}></th>
+                    <!--<th width="200"><{$Think.lang.备注}></th>-->
+                    <th width="160"><{$Think.lang.操作}></th>
+                </tr>
+            </thead>
+            <tbody class="td-wrap">
+            <tr class="text-c text-b" v-for="(b,index) in bills" v-cloak>
+                <td>{{index+1}}<span style="display: none">{{b.id}}</span></td>
+                <td>
+                    <button class="button-hide">
+                        <img src="<{$HI_PATH}>images/rk-add.png"  width="14" height="14">
+                    </button>
+                </td>
+                <td>
+                    <label>
+                        <input type="checkbox">
+                    </label>
+                </td>
+                <td class="td-linknum">
+                    <span v-if="b.bill_type in out_storage"><a @click="go(b.id, 'out_storage')" >{{b.bill_id}}</a></span>
+                    <span v-else><a @click="go(b.id, 'in_storage')" >{{b.bill_id}}</a></span>
+                </td>
+                <td class="td-linknum">
+                    <span>{{b.link_bill_id}}</span>
+                </td>
+                <!--<td class="td-linknum">
+                   <a onclick="opennewtab(this,'第三方订单')" :_href="other_url+b.other_code" target="_blank" href="javascript:void(0);" > <span>{{b.other_code}}</span></a>
+                </td>-->
+                <td>{{b.batch}}</td>
+                <td v-if="b.channel in all_channel">{{all_channel[b.channel].CD_VAL}}</td>
+                <td v-else>{{b.channel}}</td>
+
+                <td v-if="b.warehouse_id in house_all_list">{{house_all_list[b.warehouse_id].warehouse}}</td>
+                <td v-else>-</td>
+                <td class="td-rela">
+                    <img :src="'../Public/images/'+b.bill_type+'.png'" width="60" height="20">
+                    <span v-if="b.bill_type in outgo">{{outgo[b.bill_type].CD_VAL}}</span>
+                    <span v-else></span>
+                </td>
+                <!--<td>{{b.bill_date}}</td>-->
+                
+                <td>{{b_rule_storage[b.warehouse_rule]}}</td>
+                <td>{{b.send_num}}</td>
+                <td>
+                    <span>{{bill_states[b.bill_state]}}</span>
+                </td>
+                <td v-if="b.user_id in warehouse_use">{{warehouse_use[b.user_id].nickname}}</td>
+                <td v-else></td>
+                <td>{{b.bill_date}}</td>
+                <!--<td>{{b.remarks}}</td>-->
+                <td v-if="b.other_code == null">
+                    <span class="td-confirm" v-if="b.bill_state == 1" @click="alert_a"><{$Think.lang.打印}></span>
+                    <a  @click="qu_a(b.id)" v-else ><span class="td-confirm" ><{$Think.lang.确认}></span></a>
+                    <span class="td-confirm" v-if="b.bill_state == 1" @click="no_a(b.id)"><{$Think.lang.取消}></span>
+                    <span class="td-confirm" v-else @click="del(b.id,index)"><{$Think.lang.删除}></span>
+
+                </td>
+                <td v-else>
+                    <span><{$Think.lang.无法操作}> </span>
+                </td>
+            </tr>
+            <tr class="hide" >
+                <td colspan="16" class="padding0">
+                    <div class="insert-wrap">
+                        <table class="table table-border table-bordered table-bg">
+                            <thead class="th-wrap">
+                            <tr class="text-c">
+                                <th width="30"></th>
+                                <th><{$Think.lang.SKU编码}></th>
+                                <th><{$Think.lang.商品名称}></th>
+                                <th><{$Think.lang.属性}></th>
+                                <th><{$Think.lang.条形码}></th>
+                                <th><{$Think.lang.应}>{{out_type}}<{$Think.lang.数量}></th>
+                                <th><{$Think.lang.实}>{{out_type}}<{$Think.lang.数量}></th>
+                                <th><{$Think.lang.货位}></th>
+                                <th><{$Think.lang.批次}></th>
+                                <th><{$Think.lang.生产日期}></th>
+                                <th><{$Think.lang.单位}></th>
+                                <th><{$Think.lang.含税单价}></th>
+                                <th><{$Think.lang.去税单价}></th>
+                                <th><{$Think.lang.税率}></th>
+                                <th><{$Think.lang.含税金额}></th>
+                                <th><{$Think.lang.去税金额}></th>
+                                <th><{$Think.lang.税额}></th>
+                                <th><{$Think.lang.币种}></th>
+                                <th><{$Think.lang.赠品}></th>
+                                <th><{$Think.lang.备注}></th>
+                            </tr>
+                            </thead>
+                            <tbody class="td-wrap">
+
+                            <tr class="text-c" v-for="(d,index) in get_data">
+                                <td width="30">{{index+1}}</td>
+                                <td>{{d.GSKU}}</td>
+                                <td v-if="d.guds[0].Guds.GUDS_CNS_NM">{{d.guds[0].Guds.GUDS_CNS_NM}}</td>
+                                <td v-else>
+                                    <span v-if="d.guds[0].Guds.GUDS_NM">{{d.guds[0].Guds.GUDS_NM}}</span>
+                                </td>
+                                <td>{{d.guds.opt_val[0].val}}</td>
+                                <td>{{d.guds.Opt[0].GUDS_OPT_UPC_ID}}</td>
+                                <td>{{d.should_num}}</td>
+                                <td>{{d.send_num}}</td>
+                                <td v-if="d.location_id == 0"></td>
+                                <td v-else>{{d.location}}</td>
+                                <td>{{d.batch}}</td>
+                                <td v-if="d.production_date == '0000-00-00'"></td>
+                                <td v-else>{{d.production_date}}</td>
+                                <td v-if="d.guds[0].Guds.VALUATION_UNIT != '' && d.guds[0].Guds.VALUATION_UNIT != null">{{metering[d.guds[0].Guds.VALUATION_UNIT].CD_VAL}}</td>
+                                <td v-else></td>
+
+                                <td>{{king(d.unit_price)}}</td>
+                                <td>{{king((d.unit_price*(1-d.taxes)).toFixed(4))}}</td>
+
+                                <td>{{d.taxes}}</td>
+
+                                <td class="unit_money">{{king((d.send_num*d.unit_price).toFixed(2))}}</td>
+                                <td class="no_unit_money">{{king((d.send_num*d.unit_price*(1-d.taxes)).toFixed(2))}}</td>
+
+                                <td>{{(d.send_num*d.unit_price*(d.taxes)).toFixed(2)}}</td>
+                                <td v-if="d.currency_id in currency">{{currency[d.currency_id].CD_VAL}}</td>
+                                <td v-else></td>
+                                <td width="30"><input type="checkbox"  v-if="Boolean(d.give_status)" checked disabled><input type="checkbox"  v-else disabled></td>
+
+
+                                <td></td>
+                            </tr>
+
+                            <tr class="text-c">
+                                <td colspan="5" class="sum"><{$Think.lang.合计}></td>
+                                <td>0.00</td>
+                                <td>0.00</td>
+                                <td colspan="7"></td>
+                                <td>0.00</td>
+                                <td>0.00</td>
+                                <td colspan="5"></td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div class="col-md-7 padding10-0">
+            <ul class="pagination">
+                <{$pages}>
+            </ul>
+        </div>
+    </div>
+
+
+</div>
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+            el: '#rk-wrap',
+            data: {
+                    bills: <{$bills}>,
+                    bill_states: <{$bill_state}>,
+                    bill_state:'',
+                    warehouse_use:<{$warehouse_use}>,
+                    house_list:<{$house_list}>,
+                    house_all_list:<{$house_all_list}>,
+                    outgo:<{$outgo}>,
+                    metering:<{$metering}>,
+                    currency:<{$currency}>,
+                    this_user:"<{$this_user}>",
+                    param:<{$param}>,
+                    all_channel:<{$all_channel}>,
+                    get_data:[],
+                    del_id:'',
+                    remove_id:'',
+                    out_type:'发',
+                    other_url:"<{$go_url}>",
+                    sale_no:'',
+                    bill_id:'',
+                    GSKU:'',
+                    bill_date_ation:'',
+                    bill_date_end:'',
+                    other_code:'',
+                    batch:'',
+                    bill_type:'',
+                    house_list_model:'',
+                    down:0,
+                    out_storage: <{$out_storage}>,
+                    link_bill_id:'',
+                    b_rule_storage:<{$rule_storage}>
+            },
+            methods:
+            {
+                load_goods:function (e) {
+
+                    var bill_id = e;
+                    $.ajax({
+                        type:"POST",
+                        async:false,
+                        url:"/index.php?m=stock&a=loading",
+                        data:{
+                           bill_id:bill_id
+                        },
+                        success:function(res){
+                            var res_status = JSON.parse(res)['status'];
+                            if(res_status == 'n'){
+                                box.Alert('<{$Think.lang.提示}>',JSON.parse(res)['info']);
+                            }else{
+                                vm.get_data = JSON.parse(res)['data'];
+                                vm.out_type = JSON.parse(res)['bill_type'];
+                            }
+                        },
+                        error:function(){
+                            alertNew('网络繁忙，请重试！')
+                        }
+                    });
+                },
+                del:function (e,index){
+                    this.del_id = e;
+                    this.remove_id = index;
+                    box.Confirm('是否删除','是否确认删除',this.del_this)
+                },
+                del_this:function(){
+
+                        // upd
+                        $.ajax({
+                            type:"POST",
+                            async:false,
+                            url:"/index.php?m=stock&a=del_bill",
+                            data:{id:vm.del_id},
+                            success:function(GetRes){
+                                box.Alert('<{$Think.lang.提示}>',JSON.parse(GetRes)['info'])
+                                if(JSON.parse(GetRes)['status'] == 'y'){
+                                    vm.bills.splice(vm.remove_id,1);
+                                    vm.del_id = '';
+                                    var hidden_tr = $(".td-wrap .text-b").eq(vm.remove_id).next();
+                                    if(hidden_tr.attr('style') == 'display: table-row;' ){
+                                        hidden_tr.hide();
+                                    }
+                                }
+                            },
+                            error:function(){
+                                alertNew('网络繁忙，请重试！')
+                            }
+                        });
+
+                    },
+                go:function(e, type){
+                    var url = 'index.php?m=stock&a=inventory_edit&bill_id=';
+                    if (type) {
+                        url += e;
+                        url += '&outgoing=';
+                        url += type;
+                    } else url += e;
+                    window.location.href = url;
+                },
+                open_go:function(e){
+                    var url = '/index.php?m=orders&a=orderdetail_self&ordId=';
+//                    window.open(url+e);
+                    opennewtab(this,'this');
+                },
+                alert_a:function(){
+                    box.Alert('<{$Think.lang.提示}>','无对应打印模板')
+                },
+                no_a:function(e){
+                    var bill_id = e;
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        url: "/index.php?m=stock&a=confirm_no",
+                        data: {
+                            bill_id:bill_id
+                        },
+                        success: function (res) {
+                            var res_info = JSON.parse(res)['info'];
+                            box.Alert('<{$Think.lang.提示}>', res_info);
+                            if(JSON.parse(res)['status'] == 'y'){
+                                window.location.href = '/index.php?m=stock&a=warehouse_switch';
+                            }
+                        },
+                        error: function () {
+                            alertNew('网络繁忙，请重试！')
+                        }
+                    });
+                },
+                qu_a:function(e){
+                    var bill_id = e;
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        url: "/index.php?m=stock&a=confirm_order",
+                        data: {
+                            bill_id:bill_id
+                        },
+                        success: function (res) {
+                            var res_info = JSON.parse(res)['info'];
+                            box.Alert('<{$Think.lang.提示}>', res_info);
+                            if(JSON.parse(res)['status'] == 'y'){
+                                window.location.href = '/index.php?m=stock&a=warehouse_switch';
+                            }
+                        },
+                        error: function () {
+                            alertNew('网络繁忙，请重试！')
+                        }
+                    });
+                },
+                reset:function(){
+                    this.bill_id = '';
+                    this.GSKU = '';
+                    this.other_code = '';
+                    this.batch = '';
+                    this.bill_type = '';
+                    this.house_list_model = '';
+                    this.sale_no = '';
+
+                },
+                loading_excel:function(){
+                    $('#upload').submit();
+                    box.Alert('<{$Think.lang.提示}>','增在加载数据。。。')
+                },
+                loading_excel_out:function(){
+                    $('#upload_out').submit();
+                    box.Alert('<{$Think.lang.提示}>','增在加载数据。。。')
+                },
+                king:function(e){
+                    var k = e.toString().split('.')
+                    if(e.toString().indexOf('.') > 0){
+                        var s = '.'+k[1]
+                    }else{
+                        var s = ''
+                    }
+                    return k[0].toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')+s;
+                }
+
+            }
+    })
+</script>
+<script>
+    $().ready(
+            function () {
+
+                $(".button-wrap .col-50 button[name='int']:eq(0)").click(function () {
+                    $(this).next().toggle();
+                    $(this).next().next().toggle();
+                })
+                $(".button-wrap .col-50 button[name='out']:eq(0)").click(function () {
+                    $(this).next().toggle();
+                    $(this).next().next().toggle();
+                })
+            }
+    );
+    function get_sum(e) {
+        var sum = 0;
+        for (var i = 0; i < vm.get_data.length; i++) {
+            var one = vm.get_data[i][e];
+            sum += parseInt(one);
+        }
+        return sum;
+
+    }
+    function f_sum(e) {
+        var all_sum = $(".hide:last .insert-wrap table tr").find(e);
+        var sum = 0;
+        for(var i = 0; i < all_sum.length; i++){
+            sum += parseFloat(all_sum.eq(i).text().replace(/,/g,''));
+        }
+        return sum.toFixed(2);
+    }
+    $(".td-wrap td button").click(function () {
+        $(this).attr("disabled","disabled");
+        var imgBtn = $(this).find("img");
+        imgBtn.toggleClass("unfold");
+        if (imgBtn.hasClass("unfold")) {
+            vm.get_data = [];
+            vm.load_goods($(this).parents("tr").find("td:eq(0) span").text());
+            setTimeout(function () {
+                //  count
+                var sum_should = get_sum('should_num');
+                var sum_send = get_sum('send_num');
+                var sum_unit = vm.king(f_sum('.unit_money'));
+                var sum_no_unit = vm.king(f_sum('.no_unit_money'));
+                $(".hide:last .insert-wrap table tr:last td:eq(1)").text(sum_should);
+                $(".hide:last .insert-wrap table tr:last td:eq(2)").text(sum_send);
+                $(".hide:last .insert-wrap table tr:last td:eq(4)").text(sum_unit);
+                $(".hide:last .insert-wrap table tr:last td:eq(5)").text(sum_no_unit);
+
+
+                imgBtn.attr("src", "<{$HI_PATH}>/images/rk-shrink.png");
+                var tableHtml = $(".insert-wrap").parents("tr")[0].outerHTML;
+                imgBtn.parents("tr").after(tableHtml);
+                imgBtn.parents("tr").next().show().find("div");
+                $(".td-wrap td button").removeAttr("disabled");
+            }, 100);
+        } else {
+            imgBtn.attr("src", "<{$HI_PATH}>/images/rk-add.png");
+            imgBtn.parents("tr").next().remove();
+            $(".td-wrap td button").removeAttr("disabled");
+        }
+    });
+
+    var rkBtn = $(".button-wrap .col-50 button[name='int']");
+    var ckBtn = $(".button-wrap .col-50 button[name='out']");
+    $(".button-wrap .col-50 span:eq(0)").hover(function () {
+        $(this).css({display:"inline-block",height:'96px',position:'relative'});
+        rkBtn.next().css({position:'absolute',top:'32px',left:"20px"}).next().css({position:'absolute',top:'64px',left:"20px"});
+        rkBtn.siblings().show();
+    },function () {
+        $(this).css({height:'30px'});
+        rkBtn.siblings().hide();
+    })
+    $(".button-wrap .col-50 span:eq(1)").hover(function () {
+        $(this).css({display:"inline-block",height:'96px',position:'relative',left:'0'});
+        ckBtn.next().css({position:'absolute',top:'32px',left:"20px"}).next().css({position:'absolute',top:'64px',left:"20px"});
+        ckBtn.siblings().show();
+    },function () {
+        $(this).css({height:'30px'});
+        ckBtn.siblings().hide();
+    });
+
+    function opennewtab(o,title){
+        if($(o).attr('_href')){
+            var bStop=false;
+            var bStopIndex=0;
+            var _href=$(o).attr('_href');
+            var _titleName=$(o).html();
+            var topWindow=$(window.parent.document);
+            var show_navLi=topWindow.find("#min_title_list li");
+            show_navLi.each(function() {
+                if($(this).find('span').attr("data-href")==_href){
+                    bStop=true;
+                    bStopIndex=show_navLi.index($(o));
+                    return false;
+                }
+            });
+            if(!bStop){
+                var topWindow=$(window.parent.document);
+                var show_nav=topWindow.find('#min_title_list');
+                show_nav.find('li').removeClass("active");
+                var iframe_box=topWindow.find('#iframe_box');
+                show_nav.append('<li class="active"><span data-href="'+_href+'">'+title+'</span><i></i><em></em></li>');
+
+                var topWindow=$(window.parent.document);
+                var taballwidth=0,
+                        $tabNav = topWindow.find('.acrossTab'),
+                        $tabNavWp = topWindow.find(".Hui-tabNav-wp"),
+                        $tabNavitem = topWindow.find(".acrossTab li"),
+                        $tabNavmore =topWindow.find(".Hui-tabNav-more");
+                if (!$tabNav[0]){return}
+                $tabNavitem.each(function(index, element) {
+                    taballwidth+=Number(parseFloat($(this).width()+60))});
+                $tabNav.width(taballwidth+25);
+                var w = $tabNavWp.width();
+                if(taballwidth+25>w){
+                    $tabNavmore.show()}
+                else{
+                    $tabNavmore.hide();
+                    $tabNav.css({left:0})}
+                var iframeBox=iframe_box.find('.show_iframe');
+                iframeBox.hide();
+                iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe frameborder="0" src='+_href+'></iframe></div>');
+                var showBox=iframe_box.find('.show_iframe:visible');
+                showBox.find('iframe').attr("src",_href).load(function(){
+                    showBox.find('.loading').hide();
+                });
+
+            }
+            else{
+                show_navLi.removeClass("active").eq(bStopIndex).addClass("active");
+                var iframe_box=topWindow.find("#iframe_box");
+                iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe").attr("src",_href);
+            }
+        }
+    }
+
+    (function(){
+        if(0 != vm.param){
+            vm.house_list_model=vm.param.house_list_model
+            vm.bill_type=vm.param.bill_type
+            vm.batch=vm.param.batch
+            vm.other_code=vm.param.other_code
+            vm.bill_id=vm.param.bill_id
+            vm.GSKU=vm.param.GSKU
+            vm.bill_date_end=vm.param.bill_date_end
+            vm.bill_date_ation=vm.param.bill_date_ation
+            vm.bill_date_ationD=vm.param.bill_date_ation
+            vm.bill_date_end=vm.param.bill_date_end
+            vm.link_bill_id=vm.param.link_bill_id
+        }
+    })()
+</script>
+</body>
+
+</html>

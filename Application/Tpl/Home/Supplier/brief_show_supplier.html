@@ -1,0 +1,90 @@
+<style>
+.show_supplier tr td{
+    width: 45%;
+}
+.company_type span{
+    margin-top: 5px;
+}
+</style>
+<div class="gys-wrap">
+    <div class="basis-info">
+        <table class="table table-border table-bordered table-bg">
+            <thead>
+            <tr>
+                <th width="10%"></th>
+                <th width="40%"></th>
+                <th width="10%"></th>
+                <th width="40%"></th>
+            </tr>
+            </thead>
+            <tbody class="text-le">
+                <tr>
+                    <td colspan="4"><{$Think.lang.基本信息}></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.供应商名称}></td>
+                    <td id="b-SP_NAME">
+                        
+                    </td>
+                    <td><{$Think.lang.供应商简称}></td>
+                    <td id="b-SP_RES_NAME">
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.英文名称}></td>
+                    <td id="b-SP_NAME_EN">
+                    </td>
+                    <td><{$Think.lang.英文简称}></td>
+                    <td id="b-SP_RES_NAME_EN">
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.营业执照号}></td>
+                    <td id="b-SP_CHARTER_NO">
+                    </td>
+                    <td><{$Think.lang.营业执照}></td>
+                    <td id="b-SP_ANNEX_NAME">
+                    </td>
+                     
+                </tr>
+                <tr class="">
+                    <td><{$Think.lang.企业类型}></td>
+                    <td class="company_type" id="b-company_type">
+                    </td>
+                    <td><{$Think.lang.供应商年业务规模}></td>
+                    <td id="b-scale">
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.采购团队}></td>
+                    <td class="multiple_team">
+                    </td>
+                    <td><{$Think.lang.介绍团队}></td>
+                    <td class="multiple_spt">
+                    </td>
+                </tr>
+                <tr class="">
+                    <td><{$Think.lang.供应商地址}></td>
+                    <td class="sel-map" id="b-address">
+                        
+                    </td>
+                    <td><{$Think.lang.供货品类}></td>
+                    <td id="b-cmd_cat">
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.供应商详细地址}></td>
+                    <td colspan="3" id="b-COMPANY_ADDR_INFO"></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.公司与市场地位简述}></td>
+                    <td colspan="3" id="b-COMPANY_MARKET_INFO"></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.备注}></td>
+                    <td colspan="3" id="b-SP_REMARK"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

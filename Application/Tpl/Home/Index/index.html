@@ -1,0 +1,136 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="../Public/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/H-ui.admin.css?v=20170731" rel="stylesheet" type="text/css" />
+    <link href="../Public/skin/default/skin.css?v=20170731" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/Hui-iconfont/sms-iconfont/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/style.css?v=20170731" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+    <link href="../Public/../Index/index.css?=20170508" rel="stylesheet" type="text/css" />
+    <link rel="shortcut icon" href="../Public/images/favicon.ico" type="image/x-icon">
+    <!--<script>var skin_dir = "../Public/";</script>-->
+    <title><{$host}></title>
+</head>
+<body>
+<header class="Hui-header cl">
+    <a class="Hui-logo l cus-logo-font" title="H-ui.admin v2.3" href="javascript:window.location.reload()"><img src="../Public/images/erp_logo.png" height="30" alt="" class="cus-logo-img"></a>
+    <a class="Hui-logo-m l" href="/" title="H-ui.admin"></a> <span class="Hui-subtitle l"></span>
+    <ul class="Hui-userbar navbar">
+        <li class="navbar_print"><a href="#" onclick="Print()"><img src="../Public/images/print.png" alt="" /><{$Think.lang.打印}></a></li>
+        <li class="navbar_translate"><a href="<{$langchange_url}>"> <img src="../Public/images/translate.png" alt="" /><{$langbut}></a></li>
+        <li class="navbar_userInfo">
+            <span><{$Think.session.m_loginname}> <i>▼</i></span>
+            <dl>
+                <dd><a href="#" onclick="admin_edit('<{$Think.lang.个人信息}>','<{:U("admin/admin_edit")}>&m_id=<{$Think.session.user_id}>', '', '800', '500')"><{$Think.lang.个人信息}></a></dd>
+                <dd><a href="#" onclick="admin_edit('Modify Password','<{:U("admin/admin_password")}>&m_id=<{$Think.session.user_id}>','<{$Think.session.user_id}>','500','300')" ><{$Think.lang.修改密码}></a></dd>
+                <dd><a href="<{:U('public/logout')}>"><{$Think.lang.退出}></a></dd>
+            </dl>
+        </li>
+        <li id="Hui-msg" style="display: none"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
+    </ul>
+    <a aria-hidden="false" class="Hui-nav-toggle Hui-iconfont visible-xs" href="#">&#xe667;</a> </header>
+<div class="slideBar hide"></div>
+<aside class="Hui-aside">
+    <input runat="server" id="divScrollValue" type="hidden" value="" />
+    <div class="menu_dropdown bk_2">
+        <?php foreach($module as $l){
+                if(in_array($l['ID'], array_keys($_SESSION['actlist']))){?>
+        <dl id="menu-article">
+            <dt><i <?php if(in_array($l['ICON'],['&#xe717;','&#xe601;'])){echo 'class="iconfont"';}else{echo 'class="Hui-iconfont"';}?>><?php echo $l['ICON']; ?></i> <?php echo L($l['NAME']) ?><i class="fa fa-caret-down"></i></dt>
+            <dd>
+                <ul>
+                    <?php foreach($l['child'] as $v){ if(in_array($v['ID'], array_keys($_SESSION['actlist']))){?>
+                    <li><!--<i class=" "></i>-->
+                        <a _href="<?php echo $v['url']; ?>" href="javascript:void(0)"><?php echo L($v['NAME']) ?></a></li>
+                    <?php }} ?>
+                </ul>
+            </dd>
+        </dl>
+        <?php }} ?>
+
+        <!--<dl id="menu-picture">-->
+        <!--<dt><i class="Hui-iconfont">&#xe620;</i> 支付管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>-->
+        <!--<dd>-->
+        <!--<ul>-->
+        <!--<li><a _href="<{:U('Ad/ad_list')}>" href="javascript:void(0)">交易流水记录</a></li>-->
+        <!--<li><a _href="<{:U('Ad/ad_list')}>" href="javascript:void(0)">第三方回调记录</a></li>-->
+        <!--<li><a _href="<{:U('Ad/ad_list')}>" href="javascript:void(0)">支付结果通知</a></li>-->
+        <!--<li><a _href="<{:U('Ad/ad_list')}>" href="javascript:void(0)">交易状态查询</a></li>-->
+        <!--</ul>-->
+        <!--</dd>-->
+        <!--</dl>-->
+
+        <!-- 如果是超级管理员 -->
+
+        <dl id="menu-admin"<?php if($_SESSION['role_id'] != 1){?> style="display: none" <?php }?>>
+        <dt><i class="Hui-iconfont">&#xe62d;</i><{$Think.lang.管理员管理}><i class="fa fa-caret-down"></i></dt>
+        <dd>
+            <ul>
+                <li><i class=" "></i><a _href="<{:U('Menu/menu_list')}>" href="javascript:void(0)"><{$Think.lang.菜单配置}></a></li>
+                <if condition="$Think.session.role_id eq 1">
+                    <li><i class=" "></i><a _href="<{:U('Role/role_list')}>" href="javascript:void(0)"><{$Think.lang.角色管理}></a></li>
+                </if>
+                <li><i class=" "></i><a _href="<{:U('Admin/admin_list')}>" href="javascript:void(0)"><{$Think.lang.用户管理}></a></li>
+
+                <!--<if condition="$Think.session.role_id eq 1">
+                    <li><a _href="<{:U('Node/node_list')}>" href="javascript:void(0)">Modules</a></li>
+                </if>-->
+            </ul>
+        </dd>
+        </dl>
+    </div>
+</aside>
+<div class="dislpayArrow"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
+<section class="Hui-article-box">
+    <div id="Hui-tabNav" class="Hui-tabNav">
+        <div class="Hui-tabNav-wp">
+            <ul id="min_title_list" class="acrossTab cl">
+                <li class="active"><span title="Home Page" data-href="welcome.html">Home Page</span><em></em></li>
+            </ul>
+        </div>
+        <div class="Hui-tabNav-more btn-group"><a id="js-tabNav-prev" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d4;</i></a><a id="js-tabNav-next" class="btn radius btn-default size-S" href="javascript:;"><i class="Hui-iconfont">&#xe6d7;</i></a></div>
+    </div>
+    <div id="iframe_box" class="Hui-article">
+        <div class="show_iframe">
+            <div style="display:none" class="loading"></div>
+            <iframe scrolling="yes" frameborder="0" src="<{:U('Index/welcome')}>"></iframe>
+        </div>
+    </div>
+    <div class="hide" id="closeAll">
+        <div style="display: flex;height: 105px">
+            <div class="icon-div">
+                <i class="Hui-iconfont Hui-iconfont-close"></i>
+                <i>其</i>
+                <i>All</i>
+            </div>
+            <div class="but-div">
+                <span>关闭当前标签页</span>
+                <span>关闭其他标签页</span>
+                <span>关闭全部标签页</span>
+            </div>
+        </div>
+        <div class="cancel">
+            取消
+        </div>
+    </div>
+</section>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/../Index/index.js"></script>
+</body>
+</html>

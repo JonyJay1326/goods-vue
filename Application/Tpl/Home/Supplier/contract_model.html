@@ -1,0 +1,214 @@
+<style>
+    .first-span span:nth-child(1){
+        margin-right:5px;
+    }
+    .show_main{
+        position: relative;
+    }
+    .hidden_show{
+        width: 5%;
+        position: absolute;
+        opacity: 0;
+        left: 10px;
+        height: 31px;
+    }
+    .show_main span{
+        margin-bottom: 5px;
+    }
+</style>
+<div class="row row_title">
+    <a class="active"><{$Think.lang.$title}></a>
+</div>
+<div class="row row_title_line"><a href="" class="line12" ></a></div>
+    <!--数据列表 -->
+    <div class="basis-info">
+        <input type="hidden" value="0" name="CRM_CON_TYPE"/>
+        <table class="table table-border table-bordered table-bg info-ext-by">
+            <thead>
+            <tr>
+                <th width="10%"></th>
+                <th width="40%"></th>
+                <th width="10%"></th>
+                <th width="40%"></th>
+            </tr>
+            </thead>
+            <tbody class="text-le">
+                <tr>
+                    <td colspan="4"><{$Think.lang.基本信息}></td>
+                </tr>
+                <tr class="ctcd contract_coo_type">
+                    <td><{$Think.lang.合作类型}>:</td>
+                    <td class="first-span">
+                        <?php
+                            foreach ($copanyTypeCd as $key => $value) {
+                                if (isset($result['CON_TYPE']) and (int)$result['CON_TYPE'] === $key) {
+                        ?>
+                                    <span value="<?= $key ?>" class="gys_check_item gys_check_item_active"><?= $value ?></span>
+                        <?php
+                                } else {
+                        ?>
+                                    <span value="<?= $key ?>" class="gys_check_item"><?= L($value) ?></span>
+                        <?php
+                                }
+                            }
+                        ?>
+                        
+                        <input type="hidden" name="CON_TYPE" class="CON_TYPE" id="CON_TYPE"/>
+                    </td>
+                    <td><{$Think.lang.合同状态}>:</td>
+                    <td class="gys_select">
+                        <select class="form-control" name="CON_STAT" >
+                            <?php
+                                foreach (BaseModel::contractState() as $k => $v) {
+                                    if ($result['CON_STAT'] == $k) {
+                                        echo '<option value="' . $k . '" selected="selected">' . $v . '</option>';    
+                                    } else {
+                                        echo '<option value="' . $k . '">' . $v . '</option>';
+                                    }
+                                }
+                            ?>
+                        </select>
+                    </td>
+                    <!--<td class="no-wrap"><{$model.SP_RES_NAME}></td>-->
+                </tr>
+                <tr>
+                    <td><{$Think.lang.合同编号}>:</td>
+                    <td class="gys_search">
+                        <div class="input-group">
+                            <input <?= $must_need_upload_file == 0?'readonly="readonly"':'' ?> type="text" id="CON_NO" name="CON_NO" VALUE="<{$result.CON_NO}>" class="form-control" />
+                            <input type="hidden" name="OLD_CON_NO" VALUE="<{$result.CON_NO}>" id="OLD_CON_NO"/>
+                            <span class="input-group-btn ">
+                                <button class="btn btn-secondary" type="button"><i> <img src="../Public/images/searchIco.png"  class="search-contract"/></i></button>
+                            </span>
+                        </div>
+                    </td>
+                    <td><{$Think.lang.合同简称}>:</td>
+                    <td><input type="text" name="CON_NAME" VALUE="<{$result.CON_NAME}>" class="form-control" /></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.供应商名称}>:</td>
+                    <td class="gys_assessment">
+                        <div>
+                            <input type="text" class="btn  form-control" name="SP_NAME" VALUE="<{$result.SP_NAME}>" id="SP_NAME" />
+                            <a class="btn" id="audit-grade"><{$Think.lang.风险评估}></a>
+                        </div>
+                    </td>
+                    <td><{$Think.lang.营业执照号}>:</td>
+                    <td class="gys_search">
+                        <div class="input-group">
+                            <input type="text" class="SP_CHARTER_NO form-control" name="SP_CHARTER_NO" VALUE="<{$result.SP_CHARTER_NO}>" id="CGBUSINESSLICENSE"/>
+                            <span class="input-group-btn ">
+                                <button class="btn btn-secondary" type="button"><i> <img  src="../Public/images/searchIco.png" width="28" height="25" alt="" class="img_load-con"/></i></button>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.起始时间}>:</td>
+                    <td>
+                        <input type="text" onfocus="WdatePicker({skin:'whyGreen',maxDate:'%y-%M-%d'})" id="d4311" name="START_TIME" value="<?= cutting_time($result['START_TIME']) ?>" class="input-text Wdate form-control" id="START_TIME"/>
+                    </td>
+                    <td><{$Think.lang.结束时间}>:</td>
+                    <td class="gys_data">
+                        <input type="text" onfocus="WdatePicker({skin:'whyGreen',minDate:'#F{$dp.$D(\'d4311\')}'})" name="END_TIME" value="<?= cutting_time($result['END_TIME']) ?>" class="input-text Wdate form-control" id="END_TIME"/>
+                        <label>
+                            <?php
+                                foreach (BaseModel::contractType() as $key => $value) {
+                            ?>
+                                   <input type="radio" name="CONTRACT_TYPE" data-name="<{$key}>" value="<{$key}>" <?= $result['CONTRACT_TYPE'] == $key?'checked="true"':'' ?>  /> <span data-name="<{$key}>"><{$Think.lang.$value}></span>
+                            <?php
+                                }
+                            ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.我方公司}>:</td>
+                    <td>
+                        <select style="width: 100%;" class="OUR_COMPANY" name="CON_COMPANY_CD">
+                            <?php
+                                foreach (BaseModel::conCompanyCd() as $k => $v) {
+                                    if ($result['CON_COMPANY_CD'] == $k) {
+                                        echo '<option value="' . $k . '" selected="selected">' . $v . '</option>';    
+                                    } else {
+                                        echo '<option value="' . $k . '">' . $v . '</option>';
+                                    }
+                                }
+                            ?>
+                        </select>
+                        <!--<input type="hidden" name="CON_COMPANY_CD" VALUE="<{$result.CON_COMPANY_CD}>" id="CON_COMPANY_CD"/>-->
+                    </td>
+                    <td><{$Think.lang.签约人}>:</td>
+                    <td><input type="text" name="CONTRACTOR" VALUE="<{$result.CONTRACTOR}>" id="CONTRACTOR" class="form-control"/></td>
+                </tr>
+                <tr class="sysc">
+                    <td><{$Think.lang.是否自动续约}>:</td>
+                    <td>
+                        <?php
+                            foreach ($isAutoRenew as $key => $value) {
+                                if (isset($result['IS_RENEWAL']) and (int)$result['IS_RENEWAL'] === $key) {
+                        ?>
+                                    <span value="<?= $key ?>" class="gys_check_item gys_check_item_active"><?= $value ?></span>
+                        <?php
+                                } else {
+                        ?>
+                                    <span value="<?= $key ?>" class="gys_check_item"><?= L($value) ?></span>
+                        <?php
+                                }
+                            }
+                        ?>
+                        <input type="hidden" name="IS_RENEWAL" class="IS_RENEWAL"/>
+                        <input type="hidden" name="IS_RENEWAL" class="IS_RENEWAL" value="<{$result.IS_RENEWAL}>"/>
+                    </td>
+                    <td><{$Think.lang.供应商开户行}>:</td>
+                    <td><input type="text" name="SP_BANK_CD" VALUE="<{$result.SP_BANK_CD}>" id="CGGYSKHH" class="form-control"/></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.银行账号}>:</td>
+                    <td><input type="text" name="BANK_ACCOUNT" VALUE="<{$result.BANK_ACCOUNT}>" id="CGYHZH" class="form-control"/></td>
+                    <td><{$Think.lang.Swift Code}>:</td>
+                    <td><input type="text" name="SWIFT_CODE" VALUE="<{$result.SWIFT_CODE}>" id="CGSWIFTCODE" class="form-control"/></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.对方联系人}>:</td>
+                    <td style="text-align: left;">
+                        <input type="text" name="CONTACT" VALUE="<{$result.CONTACT}>" id="CGDFLXR" class="form-control"/>
+                    </td>
+                    <td><{$Think.lang.电子邮箱}>:</td>
+                    <td style="text-align: left;">
+                        <input type="text" name="CON_EMAIL" VALUE="<{$result.CON_EMAIL}>" id="CGEMAIL" class="form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.联系手机}>:</td>
+                    <td style="text-align: left;">
+                        <input type="text" name="CON_PHONE" VALUE="<{$result.BAK_CON_PHONE}>" id="CGLXDH" class="form-control"/>
+                    </td>
+                    <td><{$Think.lang.固定电话}>:</td>
+                    <td style="text-align: left;">
+                        <input type="text" name="CON_TEL" VALUE="<{$result.BAK_CON_TEL}>" class="form-control"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.合同文件}>:</td>
+                    <td class="show_main">
+                        <label class="btn" href="#supplier_contract_file" id="supplier_contract_file_name"><{$result['SP_ANNEX_ADDR1']?$result['SP_ANNEX_ADDR1']:请选择文件}></label>
+                        <input type="file" name="SP_ANNEX_ADDR1" class="hidden_show" id="supplier_contract_file" onchange="document.getElementById('supplier_contract_file_name').innerHTML = this.value?this.value:'<{$Think.lang.请选择文件}>'"/>
+                        <span class="show_main_delete"></span>
+                    </td>
+                    <td class="no-wrap"><{$Think.lang.上传名片(选填)}>:</td>
+                    <td class="show_main">
+                        <label class="btn" href="#supplier_business_file" id="supplier_business_file_name"><{$result['SP_ANNEX_ADDR2']?$result['SP_ANNEX_ADDR2']:请选择文件}></label>
+                        <input  type="file" name="SP_ANNEX_ADDR2" class="hidden_show" id="supplier_business_file" onchange="document.getElementById('supplier_business_file_name').innerHTML = this.value?this.value:'<{$Think.lang.请选择文件}>'"/>
+                        <span class="show_main_delete"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.备注}>:</td>
+                    <td colspan="3">
+                        <textarea rows="5" style="width: 100%;" id="REMARK" name="REMARK" aria-required="true" aria-invalid="true" required:true><{$result.REMARK}></textarea>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

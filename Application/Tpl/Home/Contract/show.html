@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css?v=20170117" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/jqeury-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170306" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/supplier.css?v=201701238" />
+    <title></title>
+</head>
+<body class="pos-r">
+
+<div class="gys-wrap">
+</div>
+<div class="supplier-tables">
+<?php $title = '合同详情'; ?>
+    <if condition="$result.CRM_CON_TYPE eq 0">
+            <include file="supplier_contract_model" />
+        <else />
+            <include file="customer_contract_model" />
+    </if>
+</div>
+<div class="table-log">
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script>
+$(document).ready(function () {
+    function switchTab(param,type){
+        param.click(function () {
+            var index = $(this).index();
+            param.eq(index).addClass("active").siblings().removeClass("active");
+        });
+    }
+    switchTab($(".supplier-info span"));
+});
+
+function tab_log(){
+    $(".supplier-tables").css('display','none');
+    $(".table-log").css('display','block');
+}
+function tab_detail(){
+    $(".supplier-tables").css('display','block');
+    $(".table-log").css('display','none');
+}
+
+$(".show_contract button").click(function() {
+    $(this).addClass('btn-pink').siblings().removeClass('btn-pink');
+    
+    var tag = $(this).attr('tag');
+    var effectiveL = $(".effective").length
+    var invalid = $(".invalid").length;
+    
+    if (tag == 1) {
+        $(".c_count").html(effectiveL);
+        for (var i = 0; i < effectiveL; i ++) {
+            $(".n_c:eq("+i+")").html(i+1);
+        }
+        $(".invalid").css('display', 'none');
+        $(".effective").css('display', 'block');
+    } else if (tag == 0) {
+        $(".c_count").html(invalid);
+        for (var i = 0; i < invalid; i ++) {
+            $(".n_c:eq("+i+")").html(i+1);
+        }
+        $(".effective").css('display', 'none');
+        $(".invalid").css('display', 'block');
+    } else {
+        $(".c_count").html(effectiveL + invalid);
+        for (var i = 0; i < effectiveL + invalid; i ++) {
+            $(".n_c:eq("+i+")").html(i+1);
+        }
+        $(".effective").css('display', 'block');
+        $(".invalid").css('display', 'block');
+    }
+});
+</script>
+<script>
+function show_risk_rating_text(text){
+    layer.tips(text, '#risk_rating_text', {
+      tips: [1, '#3595CC'],
+      time: 4000
+    });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>品牌档案</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css"/>
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css">
+    <script type="text/javascript">if (document.all)alert('你的浏览器太旧了，恕不奉陪');</script>
+</head>
+
+<body>
+<div id="content">
+
+
+    <div class="ck-wrap">
+        <header>
+            <div><span class="new-add" @click="add()">新增品牌</span></div>
+        </header>
+        <article>
+            <div class="data">
+                <table class="tabel table table-border table-bordered table-bg">
+                    <thead>
+                    <tr class="text-c">
+
+                        <th width="15%">序号</th>
+                        <th width="10%">品牌名称</th>
+                        <th width="10%">备注</th>
+                        <th width="10%">状态</th>
+                        <th width="10%">创建时间</th>
+                        <th width="10%">创建人</th>
+                        <th width="10%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-c " v-for="brand in brand_data" v-show="show">
+                        <td v-cloak><span>{{brand.id}}</span> <input type="hidden" v-model="id"></td>
+
+                        <td v-if="brand.input" v-cloak><input type="text" v-model="brand_name"></td>
+                        <td v-else v-cloak><span>{{brand.brand_name}}</span></td>
+
+                        <td v-if="brand.input" v-cloak><input type="text" v-model="remarks"></td>
+                        <td v-else v-cloak><span>{{brand.remarks}}</span></td>
+
+                        <td v-if="brand.start == 1" v-cloak><span>已使用</span></td>
+                        <td v-else-if="this_start" v-cloak><span>已使用</span></td>
+                        <td v-else v-cloak><span>未使用</span></td>
+
+                        <td v-if="brand.input" v-cloak>{{date}}<input type="hidden" v-model='date' readonly></td>
+                        <td v-else v-cloak><span>{{brand.date}}</span></td>
+
+
+                        <td v-cloak><span>{{brand.user_name}}</span></td>
+
+                        <td v-cloak>
+                            <span v-if="brand.input" class="edit-btn" @click="save()">保存</span>
+                            <span class="edit-btn" @click="edit()" v-else>修改</span>&nbsp;
+                            <span class="edit-btn">封存</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+</div>
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+<!--<script type="text/javascript" src="<{$HI_PATH}>/js/basic/update.js"></script>-->
+<script type="text/javascript">
+    var vm = new Vue({
+            el: '#content',
+            data: {
+                brand_data: <{$brand_list}>,
+                show:<{$show}>,
+                add_data: {"id": '[自生成]', "brand_name": "", "remarks": "", "this_start": 1, "date": "","user_name":"[自添加]","input": true},
+                id: '',
+                brand_name: '',
+                remarks: '',
+                this_start: 1,
+                date: '',
+                user_name:''
+            },
+            methods:{
+                add: function () {
+                    //                get id
+                    this.show = true;
+                    var myDate = new Date();
+                    this.date = myDate.toLocaleDateString();
+                    this.this_start = '已使用';
+                    this.brand_data.push(this.add_data);
+                },
+                save: function () {
+                    if (this.brand_name == null || this.remarks == null || this.this_start == '' || this.date == '') {
+                        box.Alert('提示', '品牌信息不能为空');
+                        return false;
+                    }
+                    $.ajax({
+                        type: "POST",
+                        async: false,
+                        url: "/index.php?m=basic&a=brand_add",
+                        data: {
+                            brand_name: this.brand_name,
+                            remarks: this.remarks,
+                            start: this.this_start,
+                            date: this.date
+                        },
+                        success: function (res) {
+                            var res_info = JSON.parse(res)['info'];
+                            box.Alert('提示', res_info);
+                            setTimeout(function () {history.go(0)}, 2000)
+                        },
+                        error: function () {
+                            alertNew('网络繁忙，请重试！')
+                        }
+                    });
+                },
+                edit: function (e) {
+                    box.Alert('提示', '暂未开发');
+                }
+            }
+    })
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,116 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	0	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+html	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<html lang="en">$/;"	function	line:2
+head	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<head>$/;"	function	line:4
+meta	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <meta charset="UTF-8">$/;"	function	line:5
+title	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <title>仓库档案<\/title>$/;"	function	line:6
+link	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <link rel="stylesheet" type="text\/css" href="<{$HI_PATH}>css\/H-ui.min.css"\/>$/;"	function	line:7
+link	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <link rel="stylesheet" type="text\/css" href="<{$HI_PATH}>css\/H-ui.admin.css"\/>$/;"	function	line:8
+link	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <link rel="stylesheet" type="text\/css" href="<{$HI_PATH}>lib\/Hui-iconfont\/1.0.7\/iconfont.css"\/>$/;"	function	line:9
+link	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <link rel="stylesheet" type="text\/css" href="<{$HI_PATH}>lib\/icheck\/icheck.css"\/>$/;"	function	line:10
+link	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <link rel="stylesheet" type="text\/css" href="<{$HI_PATH}>skin\/default\/skin.css" id="skin"\/>$/;"	function	line:11
+link	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <link rel="stylesheet" type="text\/css" href="<{$HI_PATH}>css\/style.css"\/>$/;"	function	line:12
+link	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <link rel="stylesheet" href="<{$HI_PATH}>css\/stock.css?v=2">$/;"	function	line:13
+script	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <script type="text\/javascript">if(document.all)alert('你的浏览器太旧了，恕不奉陪');<\/script>$/;"	function	line:14
+body	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<body>$/;"	function	line:17
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<div id="content">$/;"	function	line:18
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <div class="ck-wrap">$/;"	function	line:21
+header	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^        <header>$/;"	function	line:22
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^            <div><span class="new-add" onClick="show_window('#modal')">新增仓库<\/span><\/div>$/;"	function	line:23
+article	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^        <article>$/;"	function	line:25
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^            <div class="data">$/;"	function	line:26
+table	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                <table class="tabel table table-border table-bordered table-bg">$/;"	function	line:27
+thead	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <thead class="th-wrap">$/;"	function	line:28
+tr	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <tr class="text-c">$/;"	function	line:29
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th width="30">序号<\/th>$/;"	function	line:30
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th>仓库名称<\/th>$/;"	function	line:31
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th>仓库属性<\/th>$/;"	function	line:32
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th>仓库位置<\/th>$/;"	function	line:33
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th>是否货位管理<\/th>$/;"	function	line:34
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th>SKU数量<\/th>$/;"	function	line:35
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th>库存数<\/th>$/;"	function	line:36
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th>计价方式<\/th>$/;"	function	line:37
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th>备注<\/th>$/;"	function	line:38
+th	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <th>操作<\/th>$/;"	function	line:39
+tbody	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <tbody class="td-wrap">$/;"	function	line:42
+tr	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                      <tr v-cloak class="text-c" v-for="(key,list) in json_list" v-on:load="load_this">$/;"	function	line:43
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                           <td v-cloak>{{key+1}}<\/td>$/;"	function	line:44
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                           <td v-cloak>{{list.warehouse}}<\/td>$/;"	function	line:45
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                    <td v-if="attribute_arr[list.attribute_id]" >{{attribute_arr[list.attribute_id]}}<\/td>$/;"	function	line:46
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <td v-cloak>{{list.place}}-{{list.city}}-{{list.address}}<\/td>$/;"	function	line:47
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <td v-cloak>$/;"	function	line:48
+label	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                    <label>$/;"	function	line:49
+input	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                        <input type="checkbox"  v-show="list.location_switch == 1" disabled checked>$/;"	function	line:50
+input	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                        <input type="checkbox"  v-else disabled  >$/;"	function	line:51
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <td>0<\/td>$/;"	function	line:54
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <td>0<\/td>$/;"	function	line:55
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <td v-if="valuation_arr[list.attribute_id]"  v-cloak>{{valuation_arr[list.attribute_id]}}<\/td>$/;"	function	line:56
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <td v-cloak>{{list.remarks}}<\/td>$/;"	function	line:57
+td	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <td v-cloak><span class="edit-btn" v-on:click="edit_this('#modal',list)">编辑<\/span>&nbsp;$/;"	function	line:58
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                    <span class="edit-btn" v-on:click="del_this('#modal',list)">删除<\/span><\/td>$/;"	function	line:59
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    <div id="modal" class="" style="display: none">$/;"	function	line:66
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^        <div class="pop-wrap">$/;"	function	line:67
+form	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^            <form action="#" id="modal-paly">$/;"	function	line:68
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                <div class="row">$/;"	function	line:69
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <div class="col-90">$/;"	function	line:70
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <span class="title">详情页<\/span>$/;"	function	line:71
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <div class="col-10 text-r" onclick="close_window('#modal')">$/;"	function	line:73
+img	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <img src="<{$HI_PATH}>images\/close.png" alt="" width="25" height="25" style="cursor: pointer">$/;"	function	line:74
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                <div class="row contetn" >$/;"	function	line:77
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <div class="col-100">$/;"	function	line:79
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div>$/;"	function	line:80
+input	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <input type="hidden" name="id"  value="{{ms.id}}" \/>$/;"	function	line:81
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <span class="Validform_label">仓库名称：<\/span>$/;"	function	line:82
+input	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <input type="text" name="warehouse"  value="{{ms.warehouse}}"   datatype="*" @blur="check_name($event)">$/;"	function	line:84
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div>$/;"	function	line:86
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <span class="Validform_label">仓库地点：<\/span>$/;"	function	line:87
+select	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <select class="select" name="place" id="s1" datatype="s" errormsg="请选择省"  >$/;"	function	line:88
+option	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <option ><\/option>$/;"	function	line:89
+select	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <select v-model="city_model" class="select" name="city" id="s2"  datatype="s" errormsg="请选择市">$/;"	function	line:91
+option	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <option ><\/option>$/;"	function	line:92
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div>$/;"	function	line:96
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <span class="Validform_label">所属公司：<\/span>$/;"	function	line:97
+select	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <select v-model="company_model" class="" name="company_id"  datatype="s" errormsg="请选择所属公司" >$/;"	function	line:98
+option	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                    <option   v-for="company in company_arr" value="{{company.CD}}" >{{company.CD_VAL}}<\/option>$/;"	function	line:99
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div>$/;"	function	line:102
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <span class="Validform_label">仓库属性：<\/span>$/;"	function	line:103
+select	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <select class="" name="attribute_id"  datatype="n" errormsg="请选择仓库属性">$/;"	function	line:104
+option	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <option v-for="attribute in attribute_arr" value=" {{ $index }}">{{attribute}}<\/option>$/;"	function	line:105
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div>$/;"	function	line:108
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <span>计价方式：<\/span>$/;"	function	line:109
+select	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <select class="" name="valuation"  datatype="n" errormsg="请选择计价方式">$/;"	function	line:110
+option	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <option v-for="valuation in valuation_arr" value=" {{ $index }}">{{valuation}}<\/option>$/;"	function	line:111
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div>$/;"	function	line:114
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <span class="Validform_label">联系人：<\/span> <input type="text" name="contacts"$/;"	function	line:115
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div>$/;"	function	line:119
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <span class="Validform_label">电话：<\/span> <input type="text" name="phone"$/;"	function	line:120
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div>$/;"	function	line:124
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <span class="Validform_label">地址：<\/span> <input type="text" name="address"$/;"	function	line:125
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div>$/;"	function	line:129
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <span>备注：<\/span> <textarea name="remarks">{{ms.remarks}}<\/textarea>$/;"	function	line:130
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <div class="row">$/;"	function	line:132
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                            <div class="col-50">$/;"	function	line:133
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <span>启用货位管理<\/span>$/;"	function	line:134
+input	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <input type="checkbox" name="location_switch" v-model="location_checkbox" value="1"  v-if="ms.location_switch == 1" checked>$/;"	function	line:135
+input	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <input type="checkbox" name="location_switch" v-model="location_checkbox" value="1" v-else >$/;"	function	line:136
+span	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                                <span>虚拟仓<\/span><input type="checkbox" name="location_switch" value="0" v-model="location_checkbox">$/;"	function	line:139
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                <div class="row buttons">$/;"	function	line:145
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <div class="col-25"><\/div>$/;"	function	line:146
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <div class="col-25">$/;"	function	line:147
+button	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <button type="submit" name="save" class="button-pink">保存<\/button>$/;"	function	line:149
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <div class="col-25 text-r">$/;"	function	line:152
+button	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                        <button type="button" name="cancel" onclick="close_window('#modal')" class="button-black">取消$/;"	function	line:153
+div	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^                    <div class="col-25"><\/div>$/;"	function	line:156
+script	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<script src="<{$HI_PATH}>\/lib\/jquery\/1.9.1\/jquery.min.js" type="text\/javascript"><\/script>$/;"	function	line:163
+script	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<script type="text\/javascript" src="<{$HI_PATH}>\/js\/jquery-ui.min.js"><\/script>$/;"	function	line:165
+script	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<script type="text\/javascript" src="<{$HI_PATH}>\/lib\/Validform\/5.3.2\/Validform.min.js"><\/script>$/;"	function	line:167
+script	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<script type="text\/javascript" src="<{$HI_PATH}>\/js\/geo.js"><\/script>$/;"	function	line:168
+script	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<script type="text\/javascript" src="<{$HI_PATH}>\/js\/vue.1.7.js"><\/script>$/;"	function	line:169
+script	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<script type="text\/javascript" >$/;"	function	line:170
+show_window	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    function show_window(this_id) {$/;"	function	line:173
+close_window	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^    function close_window(this_id) {$/;"	function	line:177
+script	F:\XAMPP\htdocs\b5c-sms2-storage\Application\Tpl\Stock\warehouse.html	/^<script type="text\/javascript" >$/;"	function	line:200

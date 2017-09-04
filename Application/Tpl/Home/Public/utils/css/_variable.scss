@@ -1,0 +1,45 @@
+/**============================variable start=====================================*/
+
+//color 经常使用的几个颜色
+$cl-green: #2BA384;
+$cl-default: #FFFFFF;
+$cl-blue: #1E7EB4;
+$cl-darkBlue: #546E7A;
+
+
+
+//边框颜色自己配 依次（实线；虚线；突出；内嵌；双线；隐藏）
+$bd-solid:1px solid;
+$bd-dashed:1px dashed;
+$bd-outset:1px outset;
+$bd-inset:1px inset;
+$bd-double:1px double;
+$bd-hidden:hidden;
+
+//bd-rd  边框圆角
+$bd-rd50: 50%;
+$bd-rd2: 0.1rem;
+$bd-rd3: 0.15rem;
+$bd-rd4: 0.2rem;
+$bd-rd5: 0.25rem;
+$bd-rd6: 0.3rem;
+$bd-rd7: 0.35rem;
+$bd-rd8: 0.4rem;
+$bd-rd9: 0.45rem;
+$bd-rd10: 0.5rem;
+
+
+//font  字体颜色，大小，字体名字
+$ft-black: #263238;
+$ft-white: #FFFFFF;
+$ft-sz12: 0.6rem;
+$ft-sz13: 0.65rem;
+$ft-sz14: 0.7rem;
+$ft-sz15: 0.75rem;
+$ft-sz16: 0.8rem;
+$ft-sz17: 0.85rem;
+$ft-sz18: 0.9rem;
+$ft-sz19: 0.92rem;
+$ft-sz20: 1rem;
+$fontFamily: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+/**============================end=====================================*/

@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>库存锁定</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.1/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css"/>
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css">
+    <style>
+        .kcs-box {
+            position: absolute;
+            top: calc((100% - 210px) / 2);
+            left: calc((100% - 240px) / 2);
+            background: white;
+            width: 240px;
+            height: 210px;
+            border: 1px solid #e5e5e5;
+            border-radius: 3px;
+            padding: 0 20px 10px;
+            box-shadow: 3px 2px 6px #dedede;
+        }
+
+        .kcs-box div, h4, h5 {
+            margin: 10px 0;
+        }
+
+        .kcs-box h4 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .kcs-box h5 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .kcs-box div > span {
+            margin-right: 10px;
+            display: inline-block;
+            padding: 10px;
+        }
+
+        .kcs-box div > input {
+            border: 1px solid #cccccc;
+            width: 150px;
+            height: 26px;
+            padding: 0 10px;
+            border-radius: 2px;
+            box-sizing: border-box;
+        }
+
+        .kcs-box div > select {
+            border: 1px solid #cccccc;
+            width: 150px;
+            height: 30px;
+            padding: 0 10px;
+            border-radius: 2px;
+        }
+
+        .kcs-box div > button:first-child {
+            border: 1px solid #ca2756;
+            padding: 3px 12px;
+            border-radius: 2px;
+            background: #ed2d65;
+            color: white;
+            margin-right: 30px;
+            margin-left: 10px;
+        }
+
+        .kcs-box div > button:last-child {
+            border: 1px solid #b3b3b3;
+            padding: 3px 12px;
+            border-radius: 2px;
+            background: #dddddd;
+            color: #555;
+            margin-left: 30px;
+
+        }
+    </style>
+</head>
+
+<body>
+<div class="kc-lock" id="kc-lock">
+
+    <div class="select-line">
+        <form id="search_lock" action="#" method="post"  >
+            <div class="row">
+                <div class="col-30">
+                    <select name="init_key" v-model="post.init_key">
+                        <option value="SKU">SKU</option>
+                        <option value="GUDS_CNS_NM"><{$Think.lang.按渠道展开}></option>
+                        <option value="GUDS_CODE"><{$Think.lang.自编码}></option>
+                        <option value="channel"><{$Think.lang.渠道}></option>
+                    </select>
+                    <input name="init_value" type="text" v-model="post.init_value" placeholder="<{$Think.lang.输入关键字搜索}>">
+                </div>
+                <div class="col-15">
+                    <select name="DELIVERY_WAREHOUSE" v-model="post.DELIVERY_WAREHOUSE" >
+                        <option value="" ><{$Think.lang.所有仓库}></option>
+                        <option  v-for="h in house_all_list" :value="h.CD">{{h.warehouse}}</option>
+                    </select>
+                </div>
+                <div class="col-40 text-r">
+                    <input type="submit" class="button-pink" value="<{$Think.lang.查询}>">
+                    <input type="reset" class="button-black" value="<{$Think.lang.重置}>">
+                </div>
+            </div>
+        </form>
+    </div>
+    <!--<div class="button-wrap">
+        <div class="row">
+            <div class="col-50">
+                <button type="button" name="int" class="button-pink" @click="add_list"> + <{$Think.lang.锁定}></button>
+            </div>
+            <div class="col-50 text-r">
+                <button type="button" name="reset" class="button-pink margin-right-10">批量锁定</button>
+                <button type="button" name="reset" class="button-black margin-left-10">批量解锁</button>
+            </div>
+        </div>
+    </div>-->
+    <div id="Hui-tabNav" class="Hui-tabNav">
+        <div class="Hui-tabNav-wp">
+            <ul id="min_title_list" class="acrossTab cl" style="width: 250px; left: 0px;">
+                <a href="/index.php?m=stock&a=lock" ><li class=""><span style="padding-left: 16px;" ><{$Think.lang.锁定}></span><em></em></li></a>
+                <a href="/index.php?m=stock&a=lock_log"><li class="active"><span  style="padding-left: 16px;" title="My Home" ><{$Think.lang.日志}></span><em></em></li></a>
+             </ul>
+        </div>
+    </div>
+    <div class="kc-tabel">
+        <table class="tabel table table-border table-bordered table-bg">
+            <thead class="th-wrap">
+            <tr class="text-c">
+                <th width="30"><{$Think.lang.序号}></th>
+                <th><{$Think.lang.SKU编码}></th>
+                <th><{$Think.lang.按渠道展开}></th>
+                <th><{$Think.lang.自编码}></th>
+                <th width="30"><{$Think.lang.单位}></th>
+                <th><{$Think.lang.仓库}></th>
+                <th><{$Think.lang.锁定库存}></th>
+                <th><{$Think.lang.操作库存}></th>
+                <th><{$Think.lang.锁定渠道}></th>
+                <!--<th>操作内容</th>-->
+                <th><{$Think.lang.操作人}></th>
+                <th><{$Think.lang.操作时间}></th>
+            </tr>
+            </thead>
+            <tbody class="text-c td-wrap">
+            <tr v-for="(l,index) in lock_list" v-cloak>
+                <td>{{index+1}}</td>
+                <td class="td-sku">
+                    {{l.GSKU}}
+                </td>
+
+                <td v-if="l.goods[0].GUDS_CNS_NM != null && l.goods[0].GUDS_CNS_NM != ''">{{l.goods[0].GUDS_CNS_NM}}</td>
+                <td v-else></td>
+
+                <td v-if="l.goods[0].GUDS_CODE != null && l.goods[0].GUDS_CODE != ''">{{l.goods[0].GUDS_CODE}}</td>
+                <td v-else=""></td>
+
+                <td v-if="l.goods[0].VALUATION_UNIT in metering">{{metering[l.goods[0].VALUATION_UNIT].CD_VAL}}</td>
+                <td v-else></td>
+
+                <td v-if="l.goods[0].DELIVERY_WAREHOUSE != null && l.goods[0].DELIVERY_WAREHOUSE != ''">{{house_all_list[l.goods[0].DELIVERY_WAREHOUSE].warehouse}}</td>
+                <td v-else></td>
+
+                <td v-if="l.lock_sum != null && l.lock_sum != ''">{{l.lock_sum}}</td>
+                <td v-else></td>
+                <td v-if="l.unlock_sum != null && l.unlock_sum != ''">{{l.unlock_sum}}</td>
+                <td v-else></td>
+
+                <td v-if="l.channel in all_channel">{{all_channel[l.channel].CD_VAL}}</td>
+                <td v-else=""></td>
+                <!--<td></td>-->
+                <td>{{l.user_name}}</td>
+                <td>{{l.operate_time}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="kcs-box" v-show="show_lock">
+        <h4 class="text-c"><{$Think.lang.提示}></h4>
+        <h5 class="text-c"><{$Think.lang.当前可用库存数为}> <span>180</span></h5>
+        <div>
+            <span><{$Think.lang.锁定数量}></span>
+            <input type="text" v-model="init_num"></div>
+        <div>
+            <span><{$Think.lang.锁定渠道}></span>
+            <select v-model="init_channel">
+                <option :value="c.CD" v-for="c in all_channel">{{c.CD_VAL}}</option>
+            </select>
+        </div>
+        <div class="text-c">
+            <button @click="save_lock()"><{$Think.lang.确定}></button>
+            <button @click="close_lock"><{$Think.lang.取消}></button>
+        </div>
+    </div>
+    <div class="col-md-7 padding10-0">
+        <ul class="pagination">
+            <{$pages}>
+        </ul>
+    </div>
+</div>
+
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/axios.min.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#kc-lock',
+        data: {
+            lock_list:<{$lock_list}>,
+            all_channel:<{$all_channel}>,
+            house_all_list:<{$house_all_list}>,
+            metering:<{$metering}>,
+            post:<{$post}>,
+            show_lock: 0,
+            init_data:{"SKU_ID":"","total_inventory":0,"channel":"","goods":[{"GUDS_CNS_NM":"","GUDS_CODE":"","VALUATION_UNIT":"","DELIVERY_WAREHOUSE":""}]},
+            init_sku:'',
+            init_num:0,
+            init_channel:'',
+            init_index:'',
+
+    },
+        methods: {
+
+            close_lock: function () {
+                this.show_lock = 0;
+                this.init_sku = ''
+                this.init_num = 0
+                this.init_channel = ''
+                this.init_index = ''
+            },
+            save_lock:function(){
+                var this_id = this.init_index;
+                axios.post('/index.php?m=stock&a=save_lock', {
+                        sku: this.lock_list[this_id].SKU_ID,
+                        total_inventory: this.lock_list[this_id].total_inventory,
+                        channel: this.lock_list[this_id].channel,
+                }).then(function (response) {
+                    console.log(response)
+                }).catch(function (error) {
+                    console.log(error)
+                })
+
+            },
+            search:function(id){
+                var this_id = id;
+                var this_GSKU = this.lock_list[id].SKU_ID;
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "/index.php?m=stock&a=search_goods",
+                    data: {
+                        GSKU: this_GSKU,
+                    },
+                    success: function (res) {
+                        var res_arr = JSON.parse(res);
+                        if(res_arr.status == 'y'){
+                            if (res_arr['data'][0]['GUDS_CNS_NM'] != '' && res_arr['data'][0]['GUDS_CNS_NM'] != null) {
+                                vm.lock_list[this_id].goods[0].GUDS_CNS_NM = res_arr['data'][0]['GUDS_CNS_NM']
+                                 vm.lock_list[this_id].goods[0].GUDS_CODE = res_arr['data'][0]['GUDS_CODE']
+                                 vm.lock_list[this_id].goods[0].VALUATION_UNIT = res_arr['data'][0]['VALUATION_UNIT']
+                                 vm.lock_list[this_id].goods[0].DELIVERY_WAREHOUSE = res_arr['data'][0]['DELIVERY_WAREHOUSE']
+
+                            } else {
+                                box.Alert('<{$Think.lang.提示}>', 'SKU中单位信息不存在');
+                                return false;
+                            }
+                        } else {
+                            box.Alert('<{$Think.lang.提示}>', '请输入正确的SKU编码');
+                            return false;
+                        }
+                    },
+                    error: function () {
+                        alertNew('网络繁忙，请重试！')
+                    }
+                })
+            },
+
+
+        }
+    })
+</script>
+</body>
+
+</html>
+

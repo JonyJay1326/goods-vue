@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css"/>
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Public/lib/webuploader/0.1.5/webuploader.css"/>
+    <title><{$Think.lang.详情}></title>
+    <script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+    <link rel="stylesheet" href="../Public/css/purchase.css"/>
+    <link rel="stylesheet" href="../Public/css/purchaseDetail.css?v=20170308"/>
+</head>
+<style>
+    .fa{cursor:pointer;}
+    .must:after{content: '*';color:red;
+        display:inline; font-size:20px;
+        vertical-align: middle;
+    }
+    .no-wrap{white-space: nowrap;}
+    .table td label{
+        vertical-align: middle;
+        margin: 5px 0px 0px 0px;
+    }
+    .table td button i{vertical-align:baseline;}
+    .table td{text-align: center}
+    td .row .form-control{width: 30px;display: inline-block;}
+    .card-header{height: 40px;padding: 5px 20px;}
+    .input-group button>select{width:100% !important;border: none;}
+    .card-header h4{line-height: 28px;}
+    .bod-none input {border: none;text-align: center;}
+    .btn-wrap{margin-top:30px;margin-bottom:30px;}
+    .btn-wrap .text-center button{margin:0px 10px;}
+    .input-group .form-control,form-group .form-control,.form-control{
+        padding-left:2px !important;
+        padding-right: 0px !important;height:30px;
+    }
+    .form-group .form-control{padding:0px !important;}
+    .btn-div select{width:100% !important;border: none;}
+    .input-group-btn .form-control{
+        padding:0px;width:100%;
+        border: 1px solid #CADEE7 !important;
+    }
+    .card{border-bottom: none}
+    .btn-label{color:white;padding:0px 5px;}
+</style>
+<body>
+<div class="col-lg-12 top purchase_add">
+    <form action="<{:U('')}>" method="post" enctype="multipart/form-data">
+        <if condition="isset($order_info) eq true">
+            <input type="hidden" name="relevance_id" value="<?php echo $relevance_id; ?>" > <!--隐藏域-->
+        </if>
+        <!--采购信息-->
+        <div class="card card1">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <h4><{$Think.lang.采购信息}></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-block">
+                <blockquote class="card-blockquote">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th width="10%"></th>
+                            <th width="11.6%"></th>
+                            <th width="11.7%"></th>
+                            <th width="10%"></th>
+                            <th width="11.6%"></th>
+                            <th width="11.7%"></th>
+                            <th width="10%"></th>
+                            <th width="11.6%"></th>
+                            <th width="11.8%"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><label class="must"> <{$Think.lang.采购PO}></label></td>
+                            <td  class="align_left" colspan="2">
+                                <label>
+                                    <input type="radio" value="1" name="has_po" class="has_po" style="height: 13px" <if condition="($order_info['has_po'] === '1') or (!isset($order_info))">checked</if> ><{$Think.lang.有采购PO}>
+                                </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" value="0" name="has_po" class="has_po" style="height: 13px" <if condition="$order_info['has_po'] === '0'">checked</if> ><{$Think.lang.无采购PO}>
+                                </label>
+                            </td>
+                            <td>
+                                <label class="must">PO/<{$Think.lang.采购单号}></label>
+                            </td>
+                            <td colspan="2">
+                                <div class="input-group">
+                                    <input type name="procurement_number" value="<{$order_info.procurement_number}>" placeholder="<{$Think.lang.手工录入}>" class="form-control procurement_number" />
+                                    <span class="input-group-btn" id="search_po" <if condition="($order_info['has_po'] neq 1) and (isset($order_info))">style="display:none"</if>>
+                                    <button class="btn btn-secondary" type="button"><i class="fa fa-search fa-lg"></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td style="display: none">
+                                <label class="must"> <{$Think.lang.交易编码}> </label>
+                            </td>
+                            <td style="display: none">
+                                <input style="border: none" id="deal_numbers" value="<?php echo $order_info['deal_number'];?>" readonly class="form-control">
+                                <input type="hidden" name="deal_number" id="deal_number" value="<?php echo $order_info['deal_number'];?>" readonly class="form-control">
+                            </td>
+                            <td style="vertical-align: middle;" >
+                                <label class="must"><{$Think.lang.供应商}></label>
+                            </td>
+                            <td style="vertical-align: middle;" class="purchase_supplierType" colspan="2">
+                                <div class="input-group">
+                                    <input  class="form-control" onkeyup="supplierSou()"  value="<?php echo $order_info['supplier_id'];?>" name="supplier_id" id="supplies_id" placeholder="<{$Think.lang.手工选择}>" autocomplete="off"/>
+                                    <input type="hidden" class="form-control" value="<{$order_info.sp_charter_no}>" name="sp_charter_no" id="sp_charter_no"/>
+                                    <switch name="risk_rating">
+                                        <case value="1">
+                                            <span class="input-group-addon" style="border-color:#1E7EB4;color:#1E7EB4;"  id="risk_rating"><{$Think.lang.低}></span>
+                                        </case>
+                                        <case value="2">
+                                            <span class="input-group-addon" style="color: #C31207" id="risk_rating"><{$Think.lang.中}></span>
+                                        </case>
+                                        <case value="3">
+                                            <span class="input-group-addon" style="color: #C31207;" id="risk_rating"><{$Think.lang.高}></span>
+                                        </case>
+                                        <default />
+                                        <span class="input-group-addon" id="risk_rating" style="display: none"></span>
+                                    </switch>
+                                    <if condition="$order_info['sp_charter_no'] eq ''">
+                                        <span class="input-group-addon" id="has_cooperate" style="display: none;"></span>
+                                        <elseif condition="$has_cooperate eq 1" />
+                                        <span class="input-group-addon" id="has_cooperate"style="border-color:#1E7EB4;color:#1E7EB4;"><{$Think.lang.已合作}></span>
+                                        <else />
+                                        <span class="input-group-addon" style="color: #C31207" id="has_cooperate"><{$Think.lang.新合作}></span>
+                                    </if>
+                                </div>
+                                <div style="width: 340px;border:1px solid #C0C0C0;background-color:#FCFCFC;position:absolute;display: none; height: 185px;overflow-y: scroll;overflow-x: hidden;z-index: 999;" class="supplier_sou"></div> <!--联想搜索下拉框-->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle;"><label class="must"><{$Think.lang.采购金额}></label></td>
+                            <td style="vertical-align: middle;" class="add_bizhong" colspan="2">
+                                <div class="input-group money_group">
+                                    <span class="input-group-btn">
+                                        <div>
+                                            <select name="amount_currency" class="form-control currency_select" id="amount_currency_select">
+                                                <option selected="" value=""><{$Think.lang.币种}></option>
+                                                <volist name="currency" id="v">
+                                                    <option value="<?=$v['CD_VAL'];?>" ovalue="<{$currency_relation[$v['CD']]}>" <if condition="$order_info['amount_currency'] eq $v['CD_VAL']">selected</if>><?=$v['CD_VAL'];?></option>
+                                                </volist>
+                                            </select>
+                                        </div>
+                                    </span>
+                                    <input id="amount_show" value="<{:number_format($order_info['amount'],2)}>" class="form-control money_show" autocomplete="off" style="background:rgba(0, 0, 0, 0);" readonly/>
+                                    <input type="hidden"  value="<{$order_info.amount}>" name="amount" readonly id="amount" class="money_value"/>
+                                    <input type="hidden"  value="<{$order_info.amount_rmb}>" name="amount_rmb"  id="amount_rmb" class="money_rmb"/>
+                                    <input type="hidden"  value="<{$order_info.amount_currency_rate}>" name="amount_currency_rate" class="currency_rate"/>
+                                    <span class="input-group-btn">
+                                        <input type="hidden" class="show_amount_currency_rate" name="show_amount_currency_rate">
+                                    	<button class="btn btn-secondary pad-0 btn-label" type="button">
+                                            <if condition="$order_info['amount_currency'] neq ''">
+                                                1<{$order_info.amount_currency}>=<{:number_format($order_info['amount_currency_rate'],4)}>RMB
+                                            </if>
+                                        </button>
+									</span>
+                                </div>
+                            </td>
+                            <td><label class="must"><{$Think.lang.采购团队}></label></td>
+                            <td class="purchase_select" colspan="2">
+                                <select name="payment_company" class="form-control payment_company"  >
+                                    <option selected="" value=""><{$Think.lang.请选择采购团队}></option>
+                                    <volist name="cmn_cd_info" key="key" id="v">
+                                        <option value="<?=$v['CD_VAL'];?>" <if condition="$order_info['payment_company'] eq $v['CD_VAL']">selected</if>>
+                                        <{$v.CD_VAL}>
+                                        </option>
+                                    </volist>
+                                </select>
+                            </td>
+                            <td style="position:relative;vertical-align: middle;"><label class="must"><{$Think.lang.采购合同}></label></td>
+                            <td class="purchase_select" colspan="2">
+                                <select name="contract_number" class="form-control" >
+                                    <option value=""><{$Think.lang.无采购合同}></option>
+                                    <volist name="contracts" id="v">
+                                        <option value="<{$v.CON_NO}>" contract="{SP_BANK_CD:'<{$v.SP_BANK_CD}>',BANK_ACCOUNT:'<{$V.BANK_ACCOUNT}>',BANK_ACCOUNT:'<{$v.BANK_ACCOUNT}>',SWIFT_CODE:'<{$v.SWIFT_CODE}>'}" <if condition="$v['CON_NO'] eq $order_info['contract_number']">selected</if>><{$v.CON_NO}></option>
+                                    </volist>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label class="must"> <{$Think.lang.供应商开户行}> </label></td>
+                            <td colspan="2">
+                                <div class="input-group">
+                                    <input value="<{$order_info.supplier_opening_bank}>" name="supplier_opening_bank" class="form-control" >
+                                </div>
+                            </td>
+                            <td><label class="must"> <{$Think.lang.银行账号}> </label></td>
+                            <td colspan="2">
+                                <div class="input-group">
+                                    <input value="<{$order_info.supplier_card_number}>" name="supplier_card_number" class="form-control" >
+                                </div>
+                            </td>
+                            <td><label> SWIFT CODE </label></td>
+                            <td colspan="2">
+                                <div class="input-group">
+                                    <input  value="<{$order_info.supplier_swift_code}>" name="supplier_swift_code" class="form-control" >
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label class="must"> <{$Think.lang.发票类型}> </label></td>
+                            <td class="purchase_select" colspan="2">
+                                <select class="form-control" name="invoice_type" >
+                                    <option value=""><{$Think.lang.请选择发票类型}></option>
+                                    <volist name="invoice_type" id="v" key="k">
+                                        <option value="<{$v.CD}>" ivalue="<{$v['ETC']}>" <if condition="$order_info['invoice_type'] eq $v['CD']">selected</if>><{$v.CD_VAL}></option>
+                                    </volist>
+                                </select>
+                            </td>
+                            <td><label class="must"> <{$Think.lang.含税}> </label></td>
+                            <td class="purchase_select" colspan="2">
+                                <select class="form-control" name="has_tax" >
+                                    <option value><{$Think.lang.请选择是否含税}></option>
+                                    <option value="0" <if condition="$order_info['has_tax'] === '0'">selected</if>><{$Think.lang.是}></option>
+                                    <option value="1"  <if condition="$order_info['has_tax'] === '1'">selected</if>><{$Think.lang.否}></option>
+                                </select>
+                            </td>
+                            <td><label class="must"> <{$Think.lang.税点}> </label></td>
+                            <td class="purchase_select" colspan="2">
+                                <select name="tax_rate" class="form-control" >
+                                    <option value=""><{$Think.lang.请选择税点}></option>
+                                    <volist  name="tax_rate"  id="v" key="k">
+                                        <option value="<{$v.CD}>" <if condition="$order_info['tax_rate'] eq $v['CD']">selected</if>><{$v.CD_VAL}></option>
+                                    </volist>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label class="must"><{$Think.lang.我方公司}></label></td>
+                            <td class="purchase_select" colspan="2">
+                                <select name="our_company" class="form-control" >
+                                    <option value=""><{$Think.lang.请选择我方公司}></option>
+                                    <volist name="our_company" id="v" key="k">
+                                        <option value="<{$v.CD}>" oavalue="<{$v.ETC}>" <if condition="$order_info['our_company'] eq $v['CD']">selected</if> ><{$v.CD_VAL}></option>
+                                    </volist>
+                                </select>
+                            </td>
+                            <td><label class="must"><{$Think.lang.交货方式}></label></td>
+                            <td class="purchase_select" colspan="2">
+                                <select name="delivery_type" class="form-control delivery_type">
+                                    <option selected="" value=""><{$Think.lang.请选择交货方式}></option>
+                                    <volist name="delivery_type" key="key" id="v">
+                                        <option value="<?=$v['CD_VAL'];?>" <if condition="$order_info['delivery_type'] eq $v['CD_VAL']">selected</if> ><{$v.CD_VAL}></option>
+                                    </volist>
+                                </select>
+                            </td>
+                            <td><label><{$Think.lang.采购端物流费用}></label></td>
+                            <td class="add_bizhong" colspan="2">
+                                <div class="input-group money_group">
+                                    <span class="input-group-btn">
+                                        <div>
+                                            <select name="currency" disabled="true"  class="form-control currency_select" id="expense_currency_select">
+                                                <option selected="" value=""><{$Think.lang.币种}></option>
+                                                <volist name="currency" id="v">
+                                                    <option value="<?=$v['CD_VAL'];?>" <if condition="$order_info['currency'] eq $v['CD_VAL']">selected</if>><?=$v['CD_VAL'];?></option>
+                                                </volist>
+                                            </select>
+                                        </div>
+                                    </span>
+                                    <input type value="<{$order_info['expense']}>" readonly id="expense_d" autocomplete="off" class="form-control money_show" style="background:rgba(0, 0, 0, 0);"/>
+                                    <input type="hidden" value="<{$order_info['expense']}>" name="expense" readonly id="expense_b" class="money_value"/>
+                                    <input type="hidden" value="<{$order_info['logistics_rmb']}>" name="logistics_rmb"  id="expense" class="money_rmb"/>
+                                    <input type="hidden" value="<{$order_info['real_currency_rate']}>"  name="real_currency_rate"  class="expense_c currency_rate" />
+                                    <span class="input-group-btn">
+                                       <input type="hidden" class="show_exchange currency_rate_show" value="<{$order_info['show_currency_rate']}>" name="show_currency_rate">
+                                       <button class="btn btn-secondary pad-0 btn-label" type="button">
+                                           <?php echo $order_info['show_currency_rate'];?>
+                                       </button>
+									</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label class="must"><{$Think.lang.业务方向}></label></td>
+                            <td class="purchase_select" colspan="2">
+                                <select name="business_direction"  id="business_direction" class="form-control">
+                                    <option selected="" value=""><{$Think.lang.请选择业务方向}></option>
+                                    <?php foreach($business_direction as $key=>$v){ ?>
+                                    <option value="<?=$v['CD_VAL'];?>"
+                                    <?php if($order_info['business_direction']==$v['CD_VAL']){
+                                            echo "selected=selected";
+                                        };?>
+                                    ><?=$v['CD_VAL'];?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td><label class="must"> <{$Think.lang.预计采购日期}> </label></td>
+                            <td colspan="2">
+                                <div class="input-group">
+                                    <input name="procurement_date"  value="<?php echo $order_info['procurement_date']; ?>"
+                                           id="procurement_date" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                        </span>
+                                </div>
+
+                            </td>
+                            <td><label class="must"><{$Think.lang.预计到货日期}></label></td>
+                            <td colspan="2">
+                                <div class="input-group">
+                                    <input name="arrival_date" value="<?php echo $order_info['arrival_date'];?>"  onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control arrival_date">
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                        </span>
+                                </div>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.付款账期}></td>
+                            <td class="payable_add_payment_period" colspan="2">
+                                <div>
+                                    <div class="payable_add_payment_period_item time" data-name="time">
+                                        <input type="radio" name="payment_type" value="0">
+                                        <span value="" class="<{$order_info['payment_type'] == 0?'active':''}>"><{$Think.lang.指定时间付款}></span>
+                                        <select class="form-control payment_period" name="payment_period">
+                                            <volist name="payment_period" key="k" id="v">
+                                                <option value=<{$key}> <{$order_info['payment_type'] == 0 && $key == $order_info['payment_period']?'selected':''}> ><{$v}></option>
+                                            </volist>
+                                        </select>
+                                    </div>
+                                    <div class="payable_add_payment_period_item actual" data-name="actual">
+                                        <input type="radio" name="payment_type" value="1">
+                                        <span value="" class="<{$order_info['payment_type'] == 1?'active':''}>"><{$Think.lang.按实际情况付款}></span>
+                                        <select class="form-control payment_period" name="payment_period">
+                                            <volist name="payment_period" key="k" id="v">
+                                                <option value=<{$key}>  <{$order_info['payment_type'] == 1 && $key == $order_info['payment_period']?'selected':''}>><{$v}></option>
+                                            </volist>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><{$Think.lang.具体节点}></td>
+                            <td colspan="5" class="payable_add_data">
+                                <div class="payable_add_payment_period_time time period_box">
+                                    <for start="1" end="4">
+                                        <div class="periods periods_<{$i}>">
+                                            <div class="input-group">
+                                                <input  name="payment_info[<{$i}>][payment_date]" value="<{$order_info['payment_info'][$i]['payment_date']}>" onfocus="WdatePicker({firstDayOfWeek:1})" onchange="paymentDate()" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                                </span>
+                                            </div>
+                                            <div class="period_time">
+                                                <select class="form-control select4" name="payment_info[<{$i}>][payment_percent]" onchange="paymentDate()">
+                                                    <option value="">请选择付款比例</option>
+                                                    <volist name="payment_percent" key="k" id="v">
+                                                        <option value="<{$v['CD_VAL']}>" <{$order_info['payment_info'][$i]['payment_percent'] == $v['CD_VAL']?'selected':''}>><{$v['CD_VAL']}>%</option>
+                                                    </volist>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </for>
+                                </div>
+
+                                <div  class="payable_add_payment_period_reality actual period_box input-group">
+                                    <for start="1" end="4">
+                                        <div class="periods periods_<{$i}>">
+                                            <select class="form-control select1" name="payment_info[<{$i}>][payment_node]">
+                                                <option value="">第<{$i}>期节点</option>
+                                                <volist name="payment_node" key="k" id="v">
+                                                    <option value="<{$v.CD}>" <{$order_info['payment_info'][$i]['payment_node'] == $v['CD']?'selected':''}>><{$v['CD_VAL']}></option>
+                                                </volist>
+                                            </select>
+                                            <select class="form-control select2" name="payment_info[<{$i}>][payment_days]">
+                                                <option value="">请选择天数</option>
+                                                <volist name="payment_days" key="k" id="v">
+                                                    <option value="<{$v.CD_VAL}>" <{$order_info['payment_info'][$i]['payment_days'] == $v['CD_VAL']?'selected':''}>><{$v.CD_VAL}></option>
+                                                </volist>
+                                            </select>
+                                            <select class="form-control select3" name="payment_info[<{$i}>][payment_day_type]">
+                                                <volist name="payment_day_type" key="k" id="v">
+                                                    <option value="<{$key}>" <{$order_info['payment_info'][$i]['payment_day_type'] == $key?'selected':''}>><{$v}></option>
+                                                </volist>
+                                            </select>
+                                            <select class="form-control select4" name="payment_info[<{$i}>][payment_percent]" onchange="paymentDate()">
+                                                <option value="">请选择付款比例</option>
+                                                <volist name="payment_percent" key="k" id="v">
+                                                    <option value="<{$v.CD_VAL}>" <{$order_info['payment_info'][$i]['payment_percent'] == $v['CD_VAL']?'selected':''}>><{$v.CD_VAL}>%</option>
+                                                </volist>
+                                            </select>
+                                            <div class="input-group">
+                                                <input class="payment_date_estimate form-control" value="<{$order_info['payment_info'][$i]['payment_date_estimate']}>"  onfocus="WdatePicker({firstDayOfWeek:1})"  name="payment_info[<{$i}>][payment_date_estimate]" placeholder="请填写预估时间" onchange="paymentDate()">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </for>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label class="must"><{$Think.lang.附件}></label></td>
+                            <td colspan="8" style="text-align: left">
+                                <div class="upload-box" style="display: inline-block;">
+                                    <?php
+                                        if($order_info['attachment']){
+                                            $attachment = explode(',',$order_info['attachment']);
+                                            foreach($attachment as $v) {
+                                    ?>
+                                    <div class="upload-box-child">
+                                        <a id="download-url" style="float: left;line-height: 30px" href="<{:U('download',['file'=>$v])}>"><{$v}></a>
+                                        <input name="attachment[]"  style="display: none" value="<{$v}>" />
+                                        <div style="display: inline-block;line-height: 30px" >
+                                            <i class="fujian_delete upload-minus" onclick="uploadMinus(this)"><img src="../Public/images/delete.png" alt=""></i>&nbsp;
+                                            <i class="fujian_add upload-plus" onclick="uploadPlus(this)"><img src="../Public/images/add.png" alt=""></i>
+                                        </div>
+                                    </div>
+                                    <?php
+                                            }
+                                        }else {
+                                    ?>
+                                    <div class="upload-box-child">
+                                        <input type="file" name="attachment[]"  class="attachment" style="display: inline-block;"/>
+                                        <div style="display: inline-block">
+                                            <i class="upload-minus fujian_delete" onclick="uploadMinus(this)"><img src="../Public/images/delete.png" alt=""></i>&nbsp;
+                                            <i class="upload-plus fujian_add" onclick="uploadPlus(this)"><img src="../Public/images/add.png" alt=""></i>
+                                        </div>
+                                    </div>
+                                    <?php }?>
+                                </div>
+                                <span class="upload-box_tip"><{$Think.lang.文件最大不超过20M，支持jpg,gif,png,jpeg,zip,pdf,word,excel格式}></span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label><{$Think.lang.备注}></label></td>
+                            <td colspan="8">
+                                <input  style="border: none;"  placeholder="<{$Think.lang.填写说明：添加销售预期，例如“预计在B5C平台销售”、“销售给WYKL”、“热销品囤货”等}>" value="<?php echo $order_info['order_remark'];?>" name="order_remark" class="form-control"/>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </blockquote>
+            </div>
+        </div>
+        <!--销售信息-->
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <h4><{$Think.lang.销售信息}></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-block">
+                <blockquote class="card-blockquote">
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td><label class="must"> <{$Think.lang.采购类型}> </label></td>
+                            <td  class="align_left">
+                                <label>
+                                    <input type="radio" name="has_sell_number" class="has_sell_number" value="1" <if condition="($sell_info['has_sell_number'] === '1') or (!isset($sell_info))">checked</if>><{$Think.lang.有销售PO}>
+                                </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" name="has_sell_number" class="has_sell_number" value="0" <if condition="($sell_info['has_sell_number'] === '0')">checked</if>>
+                                    <{$Think.lang.无销售PO/提前囤货}>
+                                </label>
+                            </td>
+                            <td>
+                                <label> <{$Think.lang.销售PO}> </label>
+                            </td>
+                            <td>
+                                <input    value="<?php echo $sell_info['sell_number'];?>"  name="sell_number" class="form-control sell_number" <if condition="($sell_info['has_sell_number'] === '0')">readonly</if>>
+                            </td>
+                            <td>
+                                <label><{$Think.lang.对应客户}></label>
+                            </td>
+                            <td>
+                                <div class="input-group">
+                                    <input   name="supp_id" value="<?php echo $sell_info['supp_id'];?>" id="supp_id" class="form-control"/>
+                                    <span class="input-group-btn ">
+                                        <button class="btn btn-secondary" type="button"><i class="fa fa-search fa-lg"></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label class="must"> <{$Think.lang.销售合同}> </label>
+                            </td>
+                            <td class="align_left">
+                                <label>
+                                    <input type="radio" name="has_sell_contract" class="has_sell_contract" value="1" <if condition="($sell_info['has_sell_contract'] == 1) or (!isset($sell_info))">checked</if>><{$Think.lang.有销售合同}>
+                                </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <label>
+                                    <input type="radio" name="has_sell_contract" class="has_sell_contract" value="0" <if condition="$sell_info['has_sell_contract'] === '0'">checked</if>><{$Think.lang.无销售合同}>
+                                </label>
+                            </td>
+                            <td>
+                                <label> <{$Think.lang.合同编号}> </label>
+                            </td>
+                            <td class="sell_contract_td">
+                                <input name="sell_contract" value="<{$sell_info.sell_contract}>" class="form-control sell_contract" <if condition="($sell_info['has_sell_contract'] eq 0) and (isset($sell_info))">style="display:none;float:left"</if>>
+                                <if condition="($sell_info['approve_credential'] neq '') && ($sell_info['has_sell_contract'] eq 0)">
+                                    <div class="approve_credential_box">
+                                        <a class="approve_credential_download"  style="float: left;line-height: 30px" href="<{:U('download',['file'=>$sell_info['approve_credential']])}>"><{$sell_info['approve_credential']}></a>
+                                        <button class="approve_credential_del btn-delete" type="button" style="height: 34px;line-height: 34px">删除</button>
+                                    </div>
+                                    <else />
+                                    <input type="file" name="approve_credential" class="approve_credential" <if condition="($sell_info['has_sell_contract'] eq 1) or (!isset($sell_info))">style="display:none"</if>>
+                                </if>
+                            </td>
+                            <td><label class="must"> <{$Think.lang.销售团队}> </label></td>
+                            <td class="purchase_select">
+                                <select class="form-control" name="sell_team">
+                                    <option value=""><{$Think.lang.请选择销售团队}></option>
+                                    <volist name="sell_team" id="v">
+                                        <option value="<{$v.CD}>" <if condition="$sell_info['sell_team'] eq $v['CD']">selected</if>><{$v.CD_VAL}></option>
+                                    </volist>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label class="must"><{$Think.lang.销售金额}></label></td>
+                            <td class="add_bizhong">
+                                <div class="input-group money_group">
+                                    <span class="input-group-btn">
+                                        <div>
+											<select name="curr" class="form-control currency_select">
+												<option selected="" value=""><{$Think.lang.币种}></option>
+                                                <volist name="currency" key="key" id="v">
+                                                    <option value="<?=$v['CD_VAL'];?>" <if condition="$sell_info['curr'] eq $v['CD_VAL']">selected</if>><?=$v['CD_VAL'];?></option>
+                                                </volist>
+											</select>
+										</div>
+                                    </span>
+                                    <input id="sell_money_d" value="<?php echo $sell_info['sell_money'];?>" readonly autocomplete="off" class="form-control money_show" style="background:rgba(0, 0, 0, 0);"/>
+                                    <input type="hidden"  value="<?php echo $sell_info['sell_money'];?>" name="sell_money"  readonly class="money_value"/>
+                                    <input type="hidden"  value="<?php echo $sell_info['sell_rmb'];?>" name="sell_rmb"  id="sell_money" class="money_rmb"/>
+                                    <input type="hidden"  value="<?php echo $sell_info['real_curr_rate'];?>" name="real_curr_rate"  class="expense_c currency_rate" />
+                                    <span class="input-group-btn">
+									    <input type="hidden" class="show_exchange currency_rate_show" value="<?php echo $sell_info['show_curr_rate'];?>" name="show_curr_rate">  <!--该数据是为了将显示的汇率保存起来，然后在修改界面显示的-->
+                                        <button class="btn btn-secondary pad-0 btn-label" type="button"><?php echo $sell_info['show_curr_rate'];?></button>
+									</span>
+                                </div>
+                            </td>
+                            <td><label><{$Think.lang.销售端物流费用}></label></td>
+                            <td class="add_bizhong">
+                                <div class="input-group money_group">
+                                    <span class="input-group-btn">
+                                            <div>
+												<select name="sell_logistics_currency"  class="form-control currency_select">
+													<option selected="" value=""><{$Think.lang.币种}></option>
+                                                    <?php foreach($currency as $key=>$v){ ?>
+													<option value="<?=$v['CD_VAL'];?>"
+                                                    <?php if($sell_info['sell_logistics_currency']==$v['CD_VAL']){
+															echo "selected=selected";
+														};?>
+                                                    ><?=$v['CD_VAL'];?></option>
+                                                    <?php } ?>
+												</select>
+											</div>
+                                    </span>
+                                    <input id="sell_logistics_show" value="<?php echo number_format($sell_info['sell_logistics'],2);?>" readonly id="sell_logistics_d" autocomplete="off" class="form-control money_show" style="background:rgba(0, 0, 0, 0);"/>
+                                    <input type="hidden"  value="<?php echo $sell_info['sell_logistics'];?>" name="sell_logistics" id="sell_logistics_b" class="money_value"/> <!--用于保存数据库需要的数据-->
+                                    <input type="hidden"  value="<?php echo $sell_info['sell_logistics_rmb'];?>" name="sell_logistics_rmb"  id="sell_logistics" class="money_rmb"/> <!--用于保存外币换算成人民币的金额，以供下面的预计利润的计算-->
+                                    <input type="hidden"  value="<?php echo $sell_info['sell_logistics_currency_rate'];?>"  name="sell_logistics_currency_rate"  class="currency_rate" /> <!--用于保存实际的的汇率数据，用于换算成人民币-->
+                                    <span class="input-group-btn">
+                                       <button class="btn btn-secondary pad-0 btn-label" type="button">
+                                           <if condition="$sell_info['sell_logistics_currency'] neq ''">
+                                            1<{$sell_info.sell_logistics_currency}>=<{:number_format($sell_info['sell_logistics_currency_rate'],4)}>RMB
+                                           </if>
+                                       </button>
+									</span>
+                                </div>
+                            </td>
+                            <td><label class="must"> <{$Think.lang.销售方式}> </label></td>
+                            <td class="purchase_select">
+                                <select class="form-control" name="sell_mode">
+                                    <option value=""><{$Think.lang.请选择销售方式}></option>
+                                    <volist name="sell_mode" id="v">
+                                        <option value="<{$v.CD}>"  <if condition="$sell_info['sell_mode'] eq $v['CD']">selected</if>><{$v.CD_VAL}></option>
+                                    </volist>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label class="must"> <{$Think.lang.预计销售日期}> </label></td>
+                            <td>
+                                <div class="input-group">
+                                    <input   name="sell_date" value="<?php echo $sell_info['sell_date'];?>"  name="sell_date" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control sell_date">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                    </span>
+                                </div>
+
+                            </td>
+                            <td><label class="must"><{$Think.lang.业务类型}></label></td>
+                            <td class="purchase_select">
+                                <select name="business_type" class="form-control business_type"  ="true">
+                                <option selected="" value=""><{$Think.lang.请选择销售类型}></option>
+                                <?php foreach($business_type as $key=>$v){ ?>
+                                <option value="<?=$v['CD_VAL'];?>"
+                                <?php if($order_info['business_type']==$v['CD_VAL']){
+                                        echo "selected";
+									};?>
+                                ><?=$v['CD_VAL'];?></option>
+                                <?php } ?>
+                                </select>
+                            </td>
+                            <td><{$Think.lang.采购与销售订单关联}></td>
+                            <td class="align_left">
+                                <label><input type="radio"  name="purchase_relate_sell" value="0" style="height: 13px" <if condition="$sell_info['purchase_relate_sell'] eq 0">checked</if>><{$Think.lang.不关联}></label>&nbsp;&nbsp;&nbsp;
+                                <label><input type="radio"  name="purchase_relate_sell" value="1" style="height: 13px" <if condition="$sell_info['purchase_relate_sell'] eq 1">checked</if>><{$Think.lang.一对一关联}></label>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label><{$Think.lang.收款-首期款}></label></td>
+                            <td>
+                                <div class="input-group receivable_date">
+                                    <div class="input-group">
+                                        <input name="pre_receivable_date" value="<{$sell_info.pre_receivable_date}>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="请选择日期" class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                        </span>
+                                    </div>
+                                    <select class="form-control" name="pre_receivable_percent">
+                                        <option value="">请选择收款比例</option>
+                                        <volist name="payment_percent" key="k" id="v">
+                                            <option value="<{$v.CD_VAL}>" <{$sell_info['pre_receivable_percent'] == $v['CD_VAL']?'selected':''}>><{$v.CD_VAL}>%</option>
+                                        </volist>
+                                    </select>
+                                </div>
+                            </td>
+                            <td><label><{$Think.lang.收款-中间款}></label></td>
+                            <td>
+                                <div class="input-group receivable_date">
+                                    <div class="input-group">
+                                        <input name="mid_receivable_date" value="<{$sell_info.mid_receivable_date}>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="请选择日期" class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                        </span>
+                                    </div>
+                                    <select class="form-control" name="mid_receivable_percent">
+                                        <option value="">请选择收款比例</option>
+                                        <volist name="payment_percent" key="k" id="v">
+                                            <option value="<{$v.CD_VAL}>" <{$sell_info['mid_receivable_percent'] == $v['CD_VAL']?'selected':''}>><{$v.CD_VAL}>%</option>
+                                        </volist>
+                                    </select>
+                                </div>
+                            </td>
+                            <td><label><{$Think.lang.收款-尾款}></label></td>
+                            <td>
+                                <div class="input-group receivable_date">
+                                    <div class="input-group">
+                                        <input name="end_receivable_date" value="<{$sell_info.end_receivable_date}>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="请选择日期" class="form-control">
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                        </span>
+                                    </div>
+                                    <select class="form-control" name="end_receivable_percent">
+                                        <option value="">请选择收款比例</option>
+                                        <volist name="payment_percent" key="k" id="v">
+                                            <option value="<{$v.CD_VAL}>" <{$sell_info['end_receivable_percent'] == $v['CD_VAL']?'selected':''}>><{$v.CD_VAL}>%</option>
+                                        </volist>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </blockquote>
+            </div>
+        </div>
+        <!--退税信息-->
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12">
+                        <h4><{$Think.lang.退税信息}></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-block">
+                <blockquote class="card-blockquote">
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <td><label><{$Think.lang.预计退税日期}></label></td>
+                            <td>
+                                <div class="input-group">
+                                    <input   name="drawback_date" value="<?php echo $drawback_info['drawback_date'];?>" id="drawback_date" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.单据结束日期}>" class="form-control">
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td><label><{$Think.lang.预计退税金额}></label></td>
+                            <td class="add_bizhong">
+                                <div class="input-group money_group">
+                                    <span class="input-group-btn">
+                                        <div>
+											<select name="moneytype"  class="form-control moneytype currency_select" id="moneytype">
+												<option selected="" value=""><{$Think.lang.币种}></option>
+                                                <volist name="currency" key="key" id="v">
+												<option value="<?=$v['CD_VAL'];?>" <if condition="$drawback_info['moneytype'] eq $v['CD_VAL']">selected</if>><?=$v['CD_VAL'];?></option>
+                                                </volist>
+											</select>
+										</div>
+                                    </span>
+                                    <input value="<?php echo $drawback_info['drawback_money'];?>" readonly autocomplete="off" id="drawback_money_d" class="form-control money_show" style="background:rgba(0, 0, 0, 0);"/> <!--用来展示金额数据的-->
+                                    <input type="hidden"  value="<?php echo $drawback_info['drawback_money'];?>" name="drawback_money" readonly id="drawback_money_b"  class="money_value"/> <!--用于保存数据库需要的数据-->
+                                    <input type="hidden"  value="<?php echo $drawback_info['drawback_rmb'];?>" name="drawback_rmb" id="drawback_money"  /class="money_rmb"> <!--用于保存外币换算成人民币的金额，以供下面的预计利润的计算-->
+                                    <input type="hidden"  value="<?php echo $drawback_info['real_moneytype_rate'];?>" name="real_moneytype_rate"  class="expense_c currency_rate" /> <!--用于保存实际的的汇率数据，用于换算成人民币-->
+                                    <span class="input-group-btn">
+										<input type="hidden" class="show_exchange currency_rate_show" value="<?php echo $drawback_info['show_moneytype_rate'];?>" name="show_moneytype_rate">  <!--该数据是为了将显示的汇率保存起来，然后在修改界面显示的-->
+										   <button class="btn btn-secondary pad-0 btn-label" type="button">
+											   <?php echo $drawback_info['show_moneytype_rate'];?>
+										   </button>
+									</span>
+                                </div>
+                            </td>
+                            <td><label><{$Think.lang.退税周期}></label></td>
+                            <td>
+                                <div class="input-group">
+                                    <input  name="drawback_period" readonly value="<?php echo $drawback_info['drawback_period'];?>" id="drawback_period" class="form-control"/>
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><{$Think.lang.天}></button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </blockquote>
+            </div>
+        </div>
+        <!--商品信息-->
+        <div class="card card_orderAdd_goodes">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <h4><{$Think.lang.商品信息}></h4>
+                    </div>
+                    <div class="col-lg-6 col-md-6 text-right">
+                        <button type="button" class="btn btn-white" onclick="location='<{:U(\'CommonFile/download\',[\'name\'=>\'purchase_import_goods.xls\'])}>'"><i class="fa fa-download"></i> <{$Think.lang.模板下载}></button>
+                        <button type="button" class="btn btn-yellow" id="import-goods" data-toggle="modal" data-target="#fileModal" style="padding: 0"><i class="fa fa-plus"></i> <{$Think.lang.模板导入}></button>
+                    </div>
+                </div>
+            </div>
+            <div class="card-block">
+                <blockquote class="card-blockquote">
+                    <table class="table table-bordered goods_detail">
+                        <thead>
+                        <tr>
+                            <th width="20" >No</th>
+                            <th width="240"  class="must"><{$Think.lang.SKU编码}>/<{$Think.lang.条形码}></th>
+                            <th width="260"><{$Think.lang.商品名称}></th>
+                            <th width="150"><{$Think.lang.属性}></th>
+                            <th width="150"><{$Think.lang.库存数量}></th>
+                            <th width="150"><{$Think.lang.在途库存}></th>
+                            <th width="100" style="display: none;"><{$Think.lang.币种}></th>
+                            <th width="130"  class="must"><{$Think.lang.单价}></th>
+                            <th width="130" class="must"><{$Think.lang.数量}></th>
+                            <th width="150" ><{$Think.lang.金额}></th>
+                            <!--<th width="260" style="text-align: center">备注</th>-->
+                            <th width="150" ><{$Think.lang.操作}></th>
+                        </tr>
+                        </thead>
+
+                        <?php foreach($goods_info as $key=>$v){;?>
+                        <input type="hidden" name="information_id[]" value="<?php echo $v['information_id'];?>" class="information_id"> <!--隐藏域-->
+                        <?php } ?>
+                        <tbody class="goods_detail-main goods-list">
+                        <if condition="isset($goods_info) eq true">
+                            <?php foreach($goods_info as $key=>$v){;?>
+                            <tr id="goods_info" class="goods_detail_tr" data-name="goods_detail_1">
+                                <td><label><?php echo $key+1;?></label></td>
+                                <td>
+                                    <div class="input-group">
+                                        <input name="search_information[]" onkeyup="resetSelect(this)" value="<?php echo $v['search_information'];?>" class="form-control"/>
+                                        <span class="input-group-btn ">
+                                        <button class="btn btn-secondary" type="button" onclick="checkSku(this)"><i class="fa fa-search fa-lg"></i></button>
+                                    </span>
+                                        <input name="sku_information[]" value="<?php echo $v['sku_information'];?>" hidden/>
+                                    </div>
+                                </td>
+                                <td><input name="goods_name[]" class="form-control" style="border: none;background: none;" value="<?php echo $v['goods_name'];?>" readonly></td>
+                                <td>
+                                    <input name="goods_attribute[]" style="border: none;background: none;width:200px; text-align: center;" value="<?php echo $v['goods_attribute'];?>" class="form-control" readonly>
+                                </td>
+                                <td><{:number_format($v['sale_num'])}></td>
+                                <td><{:number_format($v['on_way_num'])}></td>
+                                <td>
+                                    <input style="text-align: center" name="unit_price_g[]" value="<?php echo number_format($v['unit_price'],2); ?>" onchange="priceChange(this)" class="form-control unit_price_g"/>
+                                    <input type="hidden" name="unit_price[]"   id="unit_price" value="<?php echo $v['unit_price']; ?>"  class="form-control unit_price"/>
+                                </td>
+                                <td>
+                                    <input style="text-align: center" name="goods_number_g[]"  value="<?php echo number_format($v['goods_number']);?>" onchange="numChange(this)" class="form-control goods_number_g"/>
+                                    <input type="hidden" name="goods_number[]" value="<?php echo $v['goods_number'];?>" class="form-control goods_number"/>
+                                </td>
+                                <td>
+                                    <input style="text-align: center" name="goods_money_d[]" value="<?php echo number_format($v['goods_money'],2); ?>" class="form-control goods_money_d" readonly />
+                                    <input type="hidden" name="goods_money[]" value="<?php echo $v['goods_money']; ?>" class="form-control goods_money" readonly />
+                                </td>
+                                <!--
+                                <td>
+                                    <input  name="remark[]" value="<?php echo $v['remark']; ?>"  id="remark" class="form-control"/>
+                                </td>
+                                -->
+                                <td class="no-wrap text-center">
+                                    <button class="btn-add"  type="button" onclick="addTr(this)"><{$Think.lang.添加}></button>
+                                    <button class="btn-delete" name="goods_detail_1" type="button" onclick="deleteTr(this)"><{$Think.lang.删除}></button>
+                                </td>
+                            </tr>
+                            <?php } ?>
+                            <else />
+                            <tr id="goods_info" class="goods_detail_tr" data-name="goods_detail_1">
+                                <td><label>1</label></td>
+                                <td>
+                                    <div class="input-group">
+                                        <input  name="search_information[]" onkeyup="resetSelect(this)" id="" class="form-control"/>
+                                        <span class="input-group-btn ">
+                                        <button class="btn btn-secondary" type="button" onclick="checkSku(this)"><i class="fa fa-search fa-lg"></i></button>
+                                    </span>
+                                        <input  name="sku_information[]"  class="" hidden/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="hidden" name="goods_name[]" class="form-control goods_name">
+                                </td>
+                                <td>
+                                    <input type="hidden" name="goods_attribute[]" class="form-control">
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td class="goods_detail-main_bizhong purchase_select" style="display: none">
+                                    <select name="curType" id="curType" class="form-control curType" onchange="goodsRate()">
+                                        <option selected="" value=""><{$Think.lang.币种}></option>
+                                        <?php foreach($currency as $key=>$v){ ?>
+                                        <option value="<?=$v['CD_VAL'];?>" gcvalue="<{$currency_relation[$v['CD']]}>"><?=$v['CD_VAL'];?></option>
+                                        <?php } ?>
+                                    </select>
+                                </td>
+                                <td>
+                                    <input  style="text-align: center" name="unit_price_g[]" value="0" onchange="priceChange(this)" class="form-control unit_price_g"/>
+                                    <input type="hidden" style="text-align: center" name="unit_price[]" value="0"  class="form-control unit_price"/>
+                                </td>
+                                <td>
+                                    <input  style="text-align: center" name="goods_number_g[]"  value="0" onchange="numChange(this)" class="form-control goods_number_g"/>
+                                    <input type="hidden" name="goods_number[]" style="text-align: center"   value="0" class="form-control goods_number"/>
+                                </td>
+                                <td>
+                                    <input   style="text-align: center" name="goods_money_d[]" value="0" class="form-control goods_money_d" readonly/>
+                                    <input type="hidden" name="goods_money[]" style="text-align: center" value="0" class="form-control goods_money" readonly/>
+                                </td>
+                                <!--
+                                <td>
+                                    <input  name="remark[]" id="remark" class="form-control"/>
+                                </td>
+                                -->
+                                <td class="no-wrap text-center">
+                                    <button class="btn btn-add btn-sm"  type="button" onclick="addTr(this)"><{$Think.lang.添加}></button>
+                                    <button class="btn btn-delete btn-sm" name="goods_detail_1" type="button" onclick="deleteTr(this)"><{$Think.lang.删除}></button>
+                                </td>
+                            </tr>
+                        </if>
+                        <tr class="total">
+                            <td  style="text-align:center;font-weight: bold;word-break: keep-all"><{$Think.lang.合计}>：</td>
+                            <td colspan="3"></td>
+                            <td style="display: none">
+                                <span class="show_rate"><?php echo $relevance_info['show_total_rate']; ?></span>
+                                <input type="hidden" class="show_rate_a" value="<?php echo $relevance_info['show_total_rate']; ?>" name="show_total_rate">
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td id="goods_currency"><{$order_info.amount_currency}></td>
+                            <td><input type="hidden" value="<?php echo $relevance_info['number_total']; ?>" name="number_total" class="number_total" ><span class="number_totals"><?php echo number_format($relevance_info['number_total']); ?></span></td>
+                            <!--<td><input type="hidden" value="<?php echo $relevance_info['money_total']; ?>" name="money_total" class="money_total"><span class="money_totals"><?php echo $relevance_info['money_total']; ?></span></td>-->
+                            <td><input type="hidden" value="<?php echo $relevance_info['money_total']; ?>" name="money_total" class="money_total"> <!--用来传递与保存到数据库的-->
+                                <input type="hidden" value="<?php echo $relevance_info['real_total_rate']; ?>" name="real_total_rate" id="real_rate" > <!--保存真实的汇率-->
+                                <input type="hidden" value="<?php echo $relevance_info['money_total_rmb']; ?>" name="money_total_rmb" class="new_money_total">
+                                <span class="money_totals"><?php echo number_format($relevance_info['money_total'],2); ?></span>
+                            </td>
+                            <!--<td></td>-->
+                            <td></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </blockquote>
+            </div>
+        </div>
+        <!--预计利润-->
+        <div class="card" >
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <h4><{$Think.lang.预计利润}></h4>
+                    </div>
+                </div>
+            </div>
+            <div class="card-block">
+                <blockquote class="card-blockquote">
+                    <table class="table table-bordered bod-none">
+                        <tr>
+                            <td><label><{$Think.lang.收款账期}></label></td>
+                            <td class="order_update_payment_days">
+                                <div class="input-group">
+                                    <input readonly="" name="payment_days" id="payment_days" value="<{$order_info['payment_days']}>">
+                                    <span class="input-group-btn">
+                                            <button type="button">天</button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td><label><{$Think.lang.总收入金额}></label></td>
+                            <td>
+                                <input  readonly name="" value="¥<?php echo $predict_info['total_money']; ?>"   id="total_money_c">
+                                <input type="hidden" readonly name="total_money" value="<?php echo $predict_info['total_money']; ?>"  id="total_money">
+                            </td>
+                            <td><label><{$Think.lang.采购总金额}>(<{$Think.lang.含税}>)</label></td>
+                            <td>
+                                <input   readonly value="¥<?php echo $predict_info['purchase_total_money']; ?>"  name="" id="purchase_total_money_c">
+                                <input type="hidden"  readonly value="<?php echo $predict_info['purchase_total_money']; ?>" name="purchase_total_money"   id="purchase_total_money">
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td><label><{$Think.lang.纯利润}>(<{$Think.lang.退税前}>)</label></td>
+                            <td>
+                                <input   readonly value="¥<?php echo $predict_info['pure_profit']; ?>"  name="" id="pure_profit_c">
+                                <input type="hidden"  readonly name="pure_profit" value="<?php echo $predict_info['pure_profit']; ?>"  id="pure_profit">
+                            </td>
+
+                            <td><label><{$Think.lang.纯利润率}>(<{$Think.lang.退税前}>)</label></td>
+                            <td>
+
+                                <input  readonly name="" value="<?php echo $profit_margin; ?>"   id="profit_margin_f">
+                                <input type="hidden" readonly name="profit_margin" value="<?php echo $predict_info['profit_margin']; ?>"  id="profit_margin">
+                            </td>
+                            <td><label><{$Think.lang.总利润}>(<{$Think.lang.退税后}>)</label></td>
+                            <td>
+                                <input   readonly value="¥<?php echo $predict_info['total_profit']; ?>"  name="" id="total_profit_c">
+                                <input type="hidden"  readonly name="total_profit" value="<?php echo $predict_info['total_profit']; ?>"  id="total_profit">
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <td><label><{$Think.lang.总利润率}>(<{$Think.lang.退税后}>)</label></td>
+                            <td>
+                                <input  readonly name=""  value="<?php echo $total_profit_margin; ?>"   id="total_profit_margin_f">
+                                <input type="hidden" readonly name="total_profit_margin" value="<?php echo $predict_info['total_profit_margin']; ?>"  id="total_profit_margin">
+                            </td>
+                            <td><label><{$Think.lang.净利润}></label></td>
+                            <td>
+                                <input  readonly name="" value="¥<?php echo $predict_info['net_profit']; ?>"   id="net_profit_c">
+                                <input type="hidden" readonly name="net_profit" value="<?php echo $predict_info['net_profit']; ?>"  id="net_profit">
+                            </td>
+                            <td><label><{$Think.lang.净利润率}></label></td>
+                            <td>
+                                <input  readonly name="" value="<?php echo $retained_profits; ?>"   id="retained_profits_f">
+                                <input type="hidden" readonly name="retained_profits" value="<?php echo $predict_info['retained_profits']; ?>"  id="retained_profits">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label><{$Think.lang.利息总额}></label></td>
+                            <td>
+                                <input  readonly value="¥<?php echo $predict_info['interest_total']; ?>"  name=""  id="interest_total_c">
+                                <input type="hidden" readonly value="<?php echo $predict_info['interest_total']; ?>" name="interest_total"  id="interest_total">
+                            </td>
+                            <td><label><{$Think.lang.账期利息}></label></td>
+                            <td>
+                                <input  readonly value="¥<?php echo $predict_info['payment_interest']; ?>"  name=""  id="payment_interest_c">
+                                <input type="hidden" readonly value="<?php echo $predict_info['payment_interest']; ?>" name="payment_interest"  id="payment_interest">
+                            </td>
+                            <td><label><{$Think.lang.退税利息}></label></td>
+                            <td>
+                                <input  readonly value="¥<?php echo $predict_info['drawback_interest']; ?>"  name=""  id="drawback_interest_c">
+                                <input type="hidden" readonly value="<?php echo $predict_info['drawback_interest']; ?>" name="drawback_interest"  id="drawback_interest">
+                            </td>
+                        </tr>
+                    </table>
+                </blockquote>
+            </div>
+        </div>
+
+        <!--流程信息 -->
+        <div class="card" >
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-lg-6 col-md-6">
+                        <h4><{$Think.lang.流程信息}> </h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-block">
+                <blockquote class="card-blockquote">
+                    <table class="table table-bordered bod-none">
+                        <tbody>
+                        <tr>
+                            <td><label><{$Think.lang.采购人}></label></td>
+                            <td><input  name="prepared_by" value="<?php echo $relevance_info['prepared_by'];?>" readonly></td>
+                            <td><label><{$Think.lang.创建时间}></label></td>
+                            <td><input  readonly name="prepared_time"  value="<?php echo $relevance_info['prepared_time'];?>"></td>
+                        </tr>
+                        <tr>
+                            <td><label><{$Think.lang.审批人}></label></td>
+                            <td><{$approve['actual_approve_user']?$approve['actual_approve_user']:'无'}>-[<{:cdVal($relevance_info['order_status'])}>]</td>
+                            <td><label><{$Think.lang.审批通过时间}></label></td>
+                            <td><input  readonly value="<{$approve.approve_time}>"></td>
+                        </tr>
+                        <tr>
+                            <td><label><{$Think.lang.最新修改人}></label></td>
+                            <td><input  readonly value="<{$relevance_info.last_update_user}>"></td>
+                            <td><label><{$Think.lang.更新时间}></label></td>
+                            <td><input  readonly value="<{$relevance_info.last_update_time}>"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </blockquote>
+            </div>
+        </div>
+        <div class="row btn-wrap">
+            <div class="col-lg-12 text-center">
+                <button class="btn-sure" id="save_button" type="button" onclick="checkOuts(false)"><{$Think.lang.仅保存}></button>
+                <if condition="isset($order_info)">
+                    <button class="btn-sure " type="button" onclick="checkOuts(true)" name="goods_detail_1"><{$Think.lang.提交审批}></button>
+                </if>
+                <button class="btn-cancel" id="back_button" type="button" onclick="location='<{:U("order_list")}>'" name="goods_detail_1"><{$Think.lang.返回列表}></button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!--end-->
+</body>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../Public/utils/utils.js"></script>
+<script type="text/javascript" src="../Public/lib/jquery.form.min.js"></script>
+<script type="text/javascript" src="../Public/lib/webuploader/0.1.5/webuploader.js"></script>
+<script>
+
+    //供应商的查询
+    function supplierSou(){
+        $('#risk_rating').html('');
+        $('#has_cooperate').html('');
+        var supplies_id = $("#supplies_id").val();//获取输入的供应商的值
+        if(supplies_id==''){
+            $(".supplier_sou").hide();
+            return false;
+        }
+        var data = {supplies_id:supplies_id};
+        var url = "<{:U('OrderDetail/supplier_sou')}>";
+        $.get(url,data,function(msg){
+            if(msg==1){
+                return false;
+            }
+            $(".supplier_sou").html(msg);
+            $(".supplier_sou").show();
+        })
+
+    }
+
+    function selectSupper(ts){
+        var supper_name = $(ts).html();
+        var supplier_info = {SP_NAME:supper_name,SP_CHARTER_NO:$(ts).attr('sp_charter_no'),SP_TEAM_CD:$(ts).attr('sp_team_cd'),RISK_RATING:$(ts).attr('risk_rating'),has_cooperate:$(ts).attr('has_cooperate')};
+        $(".supplier_sou").hide();
+        changeSupplier(supplier_info);
+    }
+
+    $(".card-block table tr td").on("mouseenter",".supplier_sou p",function(){
+        $(this).css("background","#F0F0F0");
+    })
+    $(".card-block table tr td").on("mouseout",".supplier_sou p",function(){
+        $(this).css("background","#FCFCFC");
+    })
+
+    //从新输入sku时清空该商品信息让其必须从新查询
+    function resetSelect(ts){
+        $(ts).parents("tr").find("input[name='sku_information[]']").val('');
+        $(ts).parents("tr").find("input[name='goods_name[]']").val('');
+        $(ts).parents("tr").find("input[name='goods_attribute[]']").val('');
+        $(ts).parents("tr").find("input[name='unit_price_g[]']").val('0');
+        $(ts).parents("tr").find("input[name='goods_number_g[]']").val('0');
+        $(ts).parents("tr").find("input[name='goods_money_d[]']").val('0');
+        $(".number_totals").html('0');
+        $(ts).parents("tr").find("input[name='unit_price[]']").val('0');
+        $(ts).parents("tr").find("input[name='goods_number[]']").val('0');
+        $(ts).parents("tr").find("input[name='goods_money[]']").val('0');
+    }
+
+    //修改供应商
+    function changeSupplier(supplier) {
+        $('#sp_charter_no').val(supplier.SP_CHARTER_NO);
+        $('#supplies_id').val(supplier.SP_NAME);
+        switch(supplier.RISK_RATING) {
+            case "1":
+                $('#risk_rating').html('<{$Think.lang.低}>');
+                $('#risk_rating').css({'color':'#1E7EB4',"border-color":"#1E7EB4","display":"block"});
+                break;
+            case "2":
+                $('#risk_rating').html('<{$Think.lang.中}>');
+                $('#risk_rating').css({'color':'#C31207',"border-color":"#C31207","display":"block"});
+                break;
+            case "3":
+                $('#risk_rating').html('<{$Think.lang.高}>');
+                $('#risk_rating').css({'color':'#C31207',"border-color":"#C31207","display":"block"});
+                break;
+            default:
+                $('#risk_rating').html('');
+                $('#risk_rating').css('display','none');
+                break;
+        }
+        if(supplier.has_cooperate == '1') {
+            $('#has_cooperate').html('<{$Think.lang.已合作}>');
+            $('#has_cooperate').css({'color':'#1E7EB4',"border-color":"#1E7EB4","display":"block"});
+        }else {
+            $('#has_cooperate').html('<{$Think.lang.新合作}>');
+            $('#has_cooperate').css({'color':'#C31207','border-color':'#C31207',"display":"block"});
+        }
+        var sp_teams = supplier.SP_TEAM_CD.split(',');
+        $('select[name="payment_company"]').find('option').prop('selected',false);
+        $('select[name="payment_company"]').find('option[pcid="'+sp_teams[0]+'"]').prop('selected',true);
+        var url = "<{:U('getContract')}>";
+        var data = {sp_charter_no:supplier.SP_CHARTER_NO};
+        $.post(url,data,function(res) {
+            var info = res.data;
+            changeContract(info);
+        });
+    }
+
+    //修改合同
+    function changeContract(contracts) {
+        var contract = contracts[0];
+        var contract_html = '';
+        $.grep(contracts,function(val){
+            contract_html += '<option value="'+val.CON_NO+'" contract="{SP_BANK_CD:\''+val.SP_BANK_CD+'\',BANK_ACCOUNT:\''+val.BANK_ACCOUNT+'\',SWIFT_CODE:\''+val.SWIFT_CODE+'\'}">'+val.CON_NO+'</option>'
+        });
+        contract_html += '<option value=""><{$Think.lang.无采购合同}></option>'
+        $('select[name="contract_number"]').html(contract_html);
+        selectContract(contract);
+    }
+
+    function selectContract(contract) {
+        if(contract) {
+            $('input[name="supplier_opening_bank"]').val(contract.SP_BANK_CD);
+            $('input[name="supplier_card_number"]').val(contract.BANK_ACCOUNT);
+            $('input[name="supplier_swift_code"]').val(contract.SWIFT_CODE);
+        }else {
+            $('input[name="supplier_opening_bank"]').val('');
+            $('input[name="supplier_card_number"]').val('');
+            $('input[name="supplier_swift_code"]').val('');
+        }
+    }
+
+    function checkSku(ts) {
+        var currency = $('select[name="amount_currency"]').val();
+        if(currency == '') {
+            alert('请选择采购币种');
+            return false;
+        }
+        var sku_len = $("input[name='search_information[]'").length;
+        if(sku_len==1){
+            $(".show_rate").html(''); //将汇率显示清空
+        }
+
+        var sku_code_num=0;
+        var msg_index = 0;
+        var sku = $(ts).parent().prev().val();
+        var now_number = $(ts).parents("tr").eq(0).find("label").html();
+        var data = {sku: sku,now_number:now_number,currency:currency};
+        var async = {async: false};
+        var url = "<{:U('order_add_ajax')}>";
+        $(".goods_detail .goods_detail-main .input-group .form-control").each(function(){
+            if($(this).val()==sku){
+                sku_code_num++;
+            }
+        })
+        if(sku_code_num==1){
+            $.post(url, data, function (msg) {
+                if (msg == 1) {
+                    checkSku_false = 1;
+                    alert("sku编码/条形码不符合规范");
+                    $(ts).parent().prev().val('');
+                    return false;
+                } else {
+                    checkSku_false = 2;
+                    $(ts).parents("tr").prop('outerHTML',msg);
+                    var sku_id = $(msg).find("input[name='sku_information[]']").val();
+                    var search_info = $(msg).find("input[name='search_information[]']").val();
+                    var curType = "";
+                    $(".goods_detail .goods_detail-main tr[data-name='goods_detail_1']").each(function(){
+                        if($(this).find("input[name='sku_information[]']").val() == sku_id && $(this).find("input[name='search_information[]']").val() != search_info) {
+                            alert("sku编码重复了");
+                        }
+                    })
+                }
+            })
+        }
+        else{
+            alert("sku编码重复了")
+        }
+    }
+    $(".goods_detail .goods_detail-main").on("click","tr .goods_detail-main_bizhong select",function(){
+        var curType2 = "";
+        $(".goods_detail .goods_detail-main tr[data-name='goods_detail_1']").each(function(){
+            if($(this).find("td label").html()=="1"){
+                curType2 = $(this).find("select").val();
+            }else{
+                $(this).find("td select").val(curType2);
+                $(this).find("td select").prop("disabled","disabled");
+            }
+            if(curType2){
+
+                $(this).find(".unit_price_g").prop("disabled",false);
+                $(this).find(".goods_number_d").prop("disabled",false);
+            }
+            else{
+                $(this).find(".unit_price_g").prop("disabled",true);
+                $(this).find(".goods_number_d").prop("disabled",true);
+            }
+        })
+    })
+    /**
+     * 添加方法
+     * @param（html） 获取当前行html
+     * 通过循环方式添加序号
+     */
+    function addTr(that){
+        var html= $(that).parents("tr")[0].outerHTML;
+        $(that).parents("tr").after(html);
+
+        $.each($(that).parents("tr").next().find("td"),function(key,value){
+            if(key != 0){
+                var curType = $("#curType option:selected").val();
+                $(value).find('input').val('');
+                $(value).find('.unit_price_g,.unit_price,.goods_number,.goods_number_g').val('0');
+            }
+        })
+
+        $.each($(that).parents("tbody").find("tr"),function(key,value){
+            $(value).eq(0).find("label").text(key + 1)
+        })
+    }
+    /**
+     * 删除方法
+     * @param（tbody）首先获取tbody,因remove之后that参数将找不到。
+     * 通过循环方式添加序号
+     */
+    function deleteTr(that) {
+        if($(that).parents("tbody")[0].children.length>2){
+            var tbody = $(that).parents("tbody");
+            $(that).parents("tr").remove();
+        }else{
+            $("#delete-addModal").modal('show');
+        }
+        total();
+    }
+
+    function checkOuts(is_review){
+        if(is_review) {
+            var url = "<{:U('sendForReview')}>";
+        }else {
+            var url = $('form').attr('location');
+        }
+        $('#curType').each(function(){
+            $(this).attr("disabled",false);
+        })
+        $('select[name="currency"]').prop('disabled',false);
+        $("form").ajaxForm({
+            dataType : 'json',
+            url : url,
+            success : function (res) {
+                if(res.status == 1) {
+                    utils.modal(true, {width:500,title:"修改结果",content:res.info,confirmFn:function(){
+                        if(is_review) {
+                            window.location = res.data.jump_url;
+                        }else {
+                            window.location = "<{:U('order_list')}>";
+                        }
+                    }
+                    },false)
+                }else {
+                    utils.modal(true, {width:500,title:"修改结果",content:res.info},false)
+                }
+            }
+        });
+        $("form").submit();
+    }
+
+    function checkNum(money) {
+        return /^(\d+(,\d\d\d)*(\.\d{2})?|\d+(\.\d{2})?)$/.test(money);
+    }
+
+    function moneyCalculation(money_group) {
+        var rate    = money_group.find('.currency_rate').val();
+        var money   = money_group.find('.money_value').val();
+        var money_c = (rate*money).toFixed(2);
+        money_group.find('.money_rmb').val(money_c);
+    }
+
+    function numberFormat(num) {
+        if(isNaN(num)) {
+            if(num) {
+                return num.replace(/(\d{1,3})(?=(\d{3})+(?:$|\D))/g,'$1,');
+            }else {
+                return false;
+            }
+        }else {
+            return num.toString().replace(/(\d{1,3})(?=(\d{3})+(?:$|\D))/g,'$1,');
+        }
+    }
+
+    //上传组件
+    function uploadPlus() {
+        var html = '<div class="upload-box-child">'+
+            '<input type="file" name="attachment[]"  class=" attachment" style="display: inline-block"/>'+
+            '<div style="display: inline-block" >'+
+            '<i class="upload-minus fujian_delete" onclick="uploadMinus(this)"><img src="../Public/images/delete.png" alt=""></i>&nbsp;' +
+            '<i class="upload-plus fujian_add" onclick="uploadPlus(this)" style="margin-left: 5px"><img src="../Public/images/add.png" alt=""></i>'+
+            '</div>'+
+            '</div>';
+        $('.upload-box').append(html);
+
+    }
+
+    function uploadMinus(ts) {
+        var number = $('.upload-box-child').size();
+        if(number == 1) {
+            alert('<{$Think.lang.必须保留一个上传按钮}>');
+            return false;
+        }
+        $(ts).parents('.upload-box-child').remove();
+    }
+
+    function mVal(str) {
+        var val = $(str).val();
+        if(val == '') {
+            val = 0;
+        }
+        return val;
+    }
+    function priceChange(dom) {
+        var money = $(dom).val();
+        if(!checkNum(money)) {
+            alert('请输入正确的金额');
+            money = '0';
+        }
+        money = parseFloat(money.replace(/,/g,'')).toFixed(2);
+        $(dom).next().val(money);
+        $(dom).val(numberFormat(money));
+        goodsMoney($(dom).parents('tr'));
+    }
+
+    function numChange(dom) {
+        var num = $(dom).val();
+        if(!checkNum(num)) {
+            alert('请输入正确的数量');
+            num = '0';
+        }
+        num = num.replace(/,/g,'');
+        $(dom).next().val(num);
+        $(dom).val(numberFormat(num));
+        goodsMoney($(dom).parents('tr'));
+    }
+
+    function goodsMoney(dom) {
+        var price = parseFloat(dom.find('.unit_price').val());
+        var num = parseFloat(dom.find('.goods_number').val());
+        var money = price*num;
+        dom.find('.goods_money').val(money);
+        dom.find('.goods_money_d').val(numberFormat(money.toFixed(2)));
+        total();
+    }
+
+    function total() {
+        var money   = 0;
+        var num     = 0;
+        $('.goods_detail_tr').each(function () {
+            money   += parseFloat($(this).find('.goods_money').val());
+            num     += parseFloat($(this).find('.goods_number').val());
+            $('.money_total').val(money);
+            $('.money_totals').html(numberFormat(money.toFixed(2)));
+            $('.number_total').val(num);
+            $('.number_totals').html(numberFormat(num));
+        })
+    }
+
+    function paymentDate() {
+        time = 0;
+        var payment_type    = $('input[name="payment_type"]:checked').val();
+        if(payment_type == 0) {
+            var period  = parseInt($('.time .payment_period').val());
+            for(var i = 1;i <= period;i++) {
+                var date = $('.payable_add_payment_period_time .periods_'+i).find('input:eq(0)').val();
+                var percent = $('.payable_add_payment_period_time .periods_'+i).find('select').val();
+                if(!date || !percent) {
+                    var flag = true;
+                    time = 0;
+                    return false;
+                }
+                time += (new Date(date.replace(/-/,'/'))).getTime()*percent/100;
+            }
+        }else {
+            var period = parseInt($('.actual .payment_period').val());
+            for(var i = 1;i <= period;i++) {
+                var date = $('.payable_add_payment_period_reality .periods_'+i).find('input').val();
+                var percent = $('.payable_add_payment_period_reality .periods_'+i).find('select:last').val();
+                if(!date || !percent) {
+                    var flag = true;
+                    time = 0;
+                    return false;
+                }
+                time += (new Date(date.replace(/-/,'/'))).getTime()*percent/100;
+            }
+        }
+        if(flag) return false;
+        gatheringDate();
+        drawbackPeriod();
+    }
+
+    //收款账期计算
+    function gatheringDate(){
+        var time_gathering = 0;
+        if(time == 0) return false;
+        $('.receivable_date').each(function() {
+            var date    = $(this).find('input').val();
+            var percent = $(this).find('select').val();
+            if(!date || date == '0000-00-00' || !percent)  return true;
+            time_gathering += (new Date(date.replace(/-/,'/'))).getTime()*percent/100;
+        })
+        if(time_gathering != 0) {
+            var payment_days = Math.ceil((time_gathering-time)/1000/3600/24); //收款账期
+            $('#payment_days').val(payment_days);
+            predictProfit();
+        }
+    }
+
+    //退税周期
+    function drawbackPeriod(){
+        if(time == 0) return false;
+        var drawback_date       = $('#drawback_date').val(); //预计退税日期
+        var procurement_date    = $('#procurement_date').val(); //预计采购日期
+        var drawback_period     = Date.parse(new Date(drawback_date))-time;
+        var drawbackPeriod      = Math.floor(drawback_period/1000/3600/24); //退税周期
+        if(drawback_date != '' && drawback_date != '0000-00-00' && time != 0){
+            $('#drawback_period ').val(drawbackPeriod);
+        }
+        predictProfit();
+    }
+
+    //预计利润
+    function predictProfit(){
+        var total_count_money = mVal('#amount_rmb'); //采购金额
+        var sell_money = mVal('#sell_money'); //销售金额
+
+        $("#purchase_total_money").val(total_count_money);
+
+        var purchase_total_money = mVal('#purchase_total_money'); //商品信息金额合计=采购总金额(含税)
+        var expense = parseFloat(mVal('#sell_logistics')); //物流服务保险费用
+
+        //纯利润（退税前）的计算
+        var pure_profit = sell_money-(parseFloat(purchase_total_money)+parseFloat(expense)); //纯利润（退税前）
+        pure_profit  = pure_profit.toFixed(2);
+        $('#pure_profit ').val(pure_profit);
+        //纯利润率(退税前)的计算
+        var pure_profit = mVal('#pure_profit'); //获取纯利润（退税前）的值
+        pure_profit = parseFloat(pure_profit)
+        if(sell_money == 0){
+            var profit_margin = 0;
+        }
+        else {
+            var profit_margin = pure_profit / sell_money; //纯利润率（退税前）
+        }
+        var profit_margin = profit_margin.toFixed(4);
+        $('#profit_margin ').val(profit_margin);
+
+        //总收入金额计算
+        var sell_money = Math.floor(sell_money*100)/100;
+        $('#total_money').val(sell_money);
+
+        //总利润（退税后）计算
+        var drawback_money = mVal('#drawback_money'); //预计退税金额
+        var total_profit = parseFloat(pure_profit)+parseFloat(drawback_money);
+        total_profit = Math.floor(total_profit*100)/100;
+        $('#total_profit').val(total_profit); //总利润（退税后）
+
+        //总利润率(退税后)计算
+        var total_profit_margin=0;
+        if(total_profit==0 || sell_money==0){
+            total_profit_margin = 0;
+        }else{
+            total_profit_margin = total_profit/sell_money; //总利润率(退税后)
+        }
+
+        total_profit_margin = total_profit_margin.toFixed(4);
+        $('#total_profit_margin').val(total_profit_margin); //总利润率(退税后)计算
+
+
+        //账期利息计算
+        var payment_days = mVal('#payment_days'); //收款账期
+        if(payment_days<=90){
+            var payment_interest =  0.15*payment_days/365*(parseFloat(purchase_total_money));
+        }else{
+            var payment_interest = parseFloat(0.15*90/365*(parseFloat(purchase_total_money)))+parseFloat(0.25*(payment_days-90)/365*(parseFloat(purchase_total_money)));
+        }
+        if(payment_days!=''&&purchase_total_money!=''){
+            payment_interest=payment_interest.toFixed(2);
+            if(payment_interest=="0.00"){
+                $('#payment_interest').val("0");
+            }
+            else{
+                $('#payment_interest').val(payment_interest);
+            }
+            //账期利息计算
+        }
+
+        //退税利息计算
+        var drawback_period = $('#drawback_period').val();//预计退税周期
+        var drawback_money = $('#drawback_money').val(); //预计退税金额
+        if(drawback_period<=90){
+            var drawback_interest = 0.15*drawback_period/365*drawback_money;
+        }else{
+            var drawback_interest = parseFloat(0.15*90/365*drawback_money)+parseFloat(0.25*(drawback_period-90))/365*drawback_money;
+        }
+
+
+        if(drawback_period!=''&&drawback_money!=''){
+            drawback_interest =drawback_interest.toFixed(2);
+            if(drawback_interest=="0.00"){
+                $('#drawback_interest').val("0"); //退税利息计算
+            }
+            else{
+                $('#drawback_interest').val(drawback_interest); //退税利息计算
+            }
+        }
+        if(drawback_period==''||drawback_money==''){
+            $('#drawback_interest').val('0');
+        }
+
+        //利息总额计算
+        var total_interest  = parseFloat(payment_interest)+parseFloat(drawback_interest);
+        var total_interest  =Math.floor(total_interest*100)/100;
+        $('#interest_total').val(total_interest); //利息总额
+
+
+        //净利润计算
+        if(total_profit!=''&&interest_total!='') {
+            var net_profit = total_profit-parseFloat($('#interest_total').val());
+            net_profit=Math.floor(net_profit*100)/100;
+            $('#net_profit').val(net_profit); //净利润
+        }
+        if(total_profit==''||interest_total==''){
+            $('#net_profit').val('0');
+        }
+
+
+        //净利润率计算
+        if(net_profit!=''&&sell_money!='') {
+            if(sell_money==0 ||parseFloat(mVal('#net_profit'))==0){
+                $('#retained_profits').val("0"); //净利润率
+            }else{
+                var net_profit = parseFloat(mVal('#net_profit'))/sell_money;
+                $('#retained_profits').val(net_profit.toFixed(4)); //净利润率
+            }
+        }
+        if(net_profit==''||sell_money=='') {
+            $('#retained_profits').val('0');
+        }
+        upd_change();
+    }
+
+    var upd_c = ['purchase_total_money', 'pure_profit', 'total_profit', 'total_money',   'exchange_rate', 'net_profit', 'interest_total', 'payment_interest', 'drawback_interest'];
+    var upd_f = ['profit_margin', 'total_profit_margin', 'retained_profits'];
+    var upd_d= ['expense_d','sell_money_d','drawback_money_d']; //物流金额数据
+    var inputs = null
+    function upd_change(){
+        for(var i = 0;i<upd_c.length;i++){
+            $("#"+upd_c[i]+"_c").val('¥'+numberFormat($("#"+upd_c[i]).val()))
+        }
+        for(var i = 0;i<upd_f.length;i++){
+            $("#"+upd_f[i]+"_f").val(($("#"+upd_f[i]).val()*100).toFixed(2)+'%')
+        }
+    }
+
+    function payment_period_init() {
+        $('.periods').hide();
+        $(':input','.periods').val('').prop('disabled',true);
+    }
+
+    $(function () {
+        //付款账期单选框
+        $(".purchase_add .card-block .payable_add_payment_period .payable_add_payment_period_item input").click(function () {
+            if($(this).prop("checked")) {
+                var box = $(this).parent();
+                var data_name = box.attr('data-name');
+                box.find('span').addClass('active');
+                box.find('select').prop('disabled',false);
+                box.siblings().find("span").removeClass("active").next().val('').prop('disabled',true);
+                $('.payment_period').change();
+                $('.period_box.'+data_name).show().siblings().hide();
+            }
+        })
+
+        $('.payment_period').change(function () {
+            var data_name = $(this).parent().attr('data-name');
+            payment_period_init();
+            $(':input','.periods').val('').change();
+            var periods = parseInt($(this).val());
+            for(var i=1; i<=periods; i++) {
+                $('.'+data_name+' .periods_'+i).show().find(':input').prop('disabled',false);
+            }
+        });
+
+        $(".purchase_add .card-block .payable_add_payment_period .payable_add_payment_period_item span").each(function () {
+            if($(this).hasClass("active")) {
+                var box         = $(this).parent();
+                var data_name   = box.attr("data-name");
+                var periods     = parseInt(box.find('select').val());
+                for(var i=3; i>periods; i--) {
+                    $('.'+data_name+' .periods_'+i).hide().find(':input').prop('disabled',true);
+                }
+                $(this).prev().prop('checked',true);
+                box.siblings().find('select').prop('disabled',true);
+                $('.period_box.'+data_name).show().siblings().hide().find('input,select').prop('disabled',true);
+            }
+        })
+        paymentDate();
+
+
+        $('.currency_select').change(function() {
+            var group       = $(this).parents('.money_group');
+            var currency    = $(this).val();
+            var rate        = 0;
+            var rate_show   = '';
+            var data = {currency:currency};
+            var url = "<{:U('OrderDetail/exchange_rate')}>";
+            $.ajaxSetup({
+                async : false
+            });
+            $.get(url,data,function(mes){
+                if(mes.status == 1){
+                    var data    = mes.info;
+                    rate    = data.rate;
+                    var tex_rate    = Math.floor(rate*10000)/10000;  //汇率显示的时候让其显示保留四位小数
+                    rate_show   = 1+currency+ "="+ tex_rate+"RMB"; //汇率显示的格式
+                }
+            })
+            if(currency != 'RMB') {
+                group.find(".btn-label").html(rate_show); //用于展示 1USD = 6.8933RMB格式的汇率
+                group.find(".currency_rate_show").val(rate_show); //用于展示 1USD = 6.8933RMB格式的汇率
+            }
+            if(!currency) {
+                group.find(".money_show").val(0).change(); //用于展示 1USD = 6.8933RMB格式的汇率
+            }
+            group.find(".currency_rate").val(rate); //将实际的汇率参数保存起来用于下面的实际汇率换算
+            moneyCalculation(group);
+            if($(this).prop('id') == 'amount_currency_select') {
+                $('#expense_currency_select').val(currency).change();
+            }
+            predictProfit();
+        });
+
+        $('.money_show').click(function () {
+            var group = $(this).parents('.money_group');
+            var currency = group.find('.currency_select').val();
+            if(!currency) {
+                $(this).prop('readonly',true);
+                alert('请选择币种');
+                return false;
+            }else {
+                $(this).prop('readonly',false);
+            }
+        })
+
+        $('.money_show').change(function() {
+            var group = $(this).parents('.money_group');
+            var money = $(this).val();
+            if(!checkNum(money)) {
+                alert('请输入正确的金额');
+                money = '0';
+            }
+            money = parseFloat(money.replace(/,/g,'')).toFixed(2);
+            group.find('.money_value').val(money);
+            $(this).val(numberFormat(money));
+            moneyCalculation(group)
+            predictProfit()
+        });
+
+        $('.has_po').change(function () {
+            if($('.has_po:checked').val() == 1) {
+                $('#search_po').show();
+            }else {
+                $('#search_po').hide();
+            }
+        })
+
+
+
+        $('#search_po').click(function () {
+            var con_no = $('input[name="procurement_number"]').val();
+            var url = '<{:U("OrderDetail/get_po_data")}>';
+            $.post(url,{'CON_NO':con_no},function (msg) {
+                if(msg.status == 1) {
+                    $('#supplies_id').val(msg.data.YF);
+                    $('#amount_currency_select').find('option').prop('selected',false);
+                    $('option[ovalue="'+msg.data.BZ+'"]').prop('selected',true);
+                    $('#amount_currency_select').change();
+                    //币种
+                    //金额
+                    $('#amount_show').val(msg.data.AMOUNT2).change();
+                    //发票类型
+                    $('select[name="invoice_type"]').find('option').prop('selected',false);
+                    $('option[ivalue="'+msg.data.FPLX+'"]').prop('selected',true);
+                    //是否含税
+                    $('select[name="has_tax"]').find('option').prop('selected',false);
+                    $('select[name="has_tax"]').find('option[value="'+msg.data.SFHS+'"]').prop('selected',true);
+                    //我方公司
+                    $('select[name="our_company"]').find('option[oavalue="'+msg.data.GSMC+'"]').prop('selected',true);
+                    //商品币种
+                    $('select[name="curType"]').prop('selected',false);
+                    $('option[gcvalue="'+msg.data.BZ+'"]').prop('selected',true);
+                    changeSupplier(msg.data.supplier)
+                }else {
+                    alert(msg.data);
+                }
+            })
+        })
+
+        $('.receivable_date :input').blur(function () {
+            gatheringDate();
+        });
+
+        $('#drawback_date').blur(function () {
+            drawbackPeriod();
+        });
+
+
+        $('select[name="contract_number"]').change(function(){
+            var contract = eval('('+$(this).find('option:checked').attr('contract')+')');
+            selectContract(contract);
+        })
+        $('.has_sell_number').change(function() {
+            if($(this).val() == 0) {
+                $('.sell_number').val('').prop('readonly','readonly');
+            }else {
+                $('.sell_number').val('').prop('readonly',false);
+            }
+        })
+        $('.has_sell_contract').change(function() {
+            if($(this).val() == 0) {
+                $('.sell_contract').val('').hide();
+                $('.approve_credential').val('').show();
+                $('.approve_credential_box').show();
+            }else {
+                $('.sell_contract').val('').show();
+                $('.approve_credential').val('').hide();
+                $('.approve_credential_box').hide();
+            }
+        })
+        $('.approve_credential_del').click(function () {
+            $('.approve_credential_box').remove();
+            $('.sell_contract').after('<input type="file" name="approve_credential" class="approve_credential"  style="float: left;">');
+        })
+
+        uploader = WebUploader.create({
+            swf: '../Public/lib/webuploader/0.1.5/Uploader.swf',
+            server: '<{:U("importGoods")}>&currency='+$('select[name="amount_currency"]').val(),
+            pick: {id:'#import-goods'},
+            auto : true,
+            duplicate:true,
+        });
+        uploader.on('uploadSuccess',function (file,res) {
+            if(res.status == 1) {
+                utils.modal(true, {width:500,title:"<{$Think.lang.导入成功}>",content:"<{$Think.lang.导入成功}>",delay:2000},false);
+                $('.goods-list').html(res.info);
+                total();
+            }else {
+                utils.modal(true, {width:500,title:"<{$Think.lang.导入失败}>",content:res.info},false)
+            }
+        })
+        uploader.on('uploadStart',function (file) {
+            var currency = $('select[name="amount_currency"]').val();
+            if(currency == '') {
+                alert('<{$Think.lang.请选择采购币种}>');
+                uploader.reset();
+            }
+        })
+    });
+</script>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css?v=20170117" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/jqeury-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170306" />
+    <title></title>
+</head>
+<body class="pos-r mt-20">
+<style>
+    html,body,div,span,table,tr,td,em,input,th{font-family: "微软雅黑 Bold","微软雅黑";}
+    .col-md-11 ul li{font-family: "微软雅黑" !important;}
+    .new-kehu .col-md-1 {width: 65px;}
+    .new-kehu .col-md-1 span {
+        color: #333333;display: inline-block;
+        font-family: "微软雅黑 Bold","微软雅黑";
+        font-size: 13px;font-style: normal;
+        font-weight: 400;line-height: normal;
+        margin: 10px 0;padding: 3px 0;
+    }
+    .link_blue{text-decoration:underline;color:#06c;}
+    .menu-state .active a{
+        background: #ed2d65 none repeat scroll 0 0;
+        color: white;
+    }
+    .menu-state a {color: #ed2d65;}
+    .menu-state ul li {display:inline-block;}
+    input,select,button,.select-box{border-radius:5px;}
+    #form_btbtc,.plat_cd{margin: 5px 0px}
+    .sendwarning_selected{color:white !important;}
+</style>
+<div>
+    <img src="../Public/images/ajax-loader.gif" width="" height="" alt="" class="img_load-pos hide"/>
+    <div class="row">
+        <form action="" method="get" id="form_btbtc">
+            <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+            <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+            <span class="select-box inline">
+                <select name="time_type" class="select">
+                    <option value="1" <if condition="$params.time_type eq 1">selected="selected"</if> ><{$Think.lang.手机号}></option>
+                    <option value="2" <if condition="$params.time_type eq 2">selected="selected"</if> ><{$Think.lang.Email}></option>
+                    <option value="3" <if condition="$params.time_type eq 3">selected="selected"</if> ><{$Think.lang.姓名}></option>
+                </select>
+            </span>
+
+            <input type="text" name="keywords" value="<{$params.keywords}>"  placeholder="<{$Think.lang.搜索关键字}>" style="width:100px" class="input-text keywords" />
+            <span><{$Think.lang.创建时间}>：
+              <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4312\')||\'%y-%M-%d\'}'})" id="d4311"  name="CREATE_TIME_starttime" value="<{$params.CREATE_TIME_starttime}>" class="input-text Wdate" style="width:120px;" />
+              -
+              <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4311\')}',maxDate:'%y-%M-%d'})" id="d4312"  name="CREATE_TIME_endtime" value="<{$params.CREATE_TIME_endtime}>" class="input-text Wdate" style="width:120px;" />
+            </span>
+            <span><{$Think.lang.最近消费}>：
+              <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4314\')||\'%y-%M-%d\'}'})" id="d4313"  name="UPDATE_TIME_starttime" value="<{$params.UPDATE_TIME_starttime}>" class="input-text Wdate" style="width:120px;" />
+              -
+              <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4313\')}',maxDate:'%y-%M-%d'})" id="d4314"  name="UPDATE_TIME_endtime" value="<{$params.UPDATE_TIME_endtime}>" class="input-text Wdate" style="width:120px;" />
+            </span>
+            <button name="" class="btn btn-pink" type="submit"><i class="Hui-iconfont">&#xe665;</i> <{$Think.lang.搜索}></button>
+            <button type="button" value="" class="btn btn-clear"><{$Think.lang.重置}></button>
+            <input type="hidden" name="CREATE_PLAT_CD" value="<{$params.CREATE_PLAT_CD}>"/>
+        </form>
+    </div>
+    <!--来源平台 sendwarning_selected -->
+    <div class="row plat_cd">
+        <foreach name = "store" key = "k" item = "val">
+            <!--<span onclick="search('<{$k}>');" data-form="<{$k}>" class="sendwarning <if condition='$params.CREATE_PLAT_CD eq $k'>sendwarning_selected</if>" style="margin: 8px 0px;border-radius: 8px;color: black;margin-right: 10px;"><{$val}></span>-->
+            <span onclick="search('<{$k}>');" data-form="<{$k}>" class="sendwarning" style="margin: 8px 0px;border-radius: 8px;color: black;margin-right: 10px;"><{$val}></span>
+        </foreach>
+    </div>
+    <div class="row">
+        <table class="table table-border table-bordered table-bg table-hover table-sort" >
+            <thead>
+                <tr class="text-c no-wrap">
+                    <th><{$Think.lang.ID}></th>
+                    <th><{$Think.lang.手机号}></th>
+                    <th><{$Think.lang.Email}></th>
+                    <th><{$Think.lang.姓名}></th>
+                    <th><{$Think.lang.下单数}></th>
+                    <th><{$Think.lang.累计金额}></th>
+                    <th><{$Think.lang.创建时间}></th>
+                    <th><{$Think.lang.最新消费}></th>
+                    <th><{$Think.lang.操作}></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <if condition="empty($result) eq 1">
+                    <tr class="text-c va-m "  >
+                        <td class="no-wrap" colspan="12">None</td>
+                    </tr>
+                <else />
+                    <foreach name="result" key="key" item="value">
+                        <tr class="text-c va-m "  >
+                            <td class="no-wrap"><{$value.ID}></td>
+                            <td class="no-wrap" name="phoneNum"><{$value.REL_TEL_NUM}></td>
+                            <td class="no-wrap"><{$value.RES_EMAIL}></td>
+                            <td class="no-wrap"><{$value.RES_NAME}></td>
+                            <td class="no-wrap"><{$value.ALL_ORDER_COUNT}></td>
+                            <td class="no-wrap">RMB <?= format_for_currency($value['ALL_PAY_AMOUNT']) ?></td>
+                            <td class="no-wrap"><{$value.CREATE_TIME}></td>
+                            <td class="no-wrap"><{$value.UPDATE_TIME}></td>
+                            <td class="no-wrap"><a class="link_blue" onclick="opennewtab(this,'<{$Think.lang.客户详情}><?php echo $value["CUST_ID"];?>')" _href="<{:U("customer/show_customer",array('ID'=>$value[ID]))}>" ><{$Think.lang.查看}></a></td>
+                        </tr>
+                    </foreach>
+                </if>
+
+            </tbody>
+        </table>
+        <div>
+            <div class="col-md-5 search-num-wrap">
+                <span class="search-num"><{$Think.lang.搜索结果}>：&nbsp;&nbsp;<{$Think.lang.共}></span>
+                <span class="search-num-t"><{$count}></span>
+                <span class="search-num"><{$Think.lang.条记录}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </div>
+            <ul class="pagination">
+                <{$pages}>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script>
+
+/*前台号码换成*号*/
+/*var aPhone = document.getElementsByName('phoneNum');
+for (var i = 0; i < aPhone.length; i++) {
+    aPhone[i].innerHTML = aPhone[i].innerHTML.substr(0,3)+"****"+aPhone[i].innerHTML.substr(7);  
+}*/
+
+var SwitchPlat = function () {
+    var sp = this;
+    
+    sp.search = function () {
+        var exists_plat_cds = $('input[name="CREATE_PLAT_CD"]').val();
+        if (exists_plat_cds) {
+            // 在已存在的数据中，是否存在再次被选中的情况
+            if (checkPlatCdIsExists(exists_plat_cds, plat_cds)) {
+                var surplus = delExistsDataAndMerge(exists_plat_cds, plat_cds);
+                $('input[name="CREATE_PLAT_CD"]').val(surplus);
+            } else {
+                var str = $('input[name="CREATE_PLAT_CD"]').val();
+                str = str + ',' + plat_cds;
+                $('input[name="CREATE_PLAT_CD"]').val(str);
+            }
+            
+            if (plat_cds != '-1') {
+                $('input[name="CREATE_PLAT_CD"]').val(delAllChecked());
+            }
+        } else {
+            $('input[name="CREATE_PLAT_CD"]').val(plat_cds);
+        }
+        // 显示全部
+        if (plat_cds == '-1') {
+            $('input[name="CREATE_PLAT_CD"]').val('-1');
+        }
+        
+        $('#form_btbtc').submit();
+    };
+    
+    
+	// Constructor
+	(function(){
+	   alert('run');
+	})();
+}
+
+//var sp = new SwitchPlat();
+
+
+
+    // 点击平台进行数据提交
+    function search(plat_cds){
+        var exists_plat_cds = $('input[name="CREATE_PLAT_CD"]').val();
+        if (exists_plat_cds) {
+            // 在已存在的数据中，是否存在再次被选中的情况
+            if (checkPlatCdIsExists(exists_plat_cds, plat_cds)) {
+                var surplus = delExistsDataAndMerge(exists_plat_cds, plat_cds);
+                $('input[name="CREATE_PLAT_CD"]').val(surplus);
+            } else {
+                var str = $('input[name="CREATE_PLAT_CD"]').val();
+                str = str + ',' + plat_cds;
+                $('input[name="CREATE_PLAT_CD"]').val(str);
+            }
+            
+            if (plat_cds != '-1') {
+                $('input[name="CREATE_PLAT_CD"]').val(delAllChecked());
+            }
+        } else {
+            $('input[name="CREATE_PLAT_CD"]').val(plat_cds);
+        }
+        // 显示全部
+        if (plat_cds == '-1') {
+            $('input[name="CREATE_PLAT_CD"]').val('-1');
+        }
+        
+        $('#form_btbtc').submit();
+    };
+    
+    // 删除all选项
+    function delAllChecked()
+    {
+        var s = $('input[name="CREATE_PLAT_CD"]').val().split(',');
+        var temp = '';
+        for (i = 0; i < s.length; i++) {
+            if (s[i] != '-1') {
+                if (temp == '') {
+                    temp = s[i];
+                } else {
+                    temp = temp + ',' + s[i];
+                }
+            }
+        }
+        
+        return temp;
+    }
+    
+    // 当点击平台时，进行平台是否存在检查，存在返回true，不存在返回false
+    function checkPlatCdIsExists(str, plat_cds)
+    {
+        var s = str.split(',');
+        for (i = 0; i < s.length; i++) {
+            if (s[i] == plat_cds) {
+                return true;
+            }
+        }
+        
+        return false;
+    };
+    
+    // 删除数组中已经存在的平台code，对剩余的code进行合并
+    function delExistsDataAndMerge(str, plat_cds)
+    {
+        var s = str.split(',');
+        var temp = '';
+        for (i = 0; i < s.length; i++) {
+            if (s[i] != plat_cds && plat_cds != '-1') {
+                if (temp == '') {
+                    temp = s[i];
+                } else {
+                    temp = temp + ',' + s[i];
+                }
+            }
+        }
+        
+        return temp;
+    };
+    
+    function init()
+    {
+        var exists_plat_cds = $('input[name="CREATE_PLAT_CD"]').val();
+        if (!exists_plat_cds) {
+            $('input[name="CREATE_PLAT_CD"]').val('-1');
+        }
+    }
+    init();
+    
+    
+    // 刷新样式
+    function addClassByCreatePlatCd()
+    {
+        var exists_plat_cds = $('input[name="CREATE_PLAT_CD"]').val();
+        var pcds = exists_plat_cds.split(',');
+        className = 'sendwarning_selected';
+        $(".plat_cd span").each(function(t, s) {
+            $.each(this.attributes, function (x, e) {
+                if (e.name == 'data-form') {
+                    for (i = 0; i < pcds.length; i++) {
+                        if (pcds[i] == e.value) {
+                            $(".plat_cd span:eq(" + t + ")").addClass(className);
+                        }
+                    }
+                }
+            });
+            
+            return;
+        });
+    };
+    
+    // 进入页面就进行样式刷新
+    addClassByCreatePlatCd();
+    
+    $(".btn-clear").click(function() {
+        $(".select").find("option[value='1']").attr("selected",true);
+        $("#d4311").val('');
+        $("#d4312").val('');
+        $("#d4313").val('');
+        $("#d4314").val('');
+        $(".keywords").val('');
+    });
+</script>
+</body>
+</html>

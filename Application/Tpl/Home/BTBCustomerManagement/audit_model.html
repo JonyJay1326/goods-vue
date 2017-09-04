@@ -1,0 +1,105 @@
+<div class="gys-wrap">
+    <table class="table table-border table-bordered table-bg use-table-two">
+        <input type="hidden" name="SP_CHARTER_NO" value="<{$result.SP_CHARTER_NO}>"/>
+        <caption><{$Think.lang.审核信息}></caption>
+        <tbody  class="audit_supplier_info use-body">
+        <input name="CRM_CON_TYPE" value="1" type="hidden"/>
+        <input type="hidden" name="ID" value="<{$result.audit.ID}>"/>
+        <!--基础信息-->
+        <tr>
+            <td><{$Think.lang.成立时间}></td>
+            <td style="white-space: nowrap;">
+                <input class="input-date Wdate"  type="text" onfocus="WdatePicker({skin:'whyGreen',maxDate:'%y-%M-%d'})" name="EST_TIME"
+                       value="<?= cutting_time($result['audit']['EST_TIME']) ?>"/> <i class="fa  fa-calendar fa-lg"></i>
+            </td>
+            <td><{$Think.lang.认缴资本}></td>
+            <td  colspan="3" class="text-c-left">
+                <select name="CURRENCY" class="input-form" style="border-right: none; border-radius: 0.25rem 0 0 0.25rem;width: 16%;">
+                    <foreach name="currency" item="vo" key="k">
+                        <option value="<{$k}>" <?= $result['audit']['CURRENCY'] == $k?'selected':'' ?>><{$vo}></option>
+                    </foreach>
+                </select>
+                <input type="text" class="input-form" name="SUB_CAPITAL" value="<{$result.audit.SUB_CAPITAL}>" style="width: 84%; margin-left: -6px; margin-top: -2px; border-radius: 0 0.25rem 0.25rem 0;"/>
+            </td>
+        </tr>
+        <!--法人股东-->
+        <tr>
+            <td><{$Think.lang.法人代表}></td>
+            <td colspan="" class="text-c-left">
+                <input class="input-form" type="text" name="LG_REP" value="<{$result.audit.LG_REP}>"/>
+            </td>
+            <td><{$Think.lang.股东名称}></td>
+            <td colspan="3" class="text-c-left">
+                <input type="text" class="input-form" name="SHARE_NAME" value="<{$result.audit.SHARE_NAME}>" placeholder="<{$Think.lang.多名股东以英文状态下的逗号隔开}>"/>
+            </td>
+        </tr>
+        <!--信用评级-->
+        <tr class="company-credit">
+            <td>
+                <{$Think.lang.信用评分(境外公司必填)}>
+            </td>
+            <td class="credit-score">
+                <input type="text" class="input-form" name="CREDIT_SCORE" placeholder="<{$Think.lang.请填写评分(0-100分的范围)}>" value="<{$result.audit.CREDIT_SCORE}>"/>
+            </td>
+            <td>
+                <{$Think.lang.信用评级(境外公司必填)}>
+            </td>
+            <td colspan="3" class="check-radio credit-grade">
+                <foreach name="creditGrade" item="vo" key="k">
+                    <span value="<{$k}>" class="<?= $result['audit']['CREDIT_GRADE'] == $k?'check-item-pick':'check-item' ?>"><{$vo}></span>
+                </foreach>
+                <input type="hidden" value="<{$result.audit.CREDIT_GRADE}>" name="CREDIT_GRADE" class="CREDIT_GRADE" id="CREDIT_GRADE" />
+            </td>
+        </tr>
+        <!--负面信息-->
+        <tr class="nagetive-info">
+            <td>
+                <{$Think.lang.是否有负面信息}>
+            </td>
+            <td class="is-have-nagetive-info check-radio">
+                <foreach name="isHaveNagetive" item="vo" key="k">
+                    <span value="<{$k}>" class="<?= $result['audit']['IS_HAVE_NAGETIVE_INFO'] == $k?'check-item-pick':'check-item' ?>"><{$vo}></span>&nbsp;&nbsp;
+                </foreach>
+                <input type="hidden" name="IS_HAVE_NAGETIVE_INFO" value="<{$result.audit.IS_HAVE_NAGETIVE_INFO}>" class="IS_HAVE_NAGETIVE_INFO" id="IS_HAVE_NAGETIVE_INFO"/>
+            </td>
+            <td>
+                <{$Think.lang.请选择负面信息项}>
+            </td>
+            <td colspan="3" class="choice-nagetive-option use-btn">
+                <foreach name="nagetiveOptions" item="vo" key="k">
+                    <span value="<{$k}>" class="btn-pub btn-gray"  style="<?= in_array($k, explode(',', $result['audit']['C_NAGETIVE_OPTIONS']))?'background: #ff6600;':'' ?>"><{$Think.lang.$vo}></span>
+                    <!--<span value="<{$k}>"  class="btn-pub btn-gray"><{$Think.lang.$vo}></span>-->
+                </foreach>
+                <input type="hidden" name="C_NAGETIVE_OPTIONS" value="<{$result.audit.C_NAGETIVE_OPTIONS}>" class="C_NAGETIVE_OPTIONS" id="C_NAGETIVE_OPTIONS"/>
+            </td>
+        </tr>
+        <!--评级标准-->
+        <tr class="grade_standard">
+            <td><{$Think.lang.评级标准}><br />(剑圣2017年6月21日发布)</td>
+            <td colspan="5" style="text-align: left;">
+                <foreach name="auditGradeStandard" item="vo" key="k">
+                    <{$vo}>
+                </foreach>
+            </td>
+        </tr>
+        <!--风险评级-->
+        <tr class="riskpun">
+            <td><{$Think.lang.风险评级}></td>
+            <td  class="check-radio">
+                <foreach name="riskRating" item="vo" key="k">
+                    <span value="<{$k}>" class="<?= $result['audit']['RISK_RATING'] == $k?'check-item-pick':'check-item' ?>"><{$Think.lang.$vo}></span>
+                </foreach>
+                <input type="hidden" name="RISK_RATING" id="RISK_RATING" value="<{$result.audit.RISK_RATING}>" class="risk"/>
+            </td>
+            <td><{$Think.lang.审核人}></td>
+            <td>
+                -
+            </td>
+            <td><{$Think.lang.审核时间}></td>
+            <td>
+                -
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>

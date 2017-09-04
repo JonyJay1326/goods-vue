@@ -1,0 +1,22 @@
+<div class="table-log">
+    <table class="table table-border table-bordered">
+        <thead>
+        <tr>
+            <th><{$Think.lang.时间}></th>
+            <th><{$Think.lang.状态}></th>
+            <th><{$Think.lang.提交人}></th>
+            <th><{$Think.lang.详细信息}></th>
+        </tr>
+        </thead>
+        <tbody class="text-c">
+        <volist name="logList" id="vo">
+            <tr>
+                <td><{$vo.ORD_HIST_REG_DTTM}></td>
+                <td>-</td>
+                <td><{$vo.ORD_HIST_WRTR_EML}></td>
+                <td><{$vo.ORD_HIST_HIST_CONT}></td>
+            </tr>
+        </volist>
+        </tbody>
+    </table>
+</div>

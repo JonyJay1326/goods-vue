@@ -1,0 +1,662 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css" />
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+
+    <title>新建订单</title>
+</head>
+<body class="create-order">
+<div class="order-title">
+    <{$Think.lang.新建订单}>【<?php if($type == 2){echo L('直邮订单');}elseif($type == 3){echo L('保税订单');}else{echo L('现货订单');}?>】
+</div>
+<div class="cli-table">
+    <table class="table table-border table-bg table-bordered">
+        <caption><{$Think.lang.客户信息}></caption>
+        <tbody>
+        <tr>
+            <td><{$Think.lang.B5C客户ID}></td>
+            <td><input type="text" name="CUST_ID" value="">&nbsp;&nbsp;&nbsp;<em onclick="searchuser()"><{$Think.lang.搜索}></em></td>
+            <td><{$Think.lang.客户姓名}></td>
+            <td id="custNickNm"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="rece-table">
+    <table class="table table-border table-bg table-bordered">
+        <caption><{$Think.lang.收货信息}></caption>
+        <tbody>
+        <tr>
+            <td><{$Think.lang.买家姓名}></td>
+            <td>
+                <input type="text" name="buyerName" placeholder="<{$Think.lang.必填}>">
+            </td>
+            <td><{$Think.lang.买家身份证}></td>
+            <td><input type="text" name="idCard" placeholder="<{$Think.lang.必填}>"></td>
+        </tr>
+        <tr>
+            <td><{$Think.lang.使用客户收货信息}></td>
+            <td>
+                <label> <input type="radio" name="info" onclick="$('#address').prop('disabled', true);">N </label>
+                <label> <input type="radio" checked name="info" onclick="$('#address').removeAttr('disabled');">Y </label>
+                <label for="">
+                    <select name="address" id="address">
+                        <option value=""><{$Think.lang.选择地址}></option>
+                    </select>
+                </label>
+            </td>
+            <td><{$Think.lang.收货人姓名}></td>
+            <td><input type="text" name="rcvrNm" placeholder="<{$Think.lang.必填}>"></td>
+        </tr>
+        <tr>
+            <td><{$Think.lang.收货人电话}></td>
+            <td><input type="text" name="rcvrTel" placeholder="<{$Think.lang.必填}>"></td>
+            <td><{$Think.lang.所在地区}></td>
+            <td>
+                <select id="cmbProvince" name="AddressForm[province]">
+                </select>
+                <select id="cmbCity" name="AddressForm[city]">
+                </select>
+                <select id="cmbArea" name="AddressForm[area]">
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><{$Think.lang.详细地址}></td>
+            <td><input type="text" name="addrDtl" placeholder="<{$Think.lang.必填}>"></td>
+            <!--<td>运送方式</td>-->
+            <!--<td>-->
+                <!--<label for=""> <input type="radio" name="DDP">DDP </label>-->
+                <!--<label for=""> <input type="radio" name="DDP">DDP </label>-->
+            <!--</td>-->
+            <td><{$Think.lang.备注信息}></td>
+            <td><input type="text" name="reqCont"></td>
+        </tr>
+        <tr>
+            <td><{$Think.lang.第三方订单号}></td>
+            <td><input type="text" name="thirdOrdId"></td>
+            <!--<td>运送方式</td>-->
+            <!--<td>-->
+            <!--<label for=""> <input type="radio" name="DDP">DDP </label>-->
+            <!--<label for=""> <input type="radio" name="DDP">DDP </label>-->
+            <!--</td>-->
+            <td><{$Think.lang.寄件人信息}></td>
+            <td><input type="text" name="senderInfo"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<div class="goods-table">
+    <table class="table table-border table-bordered goodstable">
+        <caption><{$Think.lang.商品信息}></caption>
+        <thead>
+        <tr class="text-c">
+            <th width="5%"><{$Think.lang.NO}></th>
+            <th width="15%"><{$Think.lang.B5C商品ID}></th>
+            <th width="10%"><{$Think.lang.图片}></th>
+            <th width="20%"><{$Think.lang.标题}></th>
+            <th width="15%"><{$Think.lang.SKU}></th>
+            <th width="5%"><{$Think.lang.单价}></th>
+            <th width="10%"><{$Think.lang.数量}></th>
+            <th width="10%"><{$Think.lang.小计}></th>
+            <th width="10%"><{$Think.lang.操作}></th>
+        </tr>
+        </thead>
+        <tbody class="cptr">
+        <tr class="text-c cp">
+            <td class="line_num">1</td>
+            <td><input type="text" name="GUDS_ID">&nbsp;&nbsp;<em onclick="searchguds(this)"><{$Think.lang.搜索}></em></td>
+            <td><img src="" alt=""></td>
+            <input type="hidden" name="type" value="<?php echo $type;?>">
+            <input type="hidden" name="jhprice" value="">
+            <td class="title"></td>
+            <td class="sku"></td>
+            <td class="price"><input name="price" disabled="true" onkeyup="change_price(this)"></td>
+            <td>
+                <input type="text" value="" name="num" onkeyup="calcu_price(this);">
+            </td>
+            <td class="total_price"></td>
+            <td>
+                <em onclick="addtr(this)"><{$Think.lang.添加}></em>&nbsp;&nbsp;
+                <em onclick="rmtr(this)"><{$Think.lang.删除}></em>
+            </td>
+        </tr>
+        <tr class="text-c last">
+            <td colspan="6"></td>
+            <td class="total_num"></td>
+            <td colspan="2" ><span id="total_price"></span> <em onclick="calcu();"><{$Think.lang.计算运费税费}></em><span id="fee"></span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+<input type="hidden" name="delivery" value="">
+<div class="text-c new-buttons">
+    <span onclick="saveord();"><{$Think.lang.保存}></span>
+    <span onclick="location.href='';"><{$Think.lang.清空}></span>
+</div>
+<div class="alert hide">
+    <div class="alert-bg"></div>
+    <div class="alert-body">
+        <div class="title"><span>请选择sku</span></div>
+        <div class="content row skulist">
+
+        </div>
+        <div class="text-c">
+            <span class="btn-con"><{$Think.lang.Yes}></span>
+            <span class="btn-can" onclick="$('.alert').hide();$('.btn-con').unbind()"><{$Think.lang.No}></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<script>
+    var addressInit = function(_cmbProvince, _cmbCity, _cmbArea, defaultProvince, defaultCity, defaultArea
+    )
+    {
+        var cmbProvince = document.getElementById(_cmbProvince);
+        var cmbCity = document.getElementById(_cmbCity);
+        var cmbArea = document.getElementById(_cmbArea);
+        function cmbSelect(cmb, str)
+        {
+            for(var i=0; i<cmb.options.length; i++)
+            {
+                if(cmb.options[i].value == str)
+                {
+                    cmb.selectedIndex = i;
+                    return;
+                }
+            }
+        }
+        function cmbAddOption(cmb, str, obj)
+        {
+            var option = document.createElement("OPTION");
+            cmb.options.add(option);
+            option.innerText = str;
+            option.value = str;
+            option.obj = obj;
+        }
+
+        function changeCity()
+        {
+            cmbArea.options.length = 0;
+            if(cmbCity.selectedIndex == -1)return;
+            var item = cmbCity.options[cmbCity.selectedIndex].obj;
+            for(var i=0; i<item.areaList.length; i++)
+            {
+                cmbAddOption(cmbArea, item.areaList[i], null);
+            }
+            cmbSelect(cmbArea, defaultArea);
+        }
+        function changeProvince()
+        {
+            cmbCity.options.length = 0;
+            cmbCity.onchange = null;
+            if(cmbProvince.selectedIndex == -1)return;
+            var item = cmbProvince.options[cmbProvince.selectedIndex].obj;
+            for(var i=0; i<item.cityList.length; i++)
+            {
+                cmbAddOption(cmbCity, item.cityList[i].name, item.cityList[i]);
+            }
+            cmbSelect(cmbCity, defaultCity);
+            changeCity();
+            cmbCity.onchange = changeCity;
+        }
+        $.ajax({
+            'type':'post',
+            'data':{},
+            'dataType':'json',
+            'url':'<{:U("orders/getaddr")}>',
+            'success':function(r){
+                provinceList = r;
+                for(var i=0; i<provinceList.length; i++)
+                {
+                    cmbAddOption(cmbProvince, provinceList[i].name, provinceList[i]);
+                }
+                cmbSelect(cmbProvince, defaultProvince);
+                changeProvince();
+                cmbProvince.onchange = changeProvince;
+            }
+        });
+    }
+    addressInit('cmbProvince', 'cmbCity', 'cmbArea');
+    function searchuser(){
+        $('select[name="address"]').html('<option value=""><{$Think.lang.选择地址}></option>');
+        var CUST_ID = $('input[name="CUST_ID"]').val();
+        $.ajax({
+            'url':'<{:U("orders/searchuser")}>',
+            'type':'POST',
+            'data':{CUST_ID:CUST_ID},
+            success: function (data) {
+                //console.log(data);
+                //return false;
+                if (data.status == 1) {
+                    $('#custNickNm').text(data.info.custNickNm);
+                    for(var key in data.info.address){
+                        $('select[name="address"]').append('<option addrPrvn="'+data.info.address[key].addrPrvn+'" addrCty="'+data.info.address[key].addrCty+'" addrDstr="'+data.info.address[key].addrDstr+'" addrDtl="'+data.info.address[key].addrDtl+'" rcvrNm="'+data.info.address[key].rcvrNm+'" rcvrTel="'+data.info.address[key].rcvrTel+'" value="'+data.info.address[key].fulladdress+'">'+data.info.address[key].fulladdress+'</option>');
+                    }
+                    // 协议定价用户
+                    if(data.info.changeprice == 1){
+                        $('input[name="price"]').removeAttr('disabled');
+                    }else{
+                    // 非协议定价用户
+                        $('input[name="price"]').attr('disabled','true');
+                    }
+                } else {
+                    alert(data.info);
+                    return false;
+                }
+            }
+        },'json');
+    }
+
+    $('select[name="address"]').change(function(){
+        var addrPrvn = $(this).children('option:selected').attr('addrPrvn')
+        var addrCty = $(this).children('option:selected').attr('addrCty')
+        var addrDstr = $(this).children('option:selected').attr('addrDstr')
+        var addrDtl = $(this).children('option:selected').attr('addrDtl')
+        var rcvrNm = $(this).children('option:selected').attr('rcvrNm')
+        var rcvrTel = $(this).children('option:selected').attr('rcvrTel')
+        $('input[name="rcvrNm"]').val(rcvrNm)
+        $('input[name="addrDtl"]').val(addrDtl)
+        $('input[name="rcvrTel"]').val(rcvrTel)
+        addressInit('cmbProvince', 'cmbCity', 'cmbArea',
+                addrPrvn, addrCty,
+                addrDstr);
+    })
+
+    function confirm(o){
+        me = $(o);
+        var radio = $('input[name="sku_id"]:checked');
+        if($('input[name="sku_id['+radio.attr('sku_id')+']"]').length >0){
+            alert('<{$Think.lang.已存在sku}>');
+            return false;
+        }
+
+        me.parents('tr').find('input[name="price"]').val(radio.attr('price'));
+        me.parents('tr').find('input[name="jhprice"]').val(radio.attr('jhprice'));
+//        me.parents('tr').find('.price').text(radio.attr('price'));
+        me.parents('tr').find('img').attr('src',radio.attr('img_src'));
+        me.parents('tr').find('.title').text(radio.attr('title'));
+        me.parents('tr').find('.sku').text(radio.val());
+
+        me.parents('tr').find('.sku_id').remove();
+        me.parents('tr').find('.spu_id').remove();
+        me.parents('tr').find('.sllr_id').remove();
+        me.parents('tr').find('.max').remove();
+        me.parents('tr').find('.min').remove();
+        me.parents('tr').append('<input type="hidden" class="spu_id" value="'+radio.attr('spu_id')+'" name="spu_id['+radio.attr('spu_id')+']">');
+        me.parents('tr').append('<input type="hidden" class="sku_id" value="'+radio.attr('sku_id')+'" name="sku_id['+radio.attr('sku_id')+']">');
+        me.parents('tr').append('<input type="hidden" class="sllr_id" value="'+radio.attr('sllr_id')+'" name="sllr_id['+radio.attr('sllr_id')+']">');
+        me.parents('tr').append('<input type="hidden" class="max" value="'+radio.attr('max')+'" >');
+        me.parents('tr').append('<input type="hidden" class="min" value="'+radio.attr('min')+'" >');
+        $('input[name="delivery"]').val(radio.attr('delivery'));
+        var num = me.parents('tr').find('input[name="num"]').val();
+        if(num){
+            var total_price = parseInt(num) * parseFloat(radio.attr('price'));
+            me.parents('tr').find('.total_price').text(total_price.toFixed(2));
+        }
+        var all_price = 0;
+        $('.cp').each(function(){
+            var total_price = $(this).find('.total_price').text();
+            if($.trim(total_price) != ''){
+                all_price += parseFloat($(this).find('.total_price').text());
+            }
+        })
+        $('#total_price').text(all_price.toFixed(2));
+        $('.alert').hide();
+        $('.btn-con').unbind();
+
+    }
+    function searchguds(o){
+        var gudscount = 0;
+        $('.sku_id').each(function(){
+            gudscount++;
+        })
+        me = $(o);
+        var mark = me.parents('tr').find('.sku_id').length;
+        var GUDS_ID = me.parents('tr').find('input[name="GUDS_ID"]').val();
+        var type = $('input[name="type"]').val();
+        var delivery = $('input[name="delivery"]').val();
+        var WAREHOUSE = "<?php echo I('get.delivery');?>";
+        if(GUDS_ID.length == 8){
+            //spu搜索
+            var flag = 1;
+        }else if(GUDS_ID.length == 10){
+            //sku搜索
+            var flag = 2;
+        }else{
+            alert('<{$Think.lang.请输入正确的spu/sku}>');
+            return false;
+        }
+        $.ajax({
+            'url':'<{:U("orders/searchguds")}>',
+            'type':'POST',
+            'data':{GUDS_ID:GUDS_ID,type:type,delivery:delivery,flag:flag,WAREHOUSE:WAREHOUSE,gudscount:gudscount,mark:mark},
+            success: function (data) {
+                if (data.status == 1) {
+                    $('.skulist').text('')
+                    var n = 0;
+                    for(var key in data.info.opt_val) {
+                        n++;
+                        var htm = '<input type="radio" onchange="changesku(this)" name="sku_id" img_src="'+data.info.img+'" title="'+data.info.GUDS_NM+'" sku_id="' + data.info.opt_val[key]['GUDS_OPT_ID'] + '" spu_id="' + data.info.opt_val[key]['GUDS_ID'] + '" sllr_id="'+data.info.opt_val[key]['SLLR_ID']+'"  max="'+data.info.MAX_BUY_NUM+'"  min="'+data.info.MIN_BUY_NUM+'" delivery="'+data.info.DELIVERY_WAREHOUSE+'" class="sku" jhprice="'+data.info.opt_val[key]['GUDS_OPT_ORG_PRC']+'" onclick="checkprice(this)" price="' + data.info.opt_val[key]['price'] + '" checked="" value="' + data.info.opt_val[key]['val'] + '">' + data.info.opt_val[key]['val'] + '<br />';
+                        $('.skulist').append(htm);
+                    }
+                    if(n<2){
+                        confirm($(o));
+                    }else{
+                        $('.btn-con').bind('click',function(){confirm($(o))})
+                        $('.alert').show();
+                    }
+                }else{
+                    alert(data.info);
+                    return false;
+                }
+            }
+        },'json')
+
+
+    }
+
+    function changesku(o){
+        var aa = $(o).siblings().find('input[type="radio"]:checked').attr('sku_id');
+        var spu = $(o).attr('spu_id');
+        var sku = $(o).attr('sku_id');
+        var a = 0;
+        $(o).parents('tr').siblings().find('input[sku_id="'+sku+'"]:checked').each(function(){
+            if($(this).attr('checked') == 'checked'){
+                a++;
+            }
+        })
+
+        if(a != 0){
+            $(o).removeProp("checked");
+            alert('<{$Think.lang.按钮不可选,该sku已被勾选}>');
+            return false;
+        }
+    }
+
+    function checkprice(o){
+        var price = $(o).attr('price');
+        $(o).parents('tr').find('input[name="price"]').val(price);
+        var num = $('input[name="num"]').val();
+        if(num){
+            var total_price = parseInt(num) * parseFloat(price);
+            $(o).parents('tr').find('.total_price').text(total_price.toFixed(2));
+        }
+    }
+
+    function calcu_price(o){
+        var total_num = 0;
+        var num = $(o).val();
+        if(isNaN(num)){
+            alert('<{$Think.lang.请输入数字}>');
+            return false;
+        }
+        var price = $(o).parents('tr').find('input[name="price"]').val();
+        var all_price = 0;
+        var total_num = 0;
+        $('.cp').each(function(){
+            var num = $(this).find('input[name="num"]').val();
+            if(num != '' ){
+                total_num += parseInt(num);
+            }
+        })
+        $('.total_num').text(total_num);
+        if($.trim(price) != ''){
+
+            var total_price = parseInt(num) * parseFloat(price);
+            $(o).parents('tr').find('.total_price').text(total_price.toFixed(2));
+        }
+        $('.cp').each(function(){
+            var total_price = $(this).find('.total_price').text();
+            if($.trim(total_price)){
+                all_price += parseFloat(total_price);
+            }
+        })
+        $('#total_price').text(all_price.toFixed(2));
+    }
+    function change_price(o){
+         var num = $(o).parents('tr').find('input[name="num"]').val();
+        if(!num){
+            num = 0;
+        }
+         var total_price = parseInt(num) * parseFloat($(o).val());
+         $(o).parents('tr').find('.total_price').text(total_price.toFixed(2));
+         var all_price = 0;
+         $('.cp').each(function(){
+             var total_price = $(this).find('.total_price').text();
+             if($.trim(total_price)){
+                     all_price += parseFloat(total_price);
+                 }
+         })
+
+         $('#total_price').text(all_price.toFixed(2));
+     }
+
+
+
+    function addtr(o){
+        var line = $(o).parents('table').find('.cp:last').find('.line_num').text();
+        var newtr = tr;
+        newtr.find('.line_num').text(parseInt(line)+1)
+        $('.last').before(newtr[0].outerHTML)
+        if($(o).parents('table').find('.cp:first input[name="price"]').attr('disabled') == 'disabled'){
+
+        }else{
+            $('input[name="price"]').removeAttr('disabled','true');
+        }
+
+    }
+    function rmtr(o){
+        if($('.cp').length == 1){
+            alert('<{$Think.lang.至少保留一行}>');
+            return false;
+        }
+        var all_price = 0;
+        $('.cp').each(function(){
+            var total_price = $(this).find('.total_price').text();
+            if($.trim(total_price)!=''){
+                all_price += parseFloat(total_price);
+            }
+        })
+        $('#total_price').text(all_price.toFixed(2));
+        var guds_num = 0;
+        $('.cp').each(function(){
+            if($(this).find('.sku_id').length > 0){
+                guds_num++;
+            }
+        })
+        if(guds_num == 0){
+            $('input[name="delivery"]').val('');
+            $(o).parents('tr').remove();
+        }
+        $(o).parents('tr').remove();
+    }
+    var tr = $('.cp').clone();
+    function calcu(){
+        var arr = [];
+        $('.cp').each(function(){
+            var obj = {};
+            var ordGudsQty = $(this).find('input[name="num"]').val();
+            var gudsId = $(this).find('.spu_id').val();
+            var gudsOptId = $(this).find('.sku_id').val();
+            var sllrId = $(this).find('.sllr_id').val();
+            obj['ordGudsQty'] = ordGudsQty;
+            obj['gudsId'] = gudsId;
+            obj['gudsOptId'] = gudsOptId;
+            obj['sllrId'] = sllrId;
+            if(ordGudsQty != '' && gudsId != undefined){
+                arr.push(obj)
+            }
+        })
+
+        if(arr && arr.length == 0){
+            alert('<{$Think.lang.请添加商品或商品数量}>');
+            return false;
+        }
+        var transCheCd = $('input[name="delivery"]').val();
+        var adprAddr = $('#cmbProvince').val();
+        $.ajax({
+            'url':'<{:U("orders/calcufee")}>',
+            'type':'POST',
+            'data':{transCheCd:transCheCd,adprAddr:adprAddr,tbMsOrdGudsOptDtos:arr},
+            success: function (data) {
+                if (data.status == 1) {
+                    var fee = '运费:'+data.info.fee;
+                    if(data.info.rate != 0){
+                        //含运费
+                        var rate = '税费:'+data.info.rate;
+
+                    }else{
+                        var rate = '<{$Think.lang.不含税费}>';
+                    }
+                    $('#fee').text(fee+' '+rate);
+                } else {
+                    alert(data.info);
+                    return false;
+                }
+            }
+        },'json');
+    }
+    function saveord(){
+        var guds = [];
+        var numnull = 0;
+        var overnum = 0;
+        var msg = '';
+        $('.goodstable').find('.cp').each(function(){
+            var TdData = {};
+            var price = $(this).find('input[name="price"]').val();
+            var num = $(this).find('input[name="num"]').val();
+            var GUDS_ID = $(this).find('.spu_id').val();
+            var sku_id = $(this).find('.sku_id').val();
+            var sllr_id = $(this).find('.sllr_id').val();
+            TdData['rmbPrice'] = price
+            TdData['gudsQty'] = num
+            TdData['skuId'] = sku_id
+            TdData['gudsId'] = GUDS_ID
+            TdData['sllr_id'] = sllr_id
+            var minprice =  $(this).find('input[name="jhprice"]').val();
+            if(parseFloat(price) < parseFloat(minprice)){
+                overnum++;
+                msg += '商品单价不得小于进货价，商品ID：'+GUDS_ID;
+            }
+            var max = parseInt($(this).find('.max').val());
+            var min = parseInt($(this).find('.min').val());
+            if(max<parseInt(num)){
+                overnum++;
+                msg += GUDS_ID+'不能大于最大起订量'+max+' \n';
+            }
+            if(min>parseInt(num)){
+                overnum++;
+                msg += GUDS_ID+'不能小于最小起订量'+min+' \n';
+            }
+            if( GUDS_ID != undefined){
+                if(num == ''){
+                    numnull = 1;
+                }
+                guds.push(TdData);
+            }
+        })
+        if(overnum !=0){
+            alert(msg)
+            return false;
+        }
+        if(guds && guds.length == 0){
+            alert('<{$Think.lang.请添加商品}>');
+            return false;
+        }
+        if(numnull !=0){
+            alert('<{$Think.lang.商品数量不能为空}>');
+            return false;
+        }
+        var account = $('input[name="CUST_ID"]').val();
+        if(account == ''){
+            alert('<{$Think.lang.客户id不能为空}>');
+            return false;
+        }
+        var buyerName = $('input[name="buyerName"]').val();
+        if(buyerName == ''){
+            alert('<{$Think.lang.买家姓名不能为空}>');
+            return false;
+        }
+        var reqCont = $('input[name="reqCont"]').val();
+        var idCard = $('input[name="idCard"]').val();
+        if(idCard == ''){
+            alert('<{$Think.lang.买家身份证不能为空}>');
+            return false;
+        }
+
+        var pattern = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+        if(!pattern.test(idCard)){
+            alert('<{$Think.lang.身份证格式不对}>');
+            return false;
+        }
+
+        var recName = $('input[name="rcvrNm"]').val();
+        if(recName == ''){
+            alert('<{$Think.lang.收货人姓名不能为空}>');
+            return false;
+        }
+        var phoneNm = $('input[name="rcvrTel"]').val();
+        if(phoneNm == ''){
+            alert('<{$Think.lang.收货人电话不能为空}>');
+            return false;
+        }
+
+        var isMobile=/^(?:1[3-9]\d)\d{5}(\d{3}|\*{3})$/;
+        var isPhone=/^((0\d{2,3})-)?(\d{7,8})(-(\d{3,}))?$/;
+        if(!isMobile.test(phoneNm) && !isPhone.test(phoneNm) ){
+            alert('<{$Think.lang.电话格式不对}>');
+            return false;
+        }
+
+        var recAddr = $('input[name="addrDtl"]').val();
+        if(recAddr == ''){
+            alert('<{$Think.lang.详细地址不能为空}>');
+            return false;
+        }
+        var cmbProvince = $('#cmbProvince').val()+' ';
+        var cmbCity = $('#cmbCity').val()+' ';
+        var cmbArea = $('#cmbArea').val()+' ';
+        var transCheCd = $('input[name="delivery"]').val();
+        var adprAddr = $('#cmbProvince').val();
+        if(adprAddr == ''){
+            alert('<{$Think.lang.请选择所在地区}>');
+            return false;
+        }
+        var thirdOrdId = $('input[name="thirdOrdId"]').val();
+        var senderInfo = $('input[name="senderInfo"]').val();
+        var deliveryWarehouse = $('input[name="delivery"]').val();
+        var type = $('input[name="type"]').val();
+        $.ajax({
+            'url':'<{:U("orders/docreateorder")}>',
+            'type':'POST',
+            'data':{account:account,b5cUserId:account,buyerName:buyerName,reqCont:reqCont,recrNm:recName,buyerIdCard:idCard,recrTel:phoneNm,addrDtl:recAddr,addrPrvn:cmbProvince,addrCty:cmbCity,addrDstr:cmbArea,transCheCd:transCheCd,adprAddr:adprAddr,goods:guds,thirdOrdId:thirdOrdId,senderInfo:senderInfo,deliveryWarehouse:deliveryWarehouse,ordType:'N000620400', type: type},
+            success: function (data) {
+                if (data.status == 1) {
+                    alert(data.info.msg);
+                } else {
+                    alert(data.info);
+                    return false;
+                }
+            }
+        },'json');
+    }
+</script>

@@ -1,0 +1,728 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/jqeury-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170306" />
+    <link rel="stylesheet" href="../Public/css/common.css?v=201702"/>
+    <title></title>
+</head>
+<style>
+    .error{
+        background-color: #fbe2e2;
+        border-color: #c66161;
+        color: #c00;
+    }
+
+    label.error {
+        right: 18px;
+        top: 5px;
+        color: #ef392b;
+        font-size: 12px;
+    }
+</style>
+<body>
+<div class="commom_wrap">
+    <form action="" method="post" id="supplier" enctype="multipart/form-data">
+        <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+        <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+        <include file="supplier_model" />
+        <include file="goods_type" />
+        <div class="gys-wrap">
+            <div class="gys_wrap_btn">
+                <button class="btn gys_btn_submit" type="submit"><{$Think.lang.提交}></button>
+                <button class="btn gys_btn_reset" type="reset" id="reset"><{$Think.lang.重置}></button>
+            </div>
+        </div>
+    </form>
+    <div id="show"></div>
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../Public/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="../Public/js/validate-methods.js"></script>
+<script type="text/javascript" src="../Public/js/messages_zh.min.js"></script>
+<script type="text/javascript" src="../Public/js/jquery.form.min.js"></script>
+<script type="text/javascript" src="../Public/js/ajaxupload.js"></script>
+<script type="text/javascript" src="../Public/js/bootstrap.min.js"></script>
+</body>
+<script>
+    $(function() {
+        var must_need_upload = '<?= $must_need_upload_file ?>';
+        // 文件异步上传功能块
+        window.onload = function() {
+            _initConTypeCode();
+        };
+        var conTypeCode = new Array();
+        // 企业类型，改为可多选
+        $(".ctcd span").click(function() {
+            _this = $(this);
+            if (_this.attr('is_checked') == 1) {
+                _this.css({'background':'#C8D2D7 ',"color":"#546E7A"});//.siblings().css({'background':'#dddddd'});
+                _this.attr('is_checked', '0');
+                // 删除再次选中的企业类型
+                for (var i = 0; i < conTypeCode.length; i ++) {
+                    if (conTypeCode[i] == _this.attr('value')) {
+                        conTypeCode.splice(i, 1);
+                    }
+                }
+            } else {
+                conTypeCode.push(_this.attr('value'));
+                _this.css({'background':'#FF5224 ',"color":"white"});//.siblings().css({'background':'#dddddd'});
+                _this.attr('is_checked', '1');
+            }
+            
+            $(".COPANY_TYPE_CD").val(conTypeCode);
+            $("#COPANY_TYPE_CD-error").css('display', 'none');
+        });
+        
+        // 初始化对企业类型进行数据写入
+        function _initConTypeCode()
+        {
+            var conTypeCds = '<?= $result['COPANY_TYPE_CD'] ?>';
+            if (conTypeCds.length > 0) {
+                var arr = conTypeCds.split(',');
+                for (var i = 0; i < arr.length; i++) {
+                    conTypeCode.push(arr[i]);
+                }
+            }
+        }
+
+        $(".sysc span").click(function() {
+            $(this).addClass("gys_check_item_active").siblings().removeClass("gys_check_item_active");
+            $(".SP_YEAR_SCALE_CD").val($(this).attr('value'));
+            $("#SP_YEAR_SCALE_CD-error").css('display', 'none');
+        });
+        //采购团队功能代码
+        var App = function() {
+            var app = this;
+            var opts = [];
+            var selectedOpts = [];
+            // 采购团队增加团队
+            var create_select = function (exists) {
+                var options = '';
+                options += '<option value="" selected="selected"><{$Think.lang.请选择采购团队}></option>';
+                $.each(opts, function (i, e) {
+                    if (exists && (i == exists)) {
+                        options += '<option value="'+i+'" selected="selected">' + e + '</option>';
+                    } else {
+                        options += '<option value="'+i+'">' + e + '</option>';
+                    }
+                });
+                var shtml = '<select name="SP_TEAM_CD[]" class="required">';
+                shtml += options;
+                shtml += '</select>';
+                return shtml;
+            };
+            app.add = function () {
+                return create_select();
+            };
+            app.pushOpts = function (optVal) {
+                selectedOpts.push(optVal);
+            };
+            app.delOpts = function (optVal) {
+                for (var i = 0; i < selectedOpts.length; i ++) {
+                    if (options[i] == optVal) {
+                        options.splice(i, 1);
+                        return;
+                    }
+                }
+            };
+            // 初始化采购团队
+            app.init = function () {
+                var sp_cds = '<?= $result['SP_TEAM_CD'] ?>';
+                var arr = sp_cds.split(',');
+                if (arr.length == 1) {
+                    return;
+                } else {
+                    $(".multiple_team select").remove();
+                    for (var i = 0; i < arr.length; i++) {
+                        $(create_select(arr[i])).insertBefore($('.add_nodes'));    
+                    }
+                }
+            };
+            
+            (function () {
+                opts = eval("(" + '<?= json_encode($spTeamCd) ?>' + ")");
+            })();
+        };
+
+        var app = new App();
+        app.init();
+        
+        $('.add_nodes').click(function() {
+            $(app.add()).insertBefore($('.add_nodes'));
+        });
+        $('.del_nodes').click(function() {
+            if ($(".multiple_team select").length == 1) {
+                return false;   
+            } else {
+                $('.multiple_team select:last').remove();    
+            }
+            //$(app.add()).insertBefore($('.add_nodes'));
+        });
+
+        var sydata = '';
+        // 国、省、市、县
+        var area = function (conf, init) {
+            var ar = this;
+            this.conf = conf;
+            this.init = init;
+            this.need_init = true;
+            this.defineName = ["<{$Think.lang.国别}>", '<{$Think.lang.国别}>', '<{$Think.lang.省}>', '<{$Think.lang.市、县}>'];
+
+            this.curlRequest = function (url, id) {
+                $.ajax({
+                    url: url,
+                    type: "post",
+                    // iframe: true,
+                    dataType:'json',
+                    data: {'id': id},
+                    async: false,
+                    beforeSend:function(XMLHttpRequest){
+                    },
+                    success: function (data) {
+                        sydata = data.data;
+                    },
+                    error:function(XMLHttpRequest,textStatus,errorThrown){
+                        layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                    }
+                });
+                return sydata;
+            };
+
+            this.getData = function (checkId, id) {
+                switch (checkId) {
+                    case 1:
+                        return ar.getProvince(id);
+                        break;
+                    case 2:
+                        return ar.getCity(id);
+                        break;
+                    case 3:
+                        return ar.getCounty(id);
+                        break;
+                }
+            };
+
+            this.getProvince = function (id) {
+                var url = '<{:U("supplier/get_province")}>';
+                return ar.curlRequest(url, id);
+            };
+
+            this.getCity = function (id) {
+                var url = '<{:U("supplier/get_city")}>';
+                return ar.curlRequest(url, id);
+            };
+
+            this.getCounty = function (id) {
+                var url = '<{:U("supplier/get_county")}>';
+                return ar.curlRequest(url, id);
+            };
+
+            this.ze_me = function setOptions (index, cfg, dName) {
+                var s_country = document.getElementById(cfg[index]);
+                with(s_country) {
+                    var str = '';
+                    length = 0;
+                    options [0] = new Option(ar.defineName[index], "");
+                    if(index && document.getElementById(cfg[index-1]).selectedIndex > 0 || !index){
+                        if(true){
+                            var data = '';
+                            if (index == 0) {
+                                data = eval('<?= json_encode($country) ?>');
+                                $(data).each(function (i, e) {
+                                    i ++;
+                                    options [i] = new Option(e.NAME, e.ID);
+                                });
+                            }
+                            else if (index == 1) {
+                                var p_i = document.getElementById(cfg[index-1]).value;
+                                var sindex = document.getElementById(cfg[index-1]).selectedIndex;
+                                var p_v = document.getElementById(cfg[index-1]).options[sindex].text;
+                                data = [{"NAME": p_v, "ID": p_i}];
+                                $(data).each(function (i, e) {
+                                    i ++;
+                                    options [i] = new Option(e.NAME, e.ID);
+                                });
+                            } else if (index == 2) {
+                                str = document.getElementById(cfg[index - 1]).value;
+                                var ret = ar.getCity(str);
+                                data = ret;
+                                $(data).each(function (i, e) {
+                                    i ++;
+                                    options [i] = new Option(e.NAME, e.ID);
+                                });
+                            } else if (index ==3) {
+                                str = document.getElementById(cfg[index - 2]).value + ',';
+                                str += document.getElementById(cfg[index - 1]).value;
+                                var ret = ar.getCounty(str);
+                                data = ret;
+                                $(data).each(function (i, e) {
+                                    i ++;
+                                    options [i] = new Option(e.NAME, e.ID);
+                                });
+                            }
+                            if (ar.need_init == true) {
+                                if (init[index]) {
+                                    for (var i = 0; i < options.length; i++) {
+                                        if (options[i].value == init[index]) {
+                                            options[i].selected = true;
+                                        }
+                                    }
+                                    if (index == 1) {
+                                        options[1].selected = true;
+                                    }
+                                    
+                                } else {
+                                    options[0].selected = true;
+                                }
+                            } else {
+                                if (index) options[0].selected = true;
+                                if (index == 1) options[1].selected = true;
+                            }
+                        }
+                    }
+
+                    if(++index < cfg.length){setOptions(index, cfg, dName);}
+                }
+            };
+
+            // construct
+            (function(){
+                $(document.getElementById(ar.conf[0])).bind('change',function(){
+                    ar.ze_me(1, ar.conf, ar.defineName);
+                });
+                $(document.getElementById(ar.conf[1])).bind('change',function(){
+                    ar.ze_me(2, ar.conf, ar.defineName);
+                });
+                $(document.getElementById(ar.conf[2])).bind('change',function(){
+                    ar.ze_me(3, ar.conf, ar.defineName);
+                });
+                ar.ze_me(0, ar.conf, ar.defineName);
+                ar.need_init = false;
+            })();
+        };
+        var init_cs = ['<?= $result['SP_ADDR1'] ?>', '<?= $result['SP_ADDR2'] ?>', '<?= $result['SP_ADDR3'] ?>', '<?= $result['SP_ADDR4'] ?>'];
+        new area(['s_country', 's_province', 's_city', 's_county'], init_cs);
+        // 表单验证
+        $("#supplier").validate({
+            debug: true,
+            rules: {
+                SP_NAME: "required",
+                SP_CHARTER_NO: "required",
+                COPANY_TYPE_CD: "required",
+                SP_YEAR_SCALE_CD: "required",
+                SP_TEAM_CD: "required",
+                //SP_ANNEX_ADDR: "required",
+                SP_JS_TEAM_CD: "required",
+                SP_ADDR1: "required",
+                //SP_ADDR2: "required",
+                SP_RES_NAME_EN: "required",
+                COMPANY_ADDR_INFO: "required",
+                COMPANY_MARKET_INFO: "required",
+                SP_NAME_EN: "required",
+                //SP_ADDR3: "required",
+                SP_ADDR5: "required",
+                //SP_ADDR6: "required",
+                SP_ADDR3: {
+                    required: function() {
+                        if ($("#s_city option").length > 1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                },
+                SP_ADDR4: {
+                    required: function() {
+                        if ($("#s_county option").length > 1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                },
+                SP_ADDR7: {
+                    required: function() {
+                        if ($("#t_city option").length > 1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                },
+                SP_ADDR8: {
+                    required: function() {
+                        if ($("#t_county option").length > 1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                },
+                SP_CAT_CD: "required",
+            },
+            messages: {
+                SP_NAME: "<{$Think.lang.请输入供应商名称}>",
+                SP_CHARTER_NO: "<{$Think.lang.请输入营业执照号}>",
+                COPANY_TYPE_CD: "<{$Think.lang.请选择企业类型}>",
+                SP_YEAR_SCALE_CD: "<{$Think.lang.请选择供应商年业务规模}>",
+                SP_TEAM_CD: "<{$Think.lang.请选择采购团队}>",
+                SP_JS_TEAM_CD: "<{$Think.lang.请选择介绍团队}>",
+                SP_ADDR1: "<{$Think.lang.国别}>",
+                SP_ADDR2: "<{$Think.lang.国别}>",
+                SP_ADDR3: "<{$Think.lang.省}>",
+                SP_ADDR4: "<{$Think.lang.市、县}>",
+                SP_CAT_CD: "<{$Think.lang.请选择商品分类}>",
+                SP_RES_NAME_EN: "<{$Think.lang.请输入英文简称}>",
+                COMPANY_ADDR_INFO: "<{$Think.lang.请输入供应商详细地址}>",
+                COMPANY_MARKET_INFO: "<{$Think.lang.公司与市场地位简述}>",
+                SP_NAME_EN: "<{$Think.lang.请输入英文名称}>",
+                SP_ADDR5: "<{$Think.lang.国别}>",
+                SP_ADDR7: "<{$Think.lang.省}>",
+                SP_ADDR8: "<{$Think.lang.市县}>",
+            },
+            submitHandler:function(form){
+                if (!checkTeam()) {
+                    layer.msg('<{$Think.lang.采购团队重复选择}>');
+                    return false;
+                }
+                // 采购团队，介绍团队验证是否有重复
+                if (!checkmult()) {
+                    layer.msg('<{$Think.lang.采购团队、介绍团队重复选择}>');
+                    return false;
+                }
+                if (!$("#supplier_file").val() && must_need_upload == 1) {
+                    layer.msg('请上传营业执照');
+                    return false;
+                }
+                var options = {
+                    beforeSubmit: validate,
+                    beforeSend  : function () {
+                        index = layer.load(2, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                    },
+                    success     : function(data, status, xhr) {
+                        data = JSON.parse(data);
+                        if (data.status == 1) {
+                            layer.msg(data.msg);
+                        } else {
+                            layer.msg(data.data);
+                        }
+                        layer.close(index);
+                    },
+                    error       : function(xhr, status, error) {
+                        var context = options.context || this;
+                        layer.msg(error);
+                    },
+                };
+                $('#supplier').ajaxSubmit(options);
+            }
+        });
+        // 针对性的表单验证
+        function validate(formData, jqForm, options) {
+            var form = jqForm[0]; 
+        }
+        
+        // 校验采购团队是否重复选择
+        function checkTeam() {
+            var temparr = [];
+            var nowTemp = '';
+            var isFalse = true;
+            $('.multiple_team select option:selected').each(function () {
+                nowTemp = $(this).html();
+                if (temparr.length > 0) {
+                    for (var i = 0; i < temparr.length; i ++) {
+                        if (temparr [i] == nowTemp) {
+                            isFalse = false;
+                        }
+                    }   
+                }
+                temparr.push(nowTemp);
+            });
+            return isFalse;
+        }
+        // 校验是否有重名的采购和介绍团队
+        function checkmult() {
+            var temparr = [];
+            var isFalse = true;
+            $('.multiple_team select option:selected').each(function () {
+                 temparr.push($(this).html());
+            });
+            var tempspt = $("select[name='SP_JS_TEAM_CD'] option:selected").html();
+            for (var i = 0; i < temparr.length; i ++) {
+                if (temparr [i] == tempspt) {
+                    isFalse = false;
+                }
+            }
+            return isFalse;
+        }
+
+        // 保存选中的商品类型
+        var goodsType = new Array();
+        var spanObj = new Array();
+        $('#myModal .goods-type span').click(function() {
+            _this = $(this);
+            var goodsCd = _this.attr('value');
+            if (_this.attr('ischecked') == 'false') {
+                _this.css('background', '#00CC99');
+                _this.attr('ischecked', true);
+                goodsType.push(goodsCd);
+                spanObj.push(_this);
+            } else {
+                _this.css('background', '#ed2d65');
+                _this.attr('ischecked', false);
+                if (spanObj.length > 0) {
+                    for (var i = 0; i < spanObj.length; i ++) {
+                        if (_this[0] == spanObj[i][0]) {
+                            spanObj.splice(i, 1);
+                        }
+                    }
+                }
+                $.each(goodsType, function(i, e) {
+                    if (goodsCd == e) {
+                        goodsType.splice(i, 1);
+                    }
+                });
+            }
+            _dynamicSpan();
+            _writeInput();
+        });
+
+        // 动态生成span商品框
+        function  _dynamicSpan()
+        {
+            // 生成span之前，需要清理
+            _clean();
+            var show = $("#goods_type-show");
+            var shtml = '';
+            if (spanObj.length > 0) {
+                $.each(spanObj, function(i, e) {
+                    shtml += '<span style="background:#00CC99;color:white;">' + e.text() + '</span>';
+                });
+            }
+            $(shtml).insertBefore(show);
+        }
+        // 清理已生成的，避免重复
+        function _clean()
+        {
+            $("#goods_type-td span").remove();
+        }
+
+        function _writeInput()
+        {
+            $("#SP_CAT_CD").val(goodsType);
+        }
+        
+        // 初始化商品选中信息
+        function _initGoods()
+        {
+            var goods_cds = '<?= $result['SP_CAT_CD'] ?>';
+            if (goods_cds.length > 0) {
+               
+                var arr = goods_cds.split(',');
+                goodsType = arr;
+
+                // 初始化span对象
+                for (var i = 0; i < $(".init-goods-type span").length; i ++) {
+                    for (var j = 0; j < arr.length; j ++) {
+                        var span = $(".init-goods-type span:eq("+i+")");
+                        var val = span.attr('value');
+                        if(val == arr[j]) {
+                            spanObj.push(span);
+                            span.css('background', '#00CC99');
+                            span.attr('ischecked', true);
+                        }    
+                    }
+                }
+                // 初始化重绘
+                _dynamicSpan();
+                _writeInput();
+            }
+        }
+        _initGoods();
+    });
+    
+(function(){
+    var sydata = '';
+    // 国、省、市、县
+    var area = function (conf, init) {
+
+        var ar = this;
+        this.conf = conf;
+        this.init = init;
+        this.need_init = true;
+        this.defineName = ["<{$Think.lang.国别}>", '<{$Think.lang.国别}>', '<{$Think.lang.省}>', '<{$Think.lang.市、县}>'];
+
+        this.curlRequest = function (url, id) {
+            $.ajax({
+                url: url,
+                type: "post",
+                // iframe: true,
+                dataType:'json',
+                data: {'id': id},
+                async: false,
+                beforeSend:function(XMLHttpRequest){
+                },
+                success: function (data) {
+                    sydata = data.data;
+                },
+                error:function(XMLHttpRequest,textStatus,errorThrown){
+                    layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                }
+            });
+            return sydata;
+        };
+
+        this.getData = function (checkId, id) {
+            switch (checkId) {
+                case 1:
+                    return ar.getProvince(id);
+                    break;
+                case 2:
+                    return ar.getCity(id);
+                    break;
+                case 3:
+                    return ar.getCounty(id);
+                    break;
+            }
+        };
+
+        this.getProvince = function (id) {
+            var url = '<{:U("supplier/get_province")}>';
+            return ar.curlRequest(url, id);
+        };
+
+        this.getCity = function (id) {
+            var url = '<{:U("supplier/get_city")}>';
+            return ar.curlRequest(url, id);
+        };
+
+        this.getCounty = function (id) {
+            var url = '<{:U("supplier/get_county")}>';
+            return ar.curlRequest(url, id);
+        };
+
+        this.ze_me = function setOptions (index, cfg, dName) {
+            var s_country = document.getElementById(cfg[index]);
+            with(s_country) {
+                var str = '';
+                length = 0;
+                options [0] = new Option(ar.defineName[index], "");
+                if(index && document.getElementById(cfg[index-1]).selectedIndex > 0 || !index){
+                    if(true){
+                        var data = '';
+                        if (index == 0) {
+                            data = eval('<?= json_encode($country) ?>');
+                            $(data).each(function (i, e) {
+                                i ++;
+                                options [i] = new Option(e.NAME, e.ID);
+                            });
+                        }
+                        else if (index == 1) {
+                            var p_i = document.getElementById(cfg[index-1]).value;
+                            var sindex = document.getElementById(cfg[index-1]).selectedIndex;
+                            var p_v = document.getElementById(cfg[index-1]).options[sindex].text;
+                            data = [{"NAME": p_v, "ID": p_i}];
+                            $(data).each(function (i, e) {
+                                i ++;
+                                options [i] = new Option(e.NAME, e.ID);
+                            });
+                        } else if (index == 2) {
+                            str = document.getElementById(cfg[index - 1]).value;
+                            var ret = ar.getCity(str);
+                            data = ret;
+                            $(data).each(function (i, e) {
+                                i ++;
+                                options [i] = new Option(e.NAME, e.ID);
+                            });
+                        } else if (index ==3) {
+                            str = document.getElementById(cfg[index - 2]).value + ',';
+                            str += document.getElementById(cfg[index - 1]).value;
+                            var ret = ar.getCounty(str);
+                            data = ret;
+                            $(data).each(function (i, e) {
+                                i ++;
+                                options [i] = new Option(e.NAME, e.ID);
+                            });
+                        }
+                        if (ar.need_init == true) {
+                            if (init[index]) {
+                                for (var i = 0; i < options.length; i++) {
+                                    if (options[i].value == init[index]) {
+                                        options[i].selected = true;
+                                    }
+                                }
+                                if (index == 1) {
+                                    options[1].selected = true;
+                                }
+                                
+                            } else {
+                                options[0].selected = true;
+                            }
+                        } else {
+                            if (index) options[0].selected = true;
+                            if (index == 1) options[1].selected = true;
+                        }
+                    }
+                }
+
+                if(++index < cfg.length){setOptions(index, cfg, dName);}
+            }
+        };
+
+        // construct
+        (function(){
+            $(document.getElementById(ar.conf[0])).bind('change',function(){
+                ar.ze_me(1, ar.conf, ar.defineName);
+            });
+            $(document.getElementById(ar.conf[1])).bind('change',function(){
+                ar.ze_me(2, ar.conf, ar.defineName);
+            });
+            $(document.getElementById(ar.conf[2])).bind('change',function(){
+                ar.ze_me(3, ar.conf, ar.defineName);
+            });
+            ar.ze_me(0, ar.conf, ar.defineName);
+            ar.need_init = false;
+            $(".show_main_delete").click(function () {
+                $(this).parent().find("label").html("请选择文件")
+                $(this).parent().find(".hidden_show").html("")
+            })
+        })();
+    };
+    var init_cs = ['<?= $result['SP_ADDR5'] ?>', '<?= $result['SP_ADDR6'] ?>', '<?= $result['SP_ADDR7'] ?>', '<?= $result['SP_ADDR8'] ?>'];
+    new area(['t_country', 't_province', 't_city', 't_county'], init_cs);
+
+    $("#myModal .modal-content").on("click",".modal-body span",function () {
+        console.info($(this).prop("ischecked"));
+        if($(this).prop("ischecked")){
+            $(this).css({"background":"white"});
+            console.info($(this).html())
+        }else{
+
+        }
+
+    })
+
+})();
+</script>
+</html>

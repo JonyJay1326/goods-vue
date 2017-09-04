@@ -1,0 +1,155 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="../Public/lib/html5.js"></script>
+<script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+<script type="text/javascript" src="../Public/lib/PIE_IE678.js"></script>
+<![endif]-->
+<link href="../Public/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="../Public/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+<link href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+  <style>
+    .erp_index{text-align: center;height:185px;width:100%;}
+    .erp_index .text-success{padding-top:124px;font-family: SFUIText-Bold;
+      font-size: 28px;color: #263238;letter-spacing: 0;}
+    .erp_index .text-success_login{font-family: SFUIText-Regular;font-size: 12px;
+      color: #90A4AE;letter-spacing: 0;line-height: 23px;}
+    .erp_index .text-success_oa{font-family: PingFangSC-Regular;font-size: 18px;
+      color: #A87F5F;letter-spacing: 0;}
+  </style>
+<title>Home Page</title>
+</head>
+<body>
+<div></div>
+<div class="pd-20 erp_index" style="padding-top:20px;">
+  <p class="f-20 text-success">Welcome to Gshopper ERP System</p>
+  <p class="text-success_login">Last Login In IP：<{$Think.session.m_loginip}>Last Login In Time：<{$Think.session.m_logintime|date="Y-m-d H:i:s",###}> </p>
+  <p  style="font-size: 18px" class="text-success_oa"><{$Think.session.oa}></p>
+  <table class="table table-border table-bordered table-bg" style="display: none;">
+    <thead>
+      <tr>
+        <th colspan="7" scope="col">信息统计</th>
+      </tr>
+      <tr class="text-c">
+        <th>统计</th>
+        <th>资讯库</th>
+        <th>图片库</th>
+        <th>产品库</th>
+        <th>用户</th>
+        <th>管理员</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="text-c">
+        <td>总数</td>
+        <td>92</td>
+        <td>9</td>
+        <td>0</td>
+        <td>8</td>
+        <td>20</td>
+      </tr>
+      <tr class="text-c">
+        <td>今日</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+      <tr class="text-c">
+        <td>昨日</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+      <tr class="text-c">
+        <td>本周</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+      <tr class="text-c">
+        <td>本月</td>
+        <td>2</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+        <td>0</td>
+      </tr>
+    </tbody>
+  </table>
+  <table class="table table-border table-bordered table-bg mt-20" style="display: none">
+    <thead>
+      <tr>
+        <th colspan="2" scope="col">服务器信息</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th width="200">服务器域名</th>
+        <td><span id="lbServerName"><{$host['HTTP_HOST']}></span></td>
+      </tr>
+      <tr>
+        <td>服务器IP地址</td>
+        <td><{$host['SERVER_ADDR']}></td>
+      </tr>
+      <tr>
+        <td>PHP版本</td>
+        <td><{$php_version}></td>
+      </tr>
+      <tr>
+        <td>服务器端口 </td>
+        <td><{$host['SERVER_PORT']}></td>
+      </tr>
+      <tr>
+        <td>服务器版本信息 </td>
+        <td><{$host['SERVER_SOFTWARE']}></td>
+      </tr>
+
+      <tr>
+        <td>服务器操作系统 </td>
+        <td><{$os}></td>
+      </tr>
+      <tr>
+        <td>系统所在文件夹 </td>
+        <td><{$host['DOCUMENT_ROOT']}></td>
+      </tr>
+      <tr>
+        <td>服务器当前时间 </td>
+        <td><{$now_time}></td>
+      </tr>
+      <tr>
+        <td>脚本超时时间 </td>
+        <td><{$script_time}></td>
+      </tr>
+      <tr>
+        <td>服务器的语言种类 </td>
+        <td><{$language}></td>
+      </tr>
+      <tr>
+        <td>POST提交内容限制 </td>
+        <td><{$post_max}></td>
+      </tr>
+
+
+    </tbody>
+  </table>
+</div>
+<footer class="footer" style="border: none;">
+
+</footer>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/utils/utils.js"></script>
+</body>
+</html>

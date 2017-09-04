@@ -1,0 +1,307 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css" />
+    <title></title>
+</head>
+<body class="order-detail">
+<style>
+    .btn-pink a {
+        color: #fff;
+    }
+    .row input{
+        border:1px solid #ddd;
+        font-size:14px;
+    }
+</style>
+
+<div class="order-tabs">
+    <ul>
+        <li class="active"><a href="javascript:void()">
+            <if condition="$is_new eq 1">
+            <{$Think.lang.add}>
+            <else />
+            <{$Think.lang.edit}>
+            </if>
+            </a></li>
+        <li></li>
+    </ul>
+</div>
+
+<?php
+$form_url = U('Coupon/submitadd');
+if(!$is_new){
+    $form_url = U('Coupon/submitedit');
+}
+?>
+<div class="pd-20">
+    <form action="<?php echo $form_url; ?>" method="post" class="form form-horizontal" id="form_post_action">
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.优惠券名称}>：</label>
+            <div class="formControls col-10">
+                <input type="text" class="" value="<?php if(!$is_new){ echo $edit_data['name']; } ?>" placeholder="" id="" name="name" datatype="*1-100" nullmsg="<{$Think.lang.名称不能为空}>">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.适用平台}>：</label>
+            <div class="formControls col-10">
+                <select name="plat_cd" >
+                    <foreach name="plat_list" key="key" item="value">
+                    <?php $selected = ""; ?>
+                    <?php if(!$is_new){ ?>
+                    <?php  $selected=$edit_data['plat_cd']==$key?"selected":""; ?>
+                    <?php } ?>
+                    <option value="<{$key}>" <{$selected}> ><{$value}></option>
+                    </foreach>
+                </select>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.有效期}>：</label>
+            <div class="formControls col-10">
+                <input type="radio" name="valid_type" value="1" datatype="*" nullmsg="<{$Think.lang.Please_select}>" errormsg="" <?php if(!$is_new and 1==$edit_data['valid_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.绝对时间}>-
+                <input type="text" onfocus="WdatePicker({})" id="logmin"  name="valid_start" value="<?php if(!$is_new and $edit_data['valid_start']){ echo date('Y-m-d',$edit_data['valid_start']); } ?>" class="input-text Wdate" style="width:120px;">
+                -
+                <input type="text" onfocus="WdatePicker({})" id="logmax"  name="valid_end" value="<?php if(!$is_new and $edit_data['valid_end']){ echo date('Y-m-d',$edit_data['valid_end']); } ?>" class="input-text Wdate" style="width:120px;">
+                <br>
+                <input type="radio" name="valid_type" value="2" <?php if(!$is_new and 2==$edit_data['valid_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.相对时间}>-<{$Think.lang.领取后}><input type="input" name="valid_receive_after_days" value="<?php if(!$is_new){ echo $edit_data['valid_receive_after_days']; } ?>" datatype="n0-16" errormsg="<{$Think.lang.大于等于1的正整数}>" style="width:60px;"><{$Think.lang.天}>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.总发行量}>：</label>
+            <div class="formControls col-10">
+                <input type="text" class="" value="<?php if(!$is_new){ echo $edit_data['circulation']; } ?>" placeholder="" id="" name="circulation" datatype="n" nullmsg="请填写数字" errormsg="请填写数字" style="width:60px;"><{$Think.lang.张}>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.单日发行量}>：</label>
+            <div class="formControls col-10">
+                <input type="radio" name="is_limit_circulation" value="0" datatype="*" nullmsg="<{$Think.lang.Please_select}>" errormsg="" <?php if(!$is_new and 0==$edit_data['is_limit_circulation']){ ?>checked<?php } ?> ><{$Think.lang.无限制}> 
+                <br>
+                <input type="radio" name="is_limit_circulation" value="1" <?php if(!$is_new and 1==$edit_data['is_limit_circulation']){ ?>checked<?php } ?> ><{$Think.lang.每天最多发行}>
+                <input type="text" class="" value="<?php if(!$is_new){ echo $edit_data['circulation_daily']; } ?>" placeholder="" id="" name="circulation_daily" datatype="n0-16" errormsg="<{$Think.lang.大于等于1的正整数}>" style="width:60px;" >
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.领取限制}>：</label>
+            <div class="formControls col-10">
+                <input type="radio" name="receive_type" value="1" datatype="*" nullmsg="<{$Think.lang.Please_select}>" errormsg="" <?php if(!$is_new and 1==$edit_data['receive_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.每人总共可领取}><input type="text" class="" value="<?php echo $edit_data['receive_num_each']; ?>" placeholder="" id="" name="receive_num_each" datatype="n0-16" errormsg="<{$Think.lang.大于等于1的正整数}>" style="width:60px;"><{$Think.lang.张}>
+                <br>
+                <input type="radio" name="receive_type" value="2" <?php if(!$is_new and 2==$edit_data['receive_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.每人每}><input type="text" class="" value="<?php echo $edit_data['receive_interval_days']; ?>" placeholder="" id="" name="receive_interval_days" datatype="n0-16" errormsg="<{$Think.lang.大于等于1的正整数}>" style="width:50px;"><{$Think.lang.天可领取}><input type="text" class="" value="<?php echo $edit_data['receive_num_day']; ?>" placeholder="" id="" name="receive_num_day" datatype="n0-16" errormsg="<{$Think.lang.大于等于1的正整数}>" style="width:50px;">  
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.使用限制}>：</label>
+            <div class="formControls col-10">
+                <input type="radio" name="usage_can_superposition" value="1" datatype="*" nullmsg="<{$Think.lang.Please_select}>" errormsg="" <?php if(!$is_new and 1==$edit_data['usage_can_superposition']){ ?>checked<?php } ?> ><{$Think.lang.与其他优惠可叠加}>
+                <br>
+                <input type="radio" name="usage_can_superposition" value="0" <?php if(!$is_new and 0==$edit_data['usage_can_superposition']){ ?>checked<?php } ?> ><{$Think.lang.与其他优惠不可叠加}>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.使用条件}>：</label>
+            <div class="formControls col-10">
+                <input type="radio" name="using_conditions_type" value="2" datatype="*" nullmsg="<{$Think.lang.Please_select}>" errormsg="" <?php if(!$is_new and 2==$edit_data['using_conditions_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.满}><input type="text" class="" value="<?php echo $edit_data['using_conditions_amount']; ?>" placeholder="" id="" name="using_conditions_amount" style="width:60px;"><{$Think.lang.（币种以平台关联币种为准）}>
+                <br>
+                <input type="radio" name="using_conditions_type" value="1" <?php if(!$is_new and 1==$edit_data['using_conditions_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.无条件}>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.优惠结果}>：</label>
+            <div class="formControls col-10">
+                <input type="radio" name="favorable_results_type" value="1" datatype="*" nullmsg="<{$Think.lang.Please_select}>" errormsg="" <?php if(!$is_new and 1==$edit_data['favorable_results_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.减}><input type="text" class="" value="<?php echo $edit_data['favorable_money']; ?>" placeholder="" id="" name="favorable_money" style="width:60px;"><{$Think.lang.（币种以平台关联币种为准）}>
+                <br>
+                <input type="radio" name="favorable_results_type" value="2" <?php if(!$is_new and 2==$edit_data['favorable_results_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.打}><input type="text" class="" value="<?php echo $edit_data['favorable_discount']; ?>" placeholder="" id="" name="favorable_discount" style="width:60px;"><{$Think.lang.折}>
+                <br>
+                <input type="radio" name="favorable_results_type" value="3" <?php if(!$is_new and 3==$edit_data['favorable_results_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.免运费}>
+                <br>
+                <input type="radio" name="favorable_results_type" value="4" <?php if(!$is_new and 4==$edit_data['favorable_results_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.免税费}>
+                <br>
+                <input type="radio" name="favorable_results_type" value="5" <?php if(!$is_new and 5==$edit_data['favorable_results_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.送赠品}><input type="text" class="" value="<?php echo empty($edit_data['favorable_gift'])?'':$edit_data['favorable_gift']; ?>" placeholder="<{$Think.lang.请输入SKU_ID}>" id="" name="favorable_gift" style="">
+                <br>
+                <input type="radio" name="favorable_results_type" value="6" <?php if(!$is_new and 6==$edit_data['favorable_results_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.返券}><input type="text" class="" value="<?php echo $edit_data['favorable_coupon']; ?>" placeholder="<{$Think.lang.请输入优惠券ID}>" id="" name="favorable_coupon" style="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.使用范围}>：</label>
+            <div class="formControls col-10">
+                <input type="radio" name="use_scope_type" value="1" datatype="*" nullmsg="<{$Think.lang.Please_select}>" errormsg="" <?php if(!$is_new and 1==$edit_data['use_scope_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.全网优惠券}>
+                <br>
+                <input type="radio" name="use_scope_type" value="2" <?php if(!$is_new and 2==$edit_data['use_scope_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.类目优惠券}>
+                <br>
+                <input type="radio" name="use_scope_type" value="3" <?php if(!$is_new and 3==$edit_data['use_scope_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.品牌优惠券}>
+                <br>
+                <input type="radio" name="use_scope_type" value="4" <?php if(!$is_new and 4==$edit_data['use_scope_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.商品优惠券}>
+                <input type="text" class="" value="<?php echo $edit_data['use_scope_product']; ?>" placeholder="" id="" name="use_scope_product" style="width:60px;">
+                <br>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.发放方式}>：</label>
+            <div class="formControls col-10">
+                <input type="radio" name="delivering_way_type" value="1" datatype="*" nullmsg="<{$Think.lang.Please_select}>" errormsg="" <?php if(!$is_new and 1==$edit_data['delivering_way_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.系统发放}>
+                <select name="delivering_way_sys" >
+                    <option value="1" <?php if(!$is_new and 1==$edit_data['delivering_way_sys']){ ?>selected<?php } ?> ><{$Think.lang.新注册成功用户}></option>
+                    <option value="2" <?php if(!$is_new and 2==$edit_data['delivering_way_sys']){ ?>selected<?php } ?> ><{$Think.lang.首次下单用户}></option>
+                    <option value="3" <?php if(!$is_new and 3==$edit_data['delivering_way_sys']){ ?>selected<?php } ?> ><{$Think.lang.首次确认收货用户}></option>
+                </select>
+                <br>
+                <input type="radio" name="delivering_way_type" value="2" <?php if(!$is_new and 2==$edit_data['delivering_way_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.手工发放}>
+                <br>
+                <input type="radio" name="delivering_way_type" value="3" <?php if(!$is_new and 3==$edit_data['delivering_way_type']){ ?>checked<?php } ?> >
+                <{$Think.lang.用户领取}>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2"><{$Think.lang.状态}>：</label>
+            <div class="formControls col-10">
+                <select name="status" >
+                    <option value="0" <?php if(!$is_new and 0==$edit_data['status']){ ?>selected<?php } ?> ><{$Think.lang.关闭}></option>
+                    <option value="1" <?php if(!$is_new and 1==$edit_data['status']){ ?>selected<?php } ?> ><{$Think.lang.启用}></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row cl" style="margin:40px auto;">
+            <div class="col-10 col-offset-2">
+                <button type="submit" class="btn btn-danger radius" id="admin-save-submit" name="admin-save-submit"> <{$Think.lang.保存}></button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-default radius" id="admin-save-cancel" name="admin-save-cancel"> <{$Think.lang.取消}></button>
+            </div>
+        </div>
+
+
+        <if condition="$is_new eq 0">
+        <input type="hidden" name="edit_id" value="<{$edit_id}>">
+        </if>
+        <input type="hidden" name="isgoback" value="1" />
+        <input type="hidden" name="backurl" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+        <input type="hidden" name="issubmit" value="1">
+    </form>
+</div>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/Validform/5.3.2/Validform.min.js"></script>
+<script>
+
+$(document).ready(function (){
+
+    $('#admin-save-cancel').click(function(){
+        history.go(-1);
+    });
+    $('#form_post_action').Validform({
+        tiptype:1,
+        beforeSubmit:function(curform){
+            //在验证成功后，表单提交前执行的函数，curform参数是当前表单对象。
+            //这里明确return false的话表单将不会提交;
+            var info = curform.find('input:radio[name="valid_type"]:checked').val();
+            if(info==1){
+                if( document.getElementsByName('valid_start')[0].value && document.getElementsByName('valid_end')[0].value ){
+                }else{
+                    alert('<{$Think.lang.绝对时间}>?');
+                    return false;
+                }
+            }
+            if(info==2){
+                if( document.getElementsByName('valid_receive_after_days')[0].value<=0 ){
+                    alert('<{$Think.lang.相对时间}>?');
+                    return false;
+                }
+            }
+            var info = curform.find('input:radio[name="is_limit_circulation"]:checked').val();
+            if(info==1){
+                if( document.getElementsByName('circulation_daily')[0].value<=0 ){
+                    alert('<{$Think.lang.每天最多发行}>?');
+                    return false;
+                }
+            }
+            var info = curform.find('input:radio[name="receive_type"]:checked').val();
+            if(info==1){
+                if( document.getElementsByName('receive_num_each')[0].value<=0 ){
+                    alert('<{$Think.lang.每人总共可领取}>?');
+                    return false;
+                }
+            }
+            if(info==2){
+                if( document.getElementsByName('receive_interval_days')[0].value<=0 || document.getElementsByName('receive_num_day')[0].value<=0 ){
+                    alert('<{$Think.lang.领取限制}>?');
+                    return false;
+                }
+            }
+            var info = curform.find('input:radio[name="using_conditions_type"]:checked').val();
+            if(info==2){
+                if( document.getElementsByName('using_conditions_amount')[0].value=='' ){
+                    alert('<{$Think.lang.满}>?');
+                    return false;
+                }
+            }
+            var info = curform.find('input:radio[name="favorable_results_type"]:checked').val();
+            if(info==1){
+                if( document.getElementsByName('favorable_money')[0].value<=0 ){
+                    alert('<{$Think.lang.减}>?');
+                    return false;
+                }
+            }
+            if(info==2){
+                if( document.getElementsByName('favorable_discount')[0].value<=0 ){
+                    alert('<{$Think.lang.打}>?');
+                    return false;
+                }
+            }
+        },
+        ajaxPost:true,
+        callback:function(data){
+            if(data.status=="y"){
+                $.Hidemsg(); //公用方法关闭信息提示框;
+                var url = document.getElementsByName('backurl')[0].value;
+                if(data.url) url=data.url;
+                location.href=url;
+            }else{
+                $.Showmsg(data.info);
+            }
+        }
+    });
+
+});
+
+</script>
+
+</body>
+</html>
+

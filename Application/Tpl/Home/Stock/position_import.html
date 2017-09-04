@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>货位新增</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css"/>
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css">
+    <style type="text/css">
+        .table-border.table-bordered tbody:nth-last-of-type(odd) {
+            background-color: #EEFFCC;
+        }
+        .text-c{
+            padding: 8px;
+            line-height: 20px;
+            width: 15%;
+            float: left;
+        }
+
+    </style>
+    <script type="text/javascript">if (document.all)alert('你的浏览器太旧了，恕不奉陪');</script>
+</head>
+<body>
+<div class="hw-wrap" id="hw-wrap">
+    <form action="" id="upload_out"  method="post" enctype="multipart/form-data" >
+        <div class="text-line">
+            <div class="title">
+                <{$Think.lang.基础信息}>
+            </div>
+            <div class="row first-row">
+                <div class="col-30">
+                    <span><{$Think.lang.货位名称}>：</span>
+                    <input type="text" name="location_name" v-model="location_name" placeholder="<{$Think.lang.输入货位名称}>" v-cloak>
+                </div>
+                <div class="col-40">
+                    <span><{$Think.lang.仓库}>：</span>
+                    <select name="house_list_model" v-model="house_list_model" v-cloak>
+                        <option   value="0" ><{$Think.lang.未选择}></option>
+                        <option v-for="house in house_list"  :value="house.CD" >{{house.warehouse}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-100 text-r">
+                    <a href="<{:U('Stock/download',array('name'=>'position_import.xlsx'))}>"><button type="button" class="button-sky"><{$Think.lang.货位模版下载}></button></a>
+
+
+
+                        <button type="button" class="button-sky" onclick="$('#expe_out').click()"><{$Think.lang.货位导入}></button>
+                        <input type="file" id="expe_out" name="expe" @change="loading_excel" v-show="0" />
+
+
+                </div>
+            </div>
+            </div>
+    </form>
+
+
+
+<div class="hw-btn">
+    <!--<button type="button" class="button-pink" @click="save_data">保存</button>-->
+    <button type="button" class="button-black" @click="clear_data" ><{$Think.lang.取消}></button>
+    <button type="button" class="button-black" @click="go_home" ><{$Think.lang.返回}></button>
+</div>
+</div>
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#hw-wrap',
+        data: {
+            house_list: <{$house_list}>,
+            location_sum: 0,
+            location_key: '',
+            location_name: '',
+            house_list_model:0,
+            ok:false
+        },
+        methods:{
+            loading_excel:function(){
+                if(this.location_name != '' && this.location_name != null && this.house_list_model != 0){
+                    box.Alert('<{$Think.lang.提示}>','增在加载数据。。。')
+                    $('#upload_out').submit();
+                }else{
+
+                    box.Alert('<{$Think.lang.提示}>','请先填写基本信息')
+                }
+
+
+            },
+
+            clear_data:function(){
+                this.location_key = '';
+                this.location_name = '';
+                this.house_list_model = 0;
+                this.ok = false;
+            },
+            go_home:function(){
+                window.location.href = '/index.php?m=stock&a=position';
+            }
+
+        }
+    })
+</script>
+
+</body>
+</html>

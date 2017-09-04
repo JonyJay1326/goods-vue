@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>待入库单</title>
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../Public/css/purchase.css?=20170508"/>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css"/>
+	<link rel="stylesheet" href="../Public/css/common.css"/>
+	<style>
+		.table-bordered th{white-space:nowrap;}
+		.table-bordered td, .table-bordered th {
+			border:1px solid #eceeef;vertical-align:middle;
+			text-align:center;
+		}
+		.form-group{margin-bottom: 0px}
+		.form-control{
+			height:34px !important;
+			color: #90A4AE;
+		}
+		.input-group .input-group-btn .btn .fa {
+			font-size: 16px;color: red;}
+		.card table th,.card table td{text-align: center;vertical-align: middle}
+		.card table tbody td{background:white;}
+		.row_search{margin-top: 0px !important;margin-bottom: 10px;margin-left: -12px}
+	</style>
+</head>
+<body>
+<div class="wrap commom_wrap">
+	<div class="enter-line">
+		<form action="" method="post" id="thisform">
+			<div class="row row_menu">
+				<a class="warehouse_status_check <if condition='$param["warehouse_status"] === "" or $param["warehouse_status"] === null'>active</if>"><{$Think.lang.全部}></a>
+				<a class="warehouse_status_check <if condition='$param["warehouse_status"] === "0"'>active</if>"" value='0'><{$Think.lang.待入库}></a>
+				<a class="warehouse_status_check <if condition='$param["warehouse_status"] === "1"'>active</if>"" value='1'><{$Think.lang.已入库}></a>
+				<a class="warehouse_status_check <if condition='$param["warehouse_status"] === "2"'>active</if>"" value='2'><{$Think.lang.虚拟入库}></a>
+				<input type="hidden" name="warehouse_status" id="warehouse_status" value="<{$param.warehouse_status}>">
+			</div>
+			<div class="card order_list_row_top_input">
+				<div class="card-block" >
+					<blockquote class="card-blockquote">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+								<tr>
+									<th width="2%"></th>
+									<th width="21%"></th>
+									<th width="2%"></th>
+									<th width="2%"></th>
+									<th width="21%"></th>
+									<th width="2%"></th>
+									<th width="2%"></th>
+									<th width="21%"></th>
+									<th width="2%"></th>
+									<th width="2%"></th>
+									<th width="21%"></th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr>
+									<td><{$Think.lang.仓库}></td>
+									<td>
+										<fieldset class="form-group">
+											<select class="form-control" name="warehouse" id="warehouse">
+												<option value=""><{$Think.lang.请选择仓库}></option>
+												<volist name="warehouses" id="v">
+													<option value="<{$key}>" <if condition='$param["warehouse"] == $key'>selected</if>><{$v}></option>
+												</volist>
+											</select>
+										</fieldset>
+									</td>
+									<td></td>
+									<td><{$Think.lang.供应商}></td>
+									<td><input type="text" name="supplier_id" id="supplier_id"  placeholder="<{$Think.lang.供应商}>" class="form-control" value="<{$param.supplier_id}>"></td>
+									<td></td>
+									<td><{$Think.lang.采购单号}></td>
+									<td><input type="text" class="form-control" placeholder="<{$Think.lang.采购单号}>" name="procurement_number" value="<{$param.procurement_number}>"></td>
+									<td></td>
+									<td><{$Think.lang.采购员}></td>
+									<td><input type="text" class="form-control" placeholder="<{$Think.lang.采购员}>" name="prepared_by" value="<{$param.prepared_by}>"></td>
+								</tr>
+								<tr>
+									<td><{$Think.lang.采购团队}></td>
+									<td>
+										<fieldset class="form-group">
+											<select class="form-control" name="payment_company">
+												<option value=""><{$Think.lang.请选择采购团队}></option>
+												<volist name="purchase_teams" id="v">
+													<option value="<{$v}>" <if condition='$param["payment_company"] == $v'>selected</if>><{$v}></option>
+												</volist>
+											</select>
+										</fieldset>
+									</td>
+									<td></td>
+									<td><{$Think.lang.发货时间}></td>
+									<td class="common_data">
+										<input type="text" name="start_time" id="start_time" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.起始日期}>" class="form-control" value="<{$param.start_time}>">
+										<span class="input-group-btn">
+											<button class="btn btn-secondary" type="button"><i ></i></button>
+										</span>
+									</td>
+									<td colspan="2" class="text-center"><div class="col-data_l">一</div></td>
+									<td class="common_data">
+										<input type="text" name="end_time" id="end_time"  onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.结束时间}>" class="form-control" value="<{$param.end_time}>">
+										<span class="input-group-btn">
+											<button class="btn btn-secondary" type="button"><i ></i></button>
+										</span>
+									</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+					</blockquote>
+				</div>
+			</div>
+			<div class="row row_search">
+				<div class="col-lg-12 text-left col-md-12 col-sm-12">
+					<input name="search" value="1" type="hidden">
+					<button type="button" class="btn-search " id="search"><{$Think.lang.查询}></button>
+					<button type="button" class="btn-reset" id="resetForm"><{$Think.lang.重置}></button>
+				</div>
+			</div>
+		</form>
+	</div>
+	<p class="commom_p"></p>
+	<div class="card commom_card">
+		<div class="commom_card_head">
+			<b><{$Think.lang.待入库单}></b>
+		</div>
+		<div class="card-block">
+			<blockquote class="card-blockquote">
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+						<tr>
+							<!--<th width=""><input type="checkbox"></th>-->
+							<th width=""><{$Think.lang.序号}></th>
+							<th width=""><{$Think.lang.入库编号}></th>
+							<th width=""><{$Think.lang.PO/采购单号}></th>
+							<th width=""><{$Think.lang.提单号}></th>
+							<th width=""><{$Think.lang.商品名称}></th>
+							<th width=""><{$Think.lang.发货数量}></th>
+							<th width=""><{$Think.lang.供应商}></th>
+							<th width=""><{$Think.lang.采购人}></th>
+							<th width=""><{$Think.lang.发货时间}></th>
+							<th width=""><{$Think.lang.到货/到港时间}></th>
+							<th width=""><{$Think.lang.入我方库}></th>
+							<th width=""><{$Think.lang.入库仓库}></th>
+							<th width=""><{$Think.lang.入库状态}></th>
+							<th width=""><{$Think.lang.操作}></th>
+						</tr>
+						</thead>
+						<tbody>
+						<volist name="list" key="k" id="v">
+							<tr>
+								<td><{$k}></td>
+								<td><{$v.warehouse_id}></td>
+								<td><{$v.procurement_number}></td>
+								<td><{$v.bill_of_landing}></td>
+								<td><{$v.goods_name}></td>
+								<td><{:number_format($v['shipping_number'])}></td>
+								<td><{$v.supplier_id}></td>
+								<td><{$v.prepared_by}></td>
+								<td><{$v.shipment_date}></td>
+								<td><{$v.arrival_date}></td>
+								<td>
+									<if condition="$v['need_warehousing'] == 1">
+										<{$Think.lang.是}>
+										<else />
+										<{$Think.lang.否}>
+									</if>
+								</td>
+								<td><{$v.warehouse}></td>
+								<td>
+									<switch name="v.warehouse_status">
+										<case value="0"><{$Think.lang.待入库}></case>
+										<case value="1"><{$Think.lang.已入库}></case>
+										<default />
+									</switch>
+								</td>
+								<td class="td_operation">
+									<button class="btn-check" onclick="location='<{:U("warehouse_detail",['id'=>$v['id']])}>'"><{$Think.lang.查看}></button><br>
+									<if condition="$v['warehouse_status'] eq 0">
+                                        <button class="btn-operate" onclick="location='<{:U("warehouse",['id'=>$v['id']])}>'"><{$Think.lang.入库}></button><br>
+									</if>
+								</td>
+							</tr>
+						</volist>
+						</tbody>
+					</table>
+					<ul class="pagination" style="margin: 0;">
+						<?php echo $show;?>
+					</ul>
+				</div>
+			</blockquote>
+		</div>
+	</div>
+</div>
+
+<script>
+
+    $(document).ready(function(){
+
+        $(".goods_name_td").each(function(){
+            var goods_name_length=$(this).find(".goods_name").length;
+            if(goods_name_length > 1){
+                $(this).find(".goods_name_img").show();
+                $(this).find(".goods_name").hide();
+                $(this).find(".goods_name:nth-child(1)").show();
+            }
+            else{
+                $(this).find(".goods_name_img").hide();
+            }
+        })
+        //发货状态筛选
+        $('.warehouse_status_check').click(function () {
+            var warehouse_status = $(this).attr('value');
+            $('#warehouse_status').val(warehouse_status);
+            $('.warehouse_status_check').removeClass('active');
+            $(this).addClass('active');
+            return false;
+        })
+
+        //搜索按钮
+        $('#search').click(function () {
+            var data = $('#thisform').serialize();
+            var url = "<{:U('warehouse_list')}>&"+data;
+            location = url;
+        })
+        $('#resetForm').click(function() {
+            $('#thisform')[0].reset();
+            $('.warehouse_status_check:eq(0)').click();
+        })
+
+    })
+
+    function number_format(e) {
+        var k = e.toString().split('.')
+        if(e.toString().indexOf('.') > 0){
+            var s = '.'+k[1]
+        }else{
+            var s = ''
+        }
+        return k[0].toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')+s;
+    }
+</script>
+</body>
+</html>

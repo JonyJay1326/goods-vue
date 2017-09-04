@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<br>
+<span>Dear Finance：</span>
+<br>
+<h4>Payable Reminder:You have one purchase order need to be paid.</h4>
+<br>
+<table style="border-right:1px solid;border-bottom:1px solid;min-width:800px"  border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">1</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Payable Order Number</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$payable.payment_no}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">2</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">PO Number</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$order.procurement_number}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">3</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Total Purchase Value</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$order.amount_currency}> <{:number_format($order['amount'],2)}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">4</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Amount To Be Paid This Time</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$order.amount_currency}> <{:number_format($payable['amount_confirm'],2)}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">5</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Payment Node</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$payable.payment_period}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">6</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Purchase Team</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$relevance.prepared_by}>(<{$order.payment_company}>)</td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">7</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Payer Company</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$order.CD_VAL}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">8</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Supplier</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$order.supplier_id}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">9</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Gross Margin Rate</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$predict['total_profit_margin']*100}>%</td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">10</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Suppliers Bank</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$order.supplier_opening_bank}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">11</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Payee's Bank of Deposit</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$order.supplier_card_number}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">12</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">SWIFT CODE</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$order.supplier_swift_code}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">13</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Remark</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$order.order_remark}></td>
+    </tr>
+    <tr>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">14</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Payable Generated Time</td>
+        <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center"><{$payable.create_time}></td>
+    </tr>
+</table>
+<br>
+<span>请财务确认信息后付款，付款完成后请在ERP中上传支付凭证核销，你也可以现在<a href="<{:U('OrderDetail/payable_detail@'.$_SERVER['HTTP_HOST'],['id'=>$payable['id']])}>">查看订单</a></span>
+</body>
+</html>

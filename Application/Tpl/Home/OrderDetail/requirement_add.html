@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!--<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css"/>-->
+	<!--<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css"/>-->
+	<!--<link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css"/>-->
+	<link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css"/>
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../Public/lib/webuploader/0.1.5/webuploader.css"/>
+	<title><{$Think.lang.详情}></title>
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+    <link rel="stylesheet" href="../Public/css/purchase.css"/>
+    <link rel="stylesheet" href="../Public/css/purchaseDetail.css"/>
+</head>
+<style>
+    .webuploader-pick {
+        background: none;
+    }
+    .fa {
+        cursor:pointer;
+    }
+    .must:after{
+        content: '*';
+        color:#C31207;
+        display: inline;
+        vertical-align: middle;
+        font-size:14px;
+        margin-left:3px;
+    }
+	.pad-0{
+		padding: 0;
+	}
+	.no-wrap{
+		white-space: nowrap;
+	}
+	.table td label{
+		vertical-align: middle;
+        margin: 5px 0px 0px 0px;
+	}
+	.table td button i{
+		vertical-align:baseline;
+	}
+	.table td{
+		text-align: center;
+	}
+	.custom-file-control,
+	.custom-file-control::after,
+	.custom-file-control::before,
+	.custom-file-input {
+		cursor: pointer;
+		height: 36px;
+	}
+
+    .custom-file-control::after {
+        content: "<{$Think.lang.文件名称}>..." !important;
+    }
+
+    .custom-file-control::before {
+        content: "<{$Think.lang.浏览文件}>" !important;
+    }
+
+    .btn-danger {
+        color: #fff;
+        background-color: #ec2d64;
+        border-color: #d82c5d;
+    }
+
+    td .row .form-control {
+        width: 30px;
+        display: inline-block;
+    }
+    .input-group button>select {
+        width:100% !important;
+        border: none;
+    }
+    .card-header h4{
+        line-height: 28px;
+    }
+    .card + .card{
+        margin-top: 30px;
+    }
+    .bod-none input {
+        border: none;
+        text-align: center;
+    }
+    .inner-table {
+        margin-top: -24px;
+        margin-bottom: -5px;
+    }
+    .inner-table thead th{
+        border:none;
+
+    }
+    .inner-table tr{
+        white-space: nowrap;
+        background: none !important;
+    }
+    .inner-table td{
+        padding: 5px 0px !important;
+    }
+    .btn-wrap{
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .inner-table_tbody  td label{
+        font-size: 12px;
+    }
+    .inner-table_tbody td input{
+        text-align:left;
+        padding:0px;
+    }
+    .input-group-btn .form-control{
+        padding:0px;
+        width:100%;
+        border: 1px solid #CADEE7 !important;
+    }
+    .card{border-bottom: none}
+    .purchase_supplierType .input-group-addon{
+        display: none;}
+</style>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+<body>
+<div class="col-lg-12 top purchase_add">
+	<form action=""" method="post" enctype="multipart/form-data">
+		<!--采购信息-->
+		<div class="card">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-6 col-md-6">
+						<h4><{$Think.lang.销售信息}></h4>
+					</div>
+				</div>
+			</div>
+			<div class="card-block">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered">
+						<thead>
+                            <input type="hidden" name="relevance_id"> <!--隐藏域-->
+						</thead>
+						<tbody>
+						<tr>
+							<td><label class="must"><{$Think.lang.采购类型}></label></td>
+							<td class="add_checkBox_select">
+                                <div>
+                                    <span  value="0" class="add_checkBox">有采购</span>
+                                    <span value="1" class="add_checkBox  add_checkBox_active">无采购PO</span>
+                                </div>
+							</td>
+							<td><label class="must"><{$Think.lang.销售PO}></label></td>
+							<td class="common_searchIco">
+                                <div class="input-group">
+                                    <input type="text" placeholder="<{$Think.lang.(从OA上取数据)}>" class="form-control procurement_number"/>
+                                    <span class="input-group-btn" id="search_po">
+                                        <button class="btn btn-secondary" type="button"><i><img src="../Public/images/searchIco.png" alt=""></i></button>
+                                    </span>
+                                </div>
+							</td>
+                            <td><label><{$Think.lang.对应客户}></label></td>
+                            <td class="purchase_supplierType">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" name="supplier_id" onkeyup="supplierSou()" id="supplies_id" onblur="dealNumber()" placeholder="<{$Think.lang.手工选择}>"  autocomplete="off" />
+                                    <input type="hidden" class="form-control" name="sp_charter_no" id="sp_charter_no"/>
+                                    <span class="input-group-addon" id="risk_rating" ></span>
+                                    <span class="input-group-addon" id="has_cooperate"></span>
+                                </div>
+                                <div style="width: 340px;border:1px solid #C0C0C0;background-color:#FCFCFC;position:absolute;display: none; height: 185px;overflow-y: scroll;overflow-x: hidden;z-index: 999;" class="supplier_sou">
+                                </div> <!--联想搜索下拉框-->
+                            </td>
+						</tr>
+						<tr>
+                            <td style="vertical-align: middle;"><label class="must"><{$Think.lang.销售合同(根据对应客户获取)}></label></td>
+                            <td class="purchase_select">
+                                <select  class="form-control">
+                                    <option selected="" value=""><{$Think.lang.请选择}></option>
+                                </select>
+                            </td>
+                            <td style="position:relative;"><label><{$Think.lang.销售金额(根据OA上获取)}></label></td>
+                            <td style="vertical-align: middle;" class="add_bizhong">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <div>
+                                            <select name="amount_currency" class="form-control amount_currency" onchange="exchangeRate(this);changeGoods(this);">
+                                                <option selected="" value=""><{$Think.lang.币种}></option>
+                                                <option value="<?=$v['CD_VAL'];?>" ovalue="<{$currency_relation[$v['CD']]}>"><?=$v['CD_VAL'];?></option>
+                                            </select>
+                                        </div>
+                                    </span>
+                                    <input type="text"  readonly="readonly" id="amount_show" onchange="logistics(this);countRate(this);" onclick="amountCurrCheck();" onblur="predictProfit();numberCheck(this);" class="form-control" autocomplete="off" style="background:rgba(0, 0, 0, 0);"/> <!--用于展示数据的-->
+                                    <input type="hidden"  value="0" name="amount" readonly="readonly" id="amount"  /> <!--用于保存数据库即实际填写数据-->
+                                    <input type="hidden"  value="0" name="amount_rmb"  id="amount_rmb"  /> <!--用于保存外币换算成人民币的金额，以供下面的预计利润的计算-->
+                                    <input type="hidden"  value="0" name="amount_currency_rate" class="expense_c" /> <!--用于保存实际的的汇率数据，用于换算成人民币-->
+                                    <span class="input-group-btn">
+                                        <input type="hidden" class="show_amount_currency_rate" name="show_amount_currency_rate">  <!--该数据是为了将显示的汇率保存起来，然后在修改界面显示的-->
+                                    	<button class="btn btn-secondary pad-0 btn-label" type="button"></button>
+									</span>
+                                </div>
+                            </td>
+                            <td><label><{$Think.lang.采购端物流费用}></label></td>
+                            <td class="add_bizhong">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                            <div>
+												<select name="currency" class="form-control currency" onchange="exchangeRate(this);" disabled>
+													<option selected="" value=""><{$Think.lang.币种}></option>
+                                                    <?php foreach($currency as $key=>$v){ ?>
+													<option value="<?=$v['CD_VAL'];?>"><?=$v['CD_VAL'];?></option>
+                                                    <?php } ?>
+												</select>
+											</div>
+                                    </span>
+                                    <input type="text"  readonly="readonly" id="expense_d"onchange="logistics(this);countRate(this);" onclick="currCheck();" onblur="predictProfit();numberCheck(this);" class="form-control" autocomplete="off" style="background:rgba(0, 0, 0, 0);"/> <!--用于展示数据的-->
+                                    <input type="hidden"  value="0" name="expense" readonly="readonly" id="expense_b"  /> <!--用于保存数据库即实际填写数据-->
+                                    <input type="hidden"  value="0" name="logistics_rmb"  id="expense"  /> <!--用于保存外币换算成人民币的金额，以供下面的预计利润的计算-->
+                                    <input type="hidden"  value="0" name="real_currency_rate" class="expense_c" /> <!--用于保存实际的的汇率数据，用于换算成人民币-->
+                                    <span class="input-group-btn">
+										    <input type="hidden" class="show_exchange" name="show_currency_rate">  <!--该数据是为了将显示的汇率保存起来，然后在修改界面显示的-->
+										   <button class="btn btn-secondary pad-0 btn-label" type="button">
+										   </button>
+									</span>
+                                </div>
+                            </td>
+						</tr>
+                        <tr>
+                            <td><label class="must"><{$Think.lang.销售团队(根据对应客户获取)}></label></td>
+                            <td class="purchase_select">
+                                <select  class="form-control ">
+                                    <option selected="" value=""><{$Think.lang.请选择}></option>
+                                    <?php foreach($cmn_cd_info as $key=>$v){ ?>
+                                    <option value="<?=$v['CD_VAL'];?>" pcid="<{$v.CD}>"><?=$v['CD_VAL'];?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td style="position:relative;"><label class="must"><{$Think.lang.业务类型}></label></td>
+                            <td class="purchase_select">
+                                <select name="contract_number" class="form-control">
+                                    <option value=""><{$Think.lang请选择}></option>
+                                </select>
+                            </td>
+                            <td style="position:relative;"><label class="must"><{$Think.lang.销售方式}></label></td>
+                            <td class="purchase_select">
+                                <select name="contract_number" class="form-control">
+                                    <option value=""><{$Think.lang.请选择}></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label> <{$Think.lang.预计销售日期}> </label></td>
+                            <td class="common_data">
+                                <div class="input-group">
+                                    <input type="text" name="procurement_date" onblur="gatheringDate()"
+                                           id="procurement_date" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i></i></button>
+                                        </span>
+                                </div>
+                            </td>
+                            <td><label> <{$Think.lang.预计收款日期}> </label></td>
+                            <td class="common_data">
+                                <div class="input-group">
+                                    <input type="text" name="procurement_date" onblur="gatheringDate()"
+                                           id="procurement_date" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i></i></button>
+                                        </span>
+                                </div>
+                            </td>
+                            <td><label> <{$Think.lang.收款账期}> </label></td>
+                            <td class="common_data">
+                                <div class="input-group">
+                                    <input type="text" name="procurement_date" onblur="gatheringDate()"
+                                           id="procurement_date" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.此处可不填写}>" class="form-control">
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i></i></button>
+                                        </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle;"><label class="must"><{$Think.lang.采购与销售订单关联}></label></td>
+                            <td class="add_checkBox_select">
+                                <div>
+                                    <span  value="0" class="add_checkBox">一对一关联</span>
+                                    <span value="1" class="add_checkBox  add_checkBox_active">无关联</span>
+                                </div>
+                            </td>
+                            <td><{$Think.lang.近一年累计订单数}></td>
+                            <td></td>
+                            <td><{$Think.lang近一年累计订单金额}></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.近一年平均订单金额}></td>
+                            <td></td>
+                            <td><{$Think.lang.近一年平均每单利润}></td>
+                            <td></td>
+                            <td><{$Think.lang.指派给对应采购}></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.备注}></td>
+                            <td colspan="5"></td>
+                        </tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+		<!--退税信息-->
+		<div class="card">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-12 col-md-12">
+						<h4><{$Think.lang.退税信息}></h4>
+					</div>
+				</div>
+			</div>
+			<div class="card-block">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered">
+						<tbody>
+						<tr>
+							<td><label><{$Think.lang.预计退税日期}></label></td>
+							<td class="common_data">
+								<div class="input-group">
+									<input type="text" name="drawback_date" id="drawback_date" onblur="drawbackPeriod();predictProfit();" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-secondary" type="button"><i></i></button>
+                                    </span>
+								</div>
+							</td>
+							<td><label><{$Think.lang.预计退税金额}></label></td>
+							<td class="add_bizhong">
+								<div class="input-group">
+                                    <span class="input-group-btn">
+                                        <div>
+											<select name="moneytype"  class="form-control moneytype" onchange="exchangeRate(this);">
+												<option selected="" value=""><{$Think.lang.币种}></option>
+											</select>
+										</div>
+                                    </span>
+									<input type="text"  readonly="readonly" onchange="logistics(this);countRate(this);" onclick="drawbackCheck()" id="drawback_money_d" onblur="predictProfit();numberCheck(this);" autocomplete="off" class="form-control" style="background:rgba(0, 0, 0, 0);"/> <!--用来展示金额数据的-->
+									<input type="hidden"  value="0" name="drawback_money" readonly="readonly" id="drawback_money_b"  /> <!--用于保存数据库需要的数据-->
+									<input type="hidden"  value="0"  name="drawback_rmb" id="drawback_money"  /> <!--用于保存外币换算成人民币的金额，以供下面的预计利润的计算-->
+									<input type="hidden"  value="0" name="real_moneytype_rate"  class="expense_c" /> <!--用于保存实际的的汇率数据，用于换算成人民币-->
+									<span class="input-group-btn">
+										   <input type="hidden" class="show_exchange" name="show_moneytype_rate">  <!--该数据是为了将显示的汇率保存起来，然后在修改界面显示的-->
+										   <button class="btn btn-secondary pad-0 btn-label" type="button">
+										   </button>
+									</span>
+								</div>
+							</td>
+							<td><label><{$Think.lang.退税周期}></label></td>
+							<td>
+								<div class="input-group">
+									<input type="text" name="drawback_period" readonly="readonly" value="0" id="drawback_period" class="form-control"/>
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><{$Think.lang.天}></button>
+                                    </span>
+								</div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+
+		<!--商品信息-->
+		<div class="card card_orderAdd_goodes">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-6 col-md-6">
+						<h4><{$Think.lang.商品信息}></h4>
+					</div>
+					<div class="col-lg-6 col-md-6 text-right">
+                        <div  class="btn-white" onclick="location='<{:U(\'CommonFile/download\',[\'name\'=>\'purchase_import_goods.xls\'])}>'"><i class="fa fa-download"></i> <{$Think.lang.模板下载}></div>
+						<div  class="btn-yellow" data-toggle="modal" id="import-goods" data-target="#fileModal" style="padding: 0"><i class="fa fa-plus"></i> <{$Think.lang.模板导入}></div>
+					</div>
+				</div>
+			</div>
+			<div class="card-block">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered goods_detail">
+						<thead>
+						<tr>
+							<th width="20" >No</th>
+							<th width="240">SKU编码/条形码</th>
+							<th width="260">商品名称</th>
+							<th width="150" >属性</th>
+							<th width="100" style="text-align: center;display: none"><{$Think.lang.币种}></th>
+                            <th width="130" >库存数量</th>
+							<th width="130">预计单价</th>
+							<th width="130" >数量</th>
+							<th width="150" >金额</th>
+							<th width="150">操作</th>
+						</tr>
+						</thead>
+						<tbody class="goods_detail-main goods-list">
+						<tr id="goods_info" data-name="goods_detail_1">
+							<td><label>1</label></td>
+							<td>
+								<div class="input-group">
+									<input type="text" name="search_information[]" onkeyup="resetSelect(this)" id="" class="form-control"/>
+                                    <span class="input-group-btn ">
+                                        <button class="btn btn-secondary" type="button" onclick="checkSku(this)"><i class="fa fa-search fa-lg"></i></button>
+                                    </span>
+									<input type="text" name="sku_information[]"  class="" hidden/>
+								</div>
+							</td>
+                            <td>小米台灯一代</td>
+                            <td>标配</td>
+                            <td></td>
+							<td>
+								<input type="text" name="unit_price_g[]" value="0" class="form-control"/>
+								<input type="hidden"  name="unit_price[]" value="0"  class="form-control unit_price"/>
+							</td>
+							<td>
+								<input type="text"onblur="checkNumber(this)" name="goods_number_g[]"  value="0" class="form-control goods_number_g"/>
+								<input type="hidden" name="goods_number[]" style="text-align: center"   value="0" class="form-control goods_number"/>
+							</td>
+							<td>0</td>
+							<td class="no-wrap text-center">
+								<button class="btn btn-add btn-sm"  type="button" onclick="addTr(this)"><{$Think.lang.添加}></button>
+								<button class="btn btn-delete btn-sm" name="goods_detail_1" type="button" onclick="deleteTr(this)"><{$Think.lang.删除}></button>
+							</td>
+						</tr>
+						<tr class="total">
+							<td  style="text-align: center;font-weight: bold;;word-break: keep-all"><{$Think.lang.合计：}></td>
+                            <td colspan="3"></td>
+							<td style="display: none">
+								<span class="show_rate"></span>
+								<input type="hidden" class="show_rate_a" name="show_total_rate" >  <!--该数据是为了将显示的汇率保存起来，然后在修改界面显示的-->
+							</td>
+							<td id="goods_currency"></td>
+							<td><input type="hidden" value="0" name="number_total" class="number_total" ><span class="number_totals"></span></td>
+							<td><input type="hidden" value="0" name="money_total" class="money_total"> <!--用来传递与保存到数据库的-->
+								<input type="hidden" value="0" name="real_total_rate" id="real_rate" > <!--保存真实的汇率-->
+								<input type="hidden" value="0" name="money_total_rmb" class="new_money_total"> <!--换算成人民币后的金额用于下面的预计利润的计算-->
+								<span class="money_totals"></span>
+							</td>
+							<!--<td></td>-->
+							<td></td>
+						</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+
+		<div class="row btn-wrap">
+			<div class="col-lg-12 text-center">
+				<button class="btn btn-sure btn-lg" type="button" onclick="checkOuts()"><{$Think.lang.保   存}></button>&nbsp;&nbsp;&nbsp;&nbsp;
+				<button class="btn btn-cancel btn-lg"  type="button" onclick="quxiao()" name="goods_detail_1"><{$Think.lang.取  消}></button>
+			</div>
+		</div>
+	</form>
+</div>
+</body>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../Public/utils/utils.js"></script>
+<script type="text/javascript" src="../Public/lib/jquery.form.min.js"></script>
+<script type="text/javascript" src="../Public/lib/webuploader/0.1.5/webuploader.js"></script>
+<script>
+    $(".upload-box").on("mouseenter",".upload-box-child  .fujian_add",function () {
+        $(this).find("img").attr("src","./Application/Tpl/Public/images/add_hover.png")
+    })
+    $(".upload-box").on("mouseout",".upload-box-child  .fujian_add",function () {
+        $(this).find("img").attr("src","./Application/Tpl/Public/images/add.png")
+    })
+    $(".upload-box").on("mouseenter",".upload-box-child  .fujian_delete",function () {
+        $(this).find("img").attr("src","./Application/Tpl/Public/images/delete_hover.png")
+    })
+    $(".upload-box").on("mouseout",".upload-box-child  .fujian_delete",function () {
+        $(this).find("img").attr("src","./Application/Tpl/Public/images/delete.png")
+    })
+    //多选框
+    $(".add_checkBox_select .add_checkBox").on("click",function () {
+        $(this).addClass("add_checkBox_active").siblings().removeClass("add_checkBox_active")
+    })
+
+</script>
+</html>

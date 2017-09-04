@@ -1,0 +1,84 @@
+<div class="gys-wrap">
+    <table class="use-table-two">
+        <caption><{$Think.lang.审核信息}></caption>
+        <tbody class="use-body">
+            <tr>
+                <td><{$Think.lang.成立时间}></td>
+                <td id="a-EST_TIME">
+                </td>
+                <td><{$Think.lang.认缴资本}></td>
+                <td colspan="3" id="a-money" style="background-color: #eee;">
+                    
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.法人代表}></td>
+                <td id="a-LG_REP">
+                </td>
+                <td><{$Think.lang.股东名称}></td>
+                <td colspan="3" id="a-SHARE_NAME">
+                </td>
+            </tr>
+            <!--信用评级-->
+            <tr class="company-credit">
+                <td>
+                    信用评分(境外公司必填)
+                </td>
+                <td class="credit-score" id="a-CREDIT_SCORE" colspan="1">
+                    <{$audit.CREDIT_SCORE}>
+                </td>
+                <td>
+                    信用评级(境外公司必填)
+                </td>
+                <td colspan="3" class="credit-grade">
+                </td>
+            </tr>
+            <!--负面信息-->
+            <tr class="nagetive-info">
+                <td>
+                    是否有负面信息
+                </td>
+                <td class="is-have-nagetive-info" colspan="1">
+                    <if condition="$audit.IS_HAVE_NAGETIVE_INFO eq 1 ">
+                        <span style="border: 1px solid red; padding: 0 8px; display: inline-block; border-radius: 3px;">有12321</span>
+                        <else /> <span >无</span>
+                    </if>
+                </td>
+                <td>
+                    负面信息项
+                </td>
+                <td colspan="3" class="choice-nagetive-option">
+
+                </td>
+            </tr>
+            
+            <tr class="cripun">
+                <td><{$Think.lang.是否有司法赔偿（含财产执行保全）}></td>
+                <td id="a-cri">
+                    <if condition="$audit.CRI_PUN eq 1"> <span value="1" style="border: 1px solid red; padding: 0 8px; display: inline-block; border-radius: 3px;">有</span>
+                        <else /><span value="0">无</span>
+                    </if>
+                </td>
+                <td><{$Think.lang.裁判时间}></td>
+                <td id="a-CRI_TIME">
+                </td>
+                <td><{$Think.lang.裁判简介}></td>
+                <td id="a-CRI_DUC">
+                </td>
+            </tr>
+            
+            <tr class="riskpun">
+                <td><{$Think.lang.风险评级}></td>
+                <td id="a-riskpun">
+                </td>
+                <td><{$Think.lang.审核人}></td>
+                <td id="a-REVIEWER">
+                    <{$allUserInfo[$audit[REVIEWER]]}>
+                </td>
+                <td><{$Think.lang.审核时间}></td>
+                <td id="a-REV_TIME">
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

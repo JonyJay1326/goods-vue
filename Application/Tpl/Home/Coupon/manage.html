@@ -1,0 +1,262 @@
+<include file="Public:page_header_list" />
+<body class="pos-r mr-20 ml-20">
+<style>
+    html,body,div,span,table,tr,td,em,input,th{
+        font-family: "微软雅黑 Bold","微软雅黑";
+    }
+    .col-md-11 ul li{
+        font-family: "微软雅黑" !important;
+    }
+    .new-kehu .col-md-1 {
+        width: 65px;
+    }
+    .new-kehu .col-md-1 span {
+        color: #333333;display: inline-block;
+        font-family: "微软雅黑 Bold","微软雅黑";
+        font-size: 13px;font-style: normal;
+        font-weight:400;line-height:normal;
+        margin: 10px 0;padding: 3px 0;
+    }
+    .link_blue{text-decoration:underline;color:#06c;}
+    .menu-state .active a {
+        background: #ed2d65 none repeat scroll 0 0;
+        color: white;
+    }
+    .menu-state a {
+        color: #ed2d65;
+    }
+    .menu-state ul li {
+        display:inline-block;
+    }
+    .btn-pink a {
+        color: #fff;
+    }
+    .active{border-radius:5px}
+    select,input,button,.btn{border-radius: 5px}
+</style>
+
+<div>
+    <div>
+        <form action="" method="get" id="form_kehu">
+            <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+            <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+
+            <div class="row ">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state ">
+                    <ul>
+                        <li class="show_title"><{$Think.lang.适用平台}>：</li>
+                        <li class="<?php if(empty($filterArr['by_plat_cd'])){ ?>active<?php } ?>" >
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_plat_cd='); ?>"><{$Think.lang.全部}></a>
+                        </li>
+                        <foreach name="plat_list" key="key" item="value">
+                        <?php $now_str = implode(',',ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_plat_cd'],$key) ))); ?>
+                        <?php $now_exists = ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_plat_cd']) )); ?>
+                        <li class="<?php if(in_array($key,$now_exists)){ ?>active<?php } ?>" >
+                            <?php if(in_array($key,$now_exists)){ ?>
+                                <?php $now_clean_arr = Mainfunc::arrRmByVal($now_exists,$key); ?>
+                                <?php $now_clean_str = implode(',',$now_clean_arr); ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_plat_cd='.$now_clean_str); ?>"><{$value}></a>
+                            <?php }else{ ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_plat_cd='.$now_str); ?>"><{$value}></a>
+                            <?php } ?>
+                        </li>
+                        </foreach>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-12 col-xs-12 text-r padding5-0 no-wrap" style="height: 36px;">
+                    <span id="" class="inline-block">
+                        <span class="btn btn-pink"><a href="<{:U("coupon/add",array('id'=>''))}>"><{$Think.lang.十新建优惠券}></a> </span>
+                    </span>
+                </div>
+            </div>
+            <input type="hidden" name="by_plat_cd" value="<?php echo $filterArr['by_plat_cd']; ?>" >
+
+            <div class="row ">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state ">
+                    <ul>
+                        <li class="show_title"><{$Think.lang.使用范围}>：</li>
+                        <li class="<?php if(empty($filterArr['by_scope'])){ ?>active<?php } ?>" >
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_scope='); ?>"><{$Think.lang.全部}></a>
+                        </li>
+                        <?php $scope_list = D('ZZmscoupons')->getItemsForScope(); ?>
+                        <?php foreach($scope_list as $key=>$value){ ?>
+                        <?php $now_str = implode(',',ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_scope'],$key) ))); ?>
+                        <?php $now_exists = ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_scope']) )); ?>
+                        <li class="<?php if(in_array($key,$now_exists)){ ?>active<?php } ?>" >
+                            <?php if(in_array($key,$now_exists)){ ?>
+                                <?php $now_clean_arr = Mainfunc::arrRmByVal($now_exists,$key); ?>
+                                <?php $now_clean_str = implode(',',$now_clean_arr); ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_scope='.$now_clean_str); ?>"><{$value}></a>
+                            <?php }else{ ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_scope='.$now_str); ?>"><{$value}></a>
+                            <?php } ?>
+                        </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" name="by_scope" value="<?php echo $filterArr['by_scope']; ?>" >
+
+            <div class="row ">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state ">
+                    <ul>
+                        <li class="show_title"><{$Think.lang.发放渠道}>：</li>
+                        <li class="<?php if(empty($filterArr['by_deliver_way'])){ ?>active<?php } ?>" >
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_deliver_way='); ?>"><{$Think.lang.全部}></a>
+                        </li>
+                        <?php $deliver_list = D('ZZmscoupons')->getItemsForDeliver(); ?>
+                        <?php foreach($deliver_list as $key=>$value){ ?>
+                        <?php $now_str = implode(',',ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_deliver_way'],$key) ))); ?>
+                        <?php $now_exists = ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_deliver_way']) )); ?>
+                        <li class="<?php if(in_array($key,$now_exists)){ ?>active<?php } ?>" >
+                            <?php if(in_array($key,$now_exists)){ ?>
+                                <?php $now_clean_arr = Mainfunc::arrRmByVal($now_exists,$key); ?>
+                                <?php $now_clean_str = implode(',',$now_clean_arr); ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_deliver_way='.$now_clean_str); ?>"><{$value}></a>
+                            <?php }else{ ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_deliver_way='.$now_str); ?>"><{$value}></a>
+                            <?php } ?>
+                        </li>
+                        <?php } ?>
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" name="by_deliver_way" value="<?php echo $filterArr['by_deliver_way']; ?>" >
+
+            <div class="row" id="rowSearch">
+                <div class="col-search col-lg-9 col-md-12 col-xs-12">
+                <span><{$Think.lang.创建时间}>：
+                  <input type="text" onfocus="WdatePicker({})" id="logmin"  name="starttime" value="<{$filterArr.starttime}>" class="input-text Wdate" style="width:120px;">
+                  -
+                  <input type="text" onfocus="WdatePicker({})" id="logmax"  name="endtime" value="<{$filterArr.endtime}>" class="input-text Wdate" style="width:120px;">
+                </span>
+                <span class="select-box inline">
+                    <select name="keyword_type" class="select">
+                        <option value="1" <if condition="$filterArr.keyword_type eq 1">selected="selected"</if> ><{$Think.lang.优惠券名称}></option>
+                        <option value="2" <if condition="$filterArr.keyword_type eq 2">selected="selected"</if> ><{$Think.lang.优惠券ID}></option>
+                        <option value="3" <if condition="$filterArr.keyword_type eq 3">selected="selected"</if> ><{$Think.lang.创建人}></option>
+                    </select>
+                </span>
+                <input type="text" name="keywords" value="<{$filterArr.keywords}>"  placeholder="<{$Think.lang.搜索关键字}>" style="width:100px" class="input-text">
+                <button name="" class="btn btn-pink" type="submit"><i class="Hui-iconfont">&#xe665;</i> <{$Think.lang.搜索}></button>
+                <button name="reset" class="btn btn-clear"><{$Think.lang.重置}></button>
+            </div>
+
+            </div>
+            </form>
+        </div>
+
+        <div class="row">
+            <div>
+                <div class="col-md-5 search-num-wrap">
+                    <span class="search-num"><{$Think.lang.搜索结果}>：&nbsp;&nbsp;<{$Think.lang.共}></span>
+                    <span class="search-num-t"><{$count}></span>
+                    <span class="search-num"><{$Think.lang.条记录}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+                <ul class="pagination">
+                    <{$pages}>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-border table-bordered table-bg table-hover table-sort" >
+                <thead>
+                <tr class="text-c no-wrap">
+                    <th><{$Think.lang.优惠券ID}></th>
+                    <th><{$Think.lang.优惠券名称}></th>
+                    <th><{$Think.lang.适用平台}></th>
+                    <th><{$Think.lang.有效期}></th>
+                    <th><{$Think.lang.使用条件}></th>
+                    <th><{$Think.lang.优惠结果}></th>
+                    <th><{$Think.lang.使用范围}></th>
+                    <th><{$Think.lang.发放渠道}></th>
+                    <th><{$Think.lang.总发行量}></th>
+                    <th title="剩余量=总发行量-已领取"><{$Think.lang.剩余量}></th>
+                    <th title="• 当处于优惠券有效期内时：已领取=可使用+已使用+已过期
+• 当优惠券有效期还未开始时，已领取优惠券都不可使用"><{$Think.lang.已领取}></th>
+                    <th title="可使用：优惠券还在有效期内，用户已领取但未使用"><{$Think.lang.可使用}></th>
+                    <th title="已使用：优惠券已被使用"><{$Think.lang.已使用}></th>
+                    <th title="已过期：用户领取了优惠券但未使用，优惠券已过期"><{$Think.lang.已过期}></th>
+                    <th title="使用率=已使用/已领取*100%"><{$Think.lang.使用率}></th>
+                    <th><{$Think.lang.创建日期}></th>
+                    <th><{$Think.lang.创建人}></th>
+                    <th><{$Think.lang.状态}></th>
+                    <th><{$Think.lang.操作}></th>
+                </tr>
+                </thead>
+                <tbody>
+
+<if condition="empty($list) eq 1">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap" colspan="19"><{$Think.lang.None}></td>
+                </tr>
+<else />
+<foreach name="list" key="key" item="value">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap"><{$value.code}></td>
+                    <td class="no-wrap"><{$value.name}></td>
+                    <td class="no-wrap"><?php echo D('ZZmscmncd')->getNameFromCode($value['plat_cd']); ?></td>
+                    <td class="no-wrap"><?php echo D('ZZmscoupons')->gain_validity_period($value); ?></td>
+                    <td class="no-wrap"><?php echo D('ZZmscoupons')->gain_using_condition($value); ?></td>
+                    <td class="no-wrap"><?php echo D('ZZmscoupons')->gain_favorable_result($value); ?></td>
+                    <td class="no-wrap"><?php echo D('ZZmscoupons')->gain_use_scope($value); ?></td>
+                    <td class="no-wrap"><?php echo D('ZZmscoupons')->gain_deliver_way($value); ?></td>
+                    <td class="no-wrap"><{$value.circulation}></td>
+                    <td class="no-wrap"><{$value.remain_num}></td>
+                    <td class="no-wrap"><{$value.already_receive_num}></td>
+                    <td class="no-wrap"><{$value.available_num}></td>
+                    <td class="no-wrap"><{$value.already_use_num}></td>
+                    <td class="no-wrap"><{$value.expired_num}></td>
+                    <td class="no-wrap"><?php echo D('ZZmscoupons')->gain_use_rate($value); ?></td>
+                    <td class="no-wrap"><?php if($value['create_time']){ ?><?php echo date('Y-m-d H:i',($value['create_time'])); ?><?php } ?></td>
+                    <td class="no-wrap"><?php echo DataMain::gainAdminName($value['create_admin_id']); ?></td>
+                    <td class="no-wrap"><?php echo DataMain::getStatusItemsForOpen($value['status']); ?></td>
+                    <td class="no-wrap"><a class="link_blue" href="<{:U("coupon/edit",array('edit_id'=>$value['id']))}>" ><{$Think.lang.编辑}></a></td>
+                </tr>
+</foreach>
+</if>
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="row" style="margin:40px auto;">
+            &nbsp;
+        </div>
+    </div>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script>
+    $(document).ready(function (){
+
+        //form reset
+        $("button[name='reset']").click(function(){
+            $("#form_kehu input").each(function(){
+                var is_reset = true;
+                var n = $(this).attr('name');
+                if(n=='m' || n=='a'){
+                    is_reset = false;
+                }
+                if(n=='by_scope' || n=='by_plat_cd' || n=='by_deliver_way'){
+                    is_reset = false;
+                }
+                if(is_reset){
+                    $(this).val(null);
+                }
+            });
+            $("#form_kehu select").val(0);
+            return false;
+        });
+
+    });
+
+</script>
+</body>
+</html>

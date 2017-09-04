@@ -1,0 +1,2600 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <!--<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css" />-->
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css?v=20170117" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/jqeury-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170617" />
+    <title>订单列表-全部订单</title>
+</head>
+<style>
+    .row .menu-state_span{display: block;float: left;height:32px;line-height: 32px;width:68px;}
+    .menu-state_new > ul > li:nth-child(1) {
+        color: #ED2D65;cursor: pointer;white-space: nowrap;margin:-2px 7px !important;
+        padding: 3px 8px;
+    }
+    .row .menu-state_new .menu-state_ul{display: block;float: left;width:85%;margin-top: 3px;}
+    .menu-state_new{min-height:32px;width:100%;margin-top: 10px;}
+    .row .menu-state_new .menu-state_ul li{margin:0px 7px; float: left;}
+    .menu-state1 .active {
+        background: #ED2D65;
+        color: white !important;
+    }
+    input,select,.btn,.select-box{border-radius:5px !important;}
+    .sendwarning{margin: 0px 10px}
+    .menu-sort .menu-state_ul li:nth-child(1){margin-left:0px}
+    #download .btn,#newOrderBtn .btn{padding:3px 0px;width: 118px}
+    .neword,.download{border:1px solid #ed2d65;background: white;margin-top:5px}
+    .download li,.neword li{padding:5px 0px 2px 0px;}
+    .download li:hover,.neword li:hover{background: #cdc7c9;}
+    .download li:hover a,.neword li:hover a{color:white;}
+    .sendwarning_selected{margin: 0px 10px;}
+    .active,.active span{border-radius:5px;}
+    .Shipping_status{position: relative;vertical-align: middle;
+        text-align: left !important;
+    }
+    .Shipping_status a{width: 100%;
+        display: block;text-align: center;
+    }
+    .Shipping_status .Shipping_status_div{
+        position: absolute;background: white;
+        width: 680px;min-height: 120px;
+        font-size: 13px;left:-663px;
+        top:62%;border: 1px solid #CCCCCC;
+        border-radius: 10px;z-index: 10;
+        display: none;
+    }
+    .Shipping_status .Shipping_status_div table{
+        width: 100%;height: 100%;
+    }
+    .Shipping_status .Shipping_status_div table td{text-align: left;padding: 0px;}
+    .Shipping_status .Shipping_status_div ul{
+        margin-top:10px;margin: 0;
+        padding: 0;margin-left: 20px;
+        margin-top:13px;padding-left: 10px;
+        list-style: none;font-size: 12px;
+    }
+    .Shipping_status .Shipping_status_div ul li{
+        margin-bottom: -2px;
+        min-height: 30px;
+        height: 30px;
+        border-left: 1px solid #d9d9d9;
+    }
+    .Shipping_status .Shipping_status_div ul li:before{
+        content: '';
+        border: 3px solid #red;
+        background-color: #d9d9d9;
+        display: inline-block;
+        width: 5px;
+        height: 5px;
+        border-radius: 5px;
+        margin-left: -3px;
+        margin-right: 10px;
+    }
+    .Shipping_status .Shipping_status_div ul li span{
+        display: inline-block;
+        font-family: Arial;
+        margin-right: 8px;
+    }
+    .Shipping_status .Shipping_status_div ul .latest:before{
+        background-color: #fe4300;
+        border-color: #f8e9e4;
+    }
+    .Shipping_status_img{
+        position: absolute;
+        transform: rotate(-40deg);
+        left:4%;
+        top: 61%;
+        z-index: 12;
+        width:25px !important;
+        height: 17px !important;
+        display: none;
+    }
+    .faile_reason_img{
+        position: absolute;
+        transform: rotate(-40deg);
+        left:4%;
+        top: 61%;
+        z-index: 12;
+        width:25px !important;
+        height: 17px !important;
+        display: none;
+    }
+    #rowSearch .btn-pink[type="submit"]{
+        background: #ED2D65;
+        color: white;
+    }
+</style>
+<body class="pos-r mt-20">
+<img src="../Public/images/ajax-loader.gif" width="" height="" alt="" class="img_load-pos hide"/>
+<div class="orders" id="orders">
+    <div>
+        <form action="<{:U(ACTION_NAME)}>" method="post" id="order_form">
+            <?php if($type != 'self' && $type != 'qg' && $type != 'new_self'){?>
+            <div class="order-nav">
+                <ul>
+                    <?php if(isset($access['Orders/orders'])){?><li <?php if( !$type ){echo 'class="active"';}?>><a href="<{:U('Orders/orders')}>"><{$Think.lang.全部订单}></a></li><?php }?>
+                    <?php if(isset($access['Orders/orders_bw'])){?>
+                    <li <?php if(I('get.ORD_TYPE_CD') == 'N000620400' && I('get.DELIVERY_WAREHOUSE') == 'N000680300' || $type == '3'){echo 'class="active"';}?>>
+                    <a  title="YJDF order from China bonded warehouse" href="<{:U('Orders/orders_bw',array('ORD_TYPE_CD'=>'N000620400','DELIVERY_WAREHOUSE'=>'N000680300'))}>">
+                        <{$Think.lang.保税订单}>
+                    </a>
+                    </li>
+                    <?php }?>
+                    <?php if(isset($access['Orders/orders_dm'])){?>
+                    <li <?php if(I('get.ORD_TYPE_CD') == 'N000620400' && I('get.DELIVERY_WAREHOUSE') == 'N000680200' || $type == '2'){echo 'class="active"';}?>>
+                    <a title="YJDF order from oversea warehouse" href="<{:U('Orders/orders_dm',array('ORD_TYPE_CD'=>'N000620400','DELIVERY_WAREHOUSE'=>'N000680200'))}>">
+                        <{$Think.lang.直邮订单}>
+                    </a>
+                    </li>
+                    <?php }?>
+                    <?php if(isset($access['Orders/orders_xh'])){?>
+                    <li <?php if(I('get.ORD_TYPE_CD') == 'N000620400' && I('get.DELIVERY_WAREHOUSE') == 'N000680100' || $type == '4'){echo 'class="active"';}?>>
+                    <a title="YJDF order from China domestic warehouse" href="<{:U('Orders/orders_xh',array('ORD_TYPE_CD'=>'N000620400','DELIVERY_WAREHOUSE'=>'N000680100'))}>">
+                        <{$Think.lang.现货订单}>
+                    </a>
+                    </li><?php }?>
+                    <?php if(isset($access['Orders/orders_bulk'])){?>
+                    <li <?php if(I('get.ORD_TYPE_CD') == 'N000620100' || $type == '1'){echo 'class="active"';}?>>
+                    <a href="<{:U('Orders/orders_bulk',array('ORD_TYPE_CD'=>'N000620100'))}>">
+                        <{$Think.lang.大宗订单}>
+                    </a>
+                    </li>
+                    <?php }?>
+                    <!--<li><a href=""><{$Think.lang.Inquiry Order}></a></li>-->
+                    <!--<li><a href="<{:U('Orders/orders_self')}>"><{$Think.lang.Self-support Order}></a></li>-->
+                </ul>
+            </div>
+            <?php }?>
+            <div class="row">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state ">
+                    <ul>
+                    <!-- 订单状态筛选 -->
+                        <li><{$Think.lang.订单状态}>：</li>
+                        <li <?php if(I('ORD_STAT_CD') == ''){echo 'class="active"';}?> class="" onclick="search()"><{$Think.lang.全部}></li>
+                        <!--<li><{$Think.lang.TBU}></li>-->
+                        <!--<li <?php if(I('ORD_STAT_CD') == 'N000550100'){echo 'class="active"';}?> onclick="search('N000550100')"><{$Think.lang.TBC}></li>-->
+                        <!--<li <?php if(I('ORD_STAT_CD') == 'N000550300'){echo 'class="active"';}?> onclick="search('N000550300')"><{$Think.lang.Unpaid}></li>-->
+                        <!--<li <?php if(I('ORD_STAT_CD') == 'N000550400'){echo 'class="active"';}?> onclick="search('N000550400')"><{$Think.lang.Unshipped}></li>-->
+                        <!--<li <?php if(I('ORD_STAT_CD') == 'N000550500'){echo 'class="active"';}?> onclick="search('N000550500')"><{$Think.lang.Shipped}></li>-->
+                        <!--<li <?php if(I('ORD_STAT_CD') == 'N000550800'){echo 'class="active"';}?> onclick="search('N000550800')"><{$Think.lang.Completed}></li>-->
+                        <!--<li <?php if(I('ORD_STAT_CD') == 'N000551000'){echo 'class="active"';}?> onclick="search('N000551000')"><{$Think.lang.Canceled}></li>-->
+                        <foreach name="order_status" item="v" key="k">
+                            <li <?php if(I('ORD_STAT_CD') == $k){echo 'class="active"';}?> class="" onclick="search('<?php echo $k;?>')"><{$v}></li>
+                        </foreach>
+                    </ul>
+                </div>
+                <input type="hidden" name="SHORT_SUPPLY" value="<?php echo I('SHORT_SUPPLY');?>">
+                <input type="hidden" name="ALLOW_SENDOUT" value="<?php echo I('ALLOW_SENDOUT');?>">
+                <input type="hidden" name="ORD_STAT_CD" value="<?php echo I('ORD_STAT_CD');?>">
+                <input type="hidden" name="LOGISTIC_STATUS" value="<?php echo I('LOGISTIC_STATUS');?>">
+                <input type="hidden" name="SENDOUT_WARNING" value="<?php echo I('SENDOUT_WARNING');?>">
+                <input type="hidden" name="PLAT_CD" value="<?php echo I('PLAT_CD');?>">
+                <input type="hidden" name="STORE" value="<?php echo I('STORE');?>">
+                <input type="hidden" name="STORE_NAME" value="<?php echo I('STORE_NAME');?>">
+                <input type="hidden" name="BWC_USER_ID" value="<?php echo I('BWC_USER_ID');?>">
+                <input type="hidden" name="REFUND_STAT_CD" value="<?= I('REFUND_STAT_CD') ?>"/>
+                <div class="col-lg-2 col-md-12 col-xs-12 text-r padding5-0 no-wrap" style="height: 36px;z-index: 9999;">
+                    <span id="download" class="inline-block" >
+                        <!--<span class="btn btn-pink" onclick="showdownload(this);"><{$Think.lang.下载模板}><img src="../Public/images/u35.png" alt=""  class="sortDown">-->
+                        <span class="btn btn-pink"><{$Think.lang.下载模板}><img src="../Public/images/u35.png" alt=""  class="sortDown">
+                        <ul class="hide download">
+                            <!--<li><a href="<{:U('Orders/orders')}>">大宗采购</a></li>-->
+                            <li><a href="<{:U('Orders/download',array('name'=>'[Request]EstimateRequest.xlsx'))}>"><{$Think.lang.询盘单}></a></li>
+                            <li><a href="<{:U('Orders/download',array('name'=>'Offer-Template.xlsx'))}>"><{$Think.lang.报价单}></a></li>
+                            <li><a href="<{:U('Orders/download',array('name'=>'PO-Template.xlsx'))}>"><{$Think.lang.PO单}></a></li>
+                            <li><a href="<{:U('Orders/download',array('name'=>'Logisticstemplate.xlsx'))}>"><{$Think.lang.物流导入模板}></a></li>
+                            <li><a href="<{:U('Orders/download',array('name'=>'import.xlsx'))}>"><{$Think.lang.第三方导入}></a></li>
+                        </ul>
+                        </span>
+                    </span>
+                    <!--<span class="btn btn-pink"><{$Think.lang.Create Order}></span>-->
+                    <?php if( ($type == 0 && ($is_createorderxh == 1 || $is_createorderdm == 1 || $is_createorderbw == 1 || $is_createorderqg == 1 )) || ($is_createorder == 1) and $type != 'new_self'){?>
+                    <span id="newOrderBtn" class="inline-block">
+                        <!--<span class="btn btn-pink" onclick="showcreateord(this);"><{$Think.lang.新建订单}> <img src="../Public/images/u35.png" alt=""  class="sortDown">-->
+                        <span class="btn btn-pink"><{$Think.lang.新建订单}> <img src="../Public/images/u35.png" alt=""  class="sortDown">
+                         <ul class="hide neword">
+                             <?php if( ($type == 4 && $is_createorder == 1) || ($type == 0 && $is_createorderxh == 1) ){?><li><a href="<{:U('Orders/createorderxh')}>"><{$Think.lang.现货订单}></a></li><?php }?>
+                             <?php if( ($type == 2 && $is_createorder == 1) || ($type == 0 && $is_createorderdm == 1)){?><li><a href="<{:U('Orders/createorderdm')}>"><{$Think.lang.直邮订单}></a></li><?php }?>
+                             <?php if( ($type == 3 && $is_createorder == 1) || ($type == 0 && $is_createorderbw == 1) ){?><li><a href="<{:U('Orders/createorderbw')}>"><{$Think.lang.保税订单}></a></li><?php }?>
+                             <!--<li><a href="<{:U('Orders/createorder',array('ord_type'=>'N000620400'))}>">一件代发</a></li>-->
+                             <?php if( ($type == 'qg' && $is_createorder == 1) || ($type == 0 && $is_createorderqg == 1)){?><li><a href="<{:U('Orders/createorderqg')}>"><{$Think.lang.求购订单}></a></li><?php }?>
+                         </ul>
+                        </span>
+                    </span>
+                    <?php }?>
+
+                </div>
+            </div>
+            <!-- 运输状态 -->
+            <?php if($type == 'self' or $type == 'new_self'){?>
+            <div class="row">
+                <div class="col-md-12 menu-state1 menu-state_new">
+                    <span class="menu-state_span show_title"><{$Think.lang.运送状态}>：</span>
+                    <ul class="menu-state_ul">
+                        <li <?php if(I('LOGISTIC_STATUS') == ''){echo 'class="active"';}?> class="" onclick="logisticStatus('')"><{$Think.lang.全部}></li>
+                        <foreach name="logistic_status" item="vos" key='kt'>
+                            <li <?php if(I('LOGISTIC_STATUS') == $kt){echo 'class="active"';}?> onclick="logisticStatus('<?= $kt ?>')" ><{$vos}></li>
+                        </foreach>
+                    </ul>
+                </div>
+            </div>
+            <!-- 退款状态 -->
+            <?php } if($type == 'self' or $type == 'new_self'){?>
+            <div class="row">
+                <div class="col-md-12 menu-state1">
+                    <ul>
+                        <li><{$Think.lang.退款状态}>：</li>
+                        <li <?php if(I('REFUND_STAT_CD') == ''){echo 'class="active"';}?> class="" onclick="refund_type('')"><{$Think.lang.全部}></li>
+                        <foreach name="refund_state" item="vos" key='kt'>
+                            <li <?php if(I('REFUND_STAT_CD') == $kt){echo 'class="active"';}?> onclick="refund_type('<?= $kt ?>')" ><{$vos}></li>
+                        </foreach>
+                    </ul>
+                </div>
+            </div>
+            <!-- 平台渠道 -->
+            <div class="row">
+                <div class="col-md-12 menu-state1 menu-state_new">
+                    <span class="menu-state_span show_title"><{$Think.lang.平台渠道}>：</span>
+                    <ul class="menu-state_ul">
+                        <li <?php if(I('PLAT_CD') == ''){echo 'class="active"';}?> class="" onclick="search('',1)"><{$Think.lang.全部}></li>
+                        <foreach name="plat" item="vo" key="k">
+                            <?php
+                            $platName =$name[$vo['PLAT_CD']];
+                            if ($type == 'self' and $k == 'N000831400') continue;
+                            if($type == 'self') { ?>
+                            <li <?php if(I('PLAT_CD') == $k){echo 'class="active"';}?> onclick="search('<?php echo $k;?>',1)" ><{$vo}></li>
+                            <?php }else { ?>
+                            <li <?php if(I('PLAT_CD') == $vo['CD']){echo 'class="active"';}?> onclick="search('<?php echo $vo['CD'];?>',1)" ><{$vo.CD_VAL}></li>
+                            <?php } ?>
+                        </foreach>
+                    </ul>
+                </div>
+            </div>
+            <!-- 店铺渠道 -->
+            <!--<?php
+                            if($type == 'self') { ?>
+            <div class="row">
+                <div class="col-md-12 menu-state1 menu-state_new">
+                    <span class="menu-state_span show_title"><{$Think.lang.店铺}>：</span>
+                    <ul class="menu-state_ul">
+                        <li <?php if(I('STORE') == ''){echo 'class="active"';}?> class="" onclick="search('',6)"><{$Think.lang.全部}></li>
+                        <foreach name="store" item="vo" key="k">
+                            <?php
+                            if($type == 'self') { ?>
+                            <li <?php if(I('STORE') == $k){echo 'class="active"';}?>  onclick="search('<?php echo $k;?>',6)" ><{$vo}></li>
+                            <?php } ?>
+                        </foreach>
+                    </ul>
+                </div>
+            </div>
+            <?php } ?>-->
+            
+
+
+            <!-- 包裹类型 -->
+            <?php
+                if ($type != 'new_self') {
+            ?>
+            <div class="row">
+                <div class="col-md-12 menu-state2">
+                    <ul>
+                        <li><{$Think.lang.包裹类型}>：</li>
+                        <li onclick="searchboxtype('')" <?php if($boxtype == ''){echo 'class="active"';}?>>全部</li>
+                        <li onclick="searchboxtype(1)" <?php if($boxtype == 1){echo 'class="active"';}?>>单品单数</li>
+                        <li onclick="searchboxtype(2)" <?php if($boxtype == 2){echo 'class="active"';}?>>单品多数</li>
+                        <li onclick="searchboxtype(3)" <?php if($boxtype == 3){echo 'class="active"';}?>>多品混包</li>
+                        <input type="hidden" name="boxtype" value="<{$boxtype}>">
+                    </ul>
+                </div>
+            </div>
+            <?php
+                }
+            ?>
+            <?php }?>
+
+            <!-- 排序方式 -->
+            <div class="row">
+                <div class="menu-sort col-md-12 menu-state_new">
+                    <span class="menu-state_span show_title"><{$Think.lang.排序方式}>：</span>
+                    <ul class="menu-state_ul">
+                        <li <?php if(I('sort_type') == 'SYS_REG_DTTM'  || I('sort_type') == ''){echo 'class="active"';}?> onclick="sort('SYS_REG_DTTM')"><span><{$Think.lang.按下单时间}></span></li>
+                        <li <?php if(I('sort_type') == 'PAY_DTTM'){echo 'class="active"';}?> onclick="sort('PAY_DTTM')" ><span><{$Think.lang.按付款时间}></span>
+                        <?php if($type != 'self'){?>
+                        <li <?php if(I('sort_type') == 'GUDS_ID'){echo 'class="active"';}?> onclick="sort('GUDS_ID')"><span><{$Think.lang.按B5C商品ID}></span></li>
+                        <?php }?>
+
+                        <li <?php if(I('sort_type') == 'total_price'){echo 'class="active"';}?> onclick="sort('total_price')"><span><{$Think.lang.按订单金额}></span></li>
+                        <li <?php if(I('sort_type') == 'REMARK_STAT_CD'){echo 'class="active"';}?> onclick="sort('REMARK_STAT_CD')"><span><{$Think.lang.按备注信息}></span></li>
+                        <span class="<?php if(I('SENDOUT_WARNING')){echo 'sendwarning_selected';}else{echo 'sendwarning';}?>" onclick="search('',3);"><{$Think.lang.发货预警}></span>
+                        <?php if($type=='self'){?>
+                        <span class="<?php if(I('ALLOW_SENDOUT')){echo 'sendwarning_selected';}else{echo 'sendwarning';}?>" onclick="search('',5);"><{$Think.lang.可发货订单}></span>
+                        <span class="<?php if(I('SHORT_SUPPLY')){echo 'sendwarning_selected';}else{echo 'sendwarning';}?>" onclick="search('',4);"><{$Think.lang.缺货订单}></span>
+                        <?php }?>
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" name="sort_type" value="<?php echo I('sort_type');?>">
+            <input type="hidden" name="sort_value" value="<?php echo I('sort_value');?>">
+            <div class="row" id="rowSearch">
+                <div class="col-search col-lg-9 col-md-12 col-xs-12">
+                <span class="select-box inline">
+                    <select name="time_type" class="select">
+                        <option value="0" <?php if(I("time_type") == 0){echo 'selected';}?> ><{$Think.lang.付款时间}></option>
+                        <option value="1" <?php if(I("time_type") == 1){echo 'selected';}?> n ><{$Think.lang.created_time}></option>
+                    </select>
+                </span>
+                    <span><{$Think.lang.时间范围}>：
+                      <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}'})" id="logmin"  name="starttime" value="<?php echo I('starttime');?>" class="input-text Wdate" style="width:120px;">
+                      -
+                      <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d'})" id="logmax"  name="endtime" value="<?php echo I('endtime');?>" class="input-text Wdate" style="width:120px;">
+                    </span>
+
+                    <span class="select-box inline">
+                        <select name="keyword_type" class="select">
+                            <?php if($type != 'self'){?>
+                            <option value="ORD_ID" <?php if(I('keyword_type') == 'ORD_ID'){echo 'selected';}?> ><{$Think.lang.B5C订单号}></option>
+                            <option value="PAY_ID" <?php if(I('keyword_type') == 'PAY_ID'){echo 'selected';}?>><{$Think.lang.B5C支付号}></option>
+                            
+                            <option value="CUST_ID" <?php if(I('keyword_type') == 'CUST_ID'){echo 'selected';}?>><{$Think.lang.B5C用户ID}></option>
+                            <!--<option value="1"><{$Think.lang.Three Party Shop ID}></option>-->
+                            <option value="GUDS_NM" <?php if(I('keyword_type') == 'GUDS_NM'){echo 'selected';}?>><{$Think.lang.商品标题}></option>
+                            <option value="ORD_CUST_NM" <?php if(I('keyword_type') == 'ORD_CUST_NM'){echo 'selected';}?>><{$Think.lang.收件人}></option>
+                            <option value="ORD_CUST_CP_NO" <?php if(I('keyword_type') == 'ORD_CUST_CP_NO'){echo 'selected';}?>><{$Think.lang.收货人电话}></option>
+                            <option value="SH_SALER" <?php if(I('keyword_type') == 'SH_SALER'){echo 'selected';}?>><{$Think.lang.上海负责人}></option>
+                            <option value="GUDS_ID" <?php if(I('keyword_type') == 'GUDS_ID'){echo 'selected';}?>><{$Think.lang.B5C商品ID}></option>
+                            <option value="THIRD_SUPPLIER" <?php if(I('keyword_type') == 'THIRD_SUPPLIER'){echo 'selected';}?>><{$Think.lang.供货商名}></option>
+                            <option value="THIRD_SERIAL_NUMBER" <?php if(I('keyword_type') == 'THIRD_SERIAL_NUMBER'){echo 'selected';}?>><{$Think.lang.第三方支付流水号}></option>
+                            <option value="TRACKING_NUMBER" <?php if(I('keyword_type') == 'TRACKING_NUMBER'){echo 'selected';}?>><{$Think.lang.物流单号}></option>
+                            <option value="THIRD_ORDER_ID" <?php if(I('keyword_type') == 'THIRD_ORDER_ID'){echo 'selected';}?>><{$Think.lang.第三方订单号}></option>
+                            <?php }else{?>
+                            <option value="THIRD_ORDER_ID" <?php if(I('keyword_type') == 'THIRD_ORDER_ID'){echo 'selected';}?>><{$Think.lang.第三方订单号}></option>
+                            <option value="B5C_ACCOUNT_ID" <?php if(I('keyword_type') == 'B5C_ACCOUNT_ID'){echo 'selected';}?>><{$Think.lang.B5C用户ID}></option>
+                            <option value="B5C_ORDER_NO" <?php if(I('keyword_type') == 'B5C_ORDER_NO'){echo 'selected';}?>><{$Think.lang.B5C订单号}></option>
+                            <option value="B5C_SKU_ID" <?php if(I('keyword_type') == 'B5C_SKU_ID'){echo 'selected';}?>><{$Think.lang.B5C商品ID}></option>
+                            <option value="GUDS_NM" <?php if(I('keyword_type') == 'GUDS_NM'){echo 'selected';}?>><{$Think.lang.商品标题}></option>
+                            <option value="ORD_CUST_NM" <?php if(I('keyword_type') == 'ORD_CUST_NM'){echo 'selected';}?>><{$Think.lang.收件人}></option>
+                            <option value="ADDRESS_USER_PHONE" <?php if(I('keyword_type') == 'ADDRESS_USER_PHONE'){echo 'selected';}?>><{$Think.lang.收货人电话}></option>
+                            <?php }?>
+                        </select>
+                </span>
+
+                    <input type="text" name="keywords" value="<?php echo I('keywords');?>"  placeholder="<{$Think.lang.搜索关键字}>" style="width:100px" class="input-text">
+                    <span class="select-box inline">
+                    <select name="EXPE_COMPANY" class="select" style="width: 120px;">
+                        <option value=""><{$Think.lang.物流公司}></option>
+                        <foreach name="EXPE_COMPANY" item="v">
+                            <option <?php echo 'value="'.$v['CD'].'"';  if(I('EXPE_COMPANY') == $v['CD']){echo 'selected';} ?> ><?php echo L($v['CD_VAL']);?>
+                                
+                            </option>
+                        </foreach>
+
+                    </select>
+                    </span>
+
+                    <?php if($type == 'self'){?>
+                     <span class="select-box inline">
+                        <select name="STORE" class="select" style="width: 80px;">
+                            <option value=""><{$Think.lang.所属店铺}></option>
+                            <foreach name="store" item="v" key="k">
+                                <option <?php echo 'value= "'.$k.'"';  if(I('STORE') == $k){echo 'selected';} ?> >
+                                <?php echo $k;?>
+                                </option>
+                            </foreach>
+                        </select>
+                    </span>
+                    <?php  } ?>
+
+                    <?php if($type == 'self'){?>
+                    <span><{$Think.lang.商品数量}>：
+                      <input type="text" name="minnum" onkeydown="checknum(this);" value="<?php echo I('minnum');?>" style="width:50px;" class="input-text">
+                      -
+                      <input type="text" name="maxnum" onkeydown="checknum(this);" value="<?php echo I('maxnum');?>" style="width:50px;" class="input-text">
+                    </span>
+                    <?php }?>
+
+                        <?php if ($type == 'self' || $type == 'new_self') {   ?>
+                    <span class="select-box inline">
+                        <select name="WARE_ADDRESS" class="select" style="width: 80px;">
+                            <option value=""><{$Think.lang.所属仓库}></option>
+                            <foreach name="WARE_ADDRESS" item="v">
+                                <option <?php echo 'value="'.$v['CD'].'"';  if(I('WARE_ADDRESS') == $v['CD']){echo 'selected';} ?> ><?php echo L($v['CD_VAL']);?>
+                                    
+                                </option>
+                            </foreach>
+                        </select>
+                    </span>
+                       <?php  } ?>
+
+                    <button name="" class="btn btn-pink" type="submit"><i class="Hui-iconfont">&#xe665;</i> <{$Think.lang.搜索}></button>
+                    <button name="reset" class="btn btn-clear"><{$Think.lang.重置}></button>
+                </div>
+                <div class="col-lg-3 col-md-12 col-xs-12 text-r padding10-0">
+                    <?php if($is_bulkedit == 1){?><span class="class batch-edit"><{$Think.lang.批量编辑}></span><?php }?>
+                    <span class="edit-group hide">
+                        <span class="btn-edit cancel"><{$Think.lang.取消}></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span class="btn-edit" onclick="bulkedit()"><{$Think.lang.保存}></span>
+                     </span>
+                    <?php if($is_closeord == 1){?><span class="btn btn-pink closeord"><{$Think.lang.关闭订单}></span><?php }?>
+                    <?php if(in_array($type,[2,4,'qg']) && $is_setpaynumber == 1){?>
+                    <span class="btn btn-pink offlinepay"><{$Think.lang.线下支付}></span>
+                    <?php }?>
+                    <span class="btn btn-pink bulkreceive"><{$Think.lang.批量收货}></span>
+                    <?php if($is_bulksendout == 1){?><span class="btn btn-pink bulkship"><{$Think.lang.批量发货}></span><?php }?>
+                    <?php if ($type_add_mult == 'bw' and isset($access['Orders/multiple_import_bill_bw'])) { ?>
+                    <span onclick="$('#multiple_po_file_upload_bw').click()" class="btn btn-pink"><{$Think.lang.批量PO}></span>
+                    <?php } ?>
+                    <?php if ($type_add_mult == 'xh' and isset($access['Orders/multiple_import_bill_xh'])) { ?>
+                    <span onclick="$('#multiple_po_file_upload_xh').click()" class="btn btn-pink"><{$Think.lang.批量PO}></span>
+                    <?php } ?>
+                </div>
+            </div>
+        </form>
+        <div class="col-lg-3">
+            <!--批量导入po模板-->
+            <?php
+                    /**
+                     * 增加批量po 保税订单
+                     * 业务：保税订单页面增加“批量PO”的按钮
+                     * 实现：
+                     *      1、只能在保税订单页里显示
+                     *      2、权限控制（已实现）
+                     */
+                    // 第一句是权限控制，我勒个去。。。
+                    //if((isset($access['Orders/multiple_import_bill_bw']) or (isset($access['Orders/multiple_import_bill_xh'])) and ($type_add_mult == 'bw' or $type_add_mult == 'xh'))
+                    if ($type_add_mult == 'bw' and isset($access['Orders/multiple_import_bill_bw']))
+                    {
+                ?>
+            <form id="upload_orders_bw" action="/index.php?m=orders&s=multiple_import_bill_bw" method="post" enctype="multipart/form-data">
+                <p style="display: none"><input type="file" name="file" id="multiple_po_file_upload_bw" @change="loading_excel_out">
+                    <input type="hidden" name="ord_type" value="<?= $order_type ?>"/>
+                    <input type="hidden" name="type" value="<?= $type ?>"/>
+                    <input type="hidden" name="multiple_import_bill" value=""></p>
+            </form>
+            <?php
+                    }
+                ?>
+
+            <?php
+                    /**
+                     * 增加批量po 现货订单
+                     * 业务：在现货订单页面增加“批量PO”的按钮
+                     * 实现：
+                     *      1、只能在现货订单页里显示
+                     *      2、权限控制（已实现）
+                     */
+                    //if((isset($access['Orders/multiple_import_bill_bw']) or (isset($access['Orders/multiple_import_bill_xh'])) and ( or ))
+                    if ($type_add_mult == 'xh' and isset($access['Orders/multiple_import_bill_xh']))
+                    {
+                ?>
+            <form id="upload_orders_xh" action="/index.php?m=orders&s=multiple_import_bill_xh" method="post" enctype="multipart/form-data">
+                <p style="display: none"><input type="file" name="multiple_po_file_upload_xh" id="multiple_po_file_upload_xh" @change="loading_excel">
+                    <input type="hidden" name="ord_type" value="<?= $order_type ?>"/>
+                    <input type="hidden" name="type" value="<?= $type ?>"/>
+                    <input type="hidden" name="multiple_import_bill" value=""></p>
+            </form>
+            <?php
+                    }
+                ?>
+        </div>
+    </div>
+    <!-- 信息显示，表的导入导出 -->
+    <div class="row">
+
+    <!-- 开头显示 -->
+        <div class="col-md-5 search-num-wrap">
+            <span class="search-num"><{$Think.lang.搜索结果}>：&nbsp;&nbsp;<{$Think.lang.共}></span>
+            <span class="search-num-t"><{$total}></span>
+            <span class="search-num"><{$Think.lang.条记录}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            <?php if($type != 'qg' && $type != 'self' && $type!=''){?>
+            <a style="text-decoration:underline;" href="<{:U('orders/exportorder',array('where'=>$where,'order'=>$order))}>"><{$Think.lang.导出}></a>
+            <?php }
+                    if($type == 'self' or $type == 'new_self'){
+                        if ($type != 'new_self') {
+                ?>
+            <span style="margin-right: 10px"><a  href="<{:U('orders/exportorder_self',array('where'=>$where,'boxtype'=>$boxtype,'order'=>$order))}>"><{$Think.lang.导出}></a></span>
+            <?php
+                        }
+                    ?>
+            <span><a href="javascript:void(0)" onclick="print();"><{$Think.lang.打印}></a></span>
+            <!--<span>-->
+            <!--<a href="javascript:void(0)">-->
+            <!--<div id="update-po">-->
+            <!--<form id="upload" action="<{:U(MODULE_NAME.'/uploadexpe')}>" method="post" enctype="multipart/form-data">-->
+            <!--<div  style="margin-top: 50px">-->
+            <!--<input type="file" name="poname" id="poname" value="<{$Think.lang.上传}>">-->
+            <!--<input type="hidden" name="type" >-->
+            <!--<input type="hidden" name="ORD_NO" value="<{$detail.ORD_ID}>">-->
+            <!--<input type="hidden" name="ORD_STAT_CD" value="<{$detail.OPTION_MODE_CD}>">-->
+            <!--<input type="hidden" name="ORD_CUST_EML" value="<{$detail.ORD_CUST_EML}>">-->
+            <!--<input type="submit" value="<{$Think.lang.上传}>"  />-->
+            <!--</div>-->
+            <!--</form>-->
+            <!--</div>-->
+            <!--<i class="Hui-iconfont H-ui-dayin">&#xe652;</i>物流模板导入</a>-->
+            <!--</span>-->
+            <span class="file-1">
+                        <{$Think.lang.物流模板导入}>
+                        <form id="upload" action="<{:U(MODULE_NAME.'/uploadexpe')}>" method="post" enctype="multipart/form-data">
+                            <input type="file" name="expe" id="" onchange="$('#upload').submit();">
+                        </form>
+	       </span>
+            <span><a href="javascript:void(0)" onclick="syncorder();"><{$Think.lang.手动同步订单}></a></span>
+            <span class="file-1">
+                        <{$Think.lang.第三方订单导入}>
+                        <form id="otherImport" action="<{:U(MODULE_NAME.'/otherImport')}>" method="post" enctype="multipart/form-data">
+                            <input type="file" name="expe" id="" onchange="$('#otherImport').submit();">
+                        </form>
+	                </span>
+
+            <?php }?>
+        </div>
+
+
+        <div class="row">
+            <table class="table table-border table-bordered table-bg table-hover table-sort" >
+                <thead>
+                <tr class="text-c no-wrap">
+                    <th><input name="skuckeck" type="checkbox" value=""></th>
+                    <th><{$Think.lang.平台&店铺}></th>
+
+                    <?php if($type != 'self'){?>
+                    <?php if($type != 'new_self'){ ?>
+                    <th class="cust_id"><{$Think.lang.B5C用户ID}></th>
+                   
+                    <th><{$Think.lang.上海负责人}></th>    <!-- 上海负责人 -->
+                    <?php } ?>
+                     <?php if ($type !='new_self') {  ?>
+                        <th  class="orderid"><{$Think.lang.B5C订单号&支付号}></th>
+                    <?php } ?>
+                    <?php if ($type== 'new_self') {  ?>
+                        <th  class="orderid"><{$Think.lang.ERP订单号&支付号}></th>
+                    <?php } ?>
+                    
+
+                    <?php if($type == 3 || $type == 'new_self'){?>
+                    <th>第三方订单号</th>
+                    <?php }?>
+                    <th><{$Think.lang.商品ID}></th>
+                    <?php }else{?>
+                    
+                    <th><{$Think.lang.B5C用户ID}></th>
+                   
+                    <th><{$Think.lang.ERP订单号}></th>
+                    <th width="10%" class="thirdorder"><{$Think.lang.第三方订单号}></th>
+
+                    <th><{$Think.lang.B5C商品ID}></th>
+                    <th><{$Think.lang.库存}></th>
+                    <th class="store" style="display:none;">平台</th>
+                    <?php }?>
+
+                    <th class="title"><{$Think.lang.商品标题}></th>
+
+                    <th><{$Think.lang.币种}></th>
+
+                    <th class="price"><{$Think.lang.价格}></th>
+
+                    <th class="receiver"><{$Think.lang.收件人}></th>
+
+                    <th><{$Think.lang.时间}></th>
+
+                    <th class="logistics"><{$Think.lang.物流}>
+                        <?php if($type == 'self'){?><button class="editexpe hide">批量修改</button><?php }?>
+                    </th>
+                    <th class="order_status"><{$Think.lang.订单状态}></th>
+                    <if condition="$type eq 'self'">
+                        <th><{$Think.lang.运送状态}></th>
+                    </if>
+                    <th><{$Think.lang.操作}></th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 输出数据 -->
+                <foreach name="result" item="vo">
+                    <?php
+                        if($vo['PLAT_FORM'] === 'N000831400'){
+                            $plat_name = 'Gshopper-KR';
+                            $Gapp = 1;
+                        } else {
+                            $plat_name = 'B5C';
+                            $Gapp = 2;
+                        }
+                        if($type === 'self'){
+                            $plat1 = $vo['PLAT_CD'];
+                        } else if($type === 'new_self') {
+                            $plat1 = $vo['PLAT_FORM'];
+                        } else {
+                            $plat1 = $vo['PLAT_CD'];
+                        }
+                        $vo['EXPE_COMPANY'] = $vo['EXPE_COMPANY']!=''?L($vo['EXPE_COMPANY']):'';
+                        if($vo['ORD_TYPE_CD'] == 'N000620100'){
+                            $access_sendout = 'Orders/sendout_bulk';  //大宗url拼接地址
+                            $access_poconfirm = 'Orders/poconfirm_bulk';  //po确认
+                            $is_saveord = isset($access['Orders/saveord_bulk'])?1:0;   //编辑的保存
+                            $is_saveprice = isset($access['Orders/saveprice_bulk'])?1:0;
+                            $ord_type = 1;
+                            $ord_type_name = '大宗';
+                            if($type == 0){
+                                $detail_url = 'Orders/orderdetail_bulk';
+                            }
+                        }elseif($vo['ORD_TYPE_CD'] == 'N000620400' && $vo['DELIVERY_WAREHOUSE'] == 'N000680100'){
+                            $access_sendout = 'Orders/sendout_xh';
+                            $access_poconfirm = 'Orders/poconfirm_xh';   //现货url拼接地址
+                            $is_saveord = isset($access['Orders/saveord_xh'])?1:0;
+                            $is_saveprice = isset($access['Orders/saveprice_xh'])?1:0;
+                            $ord_type = 4;
+                            $ord_type_name = '现货';
+                            if($type == 0){
+                                $detail_url = 'Orders/orderdetail_xh';
+                            }
+                        }elseif($vo['ORD_TYPE_CD'] == 'N000620400' && $vo['DELIVERY_WAREHOUSE'] == 'N000680200'){
+                            $access_sendout = 'Orders/sendout_dm';  //直邮url拼接地址
+                            $access_poconfirm = 'Orders/poconfirm_dm';   
+                            $is_saveord = isset($access['Orders/saveprice_dm'])?1:0;
+                            $is_saveprice = isset($access['Orders/saveprice_dm'])?1:0;
+                            $ord_type = 2;
+                            $ord_type_name = '直邮';
+                            if($type == 0){
+                                $detail_url = 'Orders/orderdetail_dm';
+                            }
+                        }elseif($vo['ORD_TYPE_CD'] == 'N000620400' && $vo['DELIVERY_WAREHOUSE'] == 'N000680300'){
+                            $access_sendout = 'Orders/sendout_bw';
+                            $access_poconfirm = 'Orders/poconfirm_bw';    //保税发货url拼接地址
+                            $is_saveord = isset($access['Orders/saveprice_bw'])?1:0;
+                            $is_saveprice = isset($access['Orders/saveprice_bw'])?1:0;
+                             $ord_type = 3;
+                             $ord_type_name = '保税';
+                             if($type == 0){
+                                $detail_url = 'Orders/orderdetail_bw';
+                            }
+                        }elseif($type == 'self'){
+                            $access_sendout = 'Orders/sendout_self';    //自营发货url拼接地址
+                            $is_saveord = isset($access['Orders/saveord_self'])?1:0;
+                            $ord_type_name = '自营';
+                            $plat_name = $vo['PLAT_NAME'];
+                            $plat_name .= '<br />'.$vo['SHOP_ID'];
+
+                    $vo['THIRD_ORDER_ID'] = $vo['ORDER_ID'];
+                    if(!$vo['B5C_SKU_ID']) {
+                    $vo['GUDS_NM'] = $vo['ITEM_NAME'];
+                    }
+                    $currency = $vo['PAY_CURRENCY'];
+                    $vo['total_price'] = $vo['PAY_TOTAL_PRICE'];
+                    $vo['DISCOUNT_MN'] = $vo['PAY_VOUCHER_AMOUNT'];
+                    $vo['DLV_AMT'] = $vo['PAY_SHIPING_PRICE'];
+                    $vo['SYS_REG_DTTM'] = $vo['ORDER_TIME'];
+                    $vo['PAY_DTTM'] = $vo['ORDER_PAY_TIME'];
+                    $vo['EXPE_COMPANY'] = L($vo['SHIPPING_DELIVERY_COMPANY']);
+                    $vo['TRACKING_NUMBER'] = $vo['SHIPPING_TRACKING_CODE'];
+                    $vo['ORD_GUDS_SALE_PRC'] = $vo['RMB_PRICE'];
+                    $vo['ORD_GUDS_QTY'] = $vo['ITEM_COUNT'];
+                    $vo['ORD_CUST_NM'] = $vo['ADDRESS_USER_NAME'];
+                    $vo['ORD_STAT_CD'] = $vo['BWC_ORDER_STATUS'];
+                    $detail_url = 'Orders/orderdetail_self';
+                    $ord_type = 'self';
+                    }elseif($type == 'qg'){
+                        $access_sendout = 'Orders/sendout_qg';    //求购发货url拼接地址
+                        $access_poconfirm = 'Orders/poconfirm_qg';
+                        $is_saveord = isset($access['Orders/saveord_qg'])?1:0;
+                        $is_saveprice = isset($access['Orders/saveprice_qg'])?1:0;
+                        $ord_type = 'qg';
+                        $ord_type_name = '求购';
+                        if($type == 0){
+                        $detail_url = 'Orders/orderdetail_qg';
+                        }
+                    }
+                    if($type == 'new_self') {
+                        $currency = C($vo['currency_cd']);
+                    }
+                    ?>
+                    <tr class="text-c va-m <?php if( ( ($vo['ORD_STAT_CD'] == 'N000550100' && $ord_type != 'qg') || ($vo['ORD_STAT_CD'] == 'N000550200' && $ord_type == 'qg' ) ) || $vo['ORD_STAT_CD'] == 'N000550400'){echo 'can_edit';}?>"  >
+
+                        <td class="no-wrap"><input name="skuckeck" type="checkbox" value="" id="<?php echo $plat1 ;?>"></td>
+                        <td class="td-pos no-wrap"><span class="td-tag" id="<?php echo $plat1;?>"><{$ord_type_name}></span><span class="triangle"></span><{$plat_name}></td>
+
+                        <?php
+                        // 老版本自营订单
+                        if($type != 'self')
+                        {
+                            $is_new = ($type == 'new_self' ? 1 : 0);
+                    ?>
+                    <?php if ($type != 'new_self') {  ?>
+                         <td class="no-wrap">
+                            <input type="hidden" name="cust_id" value="<?php echo $vo['CUST_ID'];?>"><?php if($type == 'self'){echo $vo['USER_ID'];}else{echo $vo['CUST_ID'];}?>
+                        </td>
+                    <?php } ?>
+                       
+                        <?php if ($type != 'new_self') {   ?>
+                            <td class="no-wrap">
+                            <{$vo.SH_SALER}>
+                        </td>
+                        <?php } ?>
+                        
+                        <?php
+                                    if ($is_new) {
+                                ?>
+                        <td class="no-wrap">
+                            <a style="text-decoration:underline;color:#06c;" onclick="opennewtab(this,'<?php echo $vo["ORD_ID"];?>')" _href="<{:U($detail_url, array('ordId'=>$vo['ORD_ID'], 'pageId'=>$vo['ORD_TYPE_CD'], 'delop'=>$vo['DELIVERY_WAREHOUSE'], 'is_new_self' => 1,'Gapp' => $Gapp))}>" ><{$vo.ORD_ID}></a><br /><{$vo.PAY_ID}>
+                        </td>
+                      
+                        <td class="no-wrap">
+
+                             <a style="text-decoration:underline;color:#06c;" onclick="opennewtab(this,'<?php echo $vo["ORD_ID"];?>')" _href="<{:U($detail_url, array('ordId'=>$vo['ORD_ID'], 'pageId'=>$vo['ORD_TYPE_CD'], 'delop'=>$vo['DELIVERY_WAREHOUSE'], 'is_new_self' => 1,'Gapp' => $Gapp))}>" ><{$vo.THIRD_ORDER_ID}></a><br /><{$vo.PAY_ID}>
+                           
+                            
+                        </td>
+                        <?php
+                                    } else {
+                                ?>
+                        <td class="no-wrap">
+
+                            <a style="text-decoration:underline;color:#06c;" onclick="opennewtab(this,'<?php echo $vo["ORD_ID"];?>')"  h _href="<{:U($detail_url, array('ordId'=>$vo['ORD_ID'], 'pageId'=>$vo['ORD_TYPE_CD'], 'delop'=>$vo['DELIVERY_WAREHOUSE'], 'is_new_self' => 1,'Gapp' => $Gapp))}>" ><{$vo.ORD_ID}></a><br /><{$vo.PAY_ID}>
+                        </td>
+
+                        <?php
+                                    }
+                                ?>
+
+                        <?php
+                                // 保税
+                                if($type == 3)
+                                {
+                            ?>
+
+                        <td><{$vo.THIRD_ORDER_ID}></td>
+                        <?php
+                                }
+                            ?>
+                        <td class="no-wrap"><{$vo.GUDS_OPT_ID}></td>
+                        <?php
+                        } else{
+                    ?>
+
+
+                        <!--B5C账户ID-->
+                        <td class="no-wrap"><{$vo.B5C_ACCOUNT_ID}></td>
+                        <!--b5c订单号-->
+                        <td class="no-wrap Shipping_status" onmouseover="getReason1(<?php echo "'".$vo['ORDER_ID']."'" ?>)" >
+
+                            <p id="b5c_orderpanduan"><{$vo.B5C_ORDER_NO}></p>
+                        <?php if ($vo['B5C_ORDER_DES_COUNT']>0&&!$vo['B5C_ORDER_NO']) {  ?>  
+                           <a >创建失败</a>
+                           <div class="Shipping_status_div" style="left:63px;width: 680px;">                                
+                            </div>
+                        <?php  } ?>
+                                   
+
+                                         
+                         
+                        
+                        </td>
+                        <!--第三方订单号-->
+                 
+                        <td class="no-wrap">
+                            <a style="text-decoration:underline;color:#06c;" onclick="opennewtab(this,'<?php echo $vo["THIRD_ORDER_ID"];?>')" _href="<{:U($detail_url, array('ordId'=>$vo['THIRD_ORDER_ID']))}>">
+                            <{$vo.THIRD_ORDER_ID}>
+                            </a>
+                        </td>
+                       
+
+                        <td class="no-wrap"><{$vo.B5C_SKU_ID}></td>
+                        <td class="par-rela no-wrap">
+                            <?php if($vo['SHORT_SUPPLY'] == 1){?>
+                            <i class="triangle-bg"></i>
+                            <span class="triangle-text">缺</span>
+                            <?php }?>
+                            <{$vo.total_inventory}>
+                        </td>
+                        <td class="hide no-wrap"><{$vo.PLAT_NAME}></td>
+                        <?php
+                        }
+                    ?>
+                            
+                        <input type="hidden" name="title" value="<?php echo $vo['GUDS_NM'];?>">
+
+
+                        <!--商品标题-->
+                        <td class="td-pos">
+                            <?php if($vo['GUDS_NM'] != ''){?>
+                            <{$vo.GUDS_NM}><br /><?php echo sprintf("%.2f", $vo['RMB_PRICE']).'X'.(int)$vo['ORD_GUDS_QTY'];?>
+                            <?php if($vo['GUDS_NUM']>1){
+                            ?>
+                            <a style="text-decoration:underline;color:#06c;" onclick="opennewtab(this,'<?php echo $vo["ORD_ID"];?>')" _href="<{:U($detail_url, array('ordId'=>$vo['ORD_ID'], 'pageId'=>$vo['ORD_TYPE_CD'], 'delop'=>$vo['DELIVERY_WAREHOUSE']))}>"><img src="../Public/images/u266.png" alt="" class="icon-link"></a>
+                            <?php }}?>
+                        </td>
+                        <!--商品标题 end-->
+                        <!--币种-->
+                        <td class="no-wrap">
+                            <?php if ($type == 'new_self' && $vo['PAY_CURRENCY']) {
+                             echo $vo['PAY_CURRENCY'];
+                        }else{  ?>
+                            <{$currency}>
+                          <?php } ?>
+
+                        </td>  
+                        
+
+                        <!--价格-->
+                        <div></div>
+                        <td class="text-l no-wrap">
+                            
+                            <div><{$Think.lang.订单价}>：<span class="orderprice"><?php if($vo['total_price']){echo sprintf("%.2f",$vo['total_price']);}else{echo 0;} ?> </span></div>
+                            <?php if ($type != 'new_self') {  ?>
+                            <div>- <{$Think.lang.优惠}>：<span class="discount"><{$vo.DISCOUNT_MN|default="0"}></span><input type="text" name="discount" value="<?php echo $vo['DISCOUNT_MN'];?>" class="td-input hide"></div>
+                            <?php  } ?>
+                            <?php if ($type == 'new_self') {  ?>
+                            <div>- <{$Think.lang.优惠}>：<span class="discount"><{$vo.PAY_VOUCHER_AMOUNT|default="0"}></span><input type="text" name="discount" value="<?php echo $vo['PAY_VOUCHER_AMOUNT'];?>" class="td-input hide"></div>
+                            <?php  } ?>
+
+                            <?php if ($type != 'new_self') {  ?>
+                                <div>+ <{$Think.lang.运费}>：<span class="shipping"><{$vo.DLV_AMT|default="0"}></span><input type="text" name="shipping" value="<?php echo $vo['DLV_AMT'];?>" class="td-input hide"></div>  
+                            <?php  } ?>
+                            <?php if ($type == 'new_self') {  ?>
+                             <div>+ <{$Think.lang.运费}>：<span class="shipping"><{$vo.PAY_SHIPING_PRICE|default="0"}></span><input type="text" name="shipping" value="<?php echo $vo['PAY_SHIPING_PRICE'];?>" class="td-input hide"></div>   
+                              <?php  } ?>
+                            <?php if($ord_type == 3 || $ord_type=='qg'){?>
+                            <div>+ <{$Think.lang.税费}>：<span class="TARIFF"><?php echo (float)$vo['TARIFF']!=0?(float)$vo['TARIFF']:0;?></span>
+                                <?php if($ord_type=='qg'){?>
+                                <input type="text" name="TARIFF" value="<?php echo $vo['TARIFF'];?>" class="td-input hide">
+                                <?php }?>
+                            </div>
+                            <?php }?>
+
+                            <?php if ($type != 'new_self' && $type != 'self' ) {  ?>
+                            <div>= <{$Think.lang.总价}>：<span class="totalprice"><?php echo sprintf("%.2f",$vo['total_price']-$vo['DISCOUNT_MN']+$vo['DLV_AMT']+$vo['TARIFF']);?></span>
+                            </div>
+                            <?php } ?>
+
+                            <?php if ($type == 'self' ) {  ?>
+                            <div style="display: none">= <{$Think.lang.总价}>：<span class="totalprice"><{$vo.PAY_PRICE}></span>
+                            </div>
+                            <?php } ?>
+                            <?php if ($type == 'new_self') {  ?>
+                                <div>= <{$Think.lang.总价}>：<span class="totalprice"><?php echo sprintf("%.2f",$vo['total_price']-$vo['PAY_VOUCHER_AMOUNT']+$vo['PAY_SHIPING_PRICE']+$vo['TARIFF']);?></span>
+                            </div>
+                             <?php   } ?>
+                        </td>
+                        <!--价格结束-->
+
+                        <!--收件人-->
+                        <td class="no-wrap"><{$vo.ORD_CUST_NM}></td>
+                        <input type="hidden" name="receiver" value="<?php echo $vo['ORD_CUST_NM'];?>">
+                        <!--时间-->
+                        <td CLASS="text-l no-wrap">
+                        <?php if (!$vo['ORDER_PAY_TIME']||$type != 'new_self') {  ?>
+                            <{$Think.lang.下单}>：<{$vo.SYS_REG_DTTM}><br />
+                            <{$Think.lang.付款}>： <{$vo.PAY_DTTM}>  <br />
+                            <{$Think.lang.发货}>：<{$vo.SUBSCRIBE_TIME|default="-"}>
+                        <?php } ?>
+                            <?php if ($vo['ORDER_PAY_TIME'] && $type == 'new_self') {  ?>
+                                <{$Think.lang.下单}>：<?php echo $vo['ORDER_TIME']; ?><br />
+                                <{$Think.lang.付款}>： <?php echo $vo['ORDER_PAY_TIME']; ?>  <br />
+                                <{$Think.lang.发货}>：<{$vo.SUBSCRIBE_TIME|default="-"}>
+                            <?php } ?>
+                        </td>
+                        <!--物流-->
+                        <td class="no-wrap">
+                            <div>
+                                <span class="expe"><?php if($vo['EXPE_COMPANY']!=''){echo L($vo['EXPE_COMPANY']);}?></span>
+                                <span class="select-box inline select-wrap hide">    <!-- 点击编辑出现选择框  -->
+                                <select name="EXPE_COMPANY" class="select">
+                                    <option value=""><{$Think.lang.选择快递}></option>
+                                    <foreach name="EXPE_COMPANY" item="v">
+                                        <option <?php echo 'value="'.$v['CD'].'"';  if($vo['EXPE_COMPANY'] == L($v['CD_VAL'])){echo 'selected';} ?> ><?php echo L($v['CD_VAL']);?></option>
+                                    </foreach>
+                                </select>
+                            </span>
+                            </div>
+                            <div>
+                                <span class="number"><{$vo.TRACKING_NUMBER}></span>
+                                <input type="text" style="width:120px;" name="TRACKING_NUMBER" value="<?php echo $vo['TRACKING_NUMBER'];?>" class="td-input-two hide">
+                            </div>
+                        </td>
+                        <!--订单状态-->
+                        <td class="status no-wrap">
+                            <input type="hidden" name="status" value="<?php echo $vo['ORD_STAT_CD'];?>">
+                            <?php
+                            if($vo['ORD_STAT_CD']){echo L($vo['ORD_STAT_CD']);}
+                            ?>
+                            <br />
+                            <!-- 退款状态 -->
+                            <?= $refund_state[$vo['REFUND_STAT_CD']]; ?>   
+                        </td>
+                        <!--操作-->
+                        <if condition="$type eq 'self'">
+                            <td class="Shipping_status">
+                                <if condition="$vo['LGT_CONTENT'] neq null">
+                                    <a><{$logistic_status[$vo['LGT_TYPE']]}></a>
+                                    <img src="../Public/images/u64.png" alt="" class="Shipping_status_img"/>
+                                    <div class="Shipping_status_div">
+                                        <?php
+                                        $lgt_content = json_decode($vo['LGT_CONTENT'],true);
+                                        foreach($lgt_content['steps'] as $k => $v) {
+                                        $date = substr($v['acceptTime'],0,10);
+                                        $time = substr($v['acceptTime'],11,8);
+                                        ?>
+                                        <ul>
+                                            <li <?php if($k ==0 ) { ?>class="latest"<?php } ?>>
+                                            <span class="data"><{$date}></span>
+                                            <span class="time"><{$time}></span>
+                                            <span class="text"><{$v['remark']}></span>
+                                            </li>
+                                        </ul>
+                                        <?PHP } ?>
+                                    </div>
+                                </if>
+                            </td>
+                        </if>
+
+
+                        <td class="no-wrap">
+
+                            <div style='padding-bottom:3px' onclick="receivetishi('<?php echo $vo["ORD_ID"]!=""?$vo["ORD_ID"]:$vo["THIRD_ORDER_ID"];?>','<?php echo $vo['ORD_STAT_CD'];?>',this,'<?php echo $type;?>')">
+                            <?php if($vo['ORD_STAT_CD'] == 'N000550500'){  ?>
+                            <?php if($vo['REFUND_STAT_CD'] == 'N001080500'){?>
+                            <span class="btn-sub"><{$Think.lang.收货}></span>
+                            <?php }?>
+                            <?php }?>
+                            </div>
+                            <?php if($vo['ORD_STAT_CD'] == 'N000550400' or ($vo['ORD_STAT_CD'] == 'N000550500' and $type == 'self' )){   
+
+                                    if ($type == 'new_self') {
+                                        $ord_type = 5;
+                                    }   
+                            ?>
+
+
+                            <div onclick="tishi('<?php echo $vo["ORD_ID"]!=""?$vo["ORD_ID"]:$vo["THIRD_ORDER_ID"];?>','1',this,'<?php echo $ord_type;?>','<?php echo $plat1 ;?>')">
+                            <?php //if(isset($access[$access_sendout])){ ?>
+                            <?php if($vo['ORD_STAT_CD']!='N000550500'){  ?>
+                            <?php if($vo['REFUND_STAT_CD'] == 'N001080500'){?>
+
+                            <span class="btn-sub"><{$Think.lang.发货}>
+                            </span>
+                            <?php }?>
+                            <?php }?>
+                            <?php //}?>
+
+
+        </div>
+        <div class="edit-open">
+            <?php if($is_saveord == 1){ ?>
+            <?php if($vo['ORD_STAT_CD']!='N000550500'){ ?>
+            <span class="btn-edit sendout sendoutedit">
+        <{$Think.lang.编辑}>
+
+        </span>
+            <?php }?>
+            <?php }?>
+        </div>
+        <div class="edit-group hide">
+            <span class="btn-edit sendout sendoutcancel"><{$Think.lang.取消}></span>&nbsp;&nbsp;&nbsp;&nbsp;
+            <span class="btn-edit sendout sendoutsave"><{$Think.lang.保存}></span>
+        </div>
+        <?php } elseif($vo['ORD_STAT_CD'] == 'N000550300'){?>
+        <!--N000550300-->
+        <!--<div><span class="btn-sub">准备发货</span></div>-->
+        <!--|| $vo['ORD_STAT_CD'] == 'N000550300' 新加的-->
+        <!-- 待付款 -->
+        <?php } elseif ((($vo['ORD_STAT_CD'] == 'N000550100' || $vo['ORD_STAT_CD'] == 'N000550200') && $ord_type != 'qg') || ($vo['ORD_STAT_CD'] == 'N000550200' && $ord_type == 'qg')) { ?>
+        <div onclick="tishi('<?php echo $vo["ORD_ID"]?>','2',this,'<?php echo $ord_type;?>','<?php echo $plat1 ;?>')">
+        <?php  if(isset($access[$access_poconfirm])){   ?>
+        <span class="btn-sub poconfirm"><{$Think.lang.PO确认}></span>
+        <?php } ?>
+    </div>
+
+    <div class="edit-open">
+        <?php if($is_saveprice == 1){?>  
+        <span class="btn-edit priceedit poedit"><{$Think.lang.编辑}></span>
+        <?php } ?>
+    </div>
+    <div class="edit-group hide">   <!-- 编辑展开后的状态 -->
+        <span class="btn-edit priceedit pocancel"><{$Think.lang.取消}></span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="btn-edit priceedit posave"><{$Think.lang.保存}></span>
+    </div>
+
+    <?php
+                            }elseif( (($vo['ORD_STAT_CD'] == 'N000550100' || $vo['ORD_STAT_CD'] == 'N000550200') && $ord_type != 'qg') || ($vo['ORD_STAT_CD'] == 'N000550200' && $ord_type == 'qg') and $vo['REFUND_STAT_CD'] == 'N001080500')
+    { ?>
+    <div onclick="tishi('<?php echo $vo["ORD_ID"]?>','2',this,'<?php echo $ord_type;?>','<?php echo $plat1 ;?>')">
+        <?php if(isset($access[$access_poconfirm])) { ?>
+            <span class="btn-sub poconfirm"><{$Think.lang.PO确认}></span>   <!-- 点击确认保存物流信息 -->
+        <?php } ?>
+    </div>
+
+    <div class="edit-open">
+        <?php if($is_saveprice == 1){?>
+        <span class="btn-edit priceedit poedit">
+            <{$Think.lang.编辑}>
+        </span>
+        <?php }?>
+    </div>
+
+    <div class="edit-group hide">
+        <span class="btn-edit priceedit pocancel"><{$Think.lang.取消}></span>&nbsp;&nbsp;&nbsp;&nbsp;
+        <span class="btn-edit priceedit posave"><{$Think.lang.保存}></span>
+    </div>
+<?php }?>
+
+
+<?php
+    /**
+        * 备注
+        *
+    */
+        $is_self = 0;
+        if ($type == 'self') $is_self = 1;
+        if ($type == 'qg') $is_self = 2;
+        $stat = $vo ['REMARK_STAT_CD'];
+        $ord_id = $vo["ORD_ID"]?$vo["ORD_ID"]:$vo["ORDER_ID"];
+        $remark_msg = $vo['REMARK_MSG'];
+        $isRemark = function () use ($stat, $ord_id, $is_self, $remark_msg) {
+                $ord_id = "'" . $ord_id . "'";
+                $remark_msg = "'" . $remark_msg . "'";
+                if ($stat) 
+                    echo '<div><a style="color:red;" onclick="remark_update('.$ord_id.', this, ' . $is_self . ', ' . $remark_msg . ')">已备注</a></div>';
+                else 
+                    echo '<div><a style="" onclick="remark_update('.$ord_id.', this, ' . $is_self . ', ' . $remark_msg . ')">备注</a></div>';
+            };
+                $isRemark();
+
+?>
+
+
+
+        <?php 
+            if (!$vo['B5C_ORDER_NO']&&$type == "self"||$type == "new_self"&&!$vo['THIRD_ORDER_ID']) {
+                echo '<div><a  class="resetNum1"  onclick="resetNum(' ."'".$ord_id."'". ')">重置次数：'.$vo["B5C_ORDER_DES_COUNT"].'</a></div>';
+            }
+         ?>
+
+
+
+         <?php 
+            if ($vo['FILE_NAME']&&file_exists("/opt/b5c-disk/excel/{$vo['FILE_NAME']}")) {    $filename = $vo['FILE_NAME'];   ?>
+               
+                <span><a href="<{:U('otherexport', array('filename'=>$vo['FILE_NAME']))}>"  style="color:#3bb4f2;text-decoration:underline"><?php echo  '下载excel'; ?></a></span>
+          <?php   }   ?>
+</td>
+<input type="hidden" name="ORD_ID" value="<?php echo $vo['ORD_ID'];?>">
+<input type="hidden" name="THIRD_ORDER_ID" value="<?php echo $vo['THIRD_ORDER_ID'];?>">
+</tr>
+</foreach>
+</tbody>
+</table>
+<div>
+    <ul class="pagination">
+        <{$pages}>
+    </ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="alert hide">
+    <div class="alert-bg"></div>
+    <div class="alert-body">
+        <div class="title"><span><{$Think.lang.提示}></span><span class="close_window"  onclick="$('.alert').hide();$('.btn-con').unbind()">X</span></div>
+        <div class="content row sendouttishi">
+            <div><span><{$Think.lang.订单号}>：</span><span id="orderid"></span></div><br>
+            <div><span><{$Think.lang.商品标题}>：</span><span id="title"></span></div><br>
+            <div><span><{$Think.lang.总价}>：</span><span id="totalprice"></span></div><br>
+            <div><span><{$Think.lang.收件人}>：</span><span id="receiver"></span></div><br>
+            <div><span><{$Think.lang.物流}>：</span><span><span id="expe"></span>&nbsp;&nbsp;<span id="number"></span></span></div>
+        </div>
+        <div class="content row potishi">
+            <div><span><{$Think.lang.B5C订单号}>：</span><span id="b5corderid"></span></div><br>
+            <div><span><{$Think.lang.订单价}>：</span><span id="orderprice"></span></div><br>
+            <div><span><{$Think.lang.优惠}>：</span><span id="discount"></span></div><br>
+            <div><span><{$Think.lang.运费}>：</span><span id="shipping"></span></div><br>
+            <div><span><{$Think.lang.总价}>：</span><span id="total_price"></span></div>
+        </div>
+        <div class="content row closetishi">
+            <div><span></span><span><{$Think.lang.关闭提示}></span></div>
+        </div>
+        <div class="content row shiptishi" style="text-align: center;">
+            <span><{$Think.lang.发货提示}></span>
+        </div>
+        <div class="content row receivetishi" style="text-align: center;">
+            <span><{$Think.lang.收货提示}></span>
+        </div>
+        <!--<div class="con-text">-->
+        <!--<span><{$Think.lang.是否确认}></span>-->
+        <!--</div>-->
+        <div class="text-c">
+            <span class="btn-con"><{$Think.lang.确认}></span>
+            <span class="btn-can" onclick="$('.alert').hide();$('.btn-con').unbind()"><{$Think.lang.取消}></span>
+        </div>
+    </div>
+</div>
+ <!-- 批量修改 -->
+<div class="expealert hide">
+    <div class="alert-bg"></div>
+    <div class="alert-body">
+        <div class="title"><span><{$Think.lang.批量修改所选订单物流公司}></span></div>
+        <div class="content row expealert">
+            <select name="bulk_expe" class="select">
+                <option value=""><{$Think.lang.选择快递}></option>
+                <foreach name="EXPE_COMPANY" item="v">
+                    <option <?php echo 'value="'.$v['CD'].'"';  if($vo['EXPE_COMPANY'] == L($v['CD_VAL'])){echo 'selected';} ?> ><?php echo L($v['CD_VAL']);?></option>
+                </foreach>
+            </select>
+        </div>
+        <div class="text-c">
+            <span class="btn-con-1"><{$Think.lang.确认}></span>
+            <span class="btn-can" onclick="$('.expealert').hide();$('.btn-con-1').unbind()"><{$Think.lang.取消}></span>
+        </div>
+    </div>
+</div>
+
+<div class="syncalert hide">
+    <div class="alert-bg"></div>
+    <div class="alert-body">
+        <div class="title"><span><{$Think.lang.手动同步订单}></span></div>
+        <div class="content row syncalert">
+
+            <{$Think.lang.请选择平台}>:
+            <select name="plat" id="" onchange="selectstore(this);">
+                <option value="">请选择</option>
+                <foreach name="plat" item="vo" key="k">
+                    <option value="<{$k}>"><{$vo}></option>
+                </foreach>
+            </select><br />
+
+            <{$Think.lang.请选择店铺}>:
+            <select name="store" id="">
+                <option value=""></option>
+            </select><br />
+            <{$Think.lang.下单时间}>:
+            <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'logmax1\')||\'%y-%M-%d %H:%m:%s\'}',dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="logmin1"  name="startTime" value="<?php echo I('starttime');?>" class="input-text Wdate" style="width:160px;">
+            -
+            <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'logmin1\')}',maxDate:'%y-%M-%d %H:%m:%s',dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="logmax1"  name="endTime" value="<?php echo I('endtime');?>" class="input-text Wdate" style="width:160px;">
+        </div>
+        <div class="text-c">
+            <span class="btn-con-2" onclick="syncorders()"><{$Think.lang.确认}></span>
+            <span class="btn-can" onclick="$('.syncalert').hide();$('.btn-con-2').unbind()"><{$Think.lang.取消}></span>
+        </div>
+    </div>
+</div>
+
+<div class="offlinepayalert hide">
+    <div class="alert-bg"></div>
+    <div class="alert-body">
+        <div class="title"><span><{$Think.lang.请填写用户的交易流水号}></span><span class="close_window"  onclick="$('.offlinepayalert').hide();$('.btn-con-3').unbind()">X</span></div>
+        <div class="content row">
+            <div><span><{$Think.lang.B5C用户ID}>：</span><span id="user_id">11</span></div><br>
+        </div>
+        <div class="content row">
+            <div><span><{$Think.lang.订单数}>：</span><span id="order_num"></span></div><br>
+        </div>
+        <div class="content row">
+            <div><span><{$Think.lang.总价}>：</span><span id="order_totalprice"></span></div><br>
+        </div>
+        <div class="content row">
+            <div><span><{$Think.lang.转账交易流水号}>：</span><span><input type="text" name="pay_ser_nm" class="pay_number"></span></div><br>
+        </div>
+
+        <!--<div class="con-text">-->
+        <!--<span><{$Think.lang.是否确认}></span>-->
+        <!--</div>-->
+        <div class="text-c">
+            <span class="btn-con-3"><{$Think.lang.确认}></span>
+            <span class="btn-can" onclick="$('.offlinepayalert').hide();$('.btn-con-3').unbind()"><{$Think.lang.取消}></span>
+        </div>
+    </div>
+</div>
+<!--备注对话框-->
+<div class="remark hide">
+    <div class="alert-bg"></div>
+    <div class="alert-body">
+        <div class="title"><span><{$Think.lang.备注信息}></span><span class="close_window"  onclick="$('.remark').hide();$('.btn-con-3').unbind()">X</span></div>
+        <div class="content row">
+            <input type="radio" value="1" name="is_remark" checked="checked"/>备注订单&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="radio" value="0" name="is_remark"/>取消备注订单
+        </div>
+        <div class="content row">
+            <textarea name="remark_msg" id="remark_msg" cols="35" rows="5"></textarea><br />
+        </div>
+
+        <!--<div class="con-text">-->
+        <!--<span><{$Think.lang.是否确认}></span>-->
+        <!--</div>-->
+        <div class="text-c">
+            <span class="btn-con-3"><{$Think.lang.确认}></span>
+            <span class="btn-can" onclick="$('.remark').hide();$('.btn-con-3').unbind()"><{$Think.lang.取消}></span>
+        </div>
+    </div>
+</div>
+<div id="want_to_open_new_tab" style="display:none;"></div>
+
+
+<!-- js部分 -->
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../Public/js/vue.js"></script>
+<script type="text/javascript" src="../Public/js/stock/alert.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#orders',
+        data: {
+        },
+        methods:
+            {
+                loading_excel_out:function(){
+                    $('#upload_orders_bw').submit();
+                    box.Alert('提示','增在加载数据。。。')
+                },
+                loading_excel:function(){
+                    $('#upload_orders_xh').submit();
+                    box.Alert('提示','增在加载数据。。。')
+                }
+            }
+    });
+</script>
+<script>
+
+
+
+    function otherDown(filename){
+         $.ajax({
+            'url': '<{:U("orders/otherexport")}>',
+            'data': {filename: filename},
+            'type': 'POST',
+            'dataType': 'json'
+        });
+    }
+
+    $(".resetNum1").click(function() {
+        $(this).html("重置次数:0");
+    });
+    function resetNum(ord_id){
+        //alert(ord_id)
+        
+        $.ajax({
+            'url': '<{:U("orders/resetNum")}>',
+            'data': {ord_id: ord_id},
+            'type': 'POST',
+            'dataType': 'json',
+            success: function (data){
+                if(data){
+                    layer.msg(data.msg);
+                }
+            }
+        });
+         
+    };
+
+
+
+
+    function remark_update(ord_id, obj, is_self, remark_msg)
+    {
+        $("#remark_msg").val(remark_msg);
+        var _this = obj;
+        var is_remark = null;//是否备注
+        var remark_msg = null;//备注内容
+        var url = '<{:U("orders/edit_update_marks")}>';
+        var index = 0;
+        $('.remark').show();
+        $('.btn-con-3').click(function() {
+            var radios = $("input[name='is_remark']");
+            for (var i = 0; i < radios.length; i ++) {
+                if (radios[i].checked) {
+                    is_remark = radios[i].value;
+                }
+            }
+            remark_msg = $("#remark_msg").val();
+            if (is_remark == 1 && remark_msg.length <= 0) {
+                layer.msg('请输入备注信息');
+                return;
+            }
+            $.ajax({
+                'url':url,
+                'type':'POST',
+                'data':{REMARK_MSG:remark_msg, REMARK_STAT_CD:is_remark, ORD_ID: ord_id, ORD_TYPE: is_self},
+                beforeSend:function(XMLHttpRequest){
+                    //alert('远程调用开始...');
+                    index = layer.load(2, {
+                        shade: [0.1,'#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (data) {
+                    if (data.status == 1) {
+                        layer.close(index);
+                        layer.msg(data.info);
+                        if (is_remark == 1) {
+                            _this.style.color = 'red';
+                            _this.innerHTML = '已备注';
+                        } else if (is_remark == 0) {
+                            _this.style.color = '';
+                            _this.innerHTML = '备注';
+                        }
+                        var params = "remark_update('" + ord_id + "',this," + is_self + ",'" + remark_msg + "')";
+                        setTimeout(function() { window.location.reload();}, 1000);
+                        $('.remark').hide();
+                    } else {
+                        setTimeout(function() { window.location.reload();}, 1000);
+                        layer.close(index);
+                        layer.msg(data.info);
+                        return false;
+                    }
+                },
+                error:function(XMLHttpRequest,textStatus,errorThrown){
+                    layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                }
+            },'json');
+        });
+    };
+
+    $(document).ready(function (){
+        $("table thead tr th").resizable({
+            ghost: true,
+            maxHeight:20
+        });
+        $('.openli').click(function(){
+            if($(this).text()=='<{$Think.lang.展开}>>>'){
+                $(this).siblings().show();
+                $(this).text('<{$Think.lang.收起}><<');
+            }else{
+                $(this).siblings().hide();
+                $(this).text('<{$Think.lang.展开}>>>');
+            }
+        })
+        var shop_id = $('input[name="SHOP_ID"]').val();
+        if(shop_id){
+            $('.openli').siblings().show();
+            $('.openli').text('<{$Think.lang.收起}><<');
+        }
+        $("button[name='reset']").click(function(){
+            $("#rowSearch input").val(null);
+            $("#rowSearch select").val(0);
+            return false;
+        });
+        $('.cancel').click(function () {
+            $(".table>tbody>tr>td input[type='text']").hide().siblings().show();
+            $(this).parent().hide();
+            $('.class').show();
+            $('.expe').show();
+            $('.select-wrap').hide();
+            $('.editexpe').hide();
+
+        })
+        /***********************************
+         ***选项卡切换
+         ***********************************/
+        function switchTab(param,type){
+            param.click(function () {
+                var index = $(this).index();
+                if(type == 1){
+                    param.eq(index).addClass("active").siblings().removeClass("active");
+                }else{
+                    if(index == 0){
+                        return false;
+                    }else{
+                        param.eq(index).addClass("active").siblings().removeClass("active");
+                        var imgDis = $(".menu-sort ul li img.sortDown").css("display");
+//                        alert(imgDis == "none");
+                        if(imgDis == "none"){
+                            $(".menu-sort ul li img.sortDown").show();
+                            $(".menu-sort ul li img.sortUp").hide();
+                        }else{
+                            $(".menu-sort ul li img.sortDown").hide();
+                            $(".menu-sort ul li img.sortUp").show();
+                        }
+                    }
+                }
+            });
+        }
+        switchTab($(".order-nav ul li"),1);
+        switchTab($(".menu-state ul li"));
+        switchTab($(".menu-state1 ul li"));
+//        switchTab($(".menu-sort ul li"));
+        /***********************************
+         ***点击编辑按钮
+         ***********************************/
+        $(".class").click(function () {
+            if($('.can_edit').find('input[name="status"]').val() == 'N000550100' || $('.can_edit').find('input[name="status"]').val() == 'N000550200'){
+                $('.can_edit').find('input[name="discount"]').show();
+                $('.can_edit').find('input[name="shipping"]').show();
+                $('.can_edit').find('input[name="TARIFF"]').show();
+                $('.can_edit').find('.discount').hide();
+                $('.can_edit').find('.shipping').hide();
+                $('.can_edit').find('.TARIFF').hide();
+            }else{
+                $('.can_edit').find('span.select-box').show();
+                $('.can_edit').find('.expe').hide();
+                $('.can_edit').find('input[name="TRACKING_NUMBER"]').show();
+                $('.can_edit').find('.number').hide();
+                var type = '<{$type}>';
+                if(type == 'self'){
+                    $('.editexpe').show();
+                }
+            }
+            $(this).hide();
+            $(this).next().show();
+
+        });
+        $(".sendout").click(function () {
+            var me = $(this);
+            var b5c_idnow = me.parents("tr").find("p#b5c_orderpanduan").text();
+            if(b5c_idnow == '' ){
+                alert('<{$Think.lang.未生成b5c订单}>')
+                return false;
+            }
+            if( me.hasClass('sendoutedit') ){
+                me.parents("tr").find("td input[name='TRACKING_NUMBER']").show().siblings().hide();
+                var type = '<{$type}>';
+//                if(type != 'self'){
+                me.parents("tr").find("td span.select-box").show().siblings().hide();
+//                }
+                me.parent().hide();
+                me.parent().siblings().show();
+            }else if(me.hasClass('sendoutsave') ){
+                var EXPE_COMPANY = me.parents("tr").find("select[name='EXPE_COMPANY']").val();
+                var TRACKING_NUMBER = me.parents("tr").find("input[name='TRACKING_NUMBER']").val();
+                var type = '<{$type}>';
+                if(type == 'self'){
+                    var ORD_ID = me.parents("tr").find("input[name='THIRD_ORDER_ID']").val();
+                }else{
+                    var ORD_ID = me.parents("tr").find("input[name='ORD_ID']").val();
+                }
+                if(EXPE_COMPANY == '' && TRACKING_NUMBER == '' ){
+                    alert('<{$Think.lang.物流信息不全}>')
+                    return false;
+                }
+                var ord_type = "<?php echo $type;?>";
+                if(ord_type == 1){
+                    var url = '<{:U("orders/saveord_bulk")}>';
+                }else if(ord_type == 2){
+                    var url = '<{:U("orders/saveord_dm")}>';
+                }else if(ord_type == 3){
+                    var url = '<{:U("orders/saveord_bw")}>';
+                }else if(ord_type == 4){
+                    var url = '<{:U("orders/saveord_xh")}>';
+                }else if(ord_type == 'qg'){
+                    var url = '<{:U("orders/saveord_qg")}>';
+                }else if(ord_type == 'self'){
+                    var url = '<{:U("orders/saveord_self")}>';
+                }else{
+                    var url = '<{:U("orders/saveord")}>';
+                }
+                $.ajax({
+                    'url':url,
+                    'type':'POST',
+                    'data':{EXPE_COMPANY:EXPE_COMPANY,TRACKING_NUMBER:TRACKING_NUMBER,ORD_ID:ORD_ID},
+                    success: function (data) {
+                        if (data.status == 1) {
+                            layer.msg(data.info.message,{icon:1,time:2000});
+                            me.parents("tr").find(".expe").text(data.info.EXPE_COMPANY_VAL)
+                            me.parents("tr").find(".number").text(data.info.TRACKING_NUMBER)
+                            me.parents("tr").find("td input[type=text]").hide().siblings().show();
+                            me.parents("tr").find("td span.select-box").hide().siblings().show();
+                            me.parent().prev().show();
+                            me.parent().hide();
+                            window.location.reload();
+                        } else {
+                            alert(data.info);
+                            return false;
+                        }
+                    }
+                },'json');
+            }else if(me.hasClass('sendoutcancel') ){
+                me.parents("tr").find("td input[type=text]").hide().siblings().show();
+                me.parents("tr").find("td span.select-box").hide().siblings().show();
+                me.parent().prev().show();
+                me.parent().hide();
+            }
+        });
+        $(".priceedit").click(function () {
+            var me = $(this);
+            if( me.hasClass('poedit') ){
+                me.parents("tr").find("td input[name='discount']").show().siblings().hide();
+                me.parents("tr").find("td input[name='shipping']").show().siblings().hide();
+                me.parents("tr").find("td input[name='TARIFF']").show().siblings().hide();
+                me.parent().hide();
+                me.parent().siblings().show();
+            }else if(me.hasClass('posave') ){
+                var DISCOUNT_MN = me.parents("tr").find("input[name='discount']").val() != ''?me.parents("tr").find("input[name='discount']").val():0;
+                var DLV_AMT = me.parents("tr").find("input[name='shipping']").val() != ''?me.parents("tr").find("input[name='shipping']").val():0;
+                var TARIFF = me.parents("tr").find(".TARIFF").text()!=''?me.parents("tr").find(".TARIFF").text():0;
+                var ORD_ID = me.parents("tr").find("input[name='ORD_ID']").val();
+                var orderprice = me.parents("tr").find(".orderprice").text();
+                var totalprice = parseFloat(orderprice)-parseFloat(DISCOUNT_MN)+parseFloat(DLV_AMT)+parseFloat(TARIFF)
+                var data = {};
+                data.DISCOUNT_MN = DISCOUNT_MN;
+                data.DLV_AMT = DLV_AMT;
+                data.ORD_ID = ORD_ID;
+                var ord_type = "<?php echo $type;?>";
+                if(ord_type == 'qg'){
+                    var TARIFF = me.parents("tr").find("input[name='TARIFF']").val() != ''?me.parents("tr").find("input[name='TARIFF']").val():0;
+                    totalprice+=parseFloat(TARIFF);
+                    if(parseFloat(TARIFF) <0 ){
+                        alert('<{$Think.lang.输入不能为负数}>');
+                        return false;
+                    }
+                    data.TARIFF = TARIFF;
+                }
+                if(parseFloat(DISCOUNT_MN) <0 || parseFloat(DLV_AMT) <0 ){
+                    alert('<{$Think.lang.输入不能为负数}>');
+                    return false;
+                }
+                if(totalprice <0){
+                    alert('<{$Think.lang.价格不能小于0}>');
+                    return false;
+                }
+
+                if(ord_type == 1){
+                    var url = '<{:U("orders/saveprice_bulk")}>';
+                }else if(ord_type == 2){
+                    var url = '<{:U("orders/saveprice_dm")}>';
+                }else if(ord_type == 3){
+                    var url = '<{:U("orders/saveprice_bw")}>';
+                }else if(ord_type == 4){
+                    var url = '<{:U("orders/saveprice_xh")}>';
+                }else if(ord_type == 'qg'){
+                    var url = '<{:U("orders/saveprice_qg")}>';
+                }else{
+                    var url = '<{:U("orders/saveprice")}>';
+                }
+                $.ajax({
+                    'url':url,
+                    'type':'POST',
+                    'data':data,
+                    success: function (data) {
+                        if (data.status == 1) {
+                            layer.msg(data.info.message,{icon:1,time:2000});
+                            me.parents("tr").find(".discount").text(data.info.DISCOUNT_MN)
+                            me.parents("tr").find(".shipping").text(data.info.DLV_AMT)
+                            if(ord_type == 'qg'){
+                                me.parents("tr").find(".TARIFF").text(data.info.TARIFF)
+                            }
+                            me.parents("tr").find(".totalprice").text(totalprice.toFixed(2))
+                            me.parents("tr").find("td input[type=text]").hide().siblings().show();
+                            me.parents("tr").find("td span.select-box").hide().siblings().show();
+                            me.parent().prev().show();
+                            me.parent().hide();
+                        } else {
+                            alert(data.info);
+                            return false;
+                        }
+                    }
+                },'json');
+            }else if(me.hasClass('pocancel') ){
+                me.parents("tr").find("td input[type=text]").hide().siblings().show();
+                me.parents("tr").find("td span.select-box").hide().siblings().show();
+                me.parent().prev().show();
+                me.parent().hide();
+            }
+        });
+        /***********************************
+         ***复选框选项
+         ***********************************/
+        function editCheck(param1,param2){
+            param1.click(function () {
+                var checkAll= $(this).prop('checked');
+                if(checkAll == true){
+                    param2.prop("checked",true);
+                }else{
+                    param2.prop("checked",false);
+                }
+            });
+            param2.each(function () {
+                $(this).click(function () {
+                    if($(this).prop("checked") != true){
+                        param1.prop("checked",false);
+                    }else{
+                        var flag = true;
+                        for(var j=0;j<param2.length;j++){
+                            if($(param2[j]).prop("checked") == false){
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if(!flag){
+                            $(".table>thead>tr>th>input").prop("checked",false);
+                        }else{
+                            $(".table>thead>tr>th>input").prop("checked",true);
+                        }
+                    }
+
+                })
+            });
+
+        }
+        editCheck($(".table>thead>tr>th>input"),$(".table>tbody>tr>td:first-child>input[type = checkbox]"));
+        /***********************************
+         ***批量发货
+         ***********************************/
+        $("#rowSearch .col-lg-3 .btn-pink").click(function () {
+            $('.sendouttishi').hide();
+            $('.potishi').hide();
+            if( $(this).hasClass('closeord')){
+                $('.shiptishi').hide();
+                $('.receivetishi').hide();
+                $('.closetishi').show();
+                $('.btn-con').bind('click',function(){bulkset(1)})
+                $('.alert').show();
+            }else if( $(this).hasClass('bulkship') ){
+                $('.closetishi').hide();
+                $('.receivetishi').hide();
+                $('.shiptishi').show();
+                $('.btn-con').bind('click',function(){bulkset(2)})
+                $('.alert').show();
+            }else if($(this).hasClass('bulkreceive')){
+                $('.closetishi').hide();
+                $('.shiptishi').hide();
+                $('.receivetishi').show();
+                $('.btn-con').bind('click',function(){bulkrec()})
+                $('.alert').show();
+            }else if( $(this).hasClass('offlinepay')){
+                bulkset(3)
+            }
+
+            return false;
+        })
+
+        function writeObj(obj){
+            var description = "";
+            for(var i in obj){
+                var property=obj[i];
+                description+=i+" = "+property+"\n";
+            }
+            alert(description);
+        }
+
+        function reload()
+        {
+            window.location.reload();
+        }
+
+        function bulkrec(){
+            $('.alert').hide();
+            var TrData =[];
+            // 获取所有列
+            var checkTd = $('input:checkbox[name=skuckeck]:checked');
+
+            for(var i=0;i<checkTd.length;i++){
+                //判断是否选中
+                var chooCheck = $(checkTd[i]).prop("checked");
+                if(chooCheck == true){
+                    var tdVal =$(checkTd[i]).parents("tr").find("td");
+                    var TdData = {};
+                    for(var j = 1;j<tdVal.length-1;j++){
+                        if($("table th")[j].className.indexOf('order_status')!= -1 ){// 找到订单状态列
+                            TdData['order_status'] = $.trim($(tdVal[j]).find("input[name='status']").val())
+                        }else if($("table th")[j].className.indexOf('orderid')!= -1 || $("table th")[j].className.indexOf('thirdorder')!= -1 ){ // 找到第三方订单id列
+                            TdData['orderid'] = $.trim($(tdVal[j]).find("a").text())
+                        }
+                    }
+                    if(TdData.order_status)TrData.push(TdData);
+                }
+            }
+            if(TrData && TrData.length > 0 ){
+                var ord_type = "<?php echo $type;?>";
+                var orders = '';
+                var falsemsg = '';
+                for (var k in TrData) {
+                    if(orders!= ''){
+                        orders+=",'"+TrData[k]['orderid']+"'"
+                    }else{
+                        orders = "'"+TrData[k]['orderid']+"'"
+                    }
+                    if(TrData[k]['order_status'] != 'N000550500'){
+                        falsemsg = '<{$Think.lang.订单状态不正确}>';
+                    }
+                }
+                if(falsemsg != ''){
+                    alert(falsemsg);
+                    return false;
+                }
+                if (orders != '') {
+//                    $.ajax({
+//                        'url':'<{:U("orders/bulkreceive")}>',
+//                        'type':'POST',
+//                        'data':{ords:orders,ord_type:ord_type},
+//                        success: function (data) {
+//                            layer.msg(data.info, {icon:1,time:2000});
+//                            setTimeout("window.location.reload();", 2000);
+//                        }
+//                    });
+                    $('.img_load-pos').show()
+                    $('.alert').hide();
+                    $.ajax({
+                        'url':'<{:U("orders/bulkreceive")}>',
+                        'type':'POST',
+                        'data':{ords:orders,ord_type:ord_type},
+                        success: function (data) {
+                            $('.img_load-pos').hide();
+                            var new_tab_url ="/index.php?m=orders&a=bulkreceive&ords=" + orders;
+                            $('#want_to_open_new_tab').html('<a _href="'+new_tab_url+'" >abc</a>');
+                            $('#want_to_open_new_tab a').click(function(){
+                                opennewtab(this,'批量收货提示');
+                            });
+                            window.location.reload();
+                            $('#want_to_open_new_tab a').click();
+                        }
+                    });
+                }
+            }else{
+                alert('<{$Think.lang.请勾选订单}>');
+            }
+        }
+        function bulkset(type){
+            $('.alert').hide();
+            var TrData =[];
+            // 获取所有列
+            var checkTd = $('input:checkbox[name=skuckeck]:checked');
+
+            for(var i=0;i<checkTd.length;i++){
+                //判断是否选中
+                var chooCheck = $(checkTd[i]).prop("checked");
+                if(chooCheck == true){
+                    var tdVal =$(checkTd[i]).parents("tr").find("td");
+                    var TdData = {};
+                    for(var j = 1;j<tdVal.length-1;j++){
+                        TdData['plat_id'] = $.trim($('input:checkbox[name=skuckeck]:checked').attr("id"))
+                        // 找到价格列
+                        if($("table th")[j].className.indexOf('price')!= -1){
+                            TdData[$(".discount").prop("class")] = $.trim($(tdVal[j]).find(".discount").text()); // 优惠金额
+                            TdData[$(".shipping").prop("class")] = $.trim($(tdVal[j]).find(".shipping").text()); // 运费
+                            TdData[$(".totalprice").prop("class")] = $.trim($(tdVal[j]).find(".totalprice").text());// 总价
+                        }else if($("table th")[j].className.indexOf('order_status')!= -1 ){// 找到订单状态列
+                            TdData['order_status'] = $.trim($(tdVal[j]).find("input[name='status']").val())
+                        }else if($("table th")[j].className.indexOf('cust_id')!= -1 ){// 找到用户id列
+                            TdData['cust_id'] = $.trim($(tdVal[j]).find("input[name='cust_id']").val())
+                        }else if($("table th")[j].className.indexOf('orderid')!= -1 || $("table th")[j].className.indexOf('thirdorder')!= -1 ){ // 找到第三方订单id列
+                            TdData['orderid'] = $.trim($(tdVal[j]).find("a").text())
+                        }else if($("table th")[j].className.indexOf('logistic')!= -1){// 找到物流列
+                            TdData['expe'] = $.trim($(tdVal[j]).find(".expe").text())
+                            TdData['number'] = $.trim($(tdVal[j]).find(".number").text())
+                        }else{
+                            TdData[$("table th")[j].className] = $.trim($(tdVal[j]).text());
+                        }
+                    }
+                    if(TdData.discount)TrData.push(TdData);
+                }else{
+                }
+            }
+            //批量设置   /*read action*/
+            if(TrData && TrData.length > 0 ){
+                var type = type;
+                var ord_type = "<?php echo $type;?>";
+                if (type == 1) {
+                    var orders = '';
+                    for (var k in TrData) {
+                        if(orders!= ''){
+                            orders+=",'"+TrData[k]['orderid']+"'"
+                        }else{
+                            orders = "'"+TrData[k]['orderid']+"'"
+                        }
+                    }
+                    if (orders != '') {
+                        $.ajax({
+                            'url':'<{:U("orders/bulkset")}>',
+                            'type':'POST',
+                            'data':{ords:orders,type:type,ord_type:ord_type},
+                            success: function (data) {
+                                layer.msg(data.info, {icon:1,time:2000});
+                                setTimeout("window.location.reload();", 2000);
+                            }
+                        });
+                    }
+                } else if(type == 3){
+                    var order_totalprice = 0;
+                    var order_num = 0;
+                    var cust_id = '';
+                    var falsemsg = '';
+                    var orders = '';
+                    for(var key in TrData){
+                        if (orders != '') {
+                            orders += ",'" + TrData[key]['orderid']+'-'+TdData['plat_id']+ "'"
+                        } else {
+                            orders = "'" + TrData[key]['orderid']+'-'+TdData['plat_id']+ "'"
+                        }
+                        if(TrData[key]['order_status'] != 'N000550300'){
+                            falsemsg = '<{$Think.lang.订单状态不正确}>';
+                        }
+                        if(cust_id != '' && cust_id != TrData[key]['cust_id']){
+                            falsemsg = '<{$Think.lang.不是同个用户}>';
+                        }else{
+                            cust_id = TrData[key]['cust_id'];
+                        }
+                        order_totalprice += parseFloat(TrData[key]['totalprice']);
+                        order_num++;
+                    }
+                    if(falsemsg != ''){
+                        alert(falsemsg);
+                        return false;
+                    }
+                    $('#user_id').text(cust_id);
+                    $('#order_num').text(order_num);
+                    $('#order_totalprice').text(order_totalprice.toFixed(2));
+
+                    $('.offlinepayalert').show();
+
+                    $('.btn-con-3').bind('click',function(){bulksetpaynumber(orders,ord_type);})
+                }else{
+                    var orders = '';
+
+                    for(var key in TrData){
+                        if(type == 1){
+
+                        }else if(type ==2 ){
+                            if(TrData[key]['order_status'] != 'N000550400'){
+                                alert("<{$Think.lang.订单不满足发货条件}>")
+                                return false;
+
+                            }
+                            if(TdData['plat_id']  === 'N000830100' || TdData['plat_id']  === 'N000830200' || TdData['plat_id']  === 'N000831400' || TdData['plat_id']  === 'N000831300'){
+                                if(TrData[key]['number'] == ''){
+                                    alert("<{$Think.lang.物流单号不能为空}>")
+                                    return false;
+
+                                }
+                            }
+                            /* if(TrData[key]['order_status'] != 'N000550400' || TrData[key]['expe'] == '' || TrData[key]['number'] == ''){
+
+                             alert("<{$Think.lang.订单不满足发货条件}>")
+                             return false;
+                             }*/
+                        }
+                        if(orders!= ''){
+                            orders+=",'"+TrData[key]['orderid']+"'"
+                        }else{
+                            orders = "'"+TrData[key]['orderid']+"'"
+                        }
+                    }
+                    $('.img_load-pos').show()
+                    $('.alert').hide();
+                    $.ajax({
+                        'url':'<{:U("orders/my_order")}>',
+                        'type':'POST',
+                        'data':{ords:orders,type:type,ord_type:ord_type},
+                        success: function (data) {
+                            $('.img_load-pos').hide();
+                            var new_tab_url ="/index.php?m=orders&a=my_order&ords=" + orders;
+                            $('#want_to_open_new_tab').html('<a _href="'+new_tab_url+'" >abc</a>');
+                            $('#want_to_open_new_tab a').click(function(){
+                                opennewtab(this,'批量发货提示');
+                            });
+                            $('#want_to_open_new_tab a').click();
+                        }
+                    });
+                }
+            }else{
+                alert('<{$Think.lang.请勾选订单}>');
+            }
+        }
+
+        $('.editexpe').click(function(){
+            var TrData =[];
+            var checkTd = $(".table>tbody>tr>td:first-child>input[type = checkbox]");
+            for(var i=0;i<checkTd.length;i++){
+                //判断是否选中
+                var chooCheck = $(checkTd[i]).prop("checked");
+                if(chooCheck == true){
+                    var tdVal =$(checkTd[i]).parents("tr").find("td");
+                    var TdData = {};
+                    for(var j = 1;j<tdVal.length-1;j++){
+                        if($("table th")[j].className.indexOf('thirdorder')!= -1){
+                            TdData['orderid'] = $.trim($(tdVal[j]).find("a").text());
+                        }else if($("table th")[j].className.indexOf('order_status')!= -1){
+                            var status = $.trim($(tdVal[j]).find("input[name='status']").val());
+                            if(status && status != 'N000550400'){
+                                alert('<{$Think.lang.已发货订单不允许修改物流信息}>');
+                                return false;
+                            }
+                        }
+                    }
+                    TrData.push(TdData);
+                }
+            }
+            if(TrData && TrData.length > 0 ) {
+                var type = type;
+                var orders = '';
+                var ord_type = "<?php echo $type;?>";
+                for (var key in TrData) {
+                    if (orders != '') {
+                        orders += ",'" + TrData[key]['orderid'] + "'"
+                    } else {
+                        orders = "'" + TrData[key]['orderid'] + "'"
+                    }
+                }
+            }else{
+                alert('<{$Think.lang.请勾选订单}>');
+                return false;
+            }
+            $('.expealert').show();
+            $('.btn-con-1').bind('click',function(){bulksetexpe(orders);})
+        });
+        //批量设置物流
+        function bulksetexpe(orders){
+            var expe = $('select[name="bulk_expe"]').val();
+            $.ajax({
+                'url':'<{:U("orders/bulksetexpe_self")}>',
+                'type':'POST',
+                'data':{ords:orders,expe:expe},
+                success: function (data) {
+                    if (data.status == 1) {
+                        $('.btn-con-1').unbind();
+                        $('.alert').hide();
+                        alert(data.info);
+                        $('#order_form').submit();
+//                        location.replace(location.href);
+                    } else {
+                        alert(data.info);
+                        return false;
+                    }
+                }
+            },'json');
+        }
+        function bulksetpaynumber(orders,ord_type){
+            var pay_ser_nm = $('input[name="pay_ser_nm"]').val();
+            if(pay_ser_nm == ''){
+                alert('<{$Think.lang.交易流水号不能为空}>');
+                return false;
+            }
+            if(ord_type == 2){
+                var url = '<{:U("orders/setpaynumber_dm")}>';
+            }else if(ord_type == 4){
+                var url = '<{:U("orders/setpaynumber_xh")}>';
+            }else if(ord_type == 'qg'){
+                var url = '<{:U("orders/setpaynumber_qg")}>';
+            }
+            $.ajax({
+                'url':url,
+                'type':'POST',
+                'data':{ords:orders,pay_ser_nm:pay_ser_nm,ord_type:ord_type},
+                success: function (data) {
+                    if (data.status == 1) {
+                        $('.btn-con-3').unbind();
+                        $('.offlinepayalert').hide();
+                        alert(data.info);
+                        $('#order_form').submit();
+//                        location.replace(location.href);
+                    } else {
+                        $('.btn-con-3').unbind();
+                        alert(data.info);
+                        return false;
+                    }
+                }
+            },'json');
+        }
+
+        $(".new-order span:nth-of-type(2)").click(function () {
+            //$(this).next().show();
+        })
+        if($('input[name="sort_value"]').val() == 1){
+            var imgSign = '<img src="../Public/images/u35.png" alt="" class="sortDown">';
+            $(".menu-sort ul li[class='active'] span").append(imgSign);
+        }else{
+            if($('input[name="sort_value"]').val() == ''){
+                var imgSign = '<img src="../Public/images/u35.png" alt="" class="sortDown">';
+            }else{
+                var imgSign = '<img src="../Public/images/u35.png" alt="" class="sortUp">';
+            }
+
+            $(".menu-sort ul li[class='active'] span").append(imgSign);
+        }
+        $(".menu-sort ul li").click(function () {
+            var index = $(this).index();
+            $(".menu-sort ul li").eq(index).addClass("active").siblings().removeClass("active");
+            if( $(this).find("img").prop("class") == "sortDown" ){
+                $('input[name="sort_value"]').val(0)
+                $(this).find("img").remove();
+                var imgSign = '<img src="../Public/images/u35.png" alt="" class="sortUp">';
+                $(this).find("span").append(imgSign);
+            }else{
+                $('input[name="sort_value"]').val(1)
+                $(this).find("img").remove();
+                var imgSign = '<img src="../Public/images/u35.png" alt="" class="sortDown">';
+                $(this).find("span").append(imgSign);
+            }
+            $('#order_form').submit();
+        });
+    });
+
+    //操作
+    function confirm(id,type,o,ord_type,platCd){
+        var me = $(o);
+        if(type == 1){
+            if( me.parents("tr").find("input[name='TRACKING_NUMBER']").css('display') == 'inline' ||  me.parents("tr").find("input[name='TRACKING_NUMBER']").css('display') == 'inline-block'  ){
+                //保存并发货
+                var TRACKING_NUMBER = me.parents("tr").find("input[name='TRACKING_NUMBER']").val();
+                if(ord_type == 'self'){
+                    alert('<{$Think.lang.请先保存物流信息}>');
+                    return false;
+                }else{
+                    var EXPE_COMPANY = me.parents("tr").find("select[name='EXPE_COMPANY']").val();
+                }
+                $.ajax({
+                    'url':'<{:U("orders/saveord")}>',
+                    'type':'POST',
+                    'data':{ORD_ID:id,type:type,TRACKING_NUMBER:TRACKING_NUMBER,EXPE_COMPANY:EXPE_COMPANY},
+                    success: function (data) {
+                        if (data.status == 1) {
+                            $('.btn-con').unbind();
+                            me.parents("tr").find(".expe").text(EXPE_COMPANY)
+                            me.parents("tr").find(".number").text(TRACKING_NUMBER)
+                            me.parents("tr").find("td input[type=text]").hide().siblings().show();
+                            me.parents("tr").find("td span.select-box").hide().siblings().show();
+                            layer.msg(data.info.message,{icon:1,time:2000});
+                            if(data.info.status != ''){
+                                me.parents("tr").find(".status").text(data.info.status);
+                                me.parents("td").children().slice(0,3).remove();
+                            }
+                        } else {
+                            alert(data.info);
+                            return false;
+                        }
+                    }
+                },'json');
+
+            }else
+            {
+                if (platCd === 'N000830100' || platCd === 'N000830200' || platCd === 'N000831400' || platCd === 'N000831300')
+                {
+                    if (me.parents("tr").find(".expe").text() == '' || me.parents("tr").find(".number").text() == '') {
+                        alert('<{$Think.lang.物流信息不全}>');
+                        $('.btn-con').unbind();
+                        return false;
+                    }
+                }
+                $('.img_load-pos').show()
+                //发货
+                $.ajax({
+                    'url':'<{:U("orders/confirm")}>',
+                    'type':'POST',
+                    'data':{ORD_ID:id,type:type,ord_type:ord_type,plat_id:platCd},
+                    success: function (data) {
+                        $('.img_load-pos').hide()
+                        if (data.status == 1) {
+                            $('.btn-con').unbind();
+                            me.parents("tr").removeClass('can_edit');
+                            alert('发货成功！');
+                            //layer.msg(data.info,{icon:1,time:2000});
+                            me.parents("tr").find(".status").text(data.info.status);
+                            me.parents("td").children().slice(0,3).remove();
+                            $('.btn-con').unbind();
+                            setTimeout(function() { window.location.reload();}, 100);
+                        } else if(data.status == 2) {
+                            $('.btn-con').unbind();
+                            alert('调取出库接口失败');
+                            //layer.msg(data.info,{icon:2,time:2000});
+                            //if(data ==='接口处理异常:'){
+//                                alert('接口处理异常');
+//                            } else {
+//                                alert(data.info);
+//                                $('.btn-con').unbind();
+//                                return false;
+//                            }
+                        }else{
+                            $('.btn-con').unbind();
+                            alert('调取第三方接口失败');
+                        }
+                    }
+                },'json');
+
+            }
+        }else if(type == 2){
+            if(me.parents("tr").find("input[name='discount']").css('display') == 'inline-block' || me.parents("tr").find("input[name='discount']").css('display') == 'inline'){
+                //编辑并修改
+                var DISCOUNT_MN = me.parents("tr").find("input[name='discount']").val() != ''?me.parents("tr").find("input[name='discount']").val():0;
+                var DLV_AMT = me.parents("tr").find("input[name='shipping']").val() != ''?me.parents("tr").find("input[name='shipping']").val():0;
+                var ORD_ID = me.parents("tr").find("input[name='ORD_ID']").val();
+                var orderprice = me.parents("tr").find(".orderprice").text();
+                var totalprice = parseFloat(orderprice)-parseFloat(DISCOUNT_MN)+parseFloat(DLV_AMT);
+                if(parseFloat(DISCOUNT_MN) <0 || parseFloat(DLV_AMT) <0 ){
+                    alert('<{$Think.lang.输入不能为负数}>');
+                    return false;
+                }
+                if(totalprice <0){
+                    alert('<{$Think.lang.价格不能小于0}>');
+                    return false;
+                }
+                $.ajax({
+                    'url':'<{:U("orders/saveprice")}>',
+                    'type':'POST',
+                    'data':{DISCOUNT_MN:DISCOUNT_MN,DLV_AMT:DLV_AMT,ORD_ID:ORD_ID,type:type},
+                    success: function (data) {
+                        if (data.status == 1) {
+                            $('.btn-con').unbind();
+                            me.parents("tr").find(".discount").text(DISCOUNT_MN)
+                            me.parents("tr").find(".shipping").text(DLV_AMT)
+                            me.parents("tr").find(".totalprice").text(totalprice.toFixed(2))
+                            me.parents("tr").find("td input[name='discount']").hide().siblings().show();
+                            me.parents("tr").find("td input[name='shipping']").hide().siblings().show();
+                            layer.msg(data.info.message,{icon:1,time:2000});
+                            if(data.info.status != ''){
+                                me.parents("tr").find(".status").text(data.info.status);
+                                me.parents("td").children().slice(0,3).remove();
+                            }
+                        } else {
+                            alert(data.info);
+                            $('.btn-con').unbind();
+                            return false;
+                        }
+                    }
+                },'json');
+            }else{
+                //修改运费
+                $.ajax({
+                    'url':'<{:U("orders/confirm")}>',
+                    'type':'POST',
+                    'data':{ORD_ID:id,type:type,ord_type:ord_type},
+                    success: function (data) {
+                        if (data.status == 1) {
+                            $('.btn-con').unbind();
+                            layer.msg(data.info.message,{icon:1,time:2000});
+                            me.parents("tr").find(".status").text(data.info.status);
+                            me.parents("td").children().slice(0,3).remove();
+                        } else {
+                            alert(data.info);
+                            $('.btn-con').unbind();
+                            return false;
+                        }
+                    }
+                },'json');
+            }
+
+        }
+        $('.alert').hide();
+        return false;
+    };
+    function search(type,mark,u_id){
+        if(mark == 1){
+            $('input[name="PLAT_CD"]').val(type);
+        }else if(mark == 2){
+            $('input[name="STORE_NAME"]').val(type);
+            $('input[name="BWC_USER_ID"]').val(u_id);
+        }else if(mark == 3){
+            if ($('input[name="SENDOUT_WARNING"]').val()) {
+                $('input[name="SENDOUT_WARNING"]').val(null);
+                $('input[name="ORD_STAT_CD"]').val(null);
+                $('input[name="sort_type"]').val(null);
+                $('input[name="sort_value"]').val(null);
+                $('input[name="endtime"]').val(null);
+            } else {
+                $('input[name="SENDOUT_WARNING"]').val(1);
+                $('input[name="ORD_STAT_CD"]').val('N000550400');
+                $('input[name="sort_type"]').val('PAY_DTTM');
+                $('input[name="sort_value"]').val(0);
+                var endtime = '<?php echo date("Y-m-d",strtotime("-3 days"))?>';
+                $('input[name="endtime"]').val(endtime);
+            }
+        }else if(mark == 4){
+            if ($('input[name="SHORT_SUPPLY"]').val()) {
+                $('input[name="SHORT_SUPPLY"]').val(null);
+            } else {
+                $('input[name="SHORT_SUPPLY"]').val(1);
+            }
+        }else if(mark == 5){
+            if ($('input[name="ORD_STAT_CD"]').val() && $('input[name="ALLOW_SENDOUT"]').val()) {
+                $('input[name="ORD_STAT_CD"]').val(null);
+                $('input[name="ALLOW_SENDOUT"]').val(null);
+            } else {
+                $('input[name="ORD_STAT_CD"]').val('N000550400');
+                $('input[name="ALLOW_SENDOUT"]').val(1);
+            }
+
+        }else if(mark == 6){
+            $('input[name="STORE"]').val(type);
+        } else{
+            $('input[name="ORD_STAT_CD"]').val(type);
+        }
+        $('#order_form').submit();
+    };
+    function searchboxtype(type){
+        $('input[name="boxtype"]').val(type);
+        $('#order_form').submit();
+    };
+    function logisticStatus(type)
+    {
+        $('input[name="LOGISTIC_STATUS"]').val(type);
+        $('#order_form').submit();
+    };
+    function refund_type(type)
+    {
+        $('input[name="REFUND_STAT_CD"]').val(type);
+        $('#order_form').submit();
+    };
+    function sort(type){
+        $('input[name="sort_type"]').val(type);
+    };
+    //批量编辑
+    function bulkedit(){
+        var arr = [];
+        $('.can_edit').each(function(){
+            var obj = {};
+            if($(this).find('input[name="status"]').val() == 'N000550100' || $(this).find('input[name="status"]').val() == 'N000550200'){
+                var discount = $(this).find('input[name="discount"]').val();
+                var shipping = $(this).find('input[name="shipping"]').val();
+                var ORD_ID = $(this).find('input[name="ORD_ID"]').val();
+                var type = 1;
+                obj.discount = discount;
+                obj.shipping = shipping;
+                obj.ORD_ID = ORD_ID;
+                obj.type = type;
+            }else{
+                var type ='<{$type}>';
+//                if(type != 'self'){
+                var EXPE_COMPANY = $(this).find('select[name="EXPE_COMPANY"]').val();
+//                }else{
+//                    var EXPE_COMPANY = $(this).find('.expe').text();
+//                }
+                var TRACKING_NUMBER = $(this).find('input[name="TRACKING_NUMBER"]').val();
+                var ORD_ID = $(this).find('input[name="ORD_ID"]').val();
+                if(ORD_ID == ''){
+                    ORD_ID = $(this).find('input[name="THIRD_ORDER_ID"]').val();
+                }
+                var type = 2;
+                if(EXPE_COMPANY != '' && TRACKING_NUMBER != ''){
+                    obj.EXPE_COMPANY = EXPE_COMPANY;
+                    obj.TRACKING_NUMBER = TRACKING_NUMBER;
+                    obj.ORD_ID = ORD_ID;
+                    obj.type = type;
+                }
+            }
+            arr.push(obj)
+        })
+        var ord_type = "<?php echo $type;?>";
+        if(ord_type == 1){
+            var url = '<{:U("orders/bulkedit_bulk")}>';
+        }else if(ord_type == 2){
+            var url = '<{:U("orders/bulkedit_dm")}>';
+        }else if(ord_type == 3){
+            var url = '<{:U("orders/bulkedit_bw")}>';
+        }else if(ord_type == 4){
+            var url = '<{:U("orders/bulkedit_xh")}>';
+        }else if(ord_type == 'qg'){
+            var url = '<{:U("orders/bulkedit_qg")}>';
+        }else if(ord_type == 'self'){
+            var url = '<{:U("orders/bulkedit_self")}>';
+        }else{
+            var url = '<{:U("orders/bulkedit")}>';
+        }
+        $.ajax({
+            'url':url,
+            'type':'POST',
+            'data':{data:arr},
+            success: function (data) {
+                if (data.status == 1) {
+                    alert(data.info)
+//                    layer.msg(data.info,{icon:1,time:2000});
+                    $('#order_form').submit();
+//                    location.replace(location.href);
+                } else {
+                    alert(data.info);
+                    return false;
+                }
+            }
+        },'json');
+    }
+    function tishi(id,type,o,ord_type,platCd){
+        $('.closetishi').hide();
+        $('.shiptishi').hide();
+        $('.receivetishi').hide();
+        var totalprice = $(o).parents('tr').find('.totalprice').text();
+        if(type == 1){
+            $('.potishi').hide();
+            $('.sendouttishi').show();
+            var title = $(o).parents('tr').find('input[name="title"]').val();
+            var receiver = $(o).parents('tr').find('input[name="receiver"]').val();
+            //编辑状态下发货
+            if($(o).parents("tr").find("input[name='TRACKING_NUMBER']").css('display') == 'inline'){
+                var expe = $(o).parents('tr').find('select[name="EXPE_COMPANY"]').val();
+                var number = $(o).parents('tr').find('input[name="TRACKING_NUMBER"]').val();
+            }else{
+                var expe = $(o).parents('tr').find('.expe').text();
+                var number = $(o).parents('tr').find('.number').text();
+            }
+            if(ord_type == 'self') {
+                if (platCd != 'N000830700' && platCd != 'N000830800' && platCd != 'N000830900' && platCd != 'N000831000' && platCd != 'N000831100' && platCd != 'N000832900') {
+                    if (expe == '' || number == '') {
+                        alert('<{$Think.lang.物流信息不全}>');
+                        $('.btn-con').unbind();
+                        return false;
+                    }
+                }
+            }
+            $('#orderid').text(id);
+            $('#title').text(title)
+            $('#totalprice').text(totalprice)
+            $('#receiver').text(receiver)
+            $('#expe').text(expe)
+            $('#number').text(number)
+        }else{
+            var orderprice = $(o).parents('tr').find('.orderprice').text();
+            $('.sendouttishi').hide();
+            $('.potishi').show();
+            $('#b5corderid').text(id);
+            $('#orderprice').text(orderprice);
+            //编辑状态下发货
+            if($(o).parents("tr").find("input[name='discount']").css('display') == 'inline'){
+                var discount = $(o).parents('tr').find('input[name="discount"]').val();
+                var shipping = $(o).parents('tr').find('input[name="shipping"]').val();
+                totalprice = parseFloat(orderprice)-parseFloat(discount)+parseFloat(shipping)
+            }else{
+                var discount = $(o).parents('tr').find('.discount').text();
+                var shipping = $(o).parents('tr').find('.shipping').text();
+            }
+            $('#discount').text(discount);
+            $('#shipping').text(shipping);
+            $('#total_price').text(totalprice);
+
+        }
+        $('.btn-con').bind('click',function(){confirm(id,type,$(o),ord_type,platCd)})
+        $('.alert').show();
+        return false;
+    }
+    function receivetishi(id,type,o,ordtype){
+        $('.closetishi').hide();
+        $('.shiptishi').hide();
+        $('.receivetishi').hide();
+        var totalprice = $(o).parents('tr').find('.totalprice').text();
+            $('.potishi').hide();
+            $('.sendouttishi').show();
+            var title = $(o).parents('tr').find('input[name="title"]').val();
+            var receiver = $(o).parents('tr').find('input[name="receiver"]').val();
+            var expe = $(o).parents('tr').find('.expe').text();
+            var number = $(o).parents('tr').find('.number').text();
+            $('#orderid').text(id);
+            $('#title').text(title);
+            $('#totalprice').text(totalprice);
+            $('#receiver').text(receiver);
+            $('#expe').text(expe);
+            $('#number').text(number);
+        $('.btn-con').bind('click',function(){confirmreceive(id,type,$(o),ordtype)})
+        $('.alert').show();
+        return false;
+    }
+    function confirmreceive(id,type,o,ordtype){
+        var me = $(o);
+        if(type != 'N000550500'){
+            alert('<{$Think.lang.该订单状态不符合收货条件}>');
+            return false;
+        }
+        $.ajax({
+            'url':'<{:U("orders/receive")}>',
+            'type':'POST',
+            'data':{ORD_ID:id,type:ordtype},
+            success: function (data) {
+                if (data == 2) {
+                    $('.btn-con').unbind();
+                    alert('收货成功');
+                    window.location.reload();
+                } else {
+                    alert('收货失败，请重新操作');
+                    return false;
+                }
+            }
+        },'json');
+        $('.alert').hide();
+        return false;
+    }
+    //    function showcreateord(o){
+    //        if($(o).find('img').hasClass('sortDown')){
+    //            $(o).find('img').removeClass('sortDown');
+    //            $(o).find('img').addClass('sortUp');
+    //            $('.neword').show();
+    //        }else{
+    //            $(o).find('img').removeClass('sortUp');
+    //            $(o).find('img').addClass('sortDown');
+    //            $('.neword').hide();
+    //        }
+    //    }
+    //    function showdownload(o){
+    //        if($(o).find('img').hasClass('sortDown')){
+    //            $(o).find('img').removeClass('sortDown');
+    //            $(o).find('img').addClass('sortUp');
+    //            $('.download').show();
+    //        }else{
+    //            $(o).find('img').removeClass('sortUp');
+    //            $(o).find('img').addClass('sortDown');
+    //            $('.download').hide();
+    //        }
+    //    }
+    //鼠标划入和划出来控制按钮列表展开和隐藏
+    //下载模板
+    $("#download").hover(function () {
+        var setHeight = $(this).find("ul").height();
+        $(this).css({height:setHeight});
+        $(this).find('.download').show();
+        $(this).find(".sortDown").css({"transform":"rotate(0deg)","transition":"500ms"})
+
+
+    },function () {
+        var setHeight = $(this).find("span.btn").height();
+        $(this).css({height:setHeight});
+        $(this).find('.download').hide();
+        $(this).find(".sortDown").css({"transform":"rotate(180deg)","transition":"500ms"})
+
+    });
+    //新建订单
+    $("#newOrderBtn").hover(function () {
+        var setHeight = $(this).find("ul").height();
+        $(this).css({height:setHeight});
+        $(this).find('.neword').show();
+        $(this).find(".sortDown").css({"transform":"rotate(0deg)","transition":"500ms"})
+    },function () {
+        var setHeight = $(this).find("span.btn").height();
+        $(this).css({height:setHeight});
+        $(this).find('.neword').hide();
+        $(this).find(".sortDown").css({"transform":"rotate(180deg)","transition":"500ms"})
+    });
+    $('#opendayin').trigger("click");
+    /*打印方法*/
+    function print(){
+        var TrData =[];
+        var checkTd = $(".table>tbody>tr>td:first-child>input[type = checkbox]");
+        for(var i=0;i<checkTd.length;i++){
+            //判断是否选中
+            var chooCheck = $(checkTd[i]).prop("checked");
+            if(chooCheck == true){
+                var tdVal =$(checkTd[i]).parents("tr").find("td");
+                var TdData = {};
+                for(var j = 1;j<tdVal.length-1;j++){
+                    if( $("table th")[j].className.indexOf('thirdorder')!= -1){
+                        TdData['thirdorder'] = $.trim($(tdVal[j]).find("a").text())
+                    }else if($("table th")[j].className.indexOf('store')!= -1){
+                        TdData['store'] = $.trim($(tdVal[j]).text())
+                    }else if($("table th")[j].className.indexOf('receiver')!= -1){
+                        TdData['receiver'] = $.trim($(tdVal[j]).text())
+                    }
+                }
+                TrData.push(TdData);
+            }else{
+
+            }
+        }
+        if(TrData.length == 0){
+            alert('请勾选订单');
+            return false;
+        }
+
+        aa = '';
+        for(var key in TrData){
+            if(TrData[key]['store'].indexOf('Qoo10') ){
+                alert('<{$Think.lang.只有Qoo10订单可以打印}>')
+                return false;
+            }
+            if(TrData[key]['thirdorder']){
+                if(aa!=''){
+                    aa +=','+TrData[key]['thirdorder']
+                }else{
+                    aa = TrData[key]['thirdorder'];
+                }
+            }
+        }
+        window.open('<{:U("Orders/dayin",array("ords"=>"'+aa+'"))}>');
+    }
+
+    function writeObj(obj){
+        var description = "";
+        for(var i in obj){
+            var property=obj[i];
+            description+=i+" = "+property+"\n";
+        }
+        alert(description);
+    }
+
+    function importexpe(){
+
+    }
+    function checknum(o){
+        if(isNaN($(o).val())){
+            alert('<{$Think.lang.请输入数字}>');
+            return false;
+        }
+    }
+
+    function syncorder(){
+        $('.syncalert').show();
+    }
+
+    function selectstore(o){
+        var plat = $(o).val()
+        $.ajax({
+            'url':'<{:U("orders/getstore")}>',
+            'type':'POST',
+            'data':{plat:plat},
+            success: function (data) {
+                if (data.status == 1) {
+                    $('select[name="store"]').empty();
+                    for(var key in data.info){
+                        $('select[name="store"]').append('<option value="'+data.info[key]['MERCHANT_ID']+'">'+data.info[key]['STORE_NAME']+'</option>')
+                    }
+                } else {
+                    alert(data.info);
+                    return false;
+                }
+            }
+        },'json');
+    }
+    function syncorders(){
+        var plat = $('select[name="plat"]').val();
+        var store = $('select[name="store"]').val();
+        var startTime = $('input[name="startTime"]').val();
+        var endTime = $('input[name="endTime"]').val();
+        if(plat == '' || store == '' || startTime == '' || endTime == '' ){
+            alert('<{$Think.lang.信息不全}>');
+            return false;
+        }
+        $('.syncalert').hide();
+        $('.img_load-pos').show();
+        $.ajax({
+            'url':'<{:U("orders/syncorders")}>',
+            'type':'POST',
+            'data':{plat:plat,store:store,startTime:startTime,endTime:endTime},
+            success: function (data) {
+                if (data.status == 1) {
+                    $('.img_load-pos').hide();
+                    alert(data.info);
+                } else {
+                    alert(data.info);
+                    return false;
+                }
+            }
+        },'json');
+    }
+    $(".Shipping_status").hover(function(){
+        $(this).find(".Shipping_status_div").show()
+        $(this).find(".Shipping_status_img").show()
+
+    },function(){
+        $(this).find(".Shipping_status_div").hide();
+        $(this).find(".Shipping_status_img").hide()
+    })
+  
+
+
+function getReason1(ord_id){
+
+    $.ajax({
+            'url':'<{:U("orders/getReason")}>',
+            'type':'POST',
+            'data':{ordId:ord_id},
+            success: function (data) {
+                    if(data !='null'){
+                       var arr = JSON.parse(data);
+                       var str = '';
+                       str += "<ul>";
+                       for (var i = 0; i < arr.length; i++) {             
+                        str += '<li>'+'&nbsp&nbsp&nbsp'+'创建时间:'+arr[i].create_time+'&nbsp&nbsp&nbsp  '+'失败原因'+arr[i].err_msg.substring(0,64)+'</li>';     
+                       }
+                       str += "</ul>";
+                       $(".Shipping_status_div").html(str);
+                    }
+                    
+                
+                   
+            }
+        },'json');
+}
+
+        
+        
+        
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+<style>
+html,body,div,span,table,tr,td,em,input,th{
+    font-family: "微软雅黑 Bold","微软雅黑";
+}
+.col-md-11 ul li{
+    font-family: "微软雅黑" !important;
+}
+.new-kehu .col-md-1 {
+    width: 65px;
+}
+.new-kehu .col-md-1 span {
+    color: #333333;
+    display: inline-block;
+    font-family: "微软雅黑 Bold","微软雅黑";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 10px 0;
+    padding: 3px 0;
+}
+.link_blue{text-decoration:underline;color:#06c;}
+.menu-state .active a {
+    background: #ed2d65 none repeat scroll 0 0;
+    color: white;
+}
+.menu-state a {
+    color: #ed2d65;
+}
+.menu-state ul li {
+    display:inline-block;
+}
+.table-bordered th, .table-bordered td{text-align:center;}
+.cur{cursor: pointer;width:256px;}
+.cur-s{cursor: pointer;}
+input,
+select {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.gys-wrap {
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.gys-title {
+    font-size: 1.55rem;
+    font-weight: 600;
+    border-bottom: 1px solid #b3b3b3;
+    padding: 6px 0;
+    margin-bottom: 10px;
+}
+
+.basis-info {
+    margin: 0px 0;
+}
+td:nth-of-type(odd),
+td:nth-of-type(odd) {
+    width: 10%;
+}
+
+
+td>input[type="text"],
+td>select,
+td>input-text {
+    
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+    padding: 0 10px
+}
+
+.basis-info .sel-map>select {
+    width: 23%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+    padding: 0 10px;
+    margin-left: 5px;
+}
+
+.basis-info td>input[type="file"] {
+    width: 65%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+}
+
+td span {
+    display: inline-block;
+    width: 80px;
+    height: 26px;
+    border: 1px solid #b3b3b3;
+    text-align: center;
+    line-height: 26px;
+    border-radius: 2px;
+    background: #dddddd;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.table caption {
+    text-align: left;
+    background: #F0FFFF;
+    border: 1px solid #e5e5e5;
+    margin-bottom: -1px;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 5px 10px;
+    margin-top: -1px;
+}
+
+.gys-btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.gys-btn>button {
+    margin: 0 50px;
+}
+
+.table td {
+    padding: 5px 10px;
+}
+.text-le td {
+    text-align: left;
+}
+.coop-info td input[type="text"],
+.coop-info td select{
+    width: 70%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+    padding: 0 10px
+}
+.coop-info td input[type="file"]{
+     width: 70%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+}
+.multiple_team li:hover{cursor: pointer;}
+.checked_card {background-color:#ff6600;}
+.multiple_team select{margin-right: 10px;}
+input {width: 100%;}
+</style>
+<div id="add_audit">
+    <table class="table table-border table-bordered table-bg">
+        <caption><{$Think.lang.审核信息}></caption>
+        <tbody class="text-c">
+            <tr>
+                <td><{$Think.lang.成立时间}></td>
+                <td  colspan="2">
+                    <input type="text" onfocus="WdatePicker({skin:'whyGreen',maxDate:'%y-%M-%d'})" name="EST_TIME" value="" class="input-text Wdate" style="width:120px;" />
+                </td>
+                <td><{$Think.lang.认缴资本}></td>
+                <td  colspan="2">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <select>
+                                <?php
+                                    $currency = BaseModel::getCurrency();
+                                    foreach ($currency as $code => $duc) {
+                                        echo '<option value="' . $code . '">'. $code .'-'. $duc .'</option>';
+                                    }
+                                ?>
+                            </select>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" name="SUB_CAPITAL" value=""/>
+                        </div>
+                        <div class="col-sm-3">
+                            <span><{$Think.lang.万元}></span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.法人代表}></td>
+                <td colspan="2">
+                    <input type="text" name="LG_REP" value=""/>
+                </td>
+                <td><{$Think.lang.股东名称}></td>
+                <td colspan="2">
+                    <input type="text" name="SHARE_NAME" value="" placeholder="<{$Think.lang.多名股东以英文状态下的逗号隔开}>"/>
+                </td>
+            </tr>
+            
+            <tr class="compun">
+                <td><{$Think.lang.是否有工商异常}></td>
+                <td>
+                    <span value="1">有</span>
+                    <span value="0">无</span>
+                    <input type="hidden" name="COM_PUN" id="COM_PUN" value="" class="com"/>
+                </td>
+                <td><{$Think.lang.异常时间}></td>
+                <td>
+                      <input type="text" onfocus="WdatePicker({skin:'whyGreen',maxDate:'%y-%M-%d'})"  name="CRI_TIME" value="" class="input-text Wdate" style="width:120px;" />
+                </td>
+                <td><{$Think.lang.异常简介}></td>
+                <td>
+                    <input type="text" name="CRI_DUC" value=""/>
+                </td>
+            </tr>
+            
+            <tr class="admpun">
+                <td><{$Think.lang.是否有行政处罚}></td>
+                <td>
+                    <span value="1">有</span>
+                    <span value="0">无</span>
+                    <input type="hidden" name="ADM_PUN" id="ADM_PUN" value="" class="adm"/>
+                </td>
+                <td><{$Think.lang.处罚时间}></td>
+                <td>
+                    <input type="text" onfocus="WdatePicker({skin:'whyGreen',maxDate:'%y-%M-%d'})" name="ADM_TIME" value="" class="input-text Wdate" style="width:120px;" />
+                </td>
+                <td><{$Think.lang.处罚简介}></td>
+                <td>
+                    <input type="text" name="ADM_DUC" value=""/>
+                </td>
+            </tr>
+            
+            <tr class="cripun">
+                <td><{$Think.lang.是否有司法赔偿（含财产执行保全）}></td>
+                <td>
+                    <span value="1"><{$Think.lang.有}></span>
+                    <span value="0"><{$Think.lang.无}></span>
+                    <input type="hidden" name="CRI_PUN" id="CRI_PUN" value="" class="cri"/>
+                </td>
+                <td><{$Think.lang.裁判时间}></td>
+                <td>
+                    <input type="text" onfocus="WdatePicker({skin:'whyGreen',maxDate:'%y-%M-%d'})"  name="COM_TIME" value="" class="input-text Wdate" style="width:120px;" />
+                </td>
+                <td><{$Think.lang.裁判简介}></td>
+                <td>
+                    <input type="text" name="COM_DUC" value=""/>
+                </td>
+            </tr>
+            
+            <tr class="riskpun">
+                <td><{$Think.lang.风险评级}></td>
+                <td>
+                    <span value="1">低风险</span>
+                    <span value="2">中风险</span>
+                    <span value="3">高风险</span>
+                    <input type="hidden" name="RISK_RATING" id="RISK_RATING" value="" class="risk"/>
+                </td>
+                <td><{$Think.lang.审核人}></td>
+                <td>
+                    -
+                </td>
+                <td><{$Think.lang.审核时间}></td>
+                <td>
+                    -
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

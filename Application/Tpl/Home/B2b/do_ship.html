@@ -1,0 +1,448 @@
+<!DOCYPTE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../Public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Public/icon/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Public/css/send.css"/>
+    <link rel="stylesheet" href="../Public/utils/css/public.style.css">
+    <link href="/Application/Tpl/Home/Public/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">
+    <title><{$Think.lang.发货操作}></title>
+    <script type="text/javascript">
+        var url = window.location.href;
+    </script>
+    <style>
+        .wrap {
+            box-sizing: border-box;
+            padding: 20px;
+            margin: 0;
+        }
+        .row {
+            margin: 0;
+        }
+
+        .row + .row {
+            margin-top: 20px;
+        }
+        [class*="col-"]{
+            padding: 0;
+        }
+    </style>
+</head>
+<body >
+<div id="bda" v-cloak class="wrap">
+    <div class="row">
+        <div class="col-lg-12">
+            <span class="use-title"><{$Think.lang.发货操作}></span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-one">
+                <caption><{$Think.lang.基础信息}></caption>
+                <tbody class="use-body">
+                <tr>
+                    <td><label><{$Think.lang.发货子单号}></label></td>
+                    <td>{{doship.ID}}</td>
+                    <td><label>  <{$Think.lang.PO编号}></label></td>
+                    <td>{{doship.PO_ID}}</td>
+                </tr>
+                <tr>
+                    <td><label> <{$Think.lang.客户名称}> </label></td>
+                    <td>{{doship.CLIENT_NAME}}</td>
+                    <td><label> <{$Think.lang.目的地}> </label></td>
+                    <td>{{join_ares(doship.target_port)}}</td>
+                </tr>
+                <tr>
+                    <td><label> <{$Think.lang.PO发起人}> </label></td>
+                    <td>{{doship.PO_USER}}</td>
+                    <td><label> <{$Think.lang.交货方式}> </label></td>
+                    <td>{{doship.DELIVERY_METHOD}}</td>
+                </tr>
+                <tr>
+                    <td><label> <{$Think.lang.PO时间}> </label></td>
+                    <td>{{doship.po_time}}</td>
+                    <td><label> <{$Think.lang.订单备注}> </label></td>
+                    <td>{{doship.REMARKS}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-three">
+                <caption><{$Think.lang.商品信息}></caption>
+                <thead class="use-head">
+                <tr>
+                    <th width="3.5%"><input type="checkbox" v-model="allboxs" @change="allbox"></th>
+                    <th width="11%"><{$Think.lang.SKUID}></th>
+                    <th width="11%"><{$Think.lang.BarCode}></th>
+                    <th width="16%"><{$Think.lang.商品名称}></th>
+                    <th width="9%"><{$Think.lang.SKU信息}></th>
+                    <th width="9%"><{$Think.lang.需求数量}></th>
+                    <th width="9%"><{$Think.lang.已发货}></th>
+                    <th width="10.5%"><{$Think.lang.库存情况}></th>
+                    <th width="22%"><{$Think.lang.本次发货}></th>
+                    <th width="10%"><{$Think.lang.待发货}></th>
+                </tr>
+                </thead>
+                <tbody class="use-body">
+                <tr v-for="(g,key) in doship_goods">
+                    <td><input type="checkbox" :value="g.ID" v-model="boxsku" @change="box_plus(key,false,true)"></td>
+                    <td >{{g.SKU_ID}}</td>
+                    <td >{{search_bar_code(g.SKU_ID)}}</td>
+                    <td>{{g.goods_title}}</td>
+                    <td>{{g.goods_info}}</td>
+                    <td>{{g.required_quantity}}</td>
+                    <td>{{g.SHIPPED_NUM}}</td>
+                    <td v-if="g.DELIVERY_WAREHOUSE in warehouses">{{warehouses[g.DELIVERY_WAREHOUSE].warehouse}}（{{g.sale}}）</td>
+                    <td v-else=""><{$Think.lang.本地仓库未建立}></td>
+                    <td class="use-btn">
+                        <input :disabled="g.disable == 1?true:false" v-if="g.TOBE_DELIVERED_NUM" v-model="g.DELIVERED_NUM" @change="updthis_sum(g.TOBE_DELIVERED_NUM,g.sale,g.DELIVERED_NUM,key)"
+                               type="number" name="" placeholder="" class="input-form" style="width: calc(100% - 100px);">
+                        <button v-if="g.TOBE_DELIVERED_NUM && g.SHIPPED_NUM != 0" type="button" class="btn-pub btn-blue"><{$Think.lang.需要补发}></button>
+                    </td>
+                    <td>{{g.TOBE_DELIVERED_NUM - (g.DELIVERED_NUM | zero)}}</td>
+                </tr>
+
+                <tr class="table_bg">
+                    <td><{$Think.lang.合计}></td>
+                    <td>{{doship_goods.length}}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{need_sum}}</td>
+                    <td>{{slip_sum}}</td>
+                    <td>{{todo_sum}}</td>
+                    <td></td>
+                    <td>{{this_sum}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row" v-for="(h,key) in hwarehouse_ware" v-if="h">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-three">
+                <caption>
+                    <span v-if="h.warehouse in warehouses">{{warehouses[h.warehouse].warehouse}}-<{$Think.lang.发货信息}></span>
+                    <span v-else><{$Think.lang.仓库缺失-发货信息}></span>
+                </caption>
+                <tbody class="use-body">
+                <tr>
+                    <td><label class="must" ><{$Think.lang.提单号(或其他有效单据号)}> </label></td>
+                    <td>
+                        <input type="text" :name="'bill_lading_code'+key" placeholder="Bill of lading number" class="input-form" v-model="h.BILL_LADING_CODE"  v-validate="'required'">
+                        <p v-show="errors.has('bill_lading_code'+key)" class="help is-danger text-danger"><{$Think.lang.提单号必填}></p>
+                    </td>
+
+                    <td><label class="must" > <{$Think.lang.发货时间}></label></td>
+                    <td>
+                        <div class="input-date">
+                            <input type="hidden" :name="'procurement_date'+key"   v-model="h.DELIVERY_TIME" >
+                            <input type="text" :name="'DELIVERY_TIME'+key"  :id="'DELIVERY_TIME'+key" @focus="upd_delivery_time('DELIVERY_TIME',key)"   onfocus="WdatePicker({maxDate:'%y-%M-%d'})" placeholder="请选择日期" style="border: none;" class="ng-pristine ng-valid ng-empty ng-touched" ><i></i>
+                        </div>
+                    </td>
+                    <td><label class="must" > <{$Think.lang.预计到港时间}></label></td>
+                    <td>
+                        <div class="input-date">
+                            <input type="hidden" :name="'es_date'+key"  v-model="h.Estimated_arrival_DATE"  >
+                            <input type="text" :name="'Estimated_arrival_DATE'+key"  :id="'Estimated_arrival_DATE'+key" @focus="upd_delivery_time('Estimated_arrival_DATE',key)"    placeholder="请选择日期" style="border: none;" class="ng-pristine ng-valid ng-empty ng-touched"  ><i></i>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label class="must" > <{$Think.lang.本次发货数量}></label></td>
+                    <td>{{h.SHIPMENTS_NUMBER}}</td>
+                    <td><label  > <{$Think.lang.物流费用}>（<{$Think.lang.选填}>）</label></td>
+                    <td>
+                        <div class="select-input">
+                            <select :name="'currency'+key" class="input-form" v-model="h.LOGISTICS_CURRENCY"  >
+                                <option v-for="c in currency" :value="c.CD">{{c.CD_VAL}}</option>
+                            </select>
+                            <input type="text" :name="'logistics_costs'+key" placeholder="" class="input-form" v-model="h.LOGISTICS_COSTS"  >
+                        </div>
+                    </td>
+                    <td><label  > <{$Think.lang.备注}>（<{$Think.lang.选填}>）</label></td>
+                    <td><input type="text" :id="'count'+key" class="input-form" @focus="count_focus()"  v-model="h.REMARKS"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row use-btn">
+        <div class="col-lg-12 col-md-12 text-center">
+            <button type="button" class="btn-pub btn-blue" @click="save_lock"><{$Think.lang.发货提交}></button>
+            <button type="button" class="btn-pub  btn-default mg-l-20" @click="clean"><{$Think.lang.清空}></button>
+        </div>
+    </div>
+</div>
+<script src="../Public/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="../Public/js/stock/alert.js"></script>
+<script type="text/javascript" src="../Public/js/vue.js"></script>
+<script src="../Public/js/queryform.js" type="text/javascript"></script>
+<script type="text/javascript" src="../Public/js/axios.min.js"></script>
+<script src="/Application/Tpl/Home/Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript">
+    Vue.use(VeeValidate);
+    var vm = new Vue({
+            el: '#bda',
+            data: {
+                doship: <{$doship}>,
+            doship_goods: <{$doship_goods}>,
+        warehouses: <{$all_warehouse}>,
+    hwarehouse: <{$hwarehouse}>,
+    hwarehouse_in:[],
+        currency: <{$currency}>,
+    this_sum: 0,
+        initdata:<{$initdata}>,
+    boxsku: [],
+        box_ware: [],
+        allboxs:'',
+        tdh_num:[]
+    },
+    computed:{
+        need_sum: function(){
+            return this.cal_sum('required_quantity')
+        },
+        slip_sum: function() {
+            return this.cal_sum('SHIPPED_NUM')
+        },
+        todo_sum: function() {
+            return this.cal_sum('TOBE_DELIVERED_NUM')
+        },
+        hwarehouse_ware (){
+            this.hwarehouse_in = []
+            for( h in this.hwarehouse){
+                if(this.box_ware.indexOf(this.hwarehouse[h].warehouse) != -1){
+                    this.hwarehouse_in.push({warehouse:this.hwarehouse[h].warehouse})
+                }
+            }
+            return this.hwarehouse_in
+        }
+    },
+    filters:{
+        zero:function(v){
+            if(!v) return 0
+            return v
+        }
+    },
+    methods: {
+        cal_sum: function(k){
+            var t = 0
+            for(d in this.doship_goods){
+                if(this.doship_goods[d][k])t += parseInt(this.doship_goods[d][k])
+            }
+            t = isNaN(t)?0:t
+            return t;
+        },
+        checkRate : function (input) {
+            var re = /^[1-9]+[0-9]*]*$/
+            return re.test(input)
+        },
+        updthis_sum: function(t,s,d,k){
+            this.this_sum = this.cal_sum('DELIVERED_NUM')
+            if(!this.checkRate(parseFloat(d))){
+                box.Alert('<{$Think.lang.提示}>','<{$Think.lang.发货数量必须是正整数}>')
+                this.doship_goods[k]['DELIVERED_NUM'] = 0
+                this.this_sum = this.cal_sum('DELIVERED_NUM')
+            }
+            if(parseInt(d) > parseInt(t)){
+                box.Alert('<{$Think.lang.提示}>','<{$Think.lang.发货数据超过待发货}>')
+                this.doship_goods[k]['DELIVERED_NUM'] = 0
+                this.this_sum = this.cal_sum('DELIVERED_NUM')
+            }else if(parseInt(d) > parseInt(s)){
+                box.Alert('<{$Think.lang.提示}>','<{$Think.lang.发货数据超过当前仓库库存总量}>')
+                this.doship_goods[k]['DELIVERED_NUM'] = 0
+                this.this_sum = this.cal_sum('DELIVERED_NUM')
+            }
+            if(this.doship_goods[k]['DELIVERED_NUM'])this.boxware_join(k)
+            this.upd_shipments()
+        },
+        save_lock:function(){
+            if(this.check_date()){
+                this.$validator.validateAll().then(result => {
+                    if(result){
+                        goods_info =this.doship_goods
+                        ships =this.hwarehouse_in
+                        doship_id = this.doship.ID
+                        axios.post('/index.php?m=b2b&a=save_ship', {
+                            params:{
+                                goods_info: goods_info,
+                                ships: ships,
+                                doship_id: doship_id
+                            }
+                        }).then(function (response) {
+                            var res = response.data;
+                            if(res['status'] == 1){
+                                setTimeout(function(){window.location.href = '/index.php?m=b2b&a=do_ship_show&order_id='+vm.doship.ORDER_ID},2500)
+                            }else{
+                                box.Alert('<{$Think.lang.提示}>',res['info'])
+                            }
+                        }).catch(function (error) {
+                            console.log(error)
+                        })
+                    }
+//                alert('Correct them errors!');
+                    return false
+                })
+
+            }
+
+
+        },
+        msg (e) {
+            box.Alert('<{$Think.lang.提示}>',e);
+        },
+        join_ares(e){
+            if(e != null){
+                e_data = JSON.parse(e)
+                var initdata = this.initdata
+                var area = ''
+                if (e_data.country) area = initdata.area[e_data.country]
+                if (e_data.stareet) area += '-'+initdata.area[e_data.stareet]
+                if (e_data.city) area += '-'+initdata.area[e_data.city]
+                return area
+            }
+            return e
+        },
+        allbox(){
+            if(!this.allboxs) {
+                this.clean()
+            }else if(this.boxsku.length != this.doship_goods.length){
+                this.boxsku = []
+                this.box_ware = []
+                for(d in this.doship_goods){
+                    var thisd = d
+                    this.boxsku.push(this.doship_goods[d].ID)
+                    this.box_plus(d)
+                    this.boxware_join(thisd)
+                }
+                this.box_ware = []
+                for(d in this.doship_goods){
+                    this.boxware_join(d)
+                }
+            }
+            this.upd_shipments()
+        },
+        box_plus (e,clear,tigger){
+            var bbg= $("#box-bg")
+            if(bbg)bbg.remove()
+            var enums = this.doship_goods[e].TOBE_DELIVERED_NUM
+            var sales = this.doship_goods[e].sale
+            if(parseInt(enums) > parseInt(sales)){
+                box.Alert('<{$Think.lang.提示}>','第'+(parseInt(e)+1)+'行库存不够完全发货');
+                this.doship_goods[e].DELIVERED_NUM = 0
+                return false
+            }
+            if(clear)enums = 0
+            if(tigger && !this.in_box(this.doship_goods[e].ID))enums = 0
+            this.doship_goods[e].DELIVERED_NUM = enums
+            this.doship_goods[e].disable = 1
+            if(clear)this.doship_goods[e].disable = 0
+            var g = this.doship_goods[e]
+            this.updthis_sum(g.TOBE_DELIVERED_NUM,g.sale,g.DELIVERED_NUM,e)
+            if(tigger){
+                this.box_ware = []
+                for(dg in this.doship_goods){
+                    for(bs in this.boxsku){
+                        if(this.boxsku[bs] == this.doship_goods[dg].ID){
+                            this.boxware_join(dg)
+                        }
+                    }
+                }
+                this.upd_shipments()
+            }
+        },
+        in_box(e)
+        {
+            for(b in this.boxsku)if (e == this.boxsku[b])return true
+            return false
+        },
+        boxware_join(e)
+        {
+
+            this.box_ware.push(this.doship_goods[e].DELIVERY_WAREHOUSE)
+            this.box_ware =  Array.from(new Set(this.box_ware))
+        },
+        upd_shipments()
+        {
+            for (bw in this.box_ware)this.tdh_num[this.box_ware[bw]] = 0
+            for (dg in this.doship_goods){
+                if(this.doship_goods[dg].DELIVERED_NUM == undefined || this.doship_goods[dg].DELIVERED_NUM == null || !this.doship_goods[dg].DELIVERED_NUM)this.doship_goods[dg].DELIVERED_NUM = 0
+                this.tdh_num[this.doship_goods[dg].DELIVERY_WAREHOUSE] += parseInt(this.doship_goods[dg].DELIVERED_NUM)
+            }
+            for(h in this.hwarehouse_ware)this.hwarehouse_ware[h].SHIPMENTS_NUMBER = this.tdh_num[this.hwarehouse_ware[h].warehouse]
+
+        },
+        upd_delivery_time(e,k){
+            var query_data = '#'+e+k;
+            var min_date = this.hwarehouse_ware[k][e] = $(query_data).val()
+            var delivery_time = '#Estimated_arrival_DATE'+k;
+            if(e == 'DELIVERY_TIME'){
+                $(delivery_time).on("focus",function(){
+                    var wd_data = {minDate:'#F{$dp.$D(\''+e+k+'\')}'}
+                    WdatePicker(wd_data)
+                })
+                var delivery_date= $(delivery_time).val()
+                if(min_date >  delivery_date && (delivery_date != null && delivery_date != '' )){
+                    $(query_data).val('')
+                    this.hwarehouse_ware[k][e] = ''
+                    box.Alert('<{$Think.lang.提示}>','发货时间不能大于到港时间');
+                    return false
+                }
+            }
+        },
+        clean ()
+        {
+            this.allboxs = false
+            this.boxsku = []
+            this.box_ware = []
+            for(d in this.doship_goods){
+                this.box_plus(d,true)
+            }
+        },
+        count_focus(){
+            console.log('a')
+        },
+        check_date(){
+            var hwarehouse_in = this.hwarehouse_in
+            for(h in hwarehouse_in){
+                if(hwarehouse_in[h].DELIVERY_TIME == null || hwarehouse_in[h].DELIVERY_TIME == ''){
+                    box.Alert('<{$Think.lang.提示}>',this.warehouses[hwarehouse_in[h].warehouse].warehouse+'仓库的发货时间不能空')
+                    return false
+                    break
+                }
+
+                if ( hwarehouse_in[h].Estimated_arrival_DATE == '' || hwarehouse_in[h].Estimated_arrival_DATE == null ) {
+                    box.Alert('<{$Think.lang.提示}>',this.warehouses[hwarehouse_in[h].warehouse].warehouse+'仓库的预计到港时间不能空')
+                    return false
+                    break
+                }
+
+            }
+            return true
+        },
+        search_bar_code(sku){
+            var barcode = null
+            var sku = sku
+            axios.post('/index.php?m=b2b&a=search_bar_code', {
+                params:{
+                    goods_info: sku
+                }
+            }).then(function (response) {
+                var res = response.data;
+                if(res['status'] == 1)barcode = res['data']
+            })
+            return barcode
+        }
+    }
+    })
+
+</script>
+</body>
+
+
+</html>

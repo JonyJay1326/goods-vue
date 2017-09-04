@@ -1,0 +1,557 @@
+<link rel="stylesheet" href="/Application/Tpl/Home/Public/lib/webuploader/0.1.5/webuploader.css"/>
+
+<style>
+    .webuploader-pick {
+        background: none;
+    }
+
+    .wrap {
+        box-sizing: border-box;
+        padding: 20px;
+        margin: 0;
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .row+.row {
+        margin-top: 20px;
+    }
+
+    [class*="col-"] {
+        padding: 0;
+    }
+</style>
+<div class="wrap">
+    <!--基础信息-->
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-one">
+                <caption><{$Think.lang.基础信息}></caption>
+                <tbody class="use-body">
+                    <tr>
+                        <td><label class="must"><{$Think.lang.PO编号}></label></td>
+                        <td>
+                            <div class="input-wrap">
+                                <input type="text" name="skuId" ng-model="poData.poNum">
+                                <i ng-click="searchPo()"></i>
+                            </div>
+                        </td>
+                        <td><label class="must" ><{$Think.lang.客户名称}></label></td>
+                        <td><input type="text" class="input-form" ng-model="poData.clientName" ng-change="get_ht()"></td>
+                    </tr>
+                    <tr>
+                        <td><label class="must" ><{$Think.lang.适用合同}></label></td>
+                        <td>
+                            <select ng-model="poData.contract" ng-change="upd_company()" class="input-form">
+                                <option selected value="" disabled>---<{$Think.lang.无}>---</option>
+                                <option ng-repeat="(key,item) in initData.contracts" value="{{item.CON_NO}}">
+                                    {{item.CON_NO}}
+                                </option>
+                            </select>
+                        </td>
+                        <td><label class="must" ><{$Think.lang.我方公司}></label></td>
+                        <td>
+                            <select class="input-form" ng-model="poData.ourCompany">
+                                <option selected value="" disabled>---<{$Think.lang.无}>---</option>
+                                <option ng-repeat="(key,item) in initData.wfgs" value="{{item.CD_VAL}}">
+                                    {{item.CD_VAL}}
+                                </option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="must" ><{$Think.lang.PO金额}></label></td>
+                        <td>
+                            <span><select style="width: 20%" name="backend_currency" class="input-form" ng-disabled="$index > 0"  ng-model="poData.BZ">
+                               <option selected value="" disabled><{$Think.lang.币种}></option>
+                               <option ng-repeat="item in initData.currency_bz" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select></span>
+                            <input style="width: 79%;" type="text" class="input-form" ng-model="poData.poAmount">
+                        </td>
+                        <td><label class="must" ><{$Think.lang.PO时间}></label></td>
+                        <td>
+                            <input type="text" class="input-form" id="actual-receipt-date" ng-model="poData.poTime" onfocus="WdatePicker({maxDate:'%y-%M-%d'})" ng-focus="upd_potime(this)"   placeholder="请选择日期">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="must" ><{$Think.lang.付款周期}></label></td>
+                        <td>
+                            <select class="input-form" ng-change="changeCycle()" ng-model="poData.cycleNum">
+                            <option selected value="" disabled>---<{$Think.lang.请选择周期}>---</option>
+                            <option ng-repeat="(key,item) in initData.paymentCycle" ng-show="item.CD_VAL != '月结'" value="{{item.CD+1}}">
+                                {{item.CD_VAL}}
+                            </option>
+                        </select>
+                        </td>
+                        <td><label class="must" ><{$Think.lang.付款节点}></label></td>
+                        <td class="paymentCycle">
+                            <span ng-repeat="paymentNode in paymentNodeArray" class="select-group">
+                            <select ng-model="paymentNode.nodeType" class="four-width">
+                                <option selected value="" disabled>---<{$Think.lang.请选择}>---</option>
+                                <option ng-repeat="(key,item) in paymentNode.node_type" ng-show="item.CD_VAL != '收到发票后' && item.CD_VAL != '到港后' " value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select>
+                            <select ng-model="paymentNode.nodeDate" class="four-width">
+                                <option selected value="" disabled>---<{$Think.lang.请选择}>---</option>
+                                <option ng-repeat="(key,item) in paymentNode.node_date" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select>
+                            <select ng-model="paymentNode.nodeWorkday" class="four-width">
+                                <option selected value="" disabled>---<{$Think.lang.请选择}>---</option>
+                                <option ng-repeat="(key,item) in paymentNode.node_is_workday" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select>
+                            <select ng-model="paymentNode.nodeProp" class="four-width">
+                                <option selected value="" disabled>---<{$Think.lang.请选择}>---</option>
+                                <option ng-repeat="(key,item) in paymentNode.node_prop" value="{{item.CD_VAL}}">{{item.CD_VAL}}%</option>
+                            </select>
+                        </span>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="must" ><{$Think.lang.发票与税点}></label></td>
+                        <td class="select-group">
+                            <select class="three-width" ng-change="changeCounty()" ng-model="poData.invioce">
+                            <option selected value="" disabled>---<{$Think.lang.请选择发票}>---</option>
+                            <option ng-repeat="item in initData.invioce" value="{{item.CD}}">{{item.CD_VAL}}
+                            </option>
+                        </select>
+                            <select class="three-width" ng-change="changeCounty()" ng-model="poData.tax_point">
+                            <option selected value="" disabled>---<{$Think.lang.请选择税点}>---</option>
+                            <option ng-repeat="item in initData.tax_point" value="{{item.CD}}">
+                                {{item.CD_VAL}}%
+                            </option>
+                        </select>
+                        </td>
+                        <td><label class="must" ><{$Think.lang.发货方式}></label></td>
+                        <td class="check-radio">
+                            <span ng-class="$index == initData.shipping.active?'check-item-pick':'check-item'" ng-click="switchNode($index)" ng-repeat="item in initData.shipping.data">
+                            {{item.CD_VAL}}
+                        </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="must" ><{$Think.lang.目标城市}></label></td>
+                        <td class="select-group">
+                            <select class="three-width" ng-change="changeCounty(poData.country,'')" ng-model="poData.country">
+                            <option selected value="" disabled>---<{$Think.lang.请选择国家}>---</option>
+                            <option ng-repeat="item in initData.country" value="{{item.ID}}">{{item.NAME}}
+                            </option>
+                        </select>
+                            <select class="three-width" ng-change="changeCounty(poData.province,'end')" ng-model="poData.province">
+                            <option selected value="" disabled>---<{$Think.lang.请选择省市}>---</option>
+                            <option ng-repeat="item in initData.province" value="{{item.value}}">
+                                {{item.label}}
+                            </option>
+                        </select>
+                            <select class="three-width" ng-model="poData.city">
+                            <option selected value="" disabled>---<{$Think.lang.请选择城市}>---</option>
+                            <option ng-repeat="item in initData.city" value="{{item.value}}">{{item.label}}
+                            </option>
+                        </select>
+                        </td>
+                        <td style="white-space: nowrap"><label class="must"> <{$Think.lang.详细地址（港口/机场）}></label></td>
+                        <td>
+                            <input type="text" class="input-form" placeholder="" ng-model="poData.detailAdd">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="must" ><{$Think.lang.销售同事}></label></td>
+                        <td>
+                            <input type="text" class="input-form" ng-model="poData.lastname" list="userdata">
+                        </td>
+                        <td><label class="must" ><{$Think.lang.销售团队}></label></td>
+                        <td>
+                            <select class="input-form" ng-model="poData.saleTeam">
+                            <option selected value="" disabled>---<{$Think.lang.请选择销售团队}>---</option>
+                            <option ng-repeat="item in initData.salesTeam" value="{{item.CD}}">{{item.CD_VAL}}
+                            </option>
+                        </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label class="must" ><{$Think.lang.预估商品成本}></label></td>
+                        <td>
+                            <span><select style="width: 20%" name="backend_currency" class="input-form" ng-disabled="$index > 0"  ng-model="poData.backend_currency">
+                               <option selected value="" disabled><{$Think.lang.币种}></option>
+                               <option ng-repeat="item in initData.currency" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select></span>
+                            <input style="width: 79%" type="text" name="backend_estimat" class="input-form" ng-model="poData.backend_estimat" />
+                        </td>
+                        <td><label class="must" ><{$Think.lang.预估物流成本}></label></td>
+                        <td>
+                           <span><select style="width: 20%" name="logistics_currency" class="input-form" ng-disabled="$index > 0"  ng-model="poData.logistics_currency">
+                               <option selected value="" disabled><{$Think.lang.币种}></option>
+                               <option ng-repeat="item in initData.currency" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select></span>
+                            <input style="width: 79%" type="text" name="logistics_estimat" class="input-form" ng-model="poData.logistics_estimat" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label ><{$Think.lang.PO扫描件}> </label></td>
+                        <td ng-if="poData.IMAGEFILENAME">
+                            <a href="">{{poData.IMAGEFILENAME}}</a>
+                        </td>
+                        <td ng-if="!poData.IMAGEFILENAME">
+                            <span id="pofile">{{poData.IMAGEFILENAME}}</span>
+
+                            <div class="btn-yellow webuploader-container"  data-toggle="modal" id="import-po" data-target="#fileModal" style="width: 200px;height: 35px;line-height: 47px">
+                                <span class="webuploader-pick"><i class="fa fa-plus"></i> 上传PO扫描件</span>
+                            </div>
+                        </td>
+                        <td><label > <{$Think.lang.备注}></label></td>
+                        <td >
+                            <textarea ng-model="poData.remarks" cols="30" rows="10" class="text-form"></textarea>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    <link rel="stylesheet" href="/Application/Tpl/Home/Public/lib/bootstrap/css/bootstrap-grid.min.css">
+    <style>
+        .card_orderAdd_goodes .card-block table thead tr th{
+            text-align: center !important;
+        }
+        .card_orderAdd_goodes .card-header  .col-lg-6 .btn-yellow{
+            width:90px;
+            line-height: 28px;
+            height:28px;
+            overflow: hidden;
+            padding: 0px;
+            float: right;
+            margin:0px;;
+            border-radius:4px;
+            margin-right:10px;
+        }
+        .card_orderAdd_goodes .card-header  .col-lg-6 .btn-yellow .webuploader-pick{
+            text-align: center;
+            height:100%;
+            width:100%;
+            padding:0px;
+            background: #FF9100;
+        }
+        .card_orderAdd_goodes .card-header  .col-lg-6 .btn-white{
+            width:90px;
+            line-height: 28px;
+            height:28px;
+            overflow: hidden;
+            padding: 0px;
+            float:right;
+            text-align: center;
+            border-radius:4px;
+        }
+        input[type="file"]{
+            border:none !important;
+            color: #90A4AE !important;
+        }
+        .btn-yellow{
+            background:#FF9100 !important;
+            cursor: pointer;
+            font-size:14px;
+        }
+        .btn-white{
+            background: #FFFFFF;
+            border-radius: 4px;
+            border: 1px solid #C8D2D7;
+            color: #546E7A;
+            letter-spacing: 0;
+            cursor: pointer;
+            font-size:14px;
+        }
+        .btn-delete{
+            width:70px;
+            height:28px;
+            line-height: 28px;
+            color: #546E7A;
+            padding:0px;
+            background: #F7F7F7 ;
+            border: 1px solid #C8D2D7 !important;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size:14px;
+            outline:none;
+        }
+        .btn-add{
+            width:70px;
+            height:28px;
+            line-height: 28px;
+            background: #2BA384;
+            color: #FFFFFF;
+            padding:0px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size:14px;
+            outline:none;
+            border:none;
+        }
+        .btn-check{
+            width:70px;
+            height:28px;
+            line-height: 28px;
+            background: #1E7EB4;
+            padding:0px;
+            border-radius: 4px;
+            cursor: pointer;
+            color:white;
+            display: inline-block;
+            font-size:14px;
+            text-align: center;
+        }
+        .btn-edit{
+            width:70px;
+            height:28px;
+            line-height: 28px;
+            background: #2BA384;
+            padding:0px;
+            border-radius: 4px;
+            cursor: pointer;
+            color:white;
+            display: inline-block;
+            font-size:14px;
+            text-align: center;
+        }
+        .btn-check:hover{
+            color:white;
+        }
+        .btn-procedure{
+            width:70px;
+            height:28px;
+            line-height: 28px;
+            padding:0px;
+            color: #FFFFFF;
+            font-size:14px;
+            background:#2BA384;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .btn-sure{
+            width:106px;
+            height:40px;
+            font-size:14px;
+            line-height:40px;
+            background: #1E7EB4;
+            padding:0px;
+            color:white;
+            border-radius: 4px;
+            border:none;
+            outline:none;
+            cursor: pointer;
+        }
+        .btn-cancel{
+            width:106px;
+            font-size:14px;
+            height:40px;
+            line-height: 40px;
+            background: #FFFFFF;
+            border: 1px solid #C8D2D7 !important;
+            border-radius: 4px;
+            color: #546E7A;
+            letter-spacing: 0;
+            cursor: pointer;
+            padding:0px !important;
+        }
+        .btn-back{
+            width:106px;
+            height:40px;
+            line-height: 40px;
+            background:#1E7EB4;
+            font-size:14px;
+            border: 1px solid #C8D2D7 !important;
+            border-radius: 4px;
+            color: white;
+            letter-spacing: 0;
+            cursor: pointer;
+            padding:0px !important;
+            margin-left: 45%;
+        }
+        .btn-search{
+            height:32px;
+            width:80px;
+            text-align: center;
+            padding:0px;
+            line-height: 32px;
+            font-size:14px;
+            letter-spacing: 0;
+            background: #2BA384;
+            border-radius: 4px;
+            display: inline-block;
+            color:white;
+            border:none;
+            outline:none;
+        }
+        .btn-reset{
+            height:32px;
+            width:80px;
+            text-align: center;
+            padding:0px;
+            font-size:14px;
+            line-height: 32px;
+            color: #546E7A;
+            letter-spacing: 0;
+            background:#FFFFFF;
+            border-radius: 4px;
+            display: inline-block;
+            border: 1px solid #CADEE7;
+            outline:none;
+        }
+        #import-goods{
+            height: 31px;
+            width: 100px;
+            position: relative;
+            margin-top: 5px;
+            margin-right: 10px;
+        }
+        .webuploader-pick{
+            padding: 0;
+            top: -4px;
+            position: absolute;
+            height: 30px;
+            left: 1px;
+            width: 100%;
+            text-align: center;
+        }
+        #import-goods div:first-child{
+            height: 30px !important;
+            top:0 !important;
+        }
+        #import-goods div:last-child{
+            height: 30px !important;
+            top:0 !important;
+        }
+        #import-goods label{
+            margin: 0;
+        }
+        #import-goods input[type="file"]{
+            position: absolute !important;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <!--商品信息-->
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-three">
+                <caption >
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6"><{$Think.lang.商品信息}></div>
+                        <div class="col-lg-6 col-md-6 text-right use-btn" style="margin-top: -1px;">
+                            <div class="btn-yellow webuploader-container"  data-toggle="modal" id="import-goods" data-target="#fileModal">
+                                <span class="webuploader-pick"><i class="fa fa-plus"></i> 模板导入</span>
+                            </div>
+                            <a target="_blank" class="btn-pub btn-default" href="<{:U('Stock/download',array('name'=>'B2B-import-goods.xls'))}>"><i class="fa fa-download"></i>模板下载</a>
+                        </div>
+                    </div>
+                </caption>
+
+                <thead class="use-head">
+                    <tr>
+                        <th><{$Think.lang.SKUID}></th>
+                        <th><{$Think.lang.商品名称}></th>
+                        <th><{$Think.lang.SKU信息}></th>
+                        <th><{$Think.lang.仓库}></th>
+                        <th><{$Think.lang.商品售价}></th>
+                        <th><{$Think.lang.需求数量}></th>
+                        <th><{$Think.lang.小计}></th>
+                        <th><{$Think.lang.退税比例}></th>
+                        <th><{$Think.lang.预计退税金额}></th>
+                        <th>
+                            <select style="width: auto;" name="currency" class="input-form"  ng-change="changeAllTeam('purchasing_team',initData.allPurchasing)" ng-model="initData.allPurchasing">
+                                <option selected value="" disabled><{$Think.lang.采购团队}></option>
+                                <option ng-repeat="item in initData.allPurchasingArr" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select>
+                        </th>
+                        <th>
+                            <select style="width: auto;" name="currency" class="input-form" ng-change="changeAllTeam('introduce_team',initData.allIntroduce)" ng-model="initData.allIntroduce">
+                                <option selected value="" disabled><{$Think.lang.介绍团队}></option>
+                                <option ng-repeat="item in initData.allIntroduceArr" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select>
+                        </th>
+                        <th width="150"><{$Think.lang.操作}></th>
+                    </tr>
+                </thead>
+                <tbody class="use-body">
+                    <tr ng-repeat="item in skuData">
+                        <td>
+                            <div>
+                                <span class="input-wrap">
+                                <input type="text" name="toskuid" ng-model="item.toskuid">
+                                <input type="hidden" name="skuId" ng-model="item.skuId">
+                                <i ng-click="searchSku(item)"></i>
+                            </span>
+                            </div>
+                        </td>
+                        <td>{{item.gudsName}}</td>
+                        <td>{{item.skuInfo}}</td>
+                        <td>{{item.warehouse}}</td>
+                        <td class="select-input">
+                            <!--<select name="currency" class="input-form" ng-disabled="$index > 0" ng-change="changeCurrency(item)" ng-model="item.selCurrency">
+                                <option selected value="" disabled><{$Think.lang.币种}></option>
+                                <option ng-repeat="item in initData.currency" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                             </select>-->
+                            <span ng-if="poData.BZ">{{initData.currency_bz[poData.BZ].CD_VAL}}</span><input type="text" name="currencyNum" class="input-form" ng-model="item.gudsPrice" ng-change="countSubTotal(item)" />
+                        </td>
+                        <td><input type="text" name="demand" class="input-form" ng-model="item.demand" ng-change="countSubTotal(item)"></td>
+                        <td>
+                            {{item.subTotal}}
+                            <td>
+                                <select name="rebate" class="input-form" ng-model="item.drawback" ng-change="countDrawback(item)">
+                            <option ng-repeat="item in initData.taxRebateRatio" value="{{item.CD_VAL}}">
+                                {{item.CD_VAL}}%
+                            </option>
+                        </select>
+                            </td>
+                        <td>{{item.estimateDrawback}}</td>
+                        <td>
+                            <select name="currency" class="input-form"   ng-model="item.purchasing_team" style="width: auto;">
+                                <option selected value="" disabled><{$Think.lang.采购团队}></option>
+                                <option ng-repeat="item in initData.allPurchasingArr" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select>
+                        </td>
+                        <td>
+                            <select name="currency" class="input-form"   ng-model="item.introduce_team" style="width: auto;">
+                                <option selected value="" disabled><{$Think.lang.介绍团队}></option>
+                                <option ng-repeat="item in initData.allIntroduceArr" value="{{item.CD}}">{{item.CD_VAL}}</option>
+                            </select>
+                        </td>
+                            <!--<td>{{item.estimateDrawback}}</td>-->
+
+                            <td class="text-center use-btn no-wrap">
+                                <button type="button" class="btn-pub btn-green" style="margin-right:10px" ng-click="add()"><{$Think.lang.添加}></button>
+                                <button type="button" class="btn-pub btn-default " ng-click="del(item)"><{$Think.lang.删除}></button>
+                            </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4"><{$Think.lang.合计}></td>
+                        <td>
+                            <!--{{initall.allPrice}}-->
+                        </td>
+                        <td> {{initall.allnum}}</td>
+                        <td> {{initall.allSubtotal}}</td>
+                        <td></td>
+                        <td> {{initall.allEsBack}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--按钮-->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 text-center use-btn">
+            <datalist id="userdata">
+                <option ng-repeat="item in initData.user" value="{{item.M_NAME}}">{{item.M_NAME}}</option>
+            </datalist>
+            <button type="button" class="btn-pub btn-blue" ng-click="submit()"><{$Think.lang.提交}></button>
+            <button type="button" class="btn-pub btn-default mg-l-20" ng-click="reset()"><{$Think.lang.重置}></button>
+            <button type="button" style="display: none" class="btn-pub btn-default mg-l-20" ng-click="importError()">测试</button>
+        </div>
+    </div>
+
+</div>

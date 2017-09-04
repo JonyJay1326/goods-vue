@@ -1,0 +1,69 @@
+<volist name="guds" id="v">
+    <tr data-name="goods_detail_1">
+        <td><label><{$v.now_number}></label></td>
+        <td>
+            <div class="input-group">
+                <input type="text" name="search_information[]" value="<{$v.search}>" onkeyup="resetSelect(this)"  class="form-control must_val"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-secondary" type="button" onclick="checkSku(this)"><i class="fa fa-search fa-lg"></i></button>
+                </span>
+                <input type="text" name="sku_information[]" value="<{$v.sku}>"  id="sku_information"  hidden/>
+            </div>
+        </td>
+        <td><input type="text" name="goods_name[]" style="border: none; background: none;" readonly="readonly" class="form-control" value="<{$v.goods_name}>"></td>
+        <td>
+            <input type="text" name="goods_attribute[]" style="border: none; background: none;" readonly="readonly" class="form-control" value="<{$v.val_str}>"></td>
+        <td class="goods_detail-main_bizhong" style="display: none">
+            <select name="curType" id="curType" class="form-control curType" onchange="goodsRate()">
+                <option selected="" value="">币种</option>
+                <?php foreach($currency as $key=>$vo){ ?>
+                <option value="<?=$vo['CD_VAL'];?>" <?php if($currency_s == $vo['CD_VAL']) {echo 'selected';}?>><?=$ov['CD_VAL'];?></option>
+                <?php } ?>
+            </select>
+        </td>
+        <td>
+            <input type="text" style="text-align: center" onblur="checkUnit(this)" value="<{:number_format($v['price'],2)}>" name="unit_price_g[]" class="form-control unit_price_g must_val"/>
+            <input type="hidden" name="unit_price[]" style="text-align: center" onblur="predictProfit()" value="<{$v.price}>" class="form-control unit_price"/>
+        </td>
+        <td>
+            <input type="text" style="text-align: center" onblur="checkNumber(this)" name="goods_number_g[]"  value="<{:number_format($v['number'])}>" class="form-control goods_number_g must_val"/>
+            <input type="hidden" name="goods_number[]" style="text-align: center"  onblur="predictProfit()" value="<{$v.number}>" class="form-control goods_number"/>
+        </td>
+        <td>
+            <input type="text"  style="text-align: center" readonly="readonly" onblur="" value="<{:number_format($v['goods_money'],2)}>" name="goods_money_d[]" class="form-control goods_money_d"/>
+            <input type="hidden" name="goods_money[]" readonly="readonly" style="text-align: center; background: none;" onblur="" value="<{$v.goods_money}>" class="form-control goods_money"/>
+        </td>
+        <!--
+        <td>
+            <input type="text" name="remark[]" id="remark" class="form-control"/>
+        </td>
+        -->
+        <td class="no-wrap text-center">
+            <button class="btn btn-add btn-sm"  type="button" onclick="addTr(this)">添加</button>
+            <button class="btn btn-delete btn-sm" name="goods_detail_1" type="button" onclick="deleteTr(this)">删除</button>
+        </td>
+    </tr>
+</volist>
+<if condition="$is_import eq 1">
+    <tr class="total">
+        <td  style="text-align: center;font-weight: bold;;word-break: keep-all">合计：</td>
+        <td colspan="3"></td>
+        <td style="display: none">
+            <span class="show_rate"></span>
+            <input type="hidden" class="show_rate_a" name="show_total_rate">  <!--该数据是为了将显示的汇率保存起来，然后在修改界面显示的-->
+        </td>
+        <td id="goods_currency"><{$currency_s}></td>
+        <td><input type="hidden" value="0" name="number_total" class="number_total"><span class="number_totals"></span></td>
+        <td><input type="hidden" value="0" name="money_total" class="money_total"> <!--用来传递与保存到数据库的-->
+            <input type="hidden" value="0" name="real_total_rate" id="real_rate"> <!--保存真实的汇率-->
+            <input type="hidden" value="0" name="money_total_rmb" class="new_money_total"> <!--换算成人民币后的金额用于下面的预计利润的计算-->
+            <span class="money_totals"></span>
+        </td>
+        <!--<td></td>-->
+        <td></td>
+    </tr>
+</if>
+
+
+
+

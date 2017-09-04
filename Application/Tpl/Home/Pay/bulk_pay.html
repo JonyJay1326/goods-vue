@@ -1,0 +1,173 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE_IE678.js"></script>
+    <![endif]-->
+
+    <link href="../Public/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+
+    <title>资讯列表</title>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> Index <span class="c-gray en">&gt;</span> Payment <span class="c-gray en">&gt;</span> 批量支付 <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+    <div class="text-c">
+        <form method="post" action="">
+
+            <input type="text" name="order_id" placeholder="订单号" value="<?php echo I('order_id');?>" style="width:250px" class="input-text">
+            <input type="text" name="pay_id" placeholder="支付号" value="<?php echo I('pay_id');?>" style="width:250px" class="input-text">
+            <input type="text" name="request_id" placeholder="子支付号" value="<?php echo I('request_id');?>" style="width:250px" class="input-text">
+            <!--<input type="text" name="orderid" id="" placeholder="主支付号" value="<?php echo I('orderid');?>" style="width:250px" class="input-text">-->
+            支付时间：
+            <input type="text" onfocus="WdatePicker()" id="logmin" placeholder="Start Time" name="starttime" value="<?php echo I('starttime');?>" class="input-text Wdate" style="width:120px;">
+            -
+            <input type="text" onfocus="WdatePicker()" id="logmax"  placeholder="End Time" name="endtime" value="<?php echo I('endtime');?>" class="input-text Wdate" style="width:120px;">
+            操作状态：
+            <span class="select-box inline">
+                <select class="select" name="status">
+                    <option value="">请选择</option>
+                    <option value="INIT" <?php if(I('status') == 'INIT'){echo 'selected';}?> >INIT</option>
+                    <option value="SUCCESS" <?php if(I('status') == 'SUCCESS'){echo 'selected';}?> >SUCCESS</option>
+                    <option value="FAILED" <?php if(I('status') == 'FAILED'){echo 'selected';}?> >FAILED</option>
+                </select>
+		    </span>
+            节点：
+            <span class="select-box inline">
+                <select class="select" name="ope_type">
+                    <option value="">请选择</option>
+                    <option value="MF_001" <?php if(I('ope_type') == 'MF_001'){echo 'selected';}?> >充值</option>
+                    <option value="MF_002" <?php if(I('ope_type') == 'MF_002'){echo 'selected';}?> >转账</option>
+                    <option value="MF_003" <?php if(I('ope_type') == 'MF_003'){echo 'selected';}?> >支付</option>
+                </select>
+		    </span>
+
+            <button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> Search</button>
+        </form>
+    </div>
+    <form action="<{:U('pay/article_del_all')}>" method="post">
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+
+            <span class="r">Data Nums：<strong><{$total}></strong></span> </div>
+        <div class="mt-20">
+            <table class="table table-border table-bordered table-bg table-hover table-sort">
+                <thead>
+                <tr class="text-c">
+                    <th width="80">序号</th>
+                    <th width="80">用户ID</th>
+                    <th width="80">订单号</th>
+                    <th width="80">支付号</th>
+                    <th width="80">子支付号</th>
+                    <th width="120">金额(分)</th>
+                    <th width="120">支付时间</th>
+                    <th width="120">最后更新时间</th>
+                    <th width="120">节点</th>
+                    <th width="120">状态</th>
+                    <th width="120">消息记录</th>
+                    <th width="120">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <foreach name="pay_money_flow" key="k" item="vo">
+                <tr class="text-c">
+                    <td><{$k+1}></td>
+                    <td><{$vo['customer_id']}></td>
+                    <td><{$vo['order_id']}></td>
+                    <td><{$vo['pay_id']}></td>
+                    <td><{$vo['request_id']}></td>
+                    <td><{$vo['order_amount']}></td>
+                    <td><{$vo['create_time']}></td>
+                    <td><{$vo['updated_time']}></td>
+                    <td><{$vo['ope_type']}></td>
+                    <td><{$vo['status']}></td>
+                    <td><{$vo['rsp_data']}></td>
+                    <td class="f-14 td-manage">
+                        <?php if($vo['need_ope'] == 1 && $vo['be_operated'] == 0 ){
+                            if($vo['ope_type'] == '转账'){
+                                $type = 1;
+                            }elseif($vo['ope_type'] == '支付'){
+                                $type = 2;
+                            }
+                        ?>
+                        <a style="text-decoration:none" class="ml-5" href="javascript:void(0);" onclick="push('<{$type}>','<{$vo.request_id}>');">手工重试</a><br/>
+                        <?php }elseif($vo['need_ope'] == 0 && $vo['be_operated'] == 1){?>
+                        <a style="text-decoration:none" class="ml-5" href="" title="已干预">已干预</a><br/>
+                        <?php
+                        }
+                            if(isset($vo['need_cust']) && $vo['need_cust'] == 1){
+                         ?>
+                        <a style="text-decoration:none" class="ml-5" href="javascript:void(0);" onclick="push_cust('<{$vo.order_id}>','<{$vo.customer_id}>','<{$vo.request_id}>','<{$vo.order_amount}>');">手工报关</a>
+                        <?php }?>
+                        <!--<a style="text-decoration:none" class="ml-5" href="<{:U('Notify/notify_list')}>&payid=<{$vo.pay_id}>" title="日志">日志</a><br/>-->
+
+                    </td>
+                </tr>
+                </foreach>
+                </tbody>
+            </table>
+            <div>
+                <ul class="pagination">
+                    <{$pages}>
+                </ul>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+    function log_show(title,url,w,h){
+        layer_show(title,url,w,h);
+    }
+    function push(type,request_id){
+        $.ajax({
+            'url':'<{:U("pay/push")}>',
+            'type':'POST',
+            'data':{type:type,request_id:request_id},
+            success: function (data) {
+                if (data.status == 1) {
+                    alert(data.info)
+                    location.replace(location.href);
+                }else{
+                    alert(data.info);
+                    return false;
+                }
+            }
+        },'json');
+    }
+
+    function push_cust(order_id,customer_id,request_id,order_amount){
+        $.ajax({
+            'url':'<{:U("pay/push")}>',
+            'type':'POST',
+            'data':{type:'',order_id:order_id,customer_id:customer_id,request_id:request_id,order_amount:order_amount},
+            success: function (data) {
+                if (data.status == 1) {
+                    alert(data.info)
+                    location.replace(location.href);
+                }else{
+                    alert(data.info);
+                    return false;
+                }
+            }
+        },'json');
+    }
+
+</script>
+</body>
+</html>

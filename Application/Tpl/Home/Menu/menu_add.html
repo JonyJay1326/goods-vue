@@ -1,0 +1,200 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,member-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="../Public/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/Hui-iconfont/sms-iconfont/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>菜单设置</title>
+</head>
+<body>
+<div class="pd-20">
+    <form action="<{:U('Menu/menu_add')}>" method="post" class="form form-horizontal" id="form-category-add">
+        <div id="tab-category" class="HuiTab">
+            <div class="tabBar cl"><span>基本设置</span></div>
+            <div class="tabCon">
+                <div class="row cl">
+                    <label class="form-label col-3"><span class="c-red">*</span>上级菜单：</label>
+                    <div class="formControls col-6"> <span class="select-box">
+						<select class="select" id="sel_Sub" name="pid">
+                            <option value="0,顶级菜单" data-level="0">顶级菜单</option>
+                            <volist name="tree" id="vo" key="i">
+                                <if condition="$detail['PID'] eq $vo['ID']">
+                                    <option value="<{$vo.ID}>,<{$vo.NAME}>" selected="selected" data-level="<{$vo.LEVEL}>"><{$vo.NAME}></option>
+                                    <else />
+                                    <option value="<{$vo.ID}>,<{$vo.NAME}>" data-level="<{$vo.LEVEL}>"><{$vo.NAME}></option>
+                                </if>
+                            </volist>
+                        </select>
+						</span> </div>
+                    <div class="col-3"> </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-3"><span class="c-red">*</span>菜单名称：</label>
+                    <div class="formControls col-6">
+                        <input type="text" class="input-text" value="" placeholder="" id="" name="name" datatype="*2-16" nullmsg="菜单名称不能为空">
+                    </div>
+                    <div class="col-3"> </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-3"><span class="c-red">*</span>Controller：</label>
+                    <div class="formControls col-6">
+                        <input type="text" class="input-text" value="" placeholder="" id="controller" name="controller" datatype="*2-16" nullmsg="Controller不能为空">
+                    </div>
+                    <div class="col-3"> </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-3"><span class="c-red">*</span>Action：</label>
+                    <div class="formControls col-6">
+                        <input type="text" class="input-text" value="" placeholder="" id="action" name="action" datatype="*2-16" nullmsg="Action不能为空">
+                    </div>
+                    <div class="col-3"> </div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-3"><span class="c-red">*</span>Type：</label>
+                    <div class="formControls col-6">
+                        <input type="radio"  value="0" placeholder="" id="type-page" name="type" datatype="*" checked="checked">
+                        <i class="Hui-iconfont">页面类型</i>
+                        <input type="radio"  value="1" placeholder="" id="type-api" name="type" datatype="*">
+                        <i class="Hui-iconfont">接口类型</i>
+                    </div>
+                    <div class="col-3"> </div>
+                </div>
+
+                <div class="row cl">
+                    <label class="form-label col-3"><span class="c-red">*</span>图标：</label>
+                    <div class="formControls col-6">
+                        <input type="radio" id="sex-1" name="icon" value="1" datatype="*" nullmsg="请选择图标">
+                        <i class="Hui-iconfont">&#xe616;</i>
+                        <input type="radio" id="sex-2" value="2" name="icon">
+                        <i class="Hui-iconfont">&#xe613;</i>
+                        <input type="radio" id="sex-3" value="3" name="icon">
+                        <i class="Hui-iconfont">&#xe620;</i>
+                        <input type="radio" id="sex-4" value="4" name="icon">
+                        <i class="Hui-iconfont">&#xe626;</i>
+                        <input type="radio" id="sex-5" value="5" name="icon">
+                        <i class="Hui-iconfont">&#xe622;</i>
+                        <input type="radio" id="sex-6" value="6" name="icon">
+                        <i class="Hui-iconfont">&#xe63a;</i>
+                        <input type="radio" id="sex-7" value="7" name="icon">
+                        <i class="iconfont">&#xe717;</i>
+                        <input type="radio" id="sex-8" value="8" name="icon">
+                        <i class="iconfont">&#xe601;</i>
+                    </div>
+                    <div class="col-3"> </div>
+                </div>
+                <div class="row cl">
+                    <label class="form-label col-3">排序号：</label>
+                    <div class="formControls col-6">
+                        <input type="text" class="input-text" value="0" placeholder="输入排序号" id="" name="sort">
+                    </div>
+                    <div class="col-3"> </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row cl">
+            <div class="col-9 col-offset-3">
+                <input type="hidden" id="menu_level" name="menu_level" value="" />
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+            </div>
+        </div>
+    </form>
+</div>
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="../Public/lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $("#form-category-add").Validform({
+            tiptype:2,
+            ajaxPost:true,
+            callback:function(data){
+                //var index = parent.layer.getFrameIndex(window.name);
+                if (data.status == 1) {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.$('.btn-refresh').click();
+                    parent.layer.close(index);
+//                    parent.location.replace(location.href);
+                    layer.msg(data.info);
+                } else {
+                    layer.msg(data.info);
+                }
+            }
+        });
+        $.Huitab("#tab-category .tabBar span","#tab-category .tabCon","current","click","0");
+
+        //自动调整Controller 和 Action 启用关闭
+        var TopMenu = $("#sel_Sub").val();
+        TopMenu = TopMenu.split(',')[0];
+        console.log(TopMenu);
+        if(TopMenu == 0){
+            $("#controller").attr('disabled', true);
+            $("#controller").removeAttr('datatype');
+            $("#controller").removeClass('Validform_error');
+            $("#controller").parent().next().children().removeClass('Validform_wrong');
+            $("#controller").parent().next().children().text('');
+            $("#action").attr('disabled', true);
+            $("#action").removeAttr('datatype');
+            $("#action").removeClass('Validform_error');
+            $("#action").parent().next().children().removeClass('Validform_wrong');
+            $("#action").parent().next().children().text('');
+        }else{
+            $("#controller").attr('disabled', false);
+            $("#action").attr('disabled', false);
+        }
+        var level = $("#sel_Sub").find('option:checked').data('level');
+        //console.log(level);
+        $("#menu_level").val(level);
+        $("#sel_Sub").change(function(){
+            var level = $("#sel_Sub").find('option:checked').data('level');
+            //console.log(level);
+            $("#menu_level").val(level);
+            TopMenu = $("#sel_Sub").val().split(',')[0];
+            if(TopMenu == 0){
+                $("#controller").attr('disabled', true);
+                $("#controller").removeAttr('datatype');
+                $("#controller").removeClass('Validform_error');
+                $("#controller").parent().next().children().removeClass('Validform_wrong');
+                $("#controller").parent().next().children().text('');
+                $("#action").attr('disabled', true);
+                $("#action").removeAttr('datatype');
+                $("#action").removeClass('Validform_error');
+                $("#action").parent().next().children().removeClass('Validform_wrong');
+                $("#action").parent().next().children().text('');
+            }else{
+                $("#controller").attr('disabled', false);
+                $("#action").attr('disabled', false);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

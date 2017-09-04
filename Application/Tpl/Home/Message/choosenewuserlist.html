@@ -1,0 +1,210 @@
+<include file="Public:page_header_list" />
+<body class="pos-r ">
+<style>
+    html,body,div,span,table,tr,td,em,input,th{
+        font-family: "微软雅黑 Bold","微软雅黑";
+    }
+    .col-md-11 ul li{
+        font-family: "微软雅黑" !important;
+    }
+    .new-kehu .col-md-1 {
+        width: 65px;
+    }
+    .new-kehu .col-md-1 span {
+        color: #333333;
+        display: inline-block;
+        font-family: "微软雅黑 Bold","微软雅黑";
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin: 10px 0;
+        padding: 3px 0;
+    }
+    .link_blue{text-decoration:underline;color:#06c;}
+    .menu-state .active a {
+        background: #ed2d65 none repeat scroll 0 0;
+        color: white;
+    }
+    .menu-state a {
+        color: #ed2d65;
+    }
+    .menu-state ul li {
+        display:inline-block;
+    }
+    .btn-pink a {
+        color: #fff;
+    }
+</style>
+
+    <div class="mr-20 ml-20">
+        <div class="">
+            <form action="" method="get" id="form_kehu">
+            <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+            <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+
+            <div class="row " style="border-bottom:1px solid #dddddd;">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state text-c">
+                    <ul class="col-md-12">
+                        <li class="col-md-12">
+                            <b>APP Push <{$Think.lang.客户选择}></b>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            </form>
+        </div>
+
+        <div class="row" style="height:auto;">
+            <div>
+                <div class="col-md-5 search-num-wrap">
+                    <span class="search-num"><{$Think.lang.搜索结果}>：&nbsp;&nbsp;<{$Think.lang.共}></span>
+                    <span class="search-num-t"><{$count}></span>
+                    <span class="search-num"><{$Think.lang.条记录}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+                <ul class="pagination" style="margin:0px auto;">
+                    <{$pages}>
+                </ul>
+            </div>
+        </div>
+
+        <form action="" method="get" name="form_list">
+        <div class="row">
+            <table class="table table-border table-bordered table-bg table-hover table-sort" >
+                <thead>
+                <tr class="text-c no-wrap">
+                    <th>
+                        <input type="checkbox" name="batchAll" value="" onclick="javascript:checkboxAll(this,'batch');" />
+                    </th>
+                    <th><{$Think.lang.用户ID}></th>
+                    <th><{$Think.lang.平台}></th>
+                    <th><{$Think.lang.注册时间}></th>
+                    <th><{$Think.lang.APPpush}></th>
+
+                </tr>
+                </thead>
+                <tbody>
+
+<if condition="empty($list) eq 1">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap" colspan="19"><{$Think.lang.None}></td>
+                </tr>
+<else />
+<foreach name="list" key="key" item="value">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap">
+                        <input type="checkbox" name="batch" value="<{$value.CUST_ID}>" onclick="javascript:checkboxIsAll(this.name);" />
+                    </td>
+                    <td class="no-wrap"><{$value.CUST_ID}></td>
+                    <td class="no-wrap"><?php echo D('ZZmscmncd')->getNameFromCode($value['parent_plat_cd']); ?></td>
+                    <td class="no-wrap"><?php echo $value['JOIN_REQ_DT']; ?></td>
+                    <td class="no-wrap"><?php echo D('ZZmsthrdcust')->getStatusForPush(strval($value['receive_push'])); ?></td>
+
+                </tr>
+</foreach>
+</if>
+
+                </tbody>
+            </table>
+
+        </div>
+        </form>
+        <div class="row">
+            <div>
+                <div class="col-md-5 search-num-wrap">
+                    <{$show_perpage_block}>
+                </div>
+                <ul class="pagination">
+                    <{$pages}>
+                </ul>
+            </div>
+        </div>
+
+        <div class="row cl" style="margin:40px auto;">
+            <div class="col-12 text-c" style="">
+                <button type="button" class="btn" id="admin-click-confirm" name="admin-click-confirm" style="background-color: #ed2d65;color: #fff;"> <{$Think.lang.确认}></button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn" id="admin-click-reset" name="admin-click-reset" style="background-color: #000;color: #fff;"> <{$Think.lang.重置}></button>
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/fun_cms.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/alert.js?v=<{$Think.config.VER_NUM}>"></script>
+<script>
+$(document).ready(function (){
+    $('#admin-click-reset').click(function(){
+        document.form_list.reset();
+    });
+    $('#admin-click-confirm').click(function(){
+        var str = getCheckboxIds('batch');
+        if(str==false){
+            // alert('Select');
+            // return false;
+            str = '';
+        }
+        var arr = str.split('|');
+        arr = outRepeat(arr);
+        str = arr.join('|');
+
+        if(parent.document.getElementById("select_user_ids")){
+            var str_all = parent.document.getElementById("select_user_ids").value?(parent.document.getElementById("select_user_ids").value+'|'+str):(str);
+            var arr_all = str_all.split('|');
+            arr_all = removeByValue(arr_all, '');
+            arr_all = outRepeat(arr_all);
+            str_all = arr_all.join('|');
+            // check remove
+            var without_str = getNotCheckboxIds('batch');
+            var without_arr = [];
+            if(without_str){
+                var without_arr = without_str.split('|');
+            }
+            for(var key in without_arr){
+                arr_all = removeByValue(arr_all, without_arr[key]);
+            }
+            arr_all = outRepeat(arr_all);
+            str_all = arr_all.join('|');
+            parent.document.getElementById("select_user_ids").value = str_all;
+            parent.document.getElementById("user_show_num").innerHTML = arr_all.length;
+            parent.document.getElementById("user_num").value = arr_all.length;
+
+            $.load('<{$Think.lang.选择成功}>');
+            setTimeout($.loaded,2000);
+        }
+
+        // layer_close();
+    });
+
+    // chose or not
+    check_box_chose();
+});
+
+function check_box_chose(){
+    if(parent.document.getElementById("select_user_ids")){
+        var checked_str = parent.document.getElementById("select_user_ids").value;
+        var checked_arr = checked_str.split('|');
+        var arr=document.getElementsByName('batch');
+        var count=arr.length;
+        if(count==0){   return false;   }
+        var chk=0;
+        var ids_str='';
+        for(var i=0;i<count;i++){
+            if(js_in_array(arr[i].value, checked_arr)){
+                arr[i].setAttribute('checked',true);
+            }
+        }
+    }
+}
+</script>
+</body>
+</html>

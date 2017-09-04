@@ -1,0 +1,193 @@
+<!DOCYPTE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../Public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Public/icon/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Public/css/send.css"/>
+    <link rel="stylesheet" href="../Public/utils/css/public.style.css">
+    <title><{$Think.lang.发货列表}></title>
+    <script type="text/javascript">
+        var url = window.location.href;
+    </script>
+    <style>
+        .wrap {
+            box-sizing: border-box;
+            padding: 20px;
+            margin: 0;
+        }
+        .row {
+            margin: 0;
+        }
+
+        .row + .row {
+            margin-top: 20px;
+        }
+        [class*="col-"]{
+            padding: 0;
+        }
+        .pagination > li > a{
+            letter-spacing: 0;
+            font-size: 0.6rem;
+        }
+    </style>
+</head>
+<body>
+<div id="collist" v-cloak class="wrap">
+    <form action="/index.php?m=b2b&a=do_ship_list" method="post">
+        <div>
+            <!--<div class="payable_title"><{$Think.lang.发货列表}></div>-->
+            <div class="row">
+                <div class="col-lg-12 col-md-12">
+                    <div class="use-btn-wrap use-form">
+                        <button v-for="s in ship_state" @click="go(s.CD,'shipping_status')" type="button"  :class="s.CD == action.shipping_status?'active':''">{{s.CD_VAL}}</button>
+                        <input type="hidden" name="shipping_status" :value="action.shipping_status">
+                    </div>
+                </div>
+            </div>
+            <div class="row b2b-form">
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                    <label><{$Think.lang.客户名称}> </label>
+                    <input type="text" placeholder="" name="CLIENT_NAME" v-model="action.CLIENT_NAME">
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                    <label><{$Think.lang.PO单号}> </label>
+                    <input type="text" placeholder="" name="PO_ID" v-model="action.PO_ID">
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3">
+                    <label><{$Think.lang.发货仓库}> </label>
+                    <select name="delivery_warehouse_code" v-model="action.delivery_warehouse_code">
+                        <option value=""><{$Think.lang.请选择发货仓库}></option>
+                        <option v-for="s in initdata.show_warehouse" :value="s.CD">{{s.warehouse}}</option>
+                    </select>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 text-right">
+                    <label class="text-left"><{$Think.lang.销售团队}> </label>
+                    <select name="sales_team_code" v-model="action.sales_team_code">
+                        <option value=""><{$Think.lang.请选择销售团队}></option>
+                        <option v-for="s in initdata.sales_team" :value="s.CD">{{s.CD_VAL}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row use-btn">
+                <div class="col-lg-12 col-md-12 ">
+                    <button type="submit" class="btn-pub btn-green"><{$Think.lang.查询}></button>
+                    <button type="reset" @click="resetdata()" class="btn-pub btn-default mg-l-10"><{$Think.lang.重置}></button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="baseline"></div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 result-num">
+            <{$Think.lang.结果}>:<{$Think.lang.共}>&nbsp;&nbsp;<b>{{count}}</b>&nbsp;&nbsp;<{$Think.lang.条记录}>
+        </div>
+    </div>
+    <div class="row">
+        <div class="table-responsive">
+            <table class="b2b-table">
+                <thead class="use-head">
+                <tr class="text-center">
+                    <th width="8%"><{$Think.lang.发货子单号}></th>
+                    <th width="8%"><{$Think.lang.PO编号}></th>
+                    <th width="8%"><{$Think.lang.客户}></th>
+                    <th width="8%"><{$Think.lang.发货仓库}></th>
+                    <th width="10%"><{$Think.lang.目的城市}></th>
+                    <th width="8%"><{$Think.lang.订单商品数}></th>
+                    <th width="8%"><{$Think.lang.订单已发数量}></th>
+                    <th width="8%"><{$Think.lang.本次待发数量}></th>
+                    <th width="8%"><{$Think.lang.PO时间}></th>
+                    <th width="8%"><{$Think.lang.销售}></th>
+                    <th width="8%"><{$Think.lang.状态}></th>
+                    <th width="10%"><{$Think.lang.操作}></th>
+                </tr>
+                </thead>
+                <tbody class="use-body">
+                <tr class="" v-for="s in doship_list">
+                    <td>{{s.ID}}</td>
+                    <td>{{s.PO_ID}}</td>
+                    <td>{{s.CLIENT_NAME}}</td>
+                    <td v-if="s.warehouse">
+                        <span v-for="ws in s.warehouse">
+                            <span v-if="ws.scalar in all_warehouse" style="padding: 5px; display: inline-block; ">{{all_warehouse[ws.scalar].warehouse}}</span><br>
+                            <span v-else><{$Think.lang.仓库异常}></span>
+                        </span>
+                    </td>
+                    <td v-else></td>
+                    <td>{{join_ares(s.TARGET_PORT)}}</td>
+                    <td>{{s.order_num}}</td>
+                    <td>{{s.sent_num}}</td>
+                    <td>{{s.todo_sent_num}}</td>
+                    <td>{{s.po_time}}</td>
+                    <td>{{s.PO_USER}}-{{initdata.sales_team[s.SALES_TEAM].CD_VAL}}</td>
+                    <td v-if="s.shipping_status in ship_state">{{ship_state[s.shipping_status].CD_VAL}}</td>
+                    <td v-else=""></td>
+                    <td class="use-btn no-wrap">
+                        <a href="javascript:;" @click="see(s.ORDER_ID)" class="btn-pub btn-green"><{$Think.lang.查看}></a>
+                        <a v-if="s.shipping_status == 1" href="javascript:;" @click="ship(s.ORDER_ID)" class="btn-pub btn-blue mg-l-10"><{$Think.lang.发货}></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 text-right">
+            <ul class="pagination"> <{$pages}> </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../Public/js/vue.js"></script>
+<script type="text/javascript" src="../Public//js/stock/alert.js"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#collist',
+        data: {
+            ship_state:<{$ship_state}>,
+            doship_list: <{$doship_list}>,
+            action: <{$action}>,
+            count: <{$count}>,
+            initdata: <{$initdata}>,
+            all_warehouse: <{$all_warehouse}>,
+
+    },
+        methods: {
+            see: function(e) {
+                var url = "<{:U('b2b/do_ship_show')}>" +'&order_id='
+                window.location.href = url + e
+            },
+            ship: function(e){
+                var url = "<{:U('b2b/do_ship')}>" +'&order_id='
+                window.location.href = url + e
+            },
+            go:function (e,type) {
+                this.action[type] = e
+            },
+            resetdata () {
+                this.action = {"shipping_status":0,"CLIENT_NAME":"","PO_ID":"","delivery_warehouse_code":"","sales_team_code":""}
+            },
+            msg (e) {
+                box.Alert('提示',e);
+            },
+            join_ares(e){
+                if(e != null){
+                    e_data = JSON.parse(e)
+                    var initdata = this.initdata
+                    var area = ''
+                    if (e_data.country) area = initdata.area[e_data.country]
+                    if (e_data.stareet) area += '-'+initdata.area[e_data.stareet]
+                    if (e_data.city) area += '-'+initdata.area[e_data.city]
+                    return area
+                }
+                return e
+            }
+        }
+
+    })
+</script>
+</body>
+
+</html>

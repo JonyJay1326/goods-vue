@@ -1,0 +1,34 @@
+<html>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+        <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+        <input type="file" name="file"/>
+        <button type="submit">供应商或客户导入</button>
+    </form>
+</body>
+</html>
+<?php
+if ($show) {
+    echo '新增供应商：' . $ret_supplier . '个<br />';
+} else {
+}
+?>
+<table>
+    <th>坐标</th>
+    <th>原因</th>
+<?php
+    foreach ($errorinfo as $key => $value) {
+        echo '<tr>';
+        foreach ($value as $k => $v) {
+            echo '<td>';
+            echo $k; 
+            echo '</td>';
+            echo '<td>';
+            echo $v; 
+            echo '</td>';
+        }
+        echo '<tr/>';
+    }
+?>
+</table>

@@ -1,0 +1,65 @@
+<include file="Public:page_header_add" />
+<body class="order-detail">
+<style>
+
+</style>
+<div class="order-tabs">
+    <ul>
+        <li class="active"><a href="javascript:void()"><{$Think.lang.处理申请资质}></a></li>
+        <li></li>
+    </ul>
+</div>
+
+
+<div class="pd-20">
+    <form action="" method="post" enctype="" class="form form-horizontal" id="form_post_action">
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.姓名}>：</label>
+            <div class="formControls col-10">
+                <{$edit_info['name']}>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.电话}>：</label>
+            <div class="formControls col-10">
+                <{$edit_info['tel']}>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.状态}>：</label>
+            <div class="formControls col-10">
+                <select name="apply_status" id="" class="input-text" >
+                    <?php foreach(D('ZZmsmerchantapplications')->getStatusForApply() as $key=>$val){ ?>
+                    <?php  $selected=$edit_info['apply_status']==$key?"selected":""; ?>
+                    <option value="<{$key}>" <{$selected}> ><{$val}></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="row cl" style="margin:40px auto;">
+            <div class="col-10 " style="text-align:center;">
+                <button type="submit" class="btn btn-danger" id="admin-save-submit" name="admin-save-submit" style=""> <{$Think.lang.提交}></button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="reset" class="btn btn-default" id="admin-save-reset" name="admin-save-reset" style=""> <{$Think.lang.重置}></button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn" id="" name="" onclick="history.go(-1);" > <{$Think.lang.返回}></button>
+            </div>
+        </div>
+
+        <input type="hidden" name="edit_id" value="<{$edit_info.id}>">
+        <input type="hidden" name="action" value="editsubmit" >
+        <input type="hidden" name="isgoback" value="1" />
+        <input type="hidden" name="backurl" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+        <input type="hidden" name="issubmit" value="1">
+    </form>
+</div>
+
+
+
+
+
+
+</body>
+</html>
+

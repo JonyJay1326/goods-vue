@@ -1,0 +1,279 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!--<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css"/>-->
+    <!--<link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css"/>-->
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css"/>
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Public/lib/webuploader/0.1.5/webuploader.css"/>
+    <title><{$Think.lang.采购信息}></title>
+    <link rel="stylesheet" href="../Public/css/purchase.css"/>
+    <script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+    <link rel="stylesheet" href="../Public/css/purchaseDetail.css"/>
+    <style>
+        .table-bg thead{
+            visibility: hidden !important;
+            height:0px;margin-top: -10px;
+        }
+        .table{margin-bottom:0px;}
+        .card{margin-top: 20px}
+    </style>
+</head>
+<body>
+<div class="col-lg-12 col-md-12 col-sm-12 purchase_detail">
+    <form action="">
+        <div class="row row_title">
+            <a class="active">需求详情</a>
+            <a>操作日志</a>
+        </div>
+        <div class="row row_title_line"><a href="" class="line1"></a></div>
+        <div class="detail_form">
+            <table class="table table-bg">
+                <thead>
+                <th width="11%"></th>
+                <th width="23%"></th>
+                <th width="13%"></th>
+                <th width="20%"></th>
+                <th width="11%"></th>
+                <th width="22%"></th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="6"><{$Think.lang.销售信息}></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.采购类型}></td>
+                    <td class="td_span">
+                        <span <if condition="$order_info['has_po'] eq 1">style="display:block"</if>><{$Think.lang.有采购PO}></span>
+                        <span <if condition="$order_info['has_po'] neq 1">style="display:block"</if>><{$Think.lang.无采购PO}></span>
+                    </td>
+                    <td ><{$Think.lang.销售PO}></td>
+                    <td></td>
+                    <td><{$Think.lang.对应客户}></td>
+                    <td class="td_switch">
+                        <!--<?php echo $order_info['supplier_id'];?>-->
+                        <!--<if condition="$order_info['sp_charter_no'] eq ''">-->
+                        <!--<span></span>-->
+                        <!--<elseif condition="$has_cooperate eq 1" />-->
+                        <!--<span style="color: #1E7EB4;border-color:#1E7EB4;border-radius: 4px;"><{$Think.lang.已合作}></span>-->
+                        <!--<else />-->
+                        <!--<span style="color: black;border-radius: 4px;"><{$Think.lang.新合作}></span>-->
+                        <!--</if>-->
+                        <!--<switch name="risk_rating">-->
+                        <!--<case value="1">-->
+                        <!--<span style="color:black;border-radius: 4px;"><{$Think.lang.低}></span>-->
+                        <!--</case>-->
+                        <!--<case value="2">-->
+                        <!--<span style="color: red;border-color:red;border-radius: 4px;"><{$Think.lang.中}></span>-->
+                        <!--</case>-->
+                        <!--<case value="3">-->
+                        <!--<span style="color:#C31207;border-color: #C31207;border-radius: 4px; "><{$Think.lang.高}></span>-->
+                        <!--</case>-->
+                        <!--<default />-->
+                        <!--</switch>-->
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.销售合同(根据对应客户获取)}></td>
+                    <td>gshopper</td>
+                    <td><{$Think.lang.销售金额(根据OA上获取)}></td>
+                    <td>USD - 30，000</td>
+                    <td ><{$Think.lang.采购物流费用}></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.销售团队(根据对应客户获取)}></td>
+                    <td>gshopper</td>
+                    <td><{$Think.lang.业务类型)}></td>
+                    <td>gshopper</td>
+                    <td ><{$Think.lang.销售方式}></td>
+                    <td>gshopper</td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.预计销售日期}></td>
+                    <td>gshopper</td>
+                    <td><{$Think.lang.预计收款日期}></td>
+                    <td>gshopper</td>
+                    <td ><{$Think.lang.收款账期}></td>
+                    <td>gshopper</td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.采购与销售订单关联}></td>
+                    <td>一对一关联</td>
+                    <td><{$Think.lang.近一年累计订单数}></td>
+                    <td>gshopper</td>
+                    <td ><{$Think.lang.近一年累计订单金额}></td>
+                    <td>gshopper</td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.近一年平均订单金额}></td>
+                    <td></td>
+                    <td><{$Think.lang.近一年平均每单利润}></td>
+                    <td></td>
+                    <td ><{$Think.lang.指派给对应采购}></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.需求状态}></td>
+                    <td>
+                        <span style="color:#1E7EB4;">草稿</span>
+                        <span style="color:#FF9100;">待处理</span>
+                        <span style="color:#C31207;">审批失败</span>
+                        <span>已处理</span>
+                    </td>
+                    <td><{$Think.lang.采购员}></td>
+                    <td>tiezhu</td>
+                    <td ><{$Think.lang.备注}></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <table class="table  table-bg">
+                <thead>
+                <th width="11%"></th>
+                <th width="23%"></th>
+                <th width="11%"></th>
+                <th width="22%"></th>
+                <th width="11%"></th>
+                <th width="22%"></th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="6"><{$Think.lang.退税信息}></td>
+                </tr>
+                <tr>
+                    <td ><{$Think.lang.预计退税日期}></td>
+                    <td><{$drawback_info['drawback_date']}></td>
+                    <td><{$Think.lang.预计退税金额}></td>
+                    <td class="td_select">
+
+                        <{$drawback_info['moneytype']}>&nbsp;&nbsp;
+                        <?php echo number_format($drawback_info['drawback_money'],2);?>
+                    </td>
+                    <td><{$Think.lang.退税周期}></td>
+                    <td><{$drawback_info['drawback_period']}></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-goodsDetail">
+                <p class="table-p" style="height: 40px;line-height: 40px"><{$Think.lang.商品信息}></p>
+                <thead>
+                <th width="3%">No</th>
+                <th width="13%" class="must"><{$Think.lang.SKU编码}>/<{$Think.lang.条形码}></th>
+                <th width="24%"><{$Think.lang.商品名称}></th>
+                <th width="14%"><{$Think.lang.属性}></th>
+                <th width="9%" class="must"><{$Think.lang.单价}></th>
+                <th width="9%" class="must"><{$Think.lang.数量}></th>
+                <th width="10%"><{$Think.lang.金额}></th>
+                <th width="9%"><{$Think.lang.已发货}></th>
+                <th width="9%"><{$Think.lang.待发货}></th>
+                </thead>
+                <tbody>
+                <?php
+                foreach($goods_info as $key=>$v){
+                ?>
+                <tr>
+                    <td><?php echo $key+1;?></td>
+                    <td><?php echo $v['search_information'];?></td>
+                    <td><?php echo $v['goods_name'];?></td>
+                    <td><?php echo $v['goods_attribute'];?></td>
+                    <td><?php echo number_format($v['unit_price'],2);?></td>
+                    <td><?php echo number_format($v['goods_number'],2);?> </td>
+                    <td><?php echo number_format($v['goods_money'],2);?></td>
+                    <td class="detail_td_yet"><{:number_format($v['shipped_number'])}></td>
+                    <td class="detail_td_wait"><{:number_format($v['goods_number']-$v['shipped_number'])}></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td>8000284101</td>
+                    <td>小米台灯一代</td>
+                    <td>标配</td>
+                    <td>149</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>100</td>
+                    <td>待处理</td>
+                </tr>
+                <?php } ?>
+                <tr class="total">
+                    <td  style="text-align: left;font-weight: bold;"><{$Think.lang.合计}></td>
+                    <td colspan="3"></td>
+                    <td><{$relevance_info.curType}></td>
+                    <td><span class="number_totals"><?php echo number_format($relevance_info['number_total'],2);?></span></td>
+                    <td>
+                        <span class="money_totals"><?php echo number_format($relevance_info['money_total'],2);?></span>
+                    </td>
+                    <td class="detail_td_yet_total"><{:number_format($relevance_info['shipped_number'])}></td>
+                    <td class="detail_td_wait_total"><{:number_format($relevance_info['number_total']-$relevance_info['shipped_number'])}></td>
+                </tr>
+                </tbody>
+            </table>
+
+
+            <table class="table  table-bg">
+                <thead>
+                <th width="15%"></th>
+                <th width="35%"></th>
+                <th width="15%"></th>
+                <th width="35%"></th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="6"><{$Think.lang.流程信息}></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.需求发起人}></td>
+                    <td>gshopper</td>
+                    <td><{$Think.lang.发起时间}></td>
+                    <td>gshopper</td>
+                </tr>
+                <tr>
+                    <td ><{$Think.lang.需求提交}></td>
+                    <td></td>
+                    <td ><{$Think.lang.提交时间}></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td ><{$Think.lang.创建采购单}></td>
+                    <td></td>
+                    <td ><{$Think.lang.创建时间}></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td ><{$Think.lang.最新更新人}></td>
+                    <td></td>
+                    <td ><{$Think.lang.更新时间}></td>
+                    <td></td>
+                </tr>
+
+                </tbody>
+            </table>
+            <div class="col-lg-12  col-md-12 col-xs-12 col-lg-12-btn">
+                <button type="button" class="Btn-edit" onclick="location='<{:U(\'order_list\')}>'"><{$Think.lang.编辑}></button>
+                <button type="button" class="btn-sure" onclick="location='<{:U(\'order_list\')}>'"><{$Think.lang.处理}></button>
+                <button type="button" class="btn-sure" onclick="location='<{:U(\'order_list\')}>'"><{$Think.lang.提交}></button>
+                <button type="button" class="btn-cancel" onclick="location='<{:U(\'order_list\')}>'"><{$Think.lang.返回列表}></button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../Public/utils/utils.js"></script>
+<script type="text/javascript" src="../Public/lib/jquery.form.min.js"></script>
+<script type="text/javascript" src="../Public/lib/webuploader/0.1.5/webuploader.js"></script>
+<script>
+
+</script>
+</html>

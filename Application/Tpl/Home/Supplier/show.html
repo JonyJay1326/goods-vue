@@ -1,0 +1,330 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=2017036" />
+    <link rel="stylesheet" href="../Public/css/common.css?v=20170321"/>
+</head>
+<body >
+<div class="commom_wrap">
+    <div class="supplier-info row common_row_title ">
+        <span class="active"><a href="javascript:void(tab_detail())"><{$Think.lang.$title}></a></span>
+        <span><a href="javascript:void(tab_log())"><{$Think.lang.操作日志}></a></span>
+       <a href="<{:U('Supplier/update_supplier', array('ID' => $result[ID]))}>" class="btn btn-co-examine detail_audit" ><{$Think.lang.编辑}></a>
+    </div>
+    <div class="row row_title_line"><a href="" class="line21"><a href="" class="line22"></a></div>
+    <div class="supplier-tables">
+        <include file="show_supplier" />
+        <if condition="$result.audit neq null">
+                <include file="show_audit" />
+            <else />
+        </if>
+        <div class="gys-wrap">
+            <table class="table table-border table-bordered table-bg">
+                <thead>
+                <tr>
+                    <th width="10%"></th>
+                    <th width="40%"></th>
+                    <th width="10%"></th>
+                    <th width="40%"></th>
+                </tr>
+                </thead>
+                <tbody class="text-c">
+                    <tr>
+                        <td colspan="4"><{$Think.lang.合作概览}></td>
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.合同数}></td>
+                        <td>
+                            <?= count($result['contracts']) ?>
+                        </td>
+                        <td><{$Think.lang.生效合同}></td>
+                        <td>
+                            <?php
+                                $sum = 0;
+                                foreach ($result['contracts'] as $key => $value) {
+                                    if ($value ['CON_STAT'] == 1) {
+                                        $sum ++;
+                                    }
+                                }
+                                echo $sum;
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.进行中订单数}></td>
+                        <td>
+
+                        </td>
+                        <td><{$Think.lang.进行中订单金额}></td>
+                        <td>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.累计订单数}></td>
+                        <td>
+
+                        </td>
+                        <td><{$Think.lang.累计订单金额}></td>
+                        <td>
+
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <if condition="$result.contracts neq null">
+                    <div class="show_contract">
+                        <button class="btn btn-pink"><{$Think.lang.全部合同}></button>
+                        <button class="btn" tag="1"><{$Think.lang.有效合同}></button>
+                        <button class="btn" tag="0"><{$Think.lang.失效合同}></button>
+                    </div>
+                <else />
+            </if>
+            <foreach name="result[contracts]" key="k" item="val">
+                <div class="gys-wrap basis-info coop-info <if condition='($val.CON_STAT eq 1)'>effective<else />invalid</if>" style="padding: 0px;">
+                    <table class="table table-border table-bordered table-bg">
+                        <caption></caption>
+                        <tr>
+                            <th width="10%"></th>
+                            <th width="24%"></th>
+                            <th width="10%"></th>
+                            <th width="23%"></th>
+                            <th width="10%"></th>
+                            <th width="23%"></th>
+                        </tr>
+                        <tbody class="text-c ">
+                            <tr>
+                                <td colspan="6" class="common_cor_detail">
+                                    合作信息(第
+                                    <span class="n_c"><{$k + 1}></span>条/共
+                                    <span class="c_count"><?= count($result['contracts']) ?></span>条)
+                                    <a href="<{:U('Supplier/update_contract', array('ID' => $val[ID]))}>" class="btn gys_edit"><{$Think.lang.编辑}></a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><{$Think.lang.合同编号}></td>
+                                <td><{$val.CON_NO}><?php
+                                        if ($val['SP_ANNEX_ADDR1']) {
+                                    ?>
+                                            <a class="btn btn-download" href="<{:U('Supplier/contract_download', array('ID' => $val[ID]))}>"><{$Think.lang.下载合同}></a>
+                                    <?php
+                                        } else {
+                                    ?>
+                                            <button class="btn btn-download" onclick="layer.msg('<{$Think.lang.文件不存在}>');"><{$Think.lang.下载合同}></button>
+                                    <?php
+                                        }
+                                    ?></td>
+                                <td><{$Think.lang.合作类型}></td>
+                                <td><span><?= BaseModel::conType()[(int)$val['CON_TYPE']] ?></span></td>
+                                <td><{$Think.lang.合同简称}></td>
+                                <td><{$val.CON_NAME}></td>
+
+                            </tr>
+                            <tr>
+                                <td><{$Think.lang.合同类型}></td>
+                                <td><?= BaseModel::contractType()[$val['CONTRACT_TYPE']] ?></td>
+                                <td><{$Think.lang.合同起始时间}></td>
+                                <td><?= cutting_time($val['START_TIME']) ?></td>
+                                <td><{$Think.lang.合同结束时间}></td>
+                                <td><?= cutting_time($val['END_TIME']) ?></td>
+
+                            </tr>
+                             <tr>
+                                <td><{$Think.lang.开户银行}></td>
+                                <td><{$val.SP_BANK_CD}><input type="text" class="hide"></td>
+                                <td><{$Think.lang.银行账号}></td>
+                                <td><{$val.BANK_ACCOUNT}><input type="text" class="hide"></td>
+                                <td>Swift code</td>
+                                <td><{$val.SWIFT_CODE}><input type="text" class="hide"></td>
+                             </tr>
+                             <tr>
+                                <td><{$Think.lang.供应商联系人}></td>
+                                <td><{$val.CONTACT}></td>
+                                <td><{$Think.lang.手机}></td>
+                                <td id="5468" class="common_gys_deciphering"><?= CrypMobile::transformation($val ['CON_PHONE']) ?><?= CrypMobile::deCrypBtn($val ['CON_PHONE']) ?>
+                                </td>
+                                <td><{$Think.lang.固定电话}></td>
+                                <td  class="common_gys_deciphering"><?= CrypMobile::transformation($val ['CON_TEL']) ?><?= CrypMobile::deCrypBtn($val ['CON_TEL']) ?></td>
+                             </tr>
+                             <tr>
+
+                                <td><{$Think.lang.电子邮箱}></td>
+                                <td><{$val.CON_EMAIL}></td>
+                                <td><{$Think.lang.名片存档}></td>
+                                <td>
+                                    <?php
+                                        if ($val['SP_ANNEX_ADDR2']) {
+                                    ?>
+                                            <a class="btn btn-download" href="<{:U('Supplier/business_card_download', array('ID' => $val[ID]))}>"><{$Think.lang.下载名片}></a>
+                                    <?php
+                                        } else {
+                                    ?>
+                                            <button class="btn btn-download" onclick="layer.msg('<{$Think.lang.文件不存在}>');"><{$Think.lang.下载名片}></button>
+                                    <?php
+                                        }
+                                    ?>
+                                </td>
+                                <td><{$Think.lang.签约人}></td>
+                                <td><{$val.CONTRACTOR}></td>
+                            </tr>
+                            <tr>
+
+                            </tr>
+                            <tr>
+                                <td><{$Think.lang.我方合作公司}></td>
+                                <td>
+                                    <{$ourCompany[$val[CON_COMPANY_CD]]}>
+                                    <select name="" id="" class="hide">
+                                        <option value="0">qweqwr</option>
+                                        <option value="1">asdasda</option>
+                                    </select>
+                                </td>
+                                <td><{$Think.lang.是否自动续约}></td>
+                                <td>
+                                    <if condition="$val.IS_RENEWAL eq 1">
+                                        <{$Think.lang.不自动续约}>
+                                        <else /><{$Think.lang.自动续约}>
+                                    </if>
+                                </td>
+                                <td><{$Think.lang.合同状态}></td>
+                                <td><?= BaseModel::contractState()[$val['CON_STAT']] ?></td>
+                            </tr>
+                            <tr>
+                                <td><{$Think.lang.上传人}></td>
+                                <td><{$allUserInfo[$val[CREATE_USER_ID]]}></td>
+                                <td><{$Think.lang.上传时间}></td>
+                                <td><{$val.CREATE_TIME}></td>
+                                <td><{$Think.lang.合同状态更新时间}></td>
+                                <td>
+                                    <?php
+                                        // 长期合同，不需要更新状态
+                                        if ($val['CONTRACT_TYPE'] == 1) {
+                                            echo '-';
+                                        } elseif ($val ['CON_STAT'] == 1) {
+                                            $tz = new TimeZone($val['UPDATE_TIME']);
+                                            $tz->add('P6M');
+                                            echo $tz->transformationDate();
+                                        } else {
+                                            echo '-';
+                                        }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><{$Think.lang.最新修改人}></td>
+                                <td><{$allUserInfo[$val[UPDATE_USER_ID]]}></td>
+                                <td><{$Think.lang.最新修改时间}></td>
+                                <td><{$val.UPDATE_TIME}></td>
+                                <td><{$Think.lang.合同备注}></td>
+                                <td><{$val.REMARK}></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </foreach>
+        </div>
+    </div>
+    <div class="table-log">
+    <include file="log"/>
+</div>
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script>
+$(document).ready(function () {
+    function switchTab(param,type){
+        param.click(function () {
+            var index = $(this).index();
+            param.eq(index).addClass("active").siblings().removeClass("active");
+        });
+    }
+    switchTab($(".supplier-info span"));
+
+
+    $(".commom_wrap .common_row_title  span a").click(function () {
+        if($(this).html()=="操作日志"){
+            $(".commom_wrap .row_title_line .line22").css("display","block")
+            $(".commom_wrap .row_title_line .line21").css("display","none")
+        }
+        else if($(this).html()=="供应商详情"){
+            $(".commom_wrap .row_title_line .line21").css("display","block")
+            $(".commom_wrap .row_title_line .line22").css("display","none")
+        }
+    })
+});
+function tab_log(){
+    $(".supplier-tables").css('display','none');
+    $(".table-log").css('display','block');
+}
+function tab_detail(){
+    $(".supplier-tables").css('display','block');
+    $(".table-log").css('display','none');
+}
+
+$(".show_contract button").click(function() {
+    $(this).addClass('btn-pink').siblings().removeClass('btn-pink');
+
+    var tag = $(this).attr('tag');
+    var effectiveL = $(".effective").length
+    var invalid = $(".invalid").length;
+
+    if (tag == 1) {
+        $(".c_count").html(effectiveL);
+        for (var i = 0; i < effectiveL; i ++) {
+            $(".n_c:eq("+i+")").html(i+1);
+        }
+        $(".invalid").css('display', 'none');
+        $(".effective").css('display', 'block');
+    } else if (tag == 0) {
+        $(".c_count").html(invalid);
+        for (var i = 0; i < invalid; i ++) {
+            $(".n_c:eq("+i+")").html(i+1);
+        }
+        $(".effective").css('display', 'none');
+        $(".invalid").css('display', 'block');
+    } else {
+        $(".c_count").html(effectiveL + invalid);
+        for (var i = 0; i < effectiveL + invalid; i ++) {
+            $(".n_c:eq("+i+")").html(i+1);
+        }
+        $(".effective").css('display', 'block');
+        $(".invalid").css('display', 'block');
+    }
+});
+</script>
+
+<script>
+var indexTipLayer;
+function show_risk_rating_text(text){
+    indexTipLayer = layer.tips(text, '#risk_rating_text', {
+      tips: [1, '#3595CC'],
+      time: 4000
+    });
+}
+function closeAllLayer()
+{
+    layer.close(indexTipLayer);
+}
+</script>
+</body>
+</html>

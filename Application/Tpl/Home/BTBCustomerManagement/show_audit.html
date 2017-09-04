@@ -1,0 +1,126 @@
+<?php
+    /**
+     * 数据解析
+     * 
+     */
+    $d = function () use ($audit) {
+        $str = json_decode($audit['C_NAGETIVE_VAL'], true);
+        return $str;
+    };
+    /**
+     * 数据解析模板
+     * 
+     */
+    $t = function ($introduce, $time, $duc) {
+        $template = '<tr class="compun">
+                        <td>%s时间</td>
+                        <td>%s</td>
+                        <td>简介</td>
+                        <td colspan="3">%s</td>
+                    </tr>';
+        return sprintf($template, $introduce, $time, $duc);
+    };
+?>
+<style>
+.detail_audit{
+    position: absolute;
+    top: 10px;
+    right: 11px;
+}
+</style>
+<div class="gys-wrap" style="position: relative;">
+    <table class="table table-border table-bordered table-bg use-table-two">
+        <input type="hidden" name="SP_CHARTER_NO" value="<{$result.SP_CHARTER_NO}>"/>
+        <caption>
+            <div class="use-row">
+                <div class="col-50"> <{$Think.lang.审核信息}></div>
+                <div class="col-50 text-right use-btn"><a href="<{:U('BTBCustomerManagement/update_audit', array('ID' => $result[ID]))}>" class="btn-pub btn-yellow"><{$Think.lang .编辑}></a> </div>
+            </div>
+        </caption>
+        <tbody class="use-body">
+            <tr>
+                <td><{$Think.lang.成立时间}></td>
+                <td>
+                    <?= cutting_time($audit['EST_TIME']) ?>
+                </td>
+                <td><{$Think.lang.认缴资本}></td>
+                <td  colspan="3">
+                    <?php
+                        $currency = BaseModel::getCurrency();
+                        echo $currency[$audit['CURRENCY']];
+                    ?>
+                    <?= format_for_currency($audit['SUB_CAPITAL'], 2) ?>
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.法人代表}></td>
+                <td>
+                    <{$audit.LG_REP}>
+                </td>
+                <td><{$Think.lang.股东名称}></td>
+                <td colspan="3">
+                    <{$audit.SHARE_NAME}>
+                </td>
+            </tr>
+            <!--信用评级-->
+            <tr class="company-credit">
+                <td>
+                    信用评分(境外公司必填)
+                </td>
+                <td class="credit-score">
+                    <{$audit.CREDIT_SCORE}>
+                </td>
+                <td>
+                    信用评级(境外公司必填)
+                </td>
+                <td colspan="3" class="credit-grade">
+                    <?= BaseModel::getCreditGrade()[$audit['CREDIT_GRADE']] ?>
+                </td>
+            </tr>
+            <!--负面信息-->
+            <tr class="nagetive-info">
+                <td>
+                    是否有负面信息
+                </td>
+                <td class="is-have-nagetive-info">
+                    <if condition="$audit.IS_HAVE_NAGETIVE_INFO eq 1 ">
+                        <span class="text-tag">有</span>
+                        <else /> <span>无</span>
+                    </if>
+                </td>
+                <td>
+                    负面信息项
+                </td>
+                <td colspan="3" class="choice-nagetive-option">
+                    <?php
+                        if ($audit['C_NAGETIVE_OPTIONS']) {
+                            $cNagetiveOptions = explode(',', $audit['C_NAGETIVE_OPTIONS']);
+                            foreach ($cNagetiveOptions as $k => $v) {
+                                echo '<span class="text-tag">' . BaseModel::getNagetiveOptions()[$v] . '</span>';
+                            }
+                        } else {
+                            echo '<else /> <span>无</span>';
+                        }
+                    ?>
+                </td>
+            </tr>
+            <?php
+                if (isset($cNagetiveOptions) and $cNagetiveOptions) {
+                    foreach ($cNagetiveOptions as $k => $v) {
+                        echo $t(BaseModel::getNagetiveOptions()[$v], $d()['TIME_' . $v], $d()['DUC_' . $v]);
+                    }
+                }
+            ?>
+            <tr class="riskpun">
+                <td><{$Think.lang.风险评级}></td>
+                <td>
+                    <span id="risk_rating_text"  class="text-tag" onmouseover="show_risk_rating_text('<?= BaseModel::auditGradeStandardText()[$audit['RISK_RATING']] ?>');" onmouseout="closeAllLayer();" value="$audit.RISK_RATING" ><?= BaseModel::riskRating()[$audit['RISK_RATING']] ?></span>
+                </td>
+                <td><{$Think.lang.审核人}></td>
+                <td> <{$allUserInfo[$audit[REVIEWER]]}></td>
+                <td><{$Think.lang.审核时间}></td>
+                <td> <{$audit.REV_TIME}></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

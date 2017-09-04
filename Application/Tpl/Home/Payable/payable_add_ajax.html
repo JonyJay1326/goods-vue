@@ -1,0 +1,45 @@
+<td><label><?php echo $now_number; ?></label></td>
+<input type="hidden" name="information_id[]" value=""> <!--隐藏域-->
+<td>
+    <div class="input-group">
+        <input type="text" name="sku_information[]" value="<?php echo $sku; ?>" id="sku_information" class="form-control"/>
+		<span class="input-group-btn">
+			<button class="btn btn-secondary" type="button" onclick="checkSku(this)"><i class="fa fa-search fa-lg"></i></button>
+		</span>
+    </div>
+</td>
+<td><input type="text" name="goods_name[]" style="border: none; background: none;" readonly="readonly" class="form-control" value="<?php echo $goods_name; ?>"></td>
+<td>
+    <input type="text" name="goods_attribute[]" style="border: none; background: none;" readonly="readonly" class="form-control" value="<?php echo $val_str; ?>"></td>
+<td>
+    <input type="text" name="unit_price[]" style="text-align: center" onblur="predictProfit()" value="0" class="form-control unit_price"/>
+</td>
+<td class="goods_detail-main_bizhong">
+    <select name="curType[]" id="curType" class="form-control">
+        <option selected="" value="">币种</option>
+        <?php foreach($currency as $key=>$v){ ?>
+        <option value="<?=$v['CD_VAL'];?>"><?=$v['CD_VAL'];?></option>
+        <?php } ?>
+    </select>
+</td>
+<td>
+    <input type="text" name="goods_number[]" style="text-align: center"  id="goods_number" onblur="predictProfit()"    value="0" class="form-control goods_number"/>
+</td>
+<td>
+    <input type="text" name="goods_money[]" readonly="readonly" style="text-align: center; background: none;" onblur="predictProfit()" value="0" class="form-control goods_money"/>
+</td>
+<td>
+    <input type="text" name="remark[]" id="remark" class="form-control"/>
+</td>
+<td class="no-wrap text-center">
+    <button class="btn btn-success btn-sm"  type="button" onclick="addTr(this)">添加</button>
+    <button class="btn btn-danger btn-sm" name="goods_detail_1" type="button" onclick="deleteTr(this)">删除</button>
+</td>
+
+
+
+
+
+
+
+

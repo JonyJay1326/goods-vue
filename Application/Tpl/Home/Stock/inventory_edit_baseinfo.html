@@ -1,0 +1,144 @@
+<table class="table table-border table-bordered table-bg">
+    <caption><{$Think.lang.基本信息}></caption>
+    <tbody class="text-c">
+    <tr>
+        <td><{$Think.lang.出入库单号}></td>
+        <td><input v-model="bill_id" type="text"></td>
+        <td><{$Think.lang.收发类别}></td>
+        <td>
+            <select v-model="outgo_model" class="" name="outgo_id"  datatype="s" errormsg="<{$Think.lang.收发类别}>" >
+                <option   v-for="o in outgo" :value="o.CD" >{{o.CD_VAL}}</option>
+            </select>
+        </td>
+        
+    </tr>
+    <tr>
+        <td><{$Think.lang.B5C单号}></td>
+        <td><input v-model="link_bill_id" type="text"></td>
+        <td v-if="outgoing == 'in_storage'"><{$Think.lang.入库规则}></td>
+        <td v-else><{$Think.lang.出库规则}></td>
+        <td>
+            {{warehouse_rule[bills[0].warehouse_rule]}}
+        </td>
+        <!--<td><{$Think.lang.日期}></td>
+        <td>
+            <input type="date" v-model="date" >
+        </td>
+        <td><{$Think.lang.公司}></td>
+        <td>
+            <select v-model="company_model" class="" name="company_id"  datatype="s" errormsg="<{$Think.lang.请选择所属公司}>" >
+                <option v-for="company in company_arr" :value="company.CD" >{{company.CD_VAL}}</option>
+            </select>
+        </td>-->
+    </tr>
+    <tr>
+        <td v-if="outgoing == 'in_storage'"><{$Think.lang.入库批次号}></td>
+        <td v-else><{$Think.lang.出库批次号}></td>
+        <td>
+            <input v-model="batch" type="text"><img src="<{$HI_PATH}>/images/search.png" alt="" width="28" height="28">
+        </td>
+        <td v-if="outgoing == 'in_storage'"><{$Think.lang.对应销售单号}></td>
+        <td v-else><{$Think.lang.采购批次号}></td>
+        <td v-if="outgoing == 'in_storage'">
+            <input v-model="sale_no" type="text">
+        </td>
+        <td v-else><input v-model="batch" type="text"></td>
+        <!--<td><{$Think.lang.关联单据号}></td>
+        <td><input type="text" v-model="other_code"></td>-->
+    </tr>
+    <tr>
+        <td><{$Think.lang.渠道}></td>
+        <td>
+            <input v-if="bills[0].channel in all_channel" :value="all_channel[bills[0].channel].CD_VAL" type="text"  disabled >
+            <input type="text" v-else :value="bills[0].channel" disabled>
+        </td>
+        <td v-if="outgoing == 'in_storage'"><{$Think.lang.供应商名称}></td>
+        <td v-else><{$Think.lang.客户名称}></td>
+        <td><input v-model="sup" type="text"></td>
+        <!--<td><{$Think.lang.仓库}></td>
+        <td>
+            <select v-model="house_list_model" v-cloak>
+                <option v-for="house in house_all_list"  :value="house.CD" >{{house.warehouse}}</option>
+            </select>
+        </td>
+        <td><{$Think.lang.库管员}></td>
+        <td>
+            <select v-model="warehouse_use_model" class="" name="warehouse_use"  datatype="s" errormsg="<{$Think.lang.库管员}>" >
+                <option   v-for="w in warehouse_use" :value="w.id" >{{w.nickname}}</option>
+            </select></td>
+        -->
+    </tr>
+    <tr>
+        <td v-if="outgoing == 'in_storage'"><{$Think.lang.采购端物流费用}></td>
+        <td v-else><{$Think.lang.销售端物流费用}></td>
+        <td> <input v-model="plc" type="number" min="0"></td>
+        <td><{$Think.lang.仓库}></td>
+        <td>
+            <select v-model="house_list_model" v-cloak>
+                <option v-for="house in house_all_list"  :value="house.CD" >{{house.warehouse}}</option>
+            </select>
+        </td>
+        <!--<td><{$Think.lang.单据状态}></td>
+        <td>
+            <select  v-model="bill_state_model" class="" name="bill_state" >
+                <option  value="0"  ><{$Think.lang.未确认}></option>
+                <option  value="1"  ><{$Think.lang.已确认}></option>
+            </select>
+
+
+        </td>-->
+    </tr>
+    <tr>
+        <td v-if="outgoing == 'in_storage'"><{$Think.lang.入库总成本}></td>
+        <td v-else><{$Think.lang.出库总成本}></td>
+        <td> <input v-model="tc" type="number" min="0"></td>
+        <td><{$Think.lang.单据状态}></td>
+        <td>
+            <select  v-model="bill_state_model" class="" name="bill_state" >
+                <option  value="0"  ><{$Think.lang.未确认}></option>
+                <option  value="1"  ><{$Think.lang.已确认}></option>
+            </select>
+        </td>
+    </tr>
+    <!--<tr>
+        <td><{$Think.lang.渠道}></td>
+        <td>
+            <input v-if="bills[0].channel in all_channel" :value="all_channel[bills[0].channel].CD_VAL" type="text"  disabled >
+            <input type="text" v-else :value="bills[0].channel" disabled>
+
+        </td>
+
+        <td v-if="outgo_state == 'storage'" ><{$Think.lang.采购发票}></td>
+        <td v-else ><{$Think.lang.销售发票}></td>
+        <td>
+            <input type="text" v-model="invoice" disabled>
+        </td>
+    </tr>
+    <tr>
+        <td><{$Think.lang.业务类型}></td>
+        <td>
+            <select  class="" name="business" v-model="business" disabled>
+                <option   v-for="o in business_list" :value="o.CD" >{{o.CD_VAL}}</option>
+            </select>
+        </td>
+        <td v-if="outgo_state == 'storage'" ><{$Think.lang.供应商名称}></td>
+        <td v-else ><{$Think.lang.客户名称}></td>
+        <td v-if="outgo_state == 'storage'">
+            <select  class="" name="supplier" v-model="supplier" disabled>
+                <option   v-for="o in supplier_list" :value="o.id" >{{o.suppli_name}}</option>
+            </select>
+        </td>
+        <td v-else><input type="text" v-model="supplier" disabled></td>
+
+    </tr>
+    <tr>
+        <td v-if="outgo_state == 'storage'" ><{$Think.lang.应付款日期}></td>
+        <td v-else ><{$Think.lang.应收款日期}></td>
+        <td>
+            <input type="date" v-model="due_date" disabled>
+        </td>
+        <td><{$Think.lang.杂费}></td>
+        <td><input type="number" v-model="incidental" disabled></td>
+    </tr>-->
+    </tbody>
+</table>

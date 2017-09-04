@@ -1,0 +1,249 @@
+.addPerson {
+  box-sizing: border-box;
+  padding: 20px;
+  margin: 0 0 1rem; }
+  .addPerson table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    background: #F7F9FB;
+    border: 1px solid #CADEE7; }
+    .addPerson table caption {
+      background: #546E7A;
+      height: 40px;
+      font-size: 16px;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      text-align: left;
+      line-height: 40px;
+      padding: 0 15px 0 20px; }
+  .addPerson .text-value {
+    padding: 3px 0;
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    opacity: 0.87;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+    color: #263238;
+    letter-spacing: 0; }
+  .addPerson .el-form-item__content {
+    white-space: nowrap; }
+  .addPerson .el-form-item {
+    margin: 0; }
+  .addPerson .el-input__inner {
+    height: 32px; }
+  .addPerson .el-form-item__label {
+    font-size: 0.68rem;
+    padding: 0.7rem 0.6rem 0.7rem 0;
+    font-family: "Simplified Arabic";
+    color: #546E7A; }
+  .addPerson .el-select {
+    width: 100%; }
+  .addPerson .el-date-editor.el-input {
+    width: 100%; }
+  .addPerson .el-input {
+    vertical-align: sub; }
+  .addPerson .tab-title p {
+    font-size: 16px;
+    letter-spacing: 0;
+    height: 40px;
+    line-height: 40px;
+    border-radius: 3px; }
+  .addPerson .tab-title .default {
+    color: #323232;
+    background: #F6F9FA;
+    border: 1px solid #EBEFF1;
+    cursor: pointer; }
+  .addPerson .tab-title .active {
+    background: #1E7EB4;
+    color: #FFFFFF;
+    border: 1px solid #EBEFF1;
+    position: relative;
+    cursor: pointer; }
+    .addPerson .tab-title .active i {
+      position: absolute;
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      background: #1e7eb4;
+      bottom: -8px;
+      left: calc(50% - 8px);
+      transform: rotate(45deg);
+      border-radius: 2px; }
+  .addPerson .hr-table tbody tr td {
+    padding: 0.2rem 1rem;
+    width: 25%; }
+  .addPerson .hr-table tbody tr:not(:first-child) td {
+    border-top: 1px solid #dce5ef; }
+  .addPerson .hr-table tbody tr:not(:first-child) td:nth-of-type(1) {
+    border-left: 1px solid #dce5ef; }
+  .addPerson .hr-table tbody tr:first-child td:nth-of-type(2) {
+    border-left: 1px solid #dce5ef; }
+  .addPerson .hr-table .first-td {
+    width: 25%;
+    border: none;
+    text-align: center; }
+    .addPerson .hr-table .first-td .avatar-uploader .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden; }
+    .addPerson .hr-table .first-td .avatar-uploader .el-upload:hover {
+      border-color: #20a0ff; }
+    .addPerson .hr-table .first-td .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 178px;
+      height: 178px;
+      line-height: 178px;
+      text-align: center; }
+    .addPerson .hr-table .first-td .avatar {
+      width: 108px;
+      height: 164px;
+      display: block; }
+  .addPerson .per-table tbody tr td {
+    padding: 0.2rem 1rem;
+    width: 25%; }
+  .addPerson .per-table tbody tr:not(:first-child) td {
+    border-top: 1px solid #dce5ef; }
+  .addPerson .per-table tbody tr:not(:first-child) td:nth-of-type(1) {
+    border-left: 1px solid #dce5ef; }
+  .addPerson .per-table tbody .el-input, .addPerson .per-table tbody .el-radio-group {
+    vertical-align: sub; }
+  .addPerson .per-table tbody .el-radio {
+    padding-right: 30px;
+    padding-top: 14px;
+    padding-left: 3px; }
+  .addPerson .per-table tbody .inner-cus-label {
+    float: none;
+    padding: 20px;
+    vertical-align: -webkit-baseline-middle; }
+  .addPerson .per-table tbody .select-input-group .el-select {
+    width: 16%;
+    vertical-align: sub; }
+  .addPerson .per-table tbody .select-input-group .el-select + .el-input {
+    width: 49%; }
+  .addPerson .per-table tbody .select-input-group .upload-demo ul {
+    display: inline-flex; }
+  .addPerson .contact-person tr td {
+    padding: 0.2rem 1rem; }
+  .addPerson .experience tr th {
+    font-size: 13px;
+    color: #546E7A;
+    letter-spacing: 0;
+    border-left: 1px solid #dce5ef;
+    padding: 0.5rem 1rem; }
+  .addPerson .experience tr td {
+    border-top: 1px solid #dce5ef;
+    border-left: 1px solid #dce5ef;
+    padding: 0.2rem 1rem;
+    text-align: center; }
+  .addPerson .experience tr:last-child td {
+    border-left: none;
+    text-align: left; }
+  .addPerson .inter tr th {
+    font-size: 13px;
+    color: #546E7A;
+    letter-spacing: 0;
+    border-left: 1px solid #dce5ef;
+    border-bottom: 1px solid #dce5ef;
+    padding: 0.5rem 1rem; }
+  .addPerson .inter tr td {
+    border-bottom: 1px solid #dce5ef;
+    border-left: 1px solid #dce5ef;
+    padding: 0.1rem 1rem 0.5rem; }
+  .addPerson .record {
+    background: #F7F9FB;
+    border: 1px solid #CADEE7;
+    padding: 0.5rem 0;
+    box-sizing: border-box; }
+    .addPerson .record .el-input {
+      vertical-align: initial; }
+    .addPerson .record label {
+      color: #546E7A;
+      letter-spacing: 0;
+      font-size: 0.68rem;
+      font-family: "Simplified Arabic"; }
+    .addPerson .record [class*="col-"] {
+      padding: 0 1rem;
+      box-sizing: border-box; }
+  .addPerson .info-multiple tr th {
+    font-size: 13px;
+    color: #546E7A;
+    letter-spacing: 0;
+    border-left: 1px solid #dce5ef;
+    padding: 0.5rem 1rem;
+    width: 20%; }
+  .addPerson .info-multiple tr td {
+    border-top: 1px solid #dce5ef;
+    border-left: 1px solid #dce5ef;
+    padding: 0.2rem 1rem;
+    text-align: center; }
+
+.show-list {
+  box-sizing: border-box;
+  padding: 20px;
+  margin: 0; }
+  .show-list .el-form-item__label {
+    font-size: 0.68rem;
+    padding: 0.7rem 0.6rem 0.7rem 0;
+    font-family: "Simplified Arabic";
+    color: #546E7A; }
+  .show-list .search-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%; }
+    .show-list .search-table tr td {
+      padding: 0.5rem 1rem 0.5rem 0; }
+  .show-list .el-select {
+    width: 100%; }
+  .show-list .el-form-item {
+    margin: 0; }
+  .show-list .table-list {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    background: #FFFFFF;
+    border: 1px solid #CADEE7; }
+    .show-list .table-list tr th {
+      background: #546E7A;
+      height: 40px;
+      text-align: center;
+      font-size: .7rem;
+      color: #FFFFFF;
+      letter-spacing: 0;
+      border: 1px solid #668491; }
+    .show-list .table-list tr td {
+      font-size: 0.68rem;
+      color: #263238;
+      letter-spacing: 0;
+      text-align: center;
+      padding: 0.5rem;
+      border: 1px solid #CADEE7;
+      font-family: "Microsoft YaHei";
+      white-space: nowrap; }
+    .show-list .table-list tr:nth-of-type(even) {
+      background: #F7F9FB;
+      border: 1px solid #CADEE7; }
+  .show-list .edit-cont .el-input, .show-list .edit-cont .el-select {
+    width: 100%; }
+  .show-list .edit-cont .el-radio {
+    margin-right: 50px; }
+  .show-list .export .el-dialog--tiny {
+    width: 50%;
+    text-align: center; }
+  .show-list .export .el-transfer-panel {
+    height: 450px;
+    width: 260px;
+    text-align: left; }
+  .show-list .export .el-transfer-panel__list.is-filterable {
+    height: 350px; }
+  .show-list .export .el-checkbox + .el-checkbox {
+    margin: 0; }
+  .show-list .export .el-checkbox {
+    width: 120px;
+    margin: 8px 0 !important; }
+
+/*# sourceMappingURL=hrstyle.css.map */

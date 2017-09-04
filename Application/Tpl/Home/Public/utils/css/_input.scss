@@ -1,0 +1,106 @@
+/**=========================== input start=============================*/
+.use-form{
+  .label-name{
+    font-family: $fontFamily;
+    font-size: 0.7rem;
+    color: $ft-black;
+    letter-spacing: 0;
+    line-height: 1.6rem;
+  }
+  .use-input{
+    padding: 0.1rem 0.3rem;
+    border-radius:$bd-rd4;
+    border:$bd-solid  #D7DADD;
+    width:100%;
+    height: 1.6rem;
+    box-sizing: border-box;
+  }
+  .input-btn-wrap{
+    border: 1px solid #D7DADD;
+    display: inline-block;
+    width: 100%;
+    border-radius:0.2rem;
+    text-align: right;
+    input{
+      padding: 0.1rem;
+      border:none;
+      width:calc(100% - 100px);
+      height: 1.6rem;
+      box-sizing: border-box;
+    }
+    button{
+      text-align: center;
+      height: 1.6rem;
+      border-radius:0 0.1rem 0.1rem 0;
+      font-size: $ft-sz14;
+      font-family: $fontFamily;
+      padding: 0.25rem 0.75rem;
+      color: $ft-white;
+      background: $cl-blue;
+      border: $bd-solid  $cl-blue;
+      cursor: pointer;
+      margin-left: -0.25rem;
+      width:4.5rem;
+    }
+  }
+  .text-form{
+    padding: 0.1rem;
+    border-radius:$bd-rd4;
+    border:$bd-solid  #D7DADD;
+    width:100%;
+    height: 4rem;
+    box-sizing: border-box;
+  }
+}
+.input-group{
+  input,select {
+    width: 6.5rem;
+    padding: 0.1rem;
+    border-radius:$bd-rd4;
+    border:$bd-solid  #D7DADD;
+    height: 1.6rem;
+    box-sizing: border-box;
+  }
+}
+
+//b2b
+.b2b-form{
+  label{
+    display: inline-block;
+    width: 80px;
+    margin: 0;
+    font-family: $fontFamily;
+    font-size: 0.7rem;
+    color: $ft-black;
+    letter-spacing: 0;
+    vertical-align: middle;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  input,select{
+    padding: 0.1rem 0.3rem;
+    font-size: 0.7rem;
+    color: $ft-black;
+    border-radius:$bd-rd4;
+    border:$bd-solid  #D7DADD;
+    width:calc(90% - 80px);
+    height: 1.6rem;
+    box-sizing: border-box;
+    min-width: 220px;
+  }
+  .date{
+    width:calc((90% - 100px)/2);
+    min-width: 100px;
+  }
+}
+//复选框样式调整
+.use-checkbox{
+  input::before{
+    content: url("img/check-default.png");
+  }
+  input:checked::before{
+    content: url("img/check.png");
+  }
+}
+/**=========================== input end=============================*/

@@ -1,0 +1,93 @@
+<div id="add_supplier">
+    <input type="hidden" name="ID" value="<{$result.ID}>"/>
+    <div class="basis-info">
+        <table class="table table-border table-bordered table-bg">
+            <tbody class="text-le">
+            <thead>
+            <tr>
+                <th width="10%"></th>
+                <th width="40%"></th>
+                <th width="10%"></th>
+                <th width="40%"></th>
+            </tr>
+            </thead>
+                <tr>
+                    <td colspan="4"><{$Think.lang.供应商信息}></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.采购团队}></td>
+                    <td class="multiple_team">
+                        <select name="SP_TEAM_CD[]">
+                            <foreach name="spTeamCd" key="k" item="val" class="SP_TEAM_CD">
+                                <if condition="$result.SP_TEAM_CD eq $k"><option value="<{$k}>" selected="true"><{$Think.lang.$val}></option>
+                                    <else /><option value="<{$k}>"><{$Think.lang.$val}></option>
+                                </if>
+                            </foreach>
+                        </select>
+                        <li class="label label-default radius add_nodes">+</li>
+                        <li class="label label-default radius del_nodes">-</li>
+                    </td>
+                    <td><{$Think.lang.介绍团队}></td>
+                    <td class="multiple_spt">
+                        <select name="SP_JS_TEAM_CD">
+                            <foreach name="spJsTeamCd" key="k" item="val">
+                                <if condition="$result.SP_JS_TEAM_CD eq $k"><option value="<{$k}>" selected="selected"><{$Think.lang.$val}></option>
+                                    <else /><option value="<{$k}>"><{$Think.lang.$val}></option>
+                                </if>
+                            </foreach>
+                         </select>
+                    </td>
+                </tr>
+                <tr class="ctcd">
+                    <td><{$Think.lang.企业类型}></td>
+                    <td>
+                        <?php $copanyTypeCd = BaseModel::companyTypeCd() ?>
+                        <foreach name="copanyTypeCd" key="k" item="val">
+                                <if condition="$result.COPANY_TYPE_CD eq $k"><span value="<{$k}>" style="background: #ff6600;"><{$val}></span>
+                                    <else /><span value="<{$k}>" ><{$val}></span>
+                                </if>
+                        </foreach>
+                        <input type="hidden" name="COPANY_TYPE_CD" class="COPANY_TYPE_CD" value="<{$result.COPANY_TYPE_CD}>" id="COPANY_TYPE_CD"/>
+                    </td>
+                    <td><{$Think.lang.供应商地址}></td>
+                    <td class="sel-map">
+                        <select id="s_country" name="SP_ADDR1"></select>
+                        <select id="s_province" name="SP_ADDR2">
+                        </select>  
+                        <select id="s_city" name="SP_ADDR3" >
+                        </select>  
+                        <select id="s_county" name="SP_ADDR4">
+                        </select>
+                    </td>
+                </tr>
+                <tr class="sysc">
+                    <td><{$Think.lang.供应商年业务规模}></td>
+                    <td>
+                        <?php $spYearScaleCd = BaseModel::spYearScaleCd() ?>
+                        <foreach name="spYearScaleCd" key="k" item="val">
+                            <if condition="$result.SP_YEAR_SCALE_CD eq $k"><span value="<{$k}>" style="background: #ff6600;"><{$val}></span>
+                                <else /><span value="<{$k}>" ><{$val}></span>
+                            </if>
+                        </foreach>
+                        <input type="hidden" name="SP_YEAR_SCALE_CD" class="SP_YEAR_SCALE_CD" value="<{$result.SP_YEAR_SCALE_CD}>"/>
+                    </td>
+                    <td><{$Think.lang.供货品类}></td>
+                    <td id="goods_type-td">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal" id="goods_type-show">
+                        <{$Think.lang.添加品类}>
+                        </button>
+                        <input type="hidden" name="SP_CAT_CD" id="SP_CAT_CD" value="<{$result.SP_CAT_CD}>"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.公司与市场地位简述}></td>
+                    <td colspan="3"><input type="text" name="COMPANY_MARKET_INFO" value="<{$result.COMPANY_MARKET_INFO}>" placeholder="<{$Think.lang.一句话介绍供应商，和描述供应商的市场地位，所获殊荣，所获得融资等信息。}>"/></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.备注(选填)}></td>
+                    <td colspan="3"> <textarea rows="5" style="width: 100%;" name="SP_REMARK"><{$result.SP_REMARK}></textarea></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

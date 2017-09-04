@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title></title>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css"/>
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../Public/css/purchase.css?=20170508"/>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css?=20170508"/>
+	<link rel="stylesheet" href="../Public/css/common.css"/>
+	<style>
+		a span{color: white;font-size: 13px;}
+		.form-group{margin-bottom: 0px}
+		.form-control{
+			font-size:13px;
+			height:34px;
+			padding-left:5px;
+		}
+		.card table th,.card table td{text-align: center;vertical-align: middle}
+		.td_operation .btn{margin-bottom:2px}
+		form .card table tbody td{background:white;}
+
+		.row_search{
+			margin-top:0px !important;
+			margin:0px;
+		}
+		.form-group .form-control{
+			height:34px !important;
+			color: #90A4AE;
+		}
+		form .row_search .col-lg-12{
+			margin-left: -12px;
+		}
+		.td-icon
+	</style>
+</head>
+<body>
+<div class="wrap">
+	<div class="enter-line">
+		<form method="get" id="thisform" action="<{:U('list')}>">
+			<div class="row row_menu">
+                <a href="javascript:void(0)" class="ship_status_check <if condition='$ship_status === "" or
+                $ship_status === null'>active</if>" value ><{$Think.lang.全部}></a>
+				<a href="javascript:void(0)" class="ship_status_check <if condition='$ship_status === "0"'>active</if>" value="0"><{$Think.lang.待发货}></a>
+				<a href="javascript:void(0)" class="ship_status_check <if condition='$ship_status == 1'>active</if>" value="1"><{$Think.lang.部分发货}></a>
+				<a href="javascript:void(0)" class="ship_status_check <if condition='$ship_status == 2'>active</if>" value="2"><{$Think.lang.完成发货}></a>
+                <input type="hidden" name="ship_status" id="ship_status" value="<{$ship_status}>">
+			</div>
+				<div class="card order_list_row_top_input">
+					<div class="card-block" >
+						<blockquote class="card-blockquote">
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+									<tr>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr>
+										<td><{$Think.lang.采购单号}></td>
+										<td><input type="text" class="form-control" placeholder="" name="procurement_number" value="<?php echo $procurement_number;?>" id="procurement_number"></td>
+										<td></td>
+										<td><{$Think.lang.销售单号}></td>
+										<td><input type="text" name="sell_number" id="sell_number" value="<?php echo $sell_number;?>" placeholder="" class="form-control"></td>
+										<td></td>
+										<td><{$Think.lang.供应商}></td>
+										<td><input type="text" class="form-control" name="supplier_id" value="<{$params.supplier_id}>" placeholder=""></td>
+										<td></td>
+										<td><{$Think.lang.客户}></td>
+										<td><input type="text" class="form-control" name="supp_id" value="<{$params.supp_id}>" placeholder=""></td>
+									</tr>
+									<tr>
+										<td><{$Think.lang.业务方向}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="business_direction" id="business_direction" >
+													<option value=""><{$Think.lang.请选择}></option>
+													<?php foreach($business_directions as $key=>$v){ ?>
+													<option value="<?=$v['CD_VAL'];?>"
+													<?php if($v['CD_VAL']==$business_direction){
+													echo "selected=selected";
+													};?>
+													><?=$v['CD_VAL'];?></option>
+													<?php } ?>
+												</select>
+											</fieldset>
+										</td>
+										<td></td>
+										<td><{$Think.lang.业务类型}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="business_type" id="business_type" style="height: 35px;">
+													<option value=""><{$Think.lang.请选择}></option>
+													<?php foreach($business_types as $key=>$v){ ?>
+													<option value="<?=$v['CD_VAL'];?>"
+													<?php if($v['CD_VAL']==$business_type){
+														echo "selected=selected";
+														};?>
+
+													><?=$v['CD_VAL'];?></option>
+													<?php } ?>
+												</select>
+											</fieldset>
+										</td>
+										<td></td>
+										<td><{$Think.lang.采购员}></td>
+										<td><input type="text" class="form-control" value="<{$params.prepared_by}>" placeholder="" name="prepared_by"></td>
+										<td></td>
+										<td><{$Think.lang.采购团队}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="payment_company">
+													<option value=""><{$Think.lang.请选择}></option>
+													<volist name="purchase_team" id="v">
+														<option value="<{$v.CD_VAL}>" <if condition="$params['payment_company'] eq $v['CD_VAL']">selected</if>><{$v.CD_VAL}></option>
+													</volist>
+												</select>
+											</fieldset>
+										</td>
+									</tr>
+									<tr>
+										<td><{$Think.lang.商品}></td>
+										<td><input type="text" class="form-control" name="goods_name" value="<{$params.goods_name}>" placeholder="<{$Think.lang.商品}>"></td>
+										<td></td>
+										<td><{$Think.lang.创建时间}></td>
+										<td class="common_data">
+												<input type="text" name="start_time" id="start_time"  value="<?php echo $start_time;?>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.起始日期}>" class="form-control">
+												<span class="input-group-btn">
+													<button class="btn btn-secondary" type="button"><i ></i></button>
+												</span>
+										</td>
+										<td colspan="2" class="text-center"><div class="col-data_l">一</div></td>
+										<td class="common_data">
+
+												<input type="text" name="end_time" id="end_time" value="<?php echo $end_time;?>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.结束时间}>" class="form-control">
+												<span class="input-group-btn">
+													<button class="btn btn-secondary" type="button"><i></i></button>
+												</span>
+
+										</td>
+										<td></td>
+										<td></td>
+										<td></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</blockquote>
+					</div>
+				</div>
+				<div class="row row_search">
+					<div class="col-lg-12 text-left col-md-12 col-sm-12">
+						<input name="search" value="1" type="hidden">
+						<button type="button" class="btn-search" id="search"><{$Think.lang.查询}></button>
+						<button type="button" class="btn-reset" id="resetForm"><{$Think.lang.重置}></button>
+					</div>
+				</div>
+		</form>
+	<!--    <div class="col-100 text-r pos" style="padding: 4px 0px;">
+        <span id="download" class="inline-block" style="height: 50px;"><a href="<{:U('OrderDetail/order_add')}>" style="color:white;">
+            <button class="btn btn-pink button-pink">新建订单</button></a>
+        </span>
+        <span id="download" class="inline-block" style="height: 50px;"><button class="btn btn-pink button-pink" onclick="qx()">全选</button></span>
+        <span id="download" class="inline-block" style="height: 50px;"><button class="btn btn-pink button-pink" onclick="fx()">反选</button></span>
+        <span id="download" class="inline-block" style="height: 50px;"><button class="btn btn-pink button-pink" onclick="qbx()">全不选</button></span>
+        <span id="download" class="inline-block" style="height: 50px;"><button class="btn btn-pink button-pink" onclick="del()">批量删除</button></span>-->
+	<p class="purchase_list_p"></p>
+	<div class="card purchase_list_card">
+		<div class="purchase_list_card_head">
+			<b ><{$Think.lang.采购列表}></b>
+			<a  href="<{:U('OrderDetail/order_add')}>">
+				<i>+</i>
+				<span><{$Think.lang.创建订单}></span>
+			</a>
+		</div>
+		<div class="card-block">
+			<blockquote class="card-blockquote">
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+						<tr class="text-center">
+							<!--<th width=""><input type="checkbox"></th>-->
+							<th width=""><{$Think.lang.序号}></th>
+							<th width="">PO/<{$Think.lang.采购单号}></th>
+							<th width=""><{$Think.lang.业务类型}></th>
+							<th width=""><{$Think.lang.供应商}></th>
+							<th width=""><{$Think.lang.商品}></th>
+							<th width=""><{$Think.lang.币种}></th>
+							<th width=""><{$Think.lang.采购金额}></th>
+							<th width=""><{$Think.lang.利润率}>(<{$Think.lang.退税后}>)</th>
+							<th width=""><{$Think.lang.客户}></th>
+							<th width=""><{$Think.lang.采购员}></th>
+							<th width=""><{$Think.lang.创建时间}></th>
+							<th width=""><{$Think.lang.审批状态}></th>
+							<th width=""><{$Think.lang.业务状态}></th>
+							<th width=""><{$Think.lang.操作}></th>
+						</tr>
+						</thead>
+						<tbody>
+						<?php if($purchase_info){ ?> <!--start 如果搜索的数据不存在，不让其显示分页-->
+						<?php foreach($purchase_info as $key=>$v){ ?>
+						<tr class="text-c" id="<?php echo $v['relevance_id'];?>">
+							<!--<td><input type="checkbox" class="check"></td>-->
+							<td><?php echo $key+$firstRow+1;?><span style="display: none;">776</span></td>
+							<td><a  href="<{:U('OrderDetail/order_detail')}>&id=<{$v.relevance_id}>"><?php echo $v['procurement_number'];?></a></td>
+							<td><?php echo $v['business_type'];?></td>
+							<td>
+								<?php echo $v['supplier_id'];?>
+							</td>
+							<td style="position:relative;" class="goods_name_td">
+								<?php foreach($v['goods_information'] as $key1=>$v1){ ?>
+								<div class="goods_name"><?php echo $v1['goods_name'];?></div>
+								<?php } ?>
+								<div style="position:absolute;right:10px;bottom:10px" class="goods_name_img">
+								<img src="../Public/images/moreGoodes.png" alt="" width="20" height="20">
+								</div>
+							</td>
+							<td>
+								<div class="goods_number"><?php echo $v['amount_currency'];?></div>
+							</td>
+							<td>
+								<div class="goods_money"><?php echo number_format($v['amount'],2);?></div>
+							</td>
+                            <td>
+								<div class="goods_number"><?php echo $v['total_profit_margin']*100;?>%</div>
+							</td>
+							<td><?php echo $v['supp_id'];?></td>
+							<td><?php echo $v['prepared_by'];?></td>
+							<td><?php echo $v['prepared_time'];?></td>
+							<td><{:L($order_status_cd[$v['order_status']])}></td>
+							<td class="td-icon">
+								<div><!--<i class="fa fa-star fa-lg" style="color: #ec2d64;"></i>--><span><{$Think.lang.未付款}></span></div>
+								<div><!--<i class="fa fa-star fa-lg" style="color: #FFC107;"></i>--><span><{$Think.lang.未发货}></span></div>
+								<div><!--<i class="fa fa-star fa-lg" style="color: #5cb85c"></i>--><span><{$Think.lang.未开票}></span></div>
+								<div><!--<i class="fa fa-star fa-lg" style="color: #5cb85c"></i>--><span><{$Think.lang.未入库}></span></div>
+							</td>
+							<td  style="white-space: nowrap" class="td_operate">
+                                    <button class="btn btn-edit btn-sm" onclick="location='<{:U(\'OrderDetail/order_detail\')}>&id=<{$v[\'relevance_id\']}>'"><{$Think.lang.查看}></button><br />
+								<if condition="$v['order_status'] neq 'N001320300'">
+                                    <if condition="$v['order_status'] neq 'N001320200'">
+									<button class="btn btn-edit btn-sm" onclick="location='<{:U(\'OrderDetail/order_update\')}>&id=<{$v[\'relevance_id\']}>&is_edit=1'"><{$Think.lang.编辑}></button><br />
+                                    </if>
+									<button class="btn btn-check btn-sm" onclick="screening(<{$v['relevance_id']}>)"><{$Think.lang.提交审批}></button><br />
+									<if condition="$v['order_status'] neq 'N001320200'">
+                                    <button class="btn btn-danger btn-sm" onclick="reminder(<?php echo $v['relevance_id'];?>)"><{$Think.lang.删除}></button>
+									</if>
+                                    <elseif condition="$v['ship_status'] neq 2" />
+                                    <button class="btn btn-check btn-sm" onclick="location='<{:U("ship",["id"=>$v["relevance_id"]])}>'"><{$Think.lang.发货}></button><br />
+                                </if>
+							</td>
+						</tr>
+						<?php } ?>
+						</tbody>
+					</table>
+					<ul class="pagination" style="margin: 0;">
+						<?php echo $show;?>
+					</ul>
+					<?php } ?> <!--end 如果搜索的数据不存在，不让其显示分页-->
+				</div>
+			</blockquote>
+		</div>
+	</div>
+</div>
+<!--模态框-->
+
+<div class="modal fade" id="delete-modal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 360px;">
+			<div class="modal-header">
+				<h4 class="modal-title"><{$Think.lang.提示}></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span class="sr-only">Close</span>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p><{$Think.lang.确认要删除吗}>？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" onclick="order_del()"><{$Think.lang.确定}></button>
+				<input type="hidden" id="order_del"><!-- 隐藏域用来保存需要删除的订单ID-->
+				<button type="button" class="btn btn-secondary" data-dismiss="modal"><{$Think.lang.取消}></button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+
+
+<script>
+	//全选
+	$(".basis-info table tbody").on("mouseover", "tr .slect_hover div", function () {
+		$(this).find("ul").show()
+	});
+
+	$(".basis-info table tbody").on("mouseleave", "tr .slect_hover div", function () {
+		$(this).find("ul").hide()
+	});
+
+	$(".basis-info tbody ").on("click", "tr .slect_hover div ul li", function () {
+		var paymentCompany_li = $(this).html();
+		$(this).parent().parent().find("input").val(paymentCompany_li);
+		$(this).parent().hide();
+		dealNumber()
+	});
+
+	$(".pd-table-wide_delivery_type ol li:nth-child(1)").addClass("pd-table-wide_delivery_type_liClick");
+
+	$(".pd-table-wide_delivery_type ol").on("click", "li", function () {
+		$(this).siblings("li").removeClass("pd-table-wide_delivery_type_liClick");
+		$(this).addClass("pd-table-wide_delivery_type_liClick");
+	});
+
+	function reminder(relevance_id){
+		$("#delete-modal").modal('show');
+		$("#order_del").val(relevance_id);
+	}
+
+	function order_del() {
+		var relevance_id = $("#order_del").val();
+		var data = {relevance_id: relevance_id};
+		var url = "<{:U('OrderDetail/order_del')}>";
+		$.get(url, data, function (msg) {
+			if (msg == 1) {
+				$('#'+relevance_id).remove(); //删除节点
+				$("#delete-modal").modal('hide');
+			}
+		})
+	}
+
+	function screening(relevance_id) {
+	    var url = "<{:U('sendForReview')}>";
+		var data = {relevance_id: relevance_id};
+		$.get(url, data, function (msg) {
+            alert(msg.info);
+            if(msg.status == 1) {
+                location = msg.data.jump_url;
+			}
+        })
+    }
+
+	//搜索
+
+	function sou() {
+	    var data = $('#thisform').serialize();
+	    data+='&go=go';
+		var url = "<{:U('OrderDetail/order_list')}>";
+		$.get(url, data, function (msg) {
+			$("body").html(msg);
+		})
+
+	}
+
+    $(function() {
+        //多商品隐藏
+        $(".goods_name_td").each(function(){
+            var goods_name_length=$(this).find(".goods_name").length;
+            if(goods_name_length > 1){
+                $(this).find(".goods_name_img").show();
+                $(this).find(".goods_name").hide();
+                $(this).find(".goods_name:nth-child(1)").show();
+            }
+            else{
+                $(this).find(".goods_name_img").hide();
+            }
+        })
+
+        //发货状态筛选
+        $('.ship_status_check').click(function () {
+            var ship_status = $(this).attr('value');
+            $('#ship_status').val(ship_status);
+            $('.ship_status_check').removeClass('active');
+            $(this).addClass('active');
+        })
+
+        //搜索按钮
+        $('#search').click(function () {
+            var data = $('#thisform').serialize();
+            var url = "<{:U('order_list')}>&"+data;
+            location = url;
+        })
+        $('#resetForm').click(function() {
+            $('#thisform')[0].reset();
+            $('.ship_status_check:eq(0)').click();
+        })
+    })
+
+	$(".perchase_list_select select").change(function () {
+		if($(this).val() && $(this).val().length>0){
+			$(this).css("color","#263238")
+		}else{
+		    $(this).css("color","#90A4AE")
+		}
+    })
+</script>
+
+</html>

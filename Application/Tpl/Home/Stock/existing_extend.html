@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>现存量查询</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/vew.1.7.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/layer-v3.0.3/layer/skin/default/layer.css"/>
+    <link rel="stylesheet" href="../Public/icon/css/font-awesome.min.css">
+    <!--<link rel="stylesheet" href="<{$HI_PATH}>css/stock.css?=20170503">-->
+    <link rel="stylesheet" href="../Public/utils/css/public.style.css">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+        .wrap {
+            box-sizing: border-box;
+            padding: 20px;
+            margin: 0;
+        }
+        .use-row + .use-row{
+            margin: 20px 0;
+        }
+        .result-num span{
+            margin-right: 40px;
+        }
+    </style>
+    <style>
+        .box-parent {
+            position: relative;
+        }
+
+        .xcl-box {
+            width: 415px;
+            height: 400px;
+            position: absolute;
+            top: 40px;
+            right: -132px;
+            background: white;
+            box-shadow: 2px 2px 18px #c3bebe;
+            border: 1px solid azure;
+            padding: 10px;
+            z-index: 50;
+            overflow: auto;
+        }
+
+
+        .xcl-box .search-row {
+            margin: 10px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .xcl-box .search-row input {
+            border: 1px solid #dedede;
+            height: 24px;
+            padding: 0 10px;
+            width: 180px;
+            border-radius: 2px;
+        }
+        .xcl-box .search-row input:focus{
+            box-shadow: 0 0 5px #33ccff;
+            border: 1px solid transparent;
+        }
+        .xcl-box .search-row .Hui-iconfont-search{
+            color: white;
+            font-size: 20px;
+            background: #ec2d64;
+            vertical-align: middle;
+            margin-left: -15px;
+            padding: 3px 4px;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+        }
+        .xcl-box .search-row .btn-close{
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            color: #666;
+            font-size: 20px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .xcl-box .search-row .btn-close:hover{
+            color: #ec2d64;
+        }
+        .xcl-box .search-row button{
+            border: 1px solid #999;
+            padding: 0 5px;
+            height: 26px;
+            font-size: 14px;
+            width: auto;
+            margin-left: 15px;
+            background: #b3b3b3;
+            color: white;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+        .xcl-box table thead th{
+            height:25px;
+            line-height: 25px;
+            padding: 0 8px;
+        }
+        .xcl-box table tbody td{
+            height:20px;
+            line-height: 20px;
+            padding: 0 8px;
+        }
+        .showbg{
+            background-color: #ddd;
+        }
+        .td-linknum>a>span{
+            text-decoration: underline;
+        }
+
+        .xcl-btn-group{
+            position: absolute;
+            top: 28px;
+            right: 0;
+            z-index: 100;
+            display: none;
+        }
+        .xcl-btn-group span{
+            display: inline-block;
+            padding: 1px 10px 2px;
+            background: #5eb95e;
+            color: white;
+            border-radius: 2px;
+        }
+        .xcl-hover-btn{
+            display: inline-block;
+            padding: 1px 10px 2px;
+            background: #EC2D64;
+            color: white;
+            height: 20px;
+            border: 1px;
+            cursor: pointer;
+        }
+        .button-hide{
+            background: none;
+            border:none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrap" id="xcl-wrap" v-cloak>
+    <div class="select-line">
+        <form action="" method="post" id="thisform">
+            <div class="use-row b2b-form">
+                <div class="col-30">
+                    <label>SKU/自编码/条形码</label>
+                    <input type="text" name="SKU" :value="SKU" placeholder="SKU/自编码/条形码">
+                </div>
+                <div class="col-30">
+                    <label><{$Think.lang.商品名称}></label>
+                    <input type="text" name="GUDS_CNS_NM" :value="GUDS_CNS_NM" placeholder="<{$Think.lang.商品名称}>">
+                </div>
+                <div class="col-30">
+                    <label><{$Think.lang.选择仓库}></label>
+                    <select name="DELIVERY_WAREHOUSE" v-model="house_list_model" v-cloak>
+                        <option value=""><{$Think.lang.选择仓库}></option>
+                        <option v-for="house in house_list" :value="house.CD">{{house.warehouse}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="use-row">
+                <div class="col-100 use-checkbox">
+                    <label>
+                        <input type="checkbox" name="channel" v-model="def_channel" id="def_channel" onclick="submit()" value="1" class="box">&nbsp;&nbsp;
+                        <{$Think.lang.按渠道展开}>
+                    </label>
+                    <label class="mg-l-30">
+                        <input type="checkbox" name="sku_none" v-model="def_sku_none" id="def_sku" onclick="submit()" value="1">&nbsp;&nbsp;
+                        <{$Think.lang.显示无库存且无在途SKU}>
+                    </label>
+                </div>
+            </div>
+            <div class="use-row">
+                <div class="col-100 use-btn">
+                    <button onclick="submit()" type="button" name="query" class="btn-pub btn-green"><{$Think.lang.查询}></button>
+                    <button type="button" @click="reset_order" name="reset" class="btn-pub btn-default mg-l-10"><{$Think.lang.重置}></button>
+                </div>
+            </div>
+            <div class="baseline"></div>
+            <div class="use-row result-num">
+                <div class="col-40">
+                    <span><{$Think.lang.共计}>:&nbsp;&nbsp;<b><{$count}></b></span>
+                    <span><{$Think.lang.库存件数}>:&nbsp;&nbsp;<b><{$top_nums}></b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span><{$Think.lang.库存金额}>:&nbsp;&nbsp;<b>¥<{$top_sums}></b></span>&nbsp;&nbsp;
+                </div>
+                <div class="col-40">
+                    <span><{$Think.lang.在途SKU}>:&nbsp;&nbsp;<b><{$on_ways}></b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span><{$Think.lang.在途件数}>:&nbsp;&nbsp;<b><{$ow}></b></span>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span><{$Think.lang.在途金额}>:&nbsp;&nbsp;<b>¥<{$owm}></b></span>&nbsp;&nbsp;
+                </div>
+                <div class="col-20 text-right use-btn">
+                    <span name="out" onclick="history.go(0)" class="btn-pub btn-blue"><i class="fa fa-refresh"></i>&nbsp;&nbsp;<{$Think.lang.刷新}></span>&nbsp;
+                    <input type="hidden" name="down" id="down" value="">
+                    <a class="btn-pub btn-default"  href="<{:U('Stock/download_existing_to_excel')}>"><i class="fa fa-upload"></i>&nbsp;&nbsp;<{$Think.lang.全部导出}></a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="xcl-table" style="margin-top: 15px">
+        <table class="b2b-table">
+            <thead>
+                <tr class="use-head">
+                    <th width="30"><{$Think.lang.序号}></th>
+                    <th></th>
+                    <th><{$Think.lang.SKU编码}></th>
+                    <th><{$Think.lang.自编码}></th>
+                    <th><{$Think.lang.条形码}></th>
+                    <!--<th><{$Think.lang.第三方SKU编码}></th>-->
+                    <th v-if="def_channel"><{$Think.lang.渠道}></th>
+                    <th><{$Think.lang.商品名称}></th>
+
+                    <th><{$Think.lang.属性}></th>
+                    <th><{$Think.lang.仓库}></th>
+                    <!--<th>生产日期</th>-->
+                    <th><{$Think.lang.库存件数}></th>
+                    <th><{$Think.lang.可售}></th>
+
+                    <th><{$Think.lang.占用}></th>
+                    <th v-if="def_channel"><{$Think.lang.锁定}></th>
+                    <!--   <th>在途</th>
+                     <th>残次品</th>-->
+                    <th><{$Think.lang.成本价}></th>
+                    <th><{$Think.lang.库存成本}></th>
+                    <th><{$Think.lang.在途件数}></th>
+                    <th><{$Think.lang.在途成本}></th>
+                    <!--<th><{$Think.lang.操作}></th>-->
+
+                </tr>
+            </thead>
+            <tbody class="use-body">
+            <template v-for="(d,index) in stream_arr">
+                <tr v-cloak class="td-wrap">
+                    <td>{{index+1}}</td>
+                    <td :sd="tmp">
+                        <span class="button-hide" @click="show_tr(d)" style="display: inline-block">
+                            <img :src="d.noshow ? base_msg_open : base_msg"  width="14" height="14">
+                        </span>
+                    </td>
+                    <td>{{d.SKU_ID}}</td>
+                    <td class="hide"><span v-if="d.channel in all_channel">{{d.channel}}</span></td>
+                    <td>{{d.GUDS_OPT_CODE}}</td>
+                    <td>{{d.GUDS_OPT_UPC_ID}}</td>
+                    <!--<td v-if="d.CHANNEL_SKU_ID != 0">{{d.CHANNEL_SKU_ID}}</td>
+                    <td v-else></td>-->
+                    <td v-if="def_channel"><span v-if="d.channel in all_channel">{{all_channel[d.channel].CD_VAL}}</span></td>
+                    <!--<td v-if="d.channel in all_channel"></td>
+                    <td v-else=""></td>-->
+                    <td>{{d.GUDS_NM}}</td>
+                    <td v-if="d.GUDS_OPT_VAL_MPNG">{{d.GUDS_OPT_VAL_MPNG}}</td>
+                    <td v-else></td>
+                    <td>{{house_all_list[d.DELIVERY_WAREHOUSE].warehouse}}</td>
+                    <!--<td v-if="d.production_date == '0000-00-00'"></td>
+                    <td v-else>{{d.production_date}}</td>-->
+                    <td v-if="def_channel">{{d.total_inventory}}</td>
+                    <td v-else>{{parseInt(d.total_inventory) + parseInt(d.locking)}}</td>
+                    <td v-if="d.sale < 0" class="c-red">{{d.sale}}</td>
+                    <td v-else>{{d.sale}}</td>
+                    <td class="box-parent" :class="{ showbg:d.show_bg }" style="cursor: pointer;    text-decoration: underline;" >
+                        <span @click="show(d)">{{d.occupy}}</span>
+                        <div class="xcl-box" v-show="d.is_show">
+                            <div class="search-row">
+                                <input type="text" v-model="search_order" >
+                                <i class="Hui-iconfont Hui-iconfont-search" @click="search"></i>
+                                <button type="button" @click="reset"><{$Think.lang.重置11}></button>
+                                <i class="Hui-iconfont  btn-close"  @click="close(d)">&#xe6dd;</i>
+                            </div>
+                            <div>
+                                <table class="tabel table table-border table-bordered table-bg">
+                                    <thead>
+                                    <tr>
+                                        <th ><{$Think.lang.序号}></th>
+                                        <th ><{$Think.lang.B5C订单}></th>
+                                        <th ><{$Think.lang.第三方订单}></th>
+                                        <th ><{$Think.lang.数量}></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr v-for="(s,index) in show_table">
+                                        <td>{{index+1}}</td>
+                                        <td class="td-linknum">
+                                            <span>{{s.order_id}}</span>
+                                        </td>
+                                        <td class="td-linknum">
+                                            <a onclick="opennewtab(this,'第三方订单')" :_href="other_url+s.ORDER_ID" target="_blank" href="javascript:void(0);" > <span>{{s.ORDER_ID}}</span></a>
+                                        </td>
+                                        <td>{{s.change_num}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class=" padding10-0">
+                                    <ul class="pagination" v-html="ajax_page">
+                                        <!--<li v-for="(l,index) in show_list.sum"><a href="javascript:void(0);" @click="show_page(index)">{{index+1}}</a></li>-->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+
+
+                    <td v-if="def_channel">{{d.locking}}</td>
+                    <!--<td>{{d.on_way}}</td>
+                    <td>{{d.imperfections}}</td>-->
+                    <td v-if="d.weight > 0">¥{{king(d.weight)}}</td>
+                    <td v-else>{{d.weight}}</td>
+
+
+                    <td v-if="d.weight > 0">¥{{king(Math.round(d.weight*(parseInt(d.total_inventory)+parseInt(d.locking))*100)/100)}}</td>
+                    <td v-else>{{Math.round(d.weight*(parseInt(d.total_inventory)+parseInt(d.locking))*100)/100}}</td>
+                    <td>{{d.on_way}}</td>
+                    <td>￥{{d.on_way_money}}</td>
+                    <!--<td>
+                        <div style="height:20px;position: relative;">
+                            <span style="position: relative;cursor:pointer;display:inline-block" v-on:mouseenter="showBtn($event)" v-on:mouseleave="hideBtn(d)" >
+                                <button class="xcl-hover-btn"><{$Think.lang.操作}></button>
+                                <div class="xcl-btn-group">
+                                    <a onclick="opennewtab(this,'<{$Think.lang.锁库}>')" :_href="'/index.php?m=stock&a=lock&skuadd=' + d.SKU_ID" ><span ><{$Think.lang.锁库}></span></a>
+                                </div>
+                            </span>
+                        </div>
+                    </td>-->
+                </tr>
+
+                <tr v-show="d.noshow">
+                    <td colspan="16" class="padding0">
+                        <div class="insert-wrap">
+                            <table class="table table-border table-bordered table-bg">
+                                <thead class="th-wrap">
+                                <tr class="text-c">
+                                    <th><{$Think.lang.批次号}></th>
+                                    <th><{$Think.lang.销售团队}></th>
+                                    <th><{$Think.lang.采购单号}></th>
+                                    <th><{$Think.lang.采购团队}></th>
+                                    <th><{$Think.lang.入库时间}></th>
+                                    <th><{$Think.lang.批次成本}></th>
+                                    <th><{$Think.lang.保质期截止时间}></th>
+                                    <th><{$Think.lang.剩余可售}></th>
+                                    <th><{$Think.lang.已占用}></th>
+                                </tr>
+                                </thead>
+                                <tbody class="td-wrap">
+                                    <tr class="text-c" v-for="(bd,index) in d.get_data" v-cloak class="td-wrap">
+                                        <td>{{bd.batch_code}}</td>
+                                        <td><span v-if="bd.sale_team_code in sale_teams">{{sale_teams[bd.sale_team_code]}}</span></td>
+                                        <td>{{bd.purchase_order_no}}</td>
+                                        <td>{{sp_teams[bd.purchase_team_code]}}</td>
+                                        <td>{{bd.create_time}}</td>
+                                        <td v-if="d.weight > 0">¥{{king(Math.round(d.weight*(parseInt(bd.available_for_sale_num)+parseInt(bd.locking))*100)/100)}}</td>
+                                        <td v-else>{{Math.round(d.weight*(parseInt(bd.total_inventory)+parseInt(bd.locking))*100)/100}}</td>
+                                        <td>{{bd.date_of_manufacture|timeZone(d.SHELF_LIFE)}}</td>
+                                        <td>{{bd.available_for_sale_num}}</td>
+                                        <td class="box-parent" :class="{ showbg:bd.show_bg }"  style="cursor: pointer; text-decoration: underline;">
+                                            <span @click="show_data(bd)">{{bd.occupied}}</span>
+                                            <div v-show="bd.article" class="xcl-box" style="right: -8px;">
+                                                <div class="search-row">
+                                                    <input type="text" v-model="search_order" >
+                                                    <i class="Hui-iconfont Hui-iconfont-search" @click="search_batch"></i>
+                                                    <button type="button" @click="reset"><{$Think.lang.重置}></button>
+                                                    <i class="Hui-iconfont  btn-close" @click="close(bd);">&#xe6dd;</i>
+                                                </div>
+                                                <div>
+                                                    <table class="tabel table table-border table-bordered table-bg">
+                                                        <thead>
+                                                        <tr>
+                                                            <th ><{$Think.lang.序号}></th>
+                                                            <th ><{$Think.lang.B5C订单}></th>
+                                                            <th ><{$Think.lang.第三方订单}></th>
+                                                            <th ><{$Think.lang.数量}></th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr v-for="(val, key) in show_batch_datas">
+                                                            <td>{{ key + 1 }}</td>
+                                                            <td class="td-linknum">
+                                                                <!--<span>{{ val.order_id }}</span>-->
+                                                                <a onclick="opennewtab(this,'B5C订单')" :_href="detail_show + val.order_id" target="_blank" href="javascript:void(0);" > <span>{{ val.order_id }}</span></a>
+                                                            </td>
+                                                            <td class="td-linknum">
+                                                                <a onclick="opennewtab(this,'第三方订单')" :_href="other_url + val.ORDER_ID" target="_blank" href="javascript:void(0);" > <span>{{ val.ORDER_ID }}</span></a>
+                                                            </td>
+                                                            <td>{{ val.change_num }}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class=" padding10-0">
+                                                        <ul class="pagination" v-html="ajax_page">
+                                                            <!--<li v-for="(l,index) in show_list.sum"><a href="javascript:void(0);" @click="show_page(index)">{{index+1}}</a></li>-->
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </td>
+                </tr>
+            </template>
+        </tbody>
+        </table>
+    </div>
+    <div class="use-row">
+        <div class="col-100 text-right">
+            <ul class="pagination"> <{$pages}> </ul>
+        </div>
+    </div>
+</div>
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/H-ui.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/lib/layer-v3.0.3/layer/layer.js"></script>
+<script type="text/javascript">
+    Vue.filter('timeZone', function (time, self_time) {
+        var self_time = parseInt(self_time);
+        var pdate = new Date(time);
+        var str = '';
+        pdate.setDate(pdate.getDate()+self_time);
+        if (pdate != 'Invalid Date') {
+            year = pdate.getFullYear()
+            month = pdate.getMonth()+1;
+            day = pdate.getDate();
+            str = year + "-" + month + "-" + day;
+        } else {
+            str = "-";
+        }
+
+        return str;
+    });
+    var vm = new Vue({
+        el:"#xcl-wrap",
+        data:{stream_arr:<{$stream_arr}>,
+        house_list:<{$house_list}>,
+        house_all_list:<{$house_all_list}>,
+        all_channel:<{$all_channel}>,
+        def_channel:0,
+        param:<{$param}>,
+        show_table:[],
+        search_order:'',
+        SKU_ID:'',
+        other_url:"<{$go_url}>",
+        detail_show:"<{$detail_show}>",
+        show_list:"",
+        show_sku:"",
+        ajax_page:"",
+        def_sku_none: 0,
+        house_list_model:'',
+        GUDS_CNS_NM:'',
+        SKU:'',
+        //get_data: [],
+        sale_teams: <{$sale_teams}>,
+        sp_teams: <{$sp_teams}>,
+        show_batch_datas: [],
+        base_msg: '/Application/Tpl/Home/Public/images/rk-add.png',
+        base_msg_open: '/Application/Tpl/Home/Public/images/rk-shrink.png',
+        tmp: '123',
+    },
+    methods:{
+        show_tr: function (e) {
+            if (e.noshow == 1) {
+                vm.tmp = 1;
+                //vm.base_msg = '/Application/Tpl/Home/Public/images/rk-add.png';
+                e.noshow = 0;
+                //e.get_data = [];
+                vm.tmp = e.noshow;
+                return;
+            } else if(e.nowshow == 0) {
+                e.noshow = 1;
+                vm.tmp = 2;
+                //vm.base_msg = '/Application/Tpl/Home/Public/images/rk-shrink.png';
+            } else {
+                e.noshow = 1;
+                vm.tmp = 2;
+            }
+            if (!e.get_data)vm.show_batch(e.SKU_ID, e.channel, e);
+            vm.tmp = e.noshow;
+        },
+        testx: function () {
+            alert('run');
+        },
+        show_data: function (e) {
+            var batch_id = e.id;
+            var index = 0;
+            $.ajax({
+                type:"POST",
+                async:false,
+                url:"/index.php?m=stock&a=show_data",
+                data:{
+                    batch_id:batch_id,
+                },
+                beforeSend  : function () {
+                    index = layer.load(2, {
+                        shade: [0.1,'#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success:function(res){
+                    if(JSON.parse(res)['status'] == 'y'){
+                        vm.show_batch_datas = JSON.parse(res)['data'];
+                        vm.show_list = JSON.parse(res)['show'];
+                        vm.show_sku = JSON.parse(res)['show']['sku'];
+                        vm.ajax_page = JSON.parse(res)['show']['ajax'];
+                        e.article = 1;
+                    }else{
+                        box.Alert('<{$Think.lang.提示}>',JSON.parse(res)['info']);
+                    }
+                    layer.close(index);
+                },
+                error:function(){
+                    alertNew('网络繁忙，请重试！')
+                }
+            });
+        },
+        close_show: function(e) {
+            e.article = 0;
+        },
+        reset:function (e) {
+            var e = [];
+            e.SKU_ID = this.SKU_ID;
+            this.search_order = '';
+            //this.show(e);
+        },
+        reset_order:function () {
+            this.SKU = '';
+            this.GUDS_CNS_NM = '';
+            this.house_list_model = '';
+            this.def_channel = 0;
+            this.def_sku_none = 0;
+        },
+        show:function (e) {
+            e.show_bg = 1;
+            var SKU_ID = this.SKU_ID = e.SKU_ID;
+            console.log(SKU_ID);
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/index.php?m=stock&a=take_up",
+                data: {
+                    SKU_ID: SKU_ID,
+                },
+                success: function (res) {
+                    if (JSON.parse(res)['status'] == 'y') {
+                        vm.show_table = JSON.parse(res)['data']
+                        vm.show_list = JSON.parse(res)['show']
+                        vm.show_sku = JSON.parse(res)['show']['sku']
+                        vm.ajax_page = JSON.parse(res)['show']['ajax']
+                        e.is_show = 1;
+                    } else {
+                        box.Alert('<{$Think.lang.提示}>', JSON.parse(res)['info']);
+                        e.show_bg = 0;
+                    }
+
+                },
+                error: function () {
+                    alertNew('网络繁忙，请重试！')
+                }
+            });
+            this.stream_arr.splice(1, 0)
+        },
+        show_page:function (index) {
+            console.log('a');
+            var SKU_ID = this.SKU_ID = this.show_sku;
+
+            var p = index + 1;
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/index.php?m=stock&a=take_up",
+                data: {
+                    SKU_ID: SKU_ID,
+                    p: p
+                },
+                success: function (res) {
+                    if (JSON.parse(res)['status'] == 'y') {
+                        vm.show_table = JSON.parse(res)['data']
+                        vm.ajax_page = JSON.parse(res)['show']['ajax']
+                    } else {
+                        box.Alert('<{$Think.lang.提示}>', JSON.parse(res)['info']);
+                    }
+
+                },
+                error: function () {
+                    alertNew('网络繁忙，请重试！')
+                }
+            });
+            this.stream_arr.splice(1, 0)
+        },
+        search:function () {
+            var order_id = this.search_order;
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/index.php?m=stock&a=search_up",
+                data: {
+                    order_id: order_id,
+                },
+                success: function (res) {
+                    if (JSON.parse(res)['status'] == 'y') {
+                        vm.show_table = JSON.parse(res)['data']
+
+                    } else {
+                        box.Alert('<{$Think.lang.提示}>', JSON.parse(res)['info']);
+                    }
+
+                },
+                error: function () {
+                    alertNew('网络繁忙，请重试！')
+                }
+            });
+            this.stream_arr.splice(1, 0)
+        },
+        search_batch:function () {
+            var order_id = this.search_order;
+            var show_batch_datas = null;
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/index.php?m=stock&a=search_up",
+                data: {
+                    order_id: order_id,
+                },
+
+                beforeSend  : function () {
+                    index = layer.load(2, {
+                        shade: [0.1,'#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (res) {
+                    if (JSON.parse(res)['status'] == 'y') {
+                        show_batch_datas = JSON.parse(res)['data']
+                    } else {
+                        box.Alert('<{$Think.lang.提示}>', JSON.parse(res)['info']);
+                    }
+
+                },
+                error: function () {
+                    alertNew('网络繁忙，请重试！')
+                }
+            });
+            if (show_batch_datas) {
+                vm.show_batch_datas = show_batch_datas;
+                console.log(show_batch_datas);
+            }
+            this.stream_arr.splice(1, 0)
+        },
+        close:function (e) {
+            e.article = e.show_bg = e.is_show = 0;
+            this.search_order = '';
+            this.stream_arr.splice(1, 0);
+        },
+        king:function (e) {
+            var k = e.toString().split('.')
+            if (e.toString().indexOf('.') > 0) {
+                var s = '.' + k[1]
+            } else {
+                var s = ''
+            }
+            return k[0].toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,') + s;
+        },
+        showBtn:function (event) {
+            event.target.style.height = "50px";
+            event.target.children[1].style.display = "inline-block";
+        },
+        hideBtn:function (eventd) {
+            event.target.style.height = "";
+            event.target.children[1].style.display = "none";
+        },
+        show_batch: function (sku_id, channel, e) {
+            var sku_id = sku_id;
+            var channel = channel;
+            var index;
+            e.get_data = [];
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/index.php?m=stock&a=show_batch",
+                data: {
+                    sku_id: sku_id,
+                    channel: channel
+                },
+                beforeSend  : function () {
+                    index = layer.load(2, {
+                        shade: [0.1,'#fff'] //0.1透明度的白色背景
+                    });
+                },
+                success: function (res) {
+                    var res_status = JSON.parse(res)['status'];
+                    if (res_status == 'n') {
+                        //layer.msg(JSON.parse(res)['info']);
+                        //box.Alert('<{$Think.lang.提示}>',JSON.parse(res)['info']);
+                        layer.open({
+                            title: '<{$Think.lang.提示}>',
+                            type: 1,
+                            skin: 'layui-layer layui-layer-page', //样式类名
+                            closeBtn: 0, //不显示关闭按钮
+                            anim: 5,
+                            shadeClose: true, //开启遮罩关闭
+                            content: JSON.parse(res)['info']
+                        });
+                    } else {
+                        //vm.get_data = JSON.parse(res)['data'];
+                        e.get_data = JSON.parse(res)['data'];
+                    }
+                    layer.close(index);
+                },
+                error: function () {
+                    alertNew('网络繁忙，请重试！');
+                }
+            });
+            }
+        },
+    });
+    function opennewtab(o,title){
+        if($(o).attr('_href')){
+            var bStop=false;
+            var bStopIndex=0;
+            var _href=$(o).attr('_href');
+            var _titleName=$(o).html();
+            var topWindow=$(window.parent.document);
+            var show_navLi=topWindow.find("#min_title_list li");
+            show_navLi.each(function() {
+                if($(this).find('span').attr("data-href")==_href){
+                    bStop=true;
+                    bStopIndex=show_navLi.index($(o));
+                    return false;
+                }
+            });
+            if(!bStop){
+                var topWindow=$(window.parent.document);
+                var show_nav=topWindow.find('#min_title_list');
+                show_nav.find('li').removeClass("active");
+                var iframe_box=topWindow.find('#iframe_box');
+                show_nav.append('<li class="active"><span data-href="'+_href+'">'+title+'</span><i></i><em></em></li>');
+
+                var topWindow=$(window.parent.document);
+                var taballwidth=0,
+                    $tabNav = topWindow.find('.acrossTab'),
+                    $tabNavWp = topWindow.find(".Hui-tabNav-wp"),
+                    $tabNavitem = topWindow.find(".acrossTab li"),
+                    $tabNavmore =topWindow.find(".Hui-tabNav-more");
+                if (!$tabNav[0]){return}
+                $tabNavitem.each(function(index, element) {
+                    taballwidth+=Number(parseFloat($(this).width()+60))});
+                $tabNav.width(taballwidth+25);
+                var w = $tabNavWp.width();
+                if(taballwidth+25>w){
+                    $tabNavmore.show()}
+                else{
+                    $tabNavmore.hide();
+                    $tabNav.css({left:0})}
+                var iframeBox=iframe_box.find('.show_iframe');
+                iframeBox.hide();
+                iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe frameborder="0" src='+_href+'></iframe></div>');
+                var showBox=iframe_box.find('.show_iframe:visible');
+                showBox.find('iframe').attr("src",_href).load(function(){
+                    showBox.find('.loading').hide();
+                });
+
+            }
+            else{
+                show_navLi.removeClass("active").eq(bStopIndex).addClass("active");
+                var iframe_box=topWindow.find("#iframe_box");
+                iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe").attr("src",_href);
+            }
+        }
+    }
+    function show_page(e){
+        vm.show_page(e-1)
+    }
+    (function(){
+        if(0 != vm.param){
+            vm.house_list_model=vm.param.DELIVERY_WAREHOUSE;
+            vm.GUDS_CNS_NM=vm.param.GUDS_CNS_NM;
+            vm.SKU=vm.param.SKU;
+            vm.def_channel = parseInt(vm.param.channel);
+            vm.def_sku_none = parseInt(vm.param.sku_none);
+        }
+    })();
+
+    //$(".td-wrap td button").click(function () {
+    //    $(this).attr("disabled","disabled");
+    //    var imgBtn = $(this).find("img");
+    //    imgBtn.toggleClass("unfold");
+    //    if (imgBtn.hasClass("unfold")) {
+    //        vm.get_data = [];
+    //        var sku_id = $(this).parents("tr").find("td:eq(2)").html();
+    //        var channel = $(this).parents("tr").find("td:eq(3) span").text();
+    //        vm.show_batch(sku_id, channel);
+    //        setTimeout(function () {
+    //           imgBtn.attr("src", "<{$HI_PATH}>/images/rk-shrink.png");
+    //            var tableHtml = $(".insert-wrap").parents("tr")[0].outerHTML;
+    //            imgBtn.parents("tr").after(tableHtml);
+    //            imgBtn.parents("tr").next().show().find("div");
+    //            $(".td-wrap td button").removeAttr("disabled");
+    //        }, 100);
+    //    } else {
+    //        imgBtn.attr("src", "<{$HI_PATH}>/images/rk-add.png");
+    //       imgBtn.parents("tr").next().remove();
+    //        $(".td-wrap td button").removeAttr("disabled");
+    //    }
+    //});
+
+    //function show_data(e){
+    //    var batch_id = $(e).attr('data-getvalue');
+    //    var _div = $(e).next();
+    //    $.ajax({
+    //        type:"POST",
+    //        async:false,
+    //        url:"/index.php?m=stock&a=show_data",
+    //        data:{
+    //            batch_id:batch_id,
+    //        },
+    //        success:function(res){
+    //            if(JSON.parse(res)['status'] == 'y'){
+    //                vm.show_batch_datas = JSON.parse(res)['data'];
+    //                vm.show_list = JSON.parse(res)['show'];
+    //                vm.show_sku = JSON.parse(res)['show']['sku'];
+    //                vm.ajax_page = JSON.parse(res)['show']['ajax'];
+    //                _div.css('display', "block");
+    //            }else{
+    //                box.Alert('<{$Think.lang.提示}>',JSON.parse(res)['info']);
+    //                _div.css('display', "none");
+    //            }
+
+    //       },
+    //        error:function(){
+    //            alertNew('网络繁忙，请重试！')
+    //        }
+    //    });
+        //this.stream_arr.splice(1,0)
+    //}
+</script>
+</body>
+
+</html>

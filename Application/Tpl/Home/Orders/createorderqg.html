@@ -1,0 +1,166 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css" />
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+    <script type="text/javascript" src="../Public/js/ajaxupload.js"></script>
+    <title>新建订单</title>
+</head>
+<body class="create-order">
+<div class="order-title">
+    新建订单【求购订单】
+</div>
+<div class="cli-table">
+    <table class="table table-border table-bg table-bordered">
+        <caption><{$Think.lang.客户信息}></caption>
+        <tbody>
+        <tr>
+            <td><{$Think.lang.B5C客户ID}></td>
+            <td><input type="text" name="CUST_ID" value="" placeholder="请输入帮5采客户ID（手机号）">&nbsp;&nbsp;&nbsp;<em onclick="searchuser()">检索</em></td>
+            <td><{$Think.lang.客户姓名}></td>
+            <td id="custNickNm"></td>
+        </tr>
+        <tr>
+            <td>求购信息</td>
+            <td colspan="3"><textarea name="reqCont" placeholder="请输入求购信息" cols="100" rows="5"></textarea></td>
+        </tr>
+        <tr style="height:100px;">
+            <td>求购图片</td>
+            <td colspan="3" id="img">
+                <form id="begbuy-form" action="<{:U('Orders/uploadpic')}>" method="post" enctype="multipart/form-data">
+                    <div style="float:left;width:100px;padding:10px;">
+                        <a id="choosepic" href="javascript:;" class="file">选择图片
+                            <input type="file" name="" id="">
+                        </a>
+                        <input type="file" style="display:none" name="pic" id="pic" value="选择图片">
+                    </div>
+                </form>
+                <!--<div class="img-pos"><img src="http://7xli3x.media1.z0.glb.clouddn.com/b5c-web-1583bbbb0c5d4d" alt="" width="80">-->
+                    <!--<span class="close-img">-->
+                        <!--<img src="../Public/images/u5024.png" alt="" width="20" onclick="removeimg(this);">-->
+                    <!--</span>-->
+                <!--</div>-->
+            </td>
+        </tr>
+        <script>
+            $(function() {
+                var button = $('#choosepic');
+                new AjaxUpload(button, {
+                    // action: 'upload-test.php',文件上传服务器端执行的地址
+                    action: '<{:U("orders/uploadpic")}>',
+                    name: 'pic',
+                    onSubmit: function(file, ext) {
+
+                    },
+                    onComplete: function(file, response) {
+                        response = $.parseJSON(response);
+                        var html = '';
+                        if(response.success){
+                            var html = '<div class="img-pos"><img src="'+response.data+'" width="80"><span class="close-img"><img src="../Public/images/u5024.png" width="20" onclick="removeimg(this);"></span><input type="hidden" name="pic[]" value="'+response.data+'"></div>';
+                            $('#img').append(html);
+                        }else {
+                            alert(response.message);
+                        }
+
+                    }
+                });
+            })
+
+            function searchuser(){
+                $('select[name="address"]').html('<option value="">选择地址B5C客户ID</option>');
+                var CUST_ID = $('input[name="CUST_ID"]').val();
+                $.ajax({
+                    'url':'<{:U("orders/searchuser")}>',
+                    'type':'POST',
+                    'data':{CUST_ID:CUST_ID},
+                    success: function (data) {
+                        //console.log(data);
+                        //return false;
+                        if (data.status == 1) {
+                            $('#custNickNm').text(data.info.custNickNm);
+                        } else {
+                            alert(data.info);
+                            return false;
+                        }
+                    }
+                },'json');
+            }
+
+            function saveord(){
+                var account = $('input[name="CUST_ID"]').val();
+                if(account == ''){
+                    alert('客户ID不能为空');
+                    return false;
+                }
+                var reqCont = $('textarea[name="reqCont"]').val();
+                if(reqCont == ''){
+                    alert('求购信息不能为空');
+                    return false;
+                }
+                var imgs = [];
+                $('input[name="pic[]"]').each(function(){
+                    imgs.push($(this).val())
+                })
+                if(imgs && imgs.length == 0){
+                    alert('请上传求购图片');
+                    return false;
+                }
+                $.ajax({
+                    'url':'<{:U("orders/docreateorderqg")}>',
+                    'type':'POST',
+                    'data':{account:account,reqCont:reqCont,imgs:imgs},
+                    success: function (data) {
+                        if (data.status == 1) {
+                            alert(data.info.msg);
+                        } else {
+                            alert(data.info);
+                            return false;
+                        }
+                    }
+                },'json');
+            }
+
+            function removeimg(o){
+                var me = $(o);
+                me.parents('.img-pos').remove();
+            }
+        </script>
+        </tbody>
+    </table>
+</div>
+
+<div class="text-c new-buttons">
+    <span onclick="saveord();">保存</span>
+    <span onclick="location.href='';">清空</span>
+</div>
+<div class="alert hide">
+    <div class="alert-bg"></div>
+    <div class="alert-body">
+        <div class="title"><span>请选择sku</span></div>
+        <div class="content row skulist">
+
+        </div>
+        <div class="text-c">
+            <span class="btn-con"><{$Think.lang.Yes}></span>
+            <span class="btn-can" onclick="$('.alert').hide();$('.btn-con').unbind()"><{$Think.lang.No}></span>
+        </div>
+    </div>
+</div>
+</body>
+</html>

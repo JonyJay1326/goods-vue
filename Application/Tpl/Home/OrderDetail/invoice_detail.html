@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<title><{$Think.lang.未开票单}></title>
+    <link rel="stylesheet" href="../Public/css/purchase.css"/>
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+    <link rel="stylesheet" href="../Public/css/purchaseDetail.css?v=2017028"/>
+    <style>
+        .table-bg thead{visibility: hidden !important;margin-top: -10px;}
+        .table{margin-bottom:0px;}.table tbody tr td{vertical-align: middle;text-align: center}
+    </style>
+</head>
+<body>
+<div class="col-lg-12 col-md-12 col-sm-12 purchase_detail invoice_detail">
+    <div class="row row_title">
+       <a href=""><{$Think.lang.订单详情}></a>
+       <a href=""><{$Think.lang.付款}></a>
+       <a href=""><{$Think.lang.发货}></a>
+       <a href=""><{$Think.lang.入库}></a>
+       <a href="" class="active"><{$Think.lang.发票}></a>
+       <a href=""><{$Think.lang.操作日志}></a>
+    </div>
+    <div class="row row_title_line"><a href="" class="line5"></a></div>
+    <form action="">
+        <div class="detail_form">
+            <table class="table table-bg">
+                <thead>
+                    <th width="15%"></th>
+                    <th width="35%"></th>
+                    <th width="15%"></th>
+                    <th width="35%"></th>
+                </thead>
+                <tbody>
+                <tr>
+                    <td colspan="6"><{$Think.lang.订单信息}></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.订单号}></td>
+                    <td>12</td>
+                    <td><{$Think.lang.供应商}></td>
+                    <td>12</td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.我方公司}></td>
+                    <td></td>
+                    <td><{$Think.lang.采购时间}></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.采购金额}></td>
+                    <td></td>
+                    <td><{$Think.lang.采购团队}></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.发票类型}></td>
+                    <td></td>
+                    <td><{$Think.lang.税点}></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><{$Think.lang.订单备注}></td>
+                    <td></td>
+                    <td><{$Think.lang.开票状态}></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-goodsDetail">
+                <p class="table-p"><{$Think.lang.商品信息}></p>
+                <thead>
+                    <th width="10%">SKUID/<{$Think.lang.条形码}></th>
+                    <th width="15%"><{$Think.lang.商品名称}></th>
+                    <th width="10%"><{$Think.lang.商品属性}></th>
+                    <th width="8%"><{$Think.lang.采购数量}></th>
+                    <th width="8%" ><{$Think.lang.采购单价}></th>
+                    <th width="8%"><{$Think.lang.金额小计}></th>
+                    <th width="8%"><{$Think.lang.已开票金额}></th>
+                    <th width="15%"><{$Think.lang.开票名称}></th>
+                    <th width="10%"><{$Think.lang.待开票金额}></th>
+                </thead>
+                <tbody>
+                 <tr>
+                     <td>8000002501</td>
+                     <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                     <td class="invoice_td_span"><span>颜色：red</span><span>尺寸：12</span></td>
+                     <td>100</td>
+                     <td>50</td>
+                     <td>50</td>
+                     <td>0</td>
+                     <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                     <td>50</td>
+                 </tr>
+                 <tr>
+                     <td>8000002501</td>
+                     <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                     <td class="invoice_td_span"><span>颜色：red</span><span>尺寸：12</span></td>
+                     <td>100</td>
+                     <td>50</td>
+                     <td>50</td>
+                     <td>0</td>
+                     <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                     <td>50</td>
+                 </tr>
+                <tr class="total">
+                    <td><{$Think.lang.合 计}></td>
+                    <td></td>
+                    <td></td>
+                    <td>12</td>
+                    <td>RMB</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>0</td>
+                    <td>15</td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="invoice_detail_yet">
+                <table class="table table-bg">
+                    <thead>
+                    <th width="15%"></th>
+                    <th width="35%"></th>
+                    <th width="15%"></th>
+                    <th width="35%"></th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="6"><{$Think.lang.发票信息}>(1/2)</td>
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.发票号}></td>
+                        <td>12</td>
+                        <td><{$Think.lang.发票总金额}></td>
+                        <td>12</td>
+
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.发票扫描件}></td>
+                        <td></td>
+                        <td><{$Think.lang.发票备注}></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.财务确认人}></td>
+                        <td></td>
+                        <td><{$Think.lang.确认时间}></td>
+                        <td></td>
+
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-goodsDetail">
+                    <p class="table-p"><{$Think.lang.商品明细}></p>
+                    <thead>
+                    <th width="15%">SKUID/<{$Think.lang.条形码}></th>
+                    <th width="25%"><{$Think.lang.商品名称}></th>
+                    <th width="15%"><{$Think.lang.商品属性}></th>
+                    <th width="12%" ><{$Think.lang.采购单价}></th>
+                    <th width="13%" ><{$Think.lang.开票金额}></th>
+                    <th width="20%"><{$Think.lang.开票名称}></th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>8000002501</td>
+                        <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                        <td class="invoice_td_span"><span>颜色：red</span><span>尺寸：12</span></td>
+                        <td>100</td>
+                        <td>50</td>
+                        <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                    </tr>
+                    <tr>
+                        <td>8000002501</td>
+                        <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                        <td class="invoice_td_span"><span>颜色：red</span><span>尺寸：12</span></td>
+                        <td>100</td>
+                        <td>50</td>
+                        <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bg">
+                    <thead>
+                    <th width="15%"></th>
+                    <th width="35%"></th>
+                    <th width="15%"></th>
+                    <th width="35%"></th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td colspan="6"><{$Think.lang.发票信息}>(2/2)</td>
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.发票号}></td>
+                        <td>12</td>
+                        <td><{$Think.lang.发票总金额}></td>
+                        <td>12</td>
+
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.发票扫描件}></td>
+                        <td></td>
+                        <td><{$Think.lang.发票备注}></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.财务确认人}></td>
+                        <td></td>
+                        <td><{$Think.lang.确认时间}></td>
+                        <td></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-goodsDetail">
+                    <p class="table-p"><{$Think.lang.商品明细}></p>
+                    <thead>
+                    <th width="15%">SKUID/<{$Think.lang.条形码}></th>
+                    <th width="25%"><{$Think.lang.商品名称}></th>
+                    <th width="15%"><{$Think.lang.商品属性}></th>
+                    <th width="12%" ><{$Think.lang.采购单价}></th>
+                    <th width="13%" ><{$Think.lang.开票金额}></th>
+                    <th width="20%"><{$Think.lang.开票名称}></th>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>8000002501</td>
+                        <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                        <td class="invoice_td_span"><span>颜色：red</span><span>尺寸：12</span></td>
+                        <td>100</td>
+                        <td>50</td>
+                        <td>贝贝德皮诺摔跤选手图案婴儿灯笼裤</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-12  col-md-12 col-xs-12 col-lg-12-btn">
+                <button type="button" class="Btn-edit"><{$Think.lang.编辑信息}></button>
+                <button type="button" class="btn-sure"><{$Think.lang.收到发票}></button>
+                <button type="button" class="btn-back"><{$Think.lang.返回列表}></button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/jquery.form.min.js"></script>
+</html>

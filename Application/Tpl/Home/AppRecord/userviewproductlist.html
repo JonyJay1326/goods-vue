@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>用户浏览商品列表</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css" />
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css?=20170503">
+
+    <style>
+        .box-parent {
+            position: relative;
+        }
+
+        .xcl-box {
+            width: 415px;
+            height: 400px;
+            position: absolute;
+            top: 40px;
+            right: -132px;
+            background: white;
+            box-shadow: 2px 2px 18px #c3bebe;
+            border: 1px solid azure;
+            padding: 10px;
+            z-index: 50;
+            overflow: auto;
+        }
+
+
+        .xcl-box .search-row {
+            margin: 10px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .xcl-box .search-row input {
+            border: 1px solid #dedede;
+            height: 24px;
+            padding: 0 10px;
+            width: 180px;
+            border-radius: 2px;
+        }
+        .xcl-box .search-row input:focus{
+            box-shadow: 0 0 5px #33ccff;
+            border: 1px solid transparent;
+        }
+        .xcl-box .search-row .Hui-iconfont-search{
+            color: white;
+            font-size: 20px;
+            background: #ec2d64;
+            vertical-align: middle;
+            margin-left: -15px;
+            padding: 3px 4px;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+        }
+        .xcl-box .search-row .btn-close{
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            color: #666;
+            font-size: 20px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .xcl-box .search-row .btn-close:hover{
+            color: #ec2d64;
+        }
+        .xcl-box .search-row button{
+            border: 1px solid #999;
+            padding: 0 5px;
+            height: 26px;
+            font-size: 14px;
+            width: auto;
+            margin-left: 15px;
+            background: #b3b3b3;
+            color: white;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+        .xcl-box table thead th{
+            height:25px;
+            line-height: 25px;
+            padding: 0 8px;
+        }
+        .xcl-box table tbody td{
+            height:20px;
+            line-height: 20px;
+            padding: 0 8px;
+        }
+        .showbg{
+            background-color: #ddd;
+        }
+        .td-linknum>a>span{
+            text-decoration: underline;
+        }
+
+        .xcl-btn-group{
+            position: absolute;
+            top: 28px;
+            right: 0;
+            z-index: 100;
+            display: none;
+        }
+        .xcl-btn-group span{
+            display: inline-block;
+            padding: 1px 10px 2px;
+            background: #5eb95e;
+            color: white;
+            border-radius: 2px;
+        }
+        .xcl-hover-btn{
+            display: inline-block;
+            padding: 1px 10px 2px;
+            background: #EC2D64;
+            color: white;
+            height: 20px;
+            border: 1px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="xcl-wrap" id="xcl-wrap">
+    <div class="select-line">
+        <form action="" method="post" id="thisform">
+            <div class="row">
+                <div class="col-15">
+                    <select name="CD" v-model="selected">
+                        <option value=""><{$Think.lang.平台渠道}></option>
+                        <option v-for="option in options" :value="option.CD">{{option.CD_VAL}}</option>
+                    </select>
+                </div>
+
+                <div class="col-15">
+                    <input type="text" name="userId" v-model="userId" placeholder="<{$Think.lang.用户ID}>">
+                </div>
+
+                <div class="col-15">
+                    <input type="text" name="productId" v-model="productId" placeholder="<{$Think.lang.商品ID}>">
+                </div>
+                <div class="col-15 text-c">
+                    <input type="text" name="startDate" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.起始日期}>" class="Wdate" v-model="startDate">
+                </div>
+                <div class="col-15 text-c">
+                    <input type="text" name="endDate" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.结束日期}>" class="Wdate" v-model="endDate">
+                </div>
+
+                <div class="col-20">
+                    <button onclick="submit()" type="button" name="query" class="button-pink"><{$Think.lang.查询}></button>
+                    <button type="button" @click="reset_order"  name="reset" class="button-black"><{$Think.lang.重置}></button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <div class="cl pd-5"><span>共有数据：<strong><{$total}></strong> 条</span> </div>
+    <div class="xcl-tabel" id="xcl-table">
+        <table class="table table-border table-bordered table-hover table-bg table-sort dataTable no-footer">
+            <thead>
+            <tr class="text-c">
+                <th width="30"><{$Think.lang.id}></th>
+                <th><{$Think.lang.用户Id}></th>
+                <th><{$Think.lang.平台渠道}></th>
+                <th><{$Think.lang.商品ID}></th>
+                <th><{$Think.lang.创建时间}></th>
+            </tr>
+            </thead>
+            <tbody class="text-c">
+            <tr v-for="(d,index) in stream_arr" v-cloak>
+                <td>{{index+1}}</td>
+                <td>{{d.userId}}</td>
+                <td>{{all_channel[d.CD].CD_VAL}}</td>
+                <td>{{d.productId}}</td>
+                <td>{{d.createDate}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-7 padding10-0">
+        <ul class="pagination">
+            <{$pages}>
+        </ul>
+    </div>
+</div>
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/H-ui.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+
+
+<script type="text/javascript">
+    var vm = new Vue({
+            el:"#xcl-wrap",
+
+            data:{
+                selected: '<{$cdCode}>',
+                options: <{$cdList}>,
+                stream_arr:<{$result}>,
+                all_channel:<{$all_channel}>,
+            userId:'<{$params['userId']}>',
+            productId:'<{$params['productId']}>',
+            startDate:'<{$params['startDate']}>',
+            endDate:'<{$params['endDate']}>'
+    },
+    methods:{
+        reset_order:function(){
+            this.productId = '';
+            this.startDate = '';
+            this.endDate = '';
+            this.userId = '';
+        }
+    }
+    });
+    function opennewtab(o,title){
+        if($(o).attr('_href')){
+            var bStop=false;
+            var bStopIndex=0;
+            var _href=$(o).attr('_href');
+            var _titleName=$(o).html();
+            var topWindow=$(window.parent.document);
+            var show_navLi=topWindow.find("#min_title_list li");
+            show_navLi.each(function() {
+                if($(this).find('span').attr("data-href")==_href){
+                    bStop=true;
+                    bStopIndex=show_navLi.index($(o));
+                    return false;
+                }
+            });
+            if(!bStop){
+                var topWindow=$(window.parent.document);
+                var show_nav=topWindow.find('#min_title_list');
+                show_nav.find('li').removeClass("active");
+                var iframe_box=topWindow.find('#iframe_box');
+                show_nav.append('<li class="active"><span data-href="'+_href+'">'+title+'</span><i></i><em></em></li>');
+
+                var topWindow=$(window.parent.document);
+                var taballwidth=0,
+                    $tabNav = topWindow.find('.acrossTab'),
+                    $tabNavWp = topWindow.find(".Hui-tabNav-wp"),
+                    $tabNavitem = topWindow.find(".acrossTab li"),
+                    $tabNavmore =topWindow.find(".Hui-tabNav-more");
+                if (!$tabNav[0]){return}
+                $tabNavitem.each(function(index, element) {
+                    taballwidth+=Number(parseFloat($(this).width()+60))});
+                $tabNav.width(taballwidth+25);
+                var w = $tabNavWp.width();
+                if(taballwidth+25>w){
+                    $tabNavmore.show()}
+                else{
+                    $tabNavmore.hide();
+                    $tabNav.css({left:0})}
+                var iframeBox=iframe_box.find('.show_iframe');
+                iframeBox.hide();
+                iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe frameborder="0" src='+_href+'></iframe></div>');
+                var showBox=iframe_box.find('.show_iframe:visible');
+                showBox.find('iframe').attr("src",_href).load(function(){
+                    showBox.find('.loading').hide();
+                });
+
+            }
+            else{
+                show_navLi.removeClass("active").eq(bStopIndex).addClass("active");
+                var iframe_box=topWindow.find("#iframe_box");
+                iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe").attr("src",_href);
+            }
+        }
+    }
+    function show_page(e){
+        vm.show_page(e-1)
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,311 @@
+<style>
+    .wrap {
+        box-sizing: border-box;
+        padding: 20px;
+        margin: 0;
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .row + .row {
+        margin-top: 20px;
+    }
+
+    [class*="col-"] {
+        padding: 0;
+    }
+</style>
+<div class="wrap">
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="use-title">
+                订单详情
+                <a ng-href="<{:U('log_list')}>&order_id={{initData.ORDER_ID}}" style="color:gray;margin-left: 20px"><{$Think.lang.订单日志}></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-one">
+                <caption><{$Think.lang.基础信息}></caption>
+                <tbody class="use-body">
+                <tr>
+                    <td><label><{$Think.lang.订单号}></label></td>
+                    <td>{{initData.ORDER_ID}}</td>
+                    <td><label><{$Think.lang.订单提交时间}></label></td>
+                    <td>{{initData.create_time}}</td>
+                </tr>
+                <tr>
+                    <td><label><{$Think.lang.PO编号}></label></td>
+                    <td>{{initData.PO_ID}}</td>
+                    <td><label><{$Think.lang.PO扫描件}></label></td>
+                    <td>
+                        <a target="_blank" ng-href=<{:U('orderDetail/download')}>&file={{initData.po_erp_path}} >{{initData.PO_FILFE_PATH}}</a></td>
+                </tr>
+                <tr>
+                    <td><label><{$Think.lang.客户名称}></label></td>
+                    <td>{{initData.CLIENT_NAME}}</td>
+                    <td><label><{$Think.lang.销售合同}></label></td>
+                    <!--<td>{{initData.CONTRACT_NUMBER}}</td>-->
+                    <td>{{initData.contract}}</td>
+                </tr>
+                <tr>
+                    <td><label><{$Think.lang.交货方式}></label></td>
+                    <td>{{initData.DELIVERY_METHOD}}</td>
+                    <td><label><{$Think.lang.目标港口}></label></td>
+                    <td>{{join_ares(initData.TARGET_PORT)}}</td>
+                </tr>
+                <tr>
+                    <td><label><{$Think.lang.结算周期}></label></td>
+                    <td>{{run_period(initData.BILLING_CYCLE_STATE)}}</td>
+                    <td><label><{$Think.lang.付款节点}></label></td>
+                    <td>{{show_node_arr(initData.PAYMENT_NODE)}}</td>
+                </tr>
+                <tr>
+                    <td><label><{$Think.lang.发票与税点}></label></td>
+                    <td colspan="3"><{$Think.lang.发票类型}>：{{run_invioce(initData.INVOICE_CODE)}}-<{$Think.lang.税点}>：{{run_tax_point(initData.TAX_POINT)}}%</td>
+                </tr>
+                <tr>
+                    <td><label><{$Think.lang.销售团队}></label></td>
+                    <td>{{initData.PO_USER}} - {{data.sales_team[initData.SALES_TEAM].CD_VAL}}</td>
+                    <td><label><{$Think.lang.订单备注}></label></td>
+                    <td>{{initData.remarks}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-three">
+                <caption><{$Think.lang.商品信息}></caption>
+                <thead class="use-head">
+                <tr>
+                    <th width="13%"><{$Think.lang.商品自编码}></th>
+                    <th width="15%"><{$Think.lang.商品名称}></th>
+                    <th width="9%"><{$Think.lang.SKU信息}></th>
+                    <th width="9%"><{$Think.lang.商品售价}></th>
+                    <th width="9%"><{$Think.lang.需求数量}></th>
+                    <th width="9%"><{$Think.lang.已发货}></th>
+                    <th width="9%"><{$Think.lang.待发货}></th>
+                    <th width="9%"><{$Think.lang.确认入库}></th>
+                    <th width="9%"><{$Think.lang.待入库}></th>
+                    <th width="9%"><{$Think.lang.小计}></th>
+                </tr>
+                </thead>
+                <tbody class="use-body">
+                <tr ng-repeat="g in data.goods">
+                    <td ng-if="g.sku_show">{{g.sku_show}}</td>
+                    <td ng-if="!g.sku_show">{{g.SKU_ID}}</td>
+                    <td>{{king(g.goods_title)}}</td>
+                    <td>{{king(g.goods_info)}}</td>
+                    <td>{{init_data.currency_bz[initData.po_currency].CD_VAL}} {{king(g.price_goods)}}</td>
+                    <td>{{king(g.required_quantity)}}</td>
+                    <td>{{king(g.SHIPPED_NUM)}}</td>
+                    <td>{{king(g.TOBE_DELIVERED_NUM)}}</td>
+                    <td>{{king(g.is_inwarehouse_num)}}</td>
+                    <td ng-if="g.required_quantity - g.is_inwarehouse_num > 0">{{king(g.required_quantity - g.is_inwarehouse_num)}}</td>
+                    <td ng-if="g.required_quantity - g.is_inwarehouse_num <= 0"><{$Think.lang.0}></td>
+                    <td>{{king(((g.price_goods * 1000000)*(g.required_quantity * 1000000) / 1000000000000))}}</td>
+                </tr>
+                <tr class="table_bg">
+                    <td>{{king(count(data.goods))}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>{{king(goods_sum.neednum)}}</td>
+                    <td>{{king(goods_sum.shipnum)}}</td>
+                    <td></td>
+                    <td>{{king(goods_sum.warehousing)}}</td>
+                    <td></td>
+                    <td>{{king(goods_sum.allnum)}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-three">
+                <caption><{$Think.lang.物流信息}></caption>
+                <thead class="use-head">
+                <tr>
+                    <th width="12%"><{$Think.lang.提单号}></th>
+                    <th width="10%"><{$Think.lang.发货数量}></th>
+                    <th width="10%"><{$Think.lang.发货成本}></th>
+                    <th width="10%"><{$Think.lang.物流费用}></th>
+                    <th width="10%"><{$Think.lang.发货人}></th>
+                    <th width="11%"><{$Think.lang.发货时间}></th>
+                    <th width="11%"><{$Think.lang.预计到港时间}></th>
+                    <th width="10%"><{$Think.lang.理货确认状态}></th>
+                    <th width="16%"><{$Think.lang.操作}></th>
+                </tr>
+                </thead>
+                <tbody class="use-body">
+                <tr ng-repeat="s in datas.ship">
+                    <td>{{s.BILL_LADING_CODE}}</td>
+                    <td>{{s.SHIPMENTS_NUMBER}}</td>
+                    <td>RMB {{king(s.power_all)}}</td>
+                    <td>{{init_data.currency_bz[s.LOGISTICS_CURRENCY].CD_VAL}} {{king(s.LOGISTICS_COSTS)}}</td>
+                    <td>{{s.AUTHOR}}</td>
+                    <td>{{getdatestr(s.DELIVERY_TIME)}}</td>
+                    <td>{{getdatestr(s.Estimated_arrival_DATE)}}</td>
+                    <td>{{init_data.warehousing_state[s.status].CD_VAL}}</td>
+                    <td class="use-btn">
+                        <a ng-href="<{:U('b2b/do_ship_show')}>&order_id={{s.order_id}}" class="btn-pub btn-blue"><{$Think.lang.发货详情}></a>
+                        <a ng-href="<{:U('b2b/warehousing_detail')}>&ORDER_ID={{s.order_id}}" class="btn-pub btn-green mg-l-10"><{$Think.lang.理货详情}></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-three">
+                <caption><{$Think.lang.收款信息}></caption>
+                <thead class="use-head">
+                <tr>
+                    <th width="10%"><{$Think.lang.收款账期}></th>
+                    <th width="10%"><{$Think.lang.预计收款时间}></th>
+                    <th width="10%"><{$Think.lang.预计收款金额}></th>
+                    <th width="10%"><{$Think.lang.收款操作}></th>
+                    <th width="10%"><{$Think.lang.发票}></th>
+                    <th width="10%"><{$Think.lang.实际收款金额}></th>
+                    <th width="10%"><{$Think.lang.实际收款时间}></th>
+                    <th width="10%"><{$Think.lang.逾期情况}></th>
+                    <th width="10%"><{$Think.lang.收款流水号}></th>
+                    <th width="10%"><{$Think.lang.操作}></th>
+                </tr>
+                </thead>
+                <tbody class="use-body">
+                <tr ng-repeat="r in datas.receipt">
+                    <td>{{show_node(r.receiving_code)}}</td>
+                    <td>{{gather_date(r)}}</td>
+                    <td>{{init_data.currency_bz[initData.po_currency].CD_VAL}} {{king(r.expect_receipt_amount)}}</td>
+                    <td ng-if="r.receipt_operation_status == 1"><{$Think.lang.已收款}></td> <!-- 收款操作 -->
+                    <td ng-if="r.receipt_operation_status != 1"><{$Think.lang.未收款}></td>
+                    <td>{{init_data.or_invoice_arr[r.invoice_status].CD_VAL}}</td>  <!-- 发票状态 -->
+                    <td>{{init_data.currency_bz[initData.po_currency].CD_VAL}}{{king(r.actual_payment_amount)}}</td>
+                    <td>{{getdatestr(r.actual_receipt_date)}}</td>
+                    <td class="detail_red"><p ng-bind-html="overdue(r,r.actual_receipt_date)|to_trusted"></p></td>
+                    <td>{{r.receipt_serial_number}}</td>
+                    <td class="use-btn">
+                        <a ng-href="<{:U('b2b/gathering_detail')}>&id={{r.ID}}" class="btn-pub btn-green"><{$Think.lang.查看}></a>
+                        <!--<a ng-href="<{:U('b2b/gathering_detail')}>&id={{r.ID}}"><{$Think.lang.收款}></a>-->
+                    </td>
+                </tr>
+                <!--<tr class="table_bg">
+                    <td><{$Think.lang.合计}></td>
+                    <td></td>
+                    <td>{{}}</td>
+                    <td></td>
+                    <td></td>
+                    <td>{{}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>-->
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12">
+            <table class="b2b-table-two">
+                <caption><{$Think.lang.利润信息}></caption>
+                <thead style="visibility: hidden">
+                <tr>
+                    <th width="9%"></th>
+                    <th width="9%"></th>
+                    <th width="9%"></th>
+                    <th width="10%"></th>
+                    <th width="9%"></th>
+                    <th width="9%"></th>
+                    <th width="9%"></th>
+                    <th width="9%"></th>
+                    <th width="9%"></th>
+                    <th width="9%"></th>
+                    <th width="9%"></th>
+                    <th width="9%"></th>
+                </tr>
+                </thead>
+                <tbody class="use-body">
+                <tr>
+                    <td width="10%" rowspan="5" class="text-center"><{$Think.lang.预估计算}></td>
+                    <td class="bg-td"><{$Think.lang.预估销售收入}></td>
+                    <td width="30%">${{datas.profit.A}}</td>
+                    <td  class="bg-td"><{$Think.lang.退税收入}></td>
+                    <td width="30%">${{datas.profit.B}}</td>
+                </tr>
+                <tr>
+                    <td class="bg-td"><{$Think.lang.预估总收入}></td>
+                    <td width="30%">${{datas.profit.C}}</td>
+                    <td class="bg-td"><{$Think.lang.预估商品成本}></td>
+                    <td width="30%">${{datas.profit.D}}</td>
+                </tr>
+                <tr>
+                    <td class="bg-td"><{$Think.lang.预估物流成本}></td>
+                    <td width="30%">${{datas.profit.E}}</td>
+                    <td class="bg-td"><{$Think.lang.预估总成本}></td>
+                    <td width="30%">${{datas.profit.F}}</td>
+                </tr>
+                <tr>
+                    <td class="bg-td"><{$Think.lang.预估利润}></td>
+                    <td width="30%">${{datas.profit.G}}</td>
+                    <td class="bg-td"><{$Think.lang.预估利润率}></td>
+                    <td width="30%">{{datas.profit.H}}%</td>
+                </tr>
+                <tr>
+                    <td class="bg-td"><{$Think.lang.生成时间}></td>
+                    <td width="30%">{{datas.profit.order_time}}</td>
+                    <td class="bg-td"></td>
+                    <td width="30%"></td>
+                </tr>
+                <!-- 实际 -->
+                <tr ng-if="datas.profit.create_time">
+                    <td width="10%" rowspan="5" class="text-center"><{$Think.lang.实际计算}></td>
+                    <td class="bg-td"><{$Think.lang.实际销售收入}></td>
+                    <td width="30%">${{datas.profit.I}}</td>
+                    <td class="bg-td"><{$Think.lang.退税收入}></td>
+                    <td width="30%">${{datas.profit.J}}</td>
+                </tr>
+                <tr ng-if="datas.profit.create_time">
+                    <td class="bg-td"><{$Think.lang.残次品收入}></td>
+                    <td width="30%">${{datas.profit.K}}</td>
+                    <td class="bg-td"><{$Think.lang.实际总收入}></td>
+                    <td width="30%">${{datas.profit.L}}</td>
+                </tr>
+                <tr ng-if="datas.profit.create_time">
+                    <td class="bg-td"><{$Think.lang.实际商品成本}></td>
+                    <td width="30%">${{datas.profit.M}}</td>
+                    <td class="bg-td"><{$Think.lang.实际物流成本}></td>
+                    <td width="30%">${{datas.profit.N}}</td>
+                </tr>
+                <tr ng-if="datas.profit.create_time">
+                    <td class="bg-td"><{$Think.lang.实际总成本}></td>
+                    <td width="30%">${{datas.profit.U}}</td>
+                    <td class="bg-td"><{$Think.lang.实际利润}></td>
+                    <td width="30%">${{datas.profit.V}}</td>
+                </tr>
+                <tr ng-if="datas.profit.create_time">
+                    <td class="bg-td"><{$Think.lang.实际利润率}></td>
+                    <td width="30%">{{datas.profit.W}}%</td>
+                    <td class="bg-td"><{$Think.lang.生成时间}></td>
+                    <td width="30%">{{datas.profit.create_time}}</td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <a href="<{:U('order_list')}>"><button type="button" class="btn-pub btn-default mg-l-20"><{$Think.lang.返回列表}></button></a>
+    </div>
+</div>

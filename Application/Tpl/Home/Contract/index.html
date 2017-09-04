@@ -1,0 +1,205 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/jqeury-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170306" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/supplier.css?v=20170307" />
+    <title></title>
+</head>
+<body class="pos-r mt-20">
+<style>
+    .custom-bme{
+        text-align: left;
+    }
+    .show_main{
+        position: relative;
+    }
+    .pre_show{
+        position: absolute;
+        left: 30px;
+        width: 100px;
+        overflow: hidden;
+    }
+    .hidden_show{
+        width: 5%;
+        position: absolute;
+        opacity: 0;
+        left: 104px;
+        width: 96px;
+        height: 31px;
+    }
+    .show_main span{
+        margin-bottom: 5px;
+    }
+</style>
+<div style="margin-right: 20px;">
+    <img src="../Public/images/ajax-loader.gif" width="" height="" alt="" class="img_load-pos hide"/>
+    <!--载入搜索模块-->
+    <include file="search" />
+    <br />
+    <!--<div class="row">
+        <a href="<{:U('Supplier/newly_added')}>" ><span name="" class="btn btn-pink" type="submit"><{$Think.lang.新增供应商}>+</span></a>
+        <a href="<{:U('Supplier/upload_contract')}>" ><span name="" class="btn btn-pink" type="submit"><{$Think.lang.新增合同}>+</span></a>
+    </div>
+    -->
+    <br />
+    <!--数据列表 -->
+    <div class="row">
+    <div class="show_main">
+        <form method="post" enctype="multipart/form-data">
+            <input type="hidden" name="m" value="Supplier">
+            <input type="hidden" name="a" value="mult_import_contract">
+            <select class="select" style="width: 100px;height: 31px;" name="check_contract_type">
+                <option value="0"><{$Think.lang.供应商合同}></option>
+                <option value="1"><{$Think.lang.客户合同}></option>
+            </select>
+            <span class="btn" href="#supplier_file" id="supplier_file_name"><{$Think.lang.请选择文件}></span>
+            <input type="file" name="file" class="hidden_show" id="supplier_file" onchange="document.getElementById('supplier_file_name').innerHTML = this.value?this.value:'<{$Think.lang.请选择文件}>'"/>
+            <button type="submit" class="btn" style="margin-bottom: 5px;"><{$Think.lang.导入}></button>
+        </form>
+    </div>
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+                <tr class="text-c no-wrap">
+                    <foreach name="model:attributesExtends" key="k" item="val">
+                        <th><{$Think.lang.$val}></th>
+                    </foreach>
+                    <th><{$Think.lang.操作}></th>
+                </tr>
+            </thead>
+            
+            <tbody class="show-data">
+                <foreach name="result" key="k" item="vo">
+                    <!--供应商数据-->
+                    <tr>
+                        <foreach name="model:attributesExtends" key="ks" item="val">
+                            <?php
+                                if ($ks == 'SP_TEAM_CD') {
+                                    $sps = explode(',', $vo['SP_TEAM_CD']);
+                                    if (count($sps) > 1) {
+                                        $str = '';
+                                        foreach ($sps as $key => $value) {
+                                            $str .= $spTeamCd[$value] . ',';
+                                        }
+                                        $str = rtrim($str, ',');
+                                        echo '<td class="no-wrap">'. $str .'</td>'; 
+                                    } else {
+                                        echo '<td class="no-wrap">'. $spTeamCd[$vo['SP_TEAM_CD']] .'</td>';
+                                    }
+                                } elseif ($ks == 'SP_JS_TEAM_CD') {
+                                    echo '<td class="no-wrap">'. $spJsTeamCd[$vo['SP_JS_TEAM_CD']] .'</td>';
+                                } elseif ($ks == 'CREATE_USER_ID') {
+                                    echo '<td class="no-wrap">'. $allUserInfo[$vo['CREATE_USER_ID']] .'</td>';
+                                } elseif ($ks == 'CON_TYPE') {
+                                    echo '<td class="no-wrap">'. BaseModel::conType()[$vo['CON_TYPE']] .'</td>';
+                                } elseif ($ks == 'Team') {
+                                    echo '<td class="no-wrap"> - </td>';
+                                } elseif ($ks == 'CON_COMPANY_CD') {
+                                    echo '<td class="no-wrap">'. BaseModel::conCompanyCd()[$vo['CON_COMPANY_CD']] .'</td>';
+                                } elseif ($ks == 'IS_RENEWAL') {
+                                    echo '<td class="no-wrap">'. BaseModel::isAutoRenew()[$vo['IS_RENEWAL']] .'</td>';
+                                } elseif ($ks == 'START_TIME') {
+                                    echo '<td class="no-wrap">'. cutting_time($vo['START_TIME']) .'</td>';
+                                } elseif ($ks == 'END_TIME') {
+                                    echo '<td class="no-wrap">'. cutting_time($vo['END_TIME']) .'</td>';
+                                } else {
+                                    echo '<td class="no-wrap">'. $vo[$ks] .'</td>';
+                                } 
+                            ?>
+                        </foreach>
+                        <td class="cur">
+                            <a class="btn btn-pink" href="<{:U('Contract/show', array('ID' => $vo[ID]))}>"><{$Think.lang.查看}></a>
+                        </td>
+                    </tr>
+                </foreach>
+            </tbody>
+        </table>
+        <include file="search_result" />
+    </div>
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+</body>
+<script>
+    $(".btn-reset-clear").click(function () {
+         $("input[name='CON_NO']").val("");
+         $("input[name='CON_NAME']").val("");
+         $("input[name='SP_NAME']").val("");
+         $("input[name='CONTRACTOR']").val("");
+         $("#CON_TYPE option:first").prop("selected", 'selected');
+         $("#CON_COMPANY_CD option:first").prop("selected", 'selected');
+         $("#SP_TEAM_CD option:first").prop("selected", 'selected');
+         $("#TIME_TYPE option:first").prop("selected", 'selected');
+         $("#d4313").val('');
+         $("#d4314").val('');
+    });
+    $('.show-data tr td span').click(function() {
+        var _this = $(this).parent().parent();
+        if (_this.next().hasClass('hidden')) {
+            _this.next().removeClass('hidden');
+            $(this).text('-');
+        } else {
+            _this.next().addClass('hidden');
+            $(this).text('+');
+        }
+    });
+    
+    function del_supplier(id, supplierSpName)
+    {
+        var id = id;
+        var url = '<{:U("supplier/del_supplier")}>';
+        var index = 0;
+        
+        layer.confirm('<{$Think.lang.是否删除供应商}>' +  '-' + supplierSpName, {
+            btn: ['确定','取消']
+            }, function(){
+                $.ajax({
+                    'url': url,
+                    'type': 'POST',
+                    'data':{ID: id},
+                    beforeSend:function(XMLHttpRequest){
+                        index = layer.load(2, {
+                            shade: [0.1,'#fff']
+                        });
+                    },
+                    success: function (data) {
+                        layer.close(index);
+                        if (data.status == 1) {
+                            layer.msg(data.info.msg);
+                            setTimeout(function () { 
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            layer.msg(data.info.msg);
+                        }
+                    },
+                    error:function(XMLHttpRequest,textStatus,errorThrown){
+                        layer.close(index);
+                        layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                    }
+                });
+            }, function(){
+                
+            }
+        );
+    }
+</script>
+</html>

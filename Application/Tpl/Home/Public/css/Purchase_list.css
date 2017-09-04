@@ -1,0 +1,184 @@
+.Purchase_Invoicing_list{
+    margin-top: 20px;
+    margin-left: 15px;
+}
+.Purchase_Invoicing_list .row .input-group,.Purchase_Invoicing_list .form-group{
+    height:30px;
+    padding:0px;
+}
+.Purchase_Invoicing_list .row .input-group .form-control,.Purchase_Invoicing_list .form-group .form-control{
+    font-size: 13px;
+    padding:0px 5px;
+    height:30px !important;
+}
+.Purchase_Invoicing_list .row  .col-lg-2_search .btn-black{
+    background: #000;
+    color:white;
+}
+.Purchase_Invoicing_list_card{
+    border:none !important;
+}
+.Purchase_Invoicing_list_card .card-block .table thead{
+    height:25px;
+}
+.Purchase_Invoicing_list_card .card-block .table thead th{
+    font-size:13px;
+    text-align: center;
+    padding: 8px 0px;
+
+}
+.Purchase_Invoicing_list_card .card-block .table tr td:nth-child(1){
+    background:#f2ebeb;
+    text-align: center;
+}
+.Purchase_Invoicing_list_card .card-block .table tr td{
+    font-size:13px;
+    padding: 8px 0px;
+}
+.Purchase_Invoicing_detail .card-header{
+    height: 40px;
+    padding: 5px 20px;
+    font-size: 13px;
+}
+.Purchase_Invoicing_detail .card-header h4{
+    font-size: 15px;
+    margin-top:8px;
+}
+.Purchase_Invoicing_detail_Card .card-block .table tr td:nth-child(odd){
+    text-align: center;
+}
+.Purchase_Invoicing_detail_Card .card-block .table tr td label{
+    font-size: 13px;
+}
+.Purchase_Invoicing_detail_Card .card-block .table tr td .form-control{
+    height:30px;
+    padding:0px;
+    font-size: 13px;
+    width: 90%;
+    margin-left:5px;
+}
+.Purchase_Invoicing_detail_Card .card-block .table tr td .form-group{
+    margin-bottom: 0px;
+    height:30px;
+    padding:0px;
+    font-size: 13px;
+}
+.Purchase_Invoicing_detail_Card .card-block .table tr td .input-group{
+    width:91%;
+}
+.Purchase_Invoicing_detail_Card .card-block .table tr td .input-group .input-group-btn {
+    height:30px;
+    font-size: 14px;
+}
+.Purchase_Invoicing_detail_main .card-block thead th{
+    font-size:13px;
+    text-align: center;
+    padding: 8px 0px;
+}
+.Purchase_Invoicing_detail_main .card-block tbody td .form-control{
+    height:25px;
+    font-size: 13px;
+    margin: 0px;
+    padding:0px;
+}
+.Purchase_Invoicing_detail_main .card-block tbody td .input-group{
+    margin-bottom: 0px;
+}
+.Purchase_Invoicing_detail_main .card-block tbody td .input-group .input-group-btn .btn{
+    width: 25px;
+    height:25px;
+    padding:0px;
+    font-size: 13px;
+    color:red;
+}
+.Purchase_Invoicing_detail_main_total tr td{
+    font-size: 13px;
+}
+.Purchase_Invoicing_detail_make .card-block table td{
+    text-align: center;
+    font-size: 13px;
+}
+.Purchase_Invoicing_detail_make .card-block table td input{
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid #CCCCCC;
+    padding:0px 20px;
+}
+.Purchase_Invoicing_list_card .recode{
+    font-size: 13px;
+}
+.Purchase_Invoicing_list_card .recode span{
+    color: red;
+    margin:0px 5px;
+}
+.Purchase_Invoicing_list_bombBox{
+    position: fixed;
+    width:60%;
+    left:20%;
+    top:20%;
+    display: none;
+}
+.Purchase_Invoicing_list_bombBox .row .input-group,.Purchase_Invoicing_list_bombBox .form-group{
+    height:25px;
+    padding:0px;
+}
+.Purchase_Invoicing_list_bombBox .row .form-control,.Purchase_Invoicing_list_bombBox .form-group .form-control{
+    font-size: 13px;
+    padding:0px 5px;
+    height:25px !important;
+}
+.Purchase_Invoicing_list_bombBox .row  .col-lg-2_search .btn-black{
+    background: #000;
+    color:white;
+}
+.Purchase_Invoicing_list_bombBox h4{
+    font-size: 14px !important;
+    margin:0px !important;
+}
+.Purchase_Invoicing_list_bombBox .input-group-btn{
+    padding: 0px;
+}
+.Purchase_Invoicing_list_bombBox>.row{
+    margin-top: 20px;
+    margin-left:6px;
+}
+.Purchase_Invoicing_list_bombBox .card-block table tr td,.Purchase_Invoicing_list_bombBox .card-block table th{
+    font-size:13px;
+    text-align: center;
+    padding:6px 0px;
+    vertical-align: middle;
+}
+.card-block-detail .row{
+    height:30px;
+}
+.card-block-detail .col-lg-10{
+    width:100%;
+    font-size:13px;
+}
+.pay_detail  .form-group{
+    width:20% !important;
+}
+.pay_detail  input{
+    width:80% !important;
+}
+.card-block-detail .form-group{
+    float: left;
+    height:30px;
+    width:100%;
+}
+.card-block-detail input{
+    float: left;
+    font-size:13px !important;
+    height:30px !important;
+    padding:0px !important;
+    width:100%;
+}
+.card-block-detail .form-group .form-control{
+    width:100%;
+    padding:0px !important;
+    font-size:13px !important;
+    height:30px !important;
+}
+.tr_bg td:nth-child(even){
+    background: #CCCCCC;
+}

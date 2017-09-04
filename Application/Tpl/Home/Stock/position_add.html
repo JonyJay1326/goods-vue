@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>仓库详情</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css"/>
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css">
+    <style type="text/css">
+        .table-border.table-bordered tbody:nth-last-of-type(odd) {
+            background-color: #EEFFCC;
+        }
+    </style>
+    <script type="text/javascript">if (document.all)alert('你的浏览器太旧了，恕不奉陪');</script>
+</head>
+<body>
+<div class="hw-wrap" id="hw-wrap">
+    <form action="" type="post">
+        <div class="text-line">
+            <div class="title">
+                基础信息
+            </div>
+            <div class="row first-row">
+                <div class="col-30">
+                    <span>货位编码：</span>
+                    <input type="text"  v-model="location_key" placeholder="输入货位编码" v-cloak>
+                </div>
+                <div class="col-30">
+                    <span>货位名称：</span>
+                    <input type="text"  v-model="location_name" placeholder="输入货位名称" v-cloak>
+                </div>
+                <div class="col-40">
+                    <span>仓库：</span>
+                    <select v-model="house_list_model" v-cloak>
+                        <option v-for="house in house_list"  :value="house.CD" >{{house.warehouse}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row second-row">
+                <div class="col-60">
+                    <span>规则：</span>
+                    <input type="text" value="" v-model="qu" class="first-input" placeholder="A">区&nbsp;&nbsp;&nbsp;&nbsp;-
+                    <input type="number" min="1" value="" id="pai" v-model="pai">排&nbsp;&nbsp;-
+                    <input type="number" min="1" max="10" value="" v-model="ceng"> 层&nbsp;&nbsp;-
+                    <input type="number" min="1" max="20" value="" v-model="ge"> 格
+                </div>
+                <div class="col-40">
+                    <span>货位数量：</span>
+                    <span>{{location_sum}}</span>
+                </div>
+            </div>
+            <div class="row">
+                <button type="button" class="button-sky" v-on:click="exectable">生成</button>
+            </div>
+    </form>
+    <!--<div class="row">
+        <div class="col-100 text-r">
+            <button type="button" class="button-sky">货位模版导出</button>
+            <button type="button" class="button-sky">货位导入</button>
+        </div>
+    </div>-->
+</div>
+<div class="hw-tabel">
+    <table class="tabel table table-border table-bordered table-bg">
+        <caption class="text-l">货位信息</caption>
+        <tbody class="text-c" v-for="p in pai" v-show="ok">
+        <tr v-for="c in ceng">
+            <td v-for="g in ge">
+                <img src="<{$HI_PATH}>images/hw-green.png" alt="" height="20" width="20">
+                <span>{{qu}}-{{p}}-{{c}}-{{g}}</span>
+            </td>
+        </tr>
+
+
+        </tbody>
+
+    </table>
+</div>
+<div class="hw-btn">
+    <button type="button" class="button-pink" @click="save_data">保存</button>
+    <button type="button" class="button-black" @click="clear_data" ><{$Think.lang.取消}></button>
+</div>
+</div>
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#hw-wrap',
+        data: {
+            house_list: <{$house_list}>,
+            qu: 'A',
+            pai: 1,
+            ceng: 1,
+            ge: 1,
+            location_sum: 1,
+            location_key: '',
+            location_name: '',
+            house_list_model:'',
+            ok:false
+        },
+        watch:{
+            pai:function(){this.exectable()},
+            ceng:function(){this.exectable()},
+            ge:function(){this.exectable()},
+        },
+        methods:{
+            exectable:function(){
+                if(this.ceng > 10){
+                    this.ceng = 10
+                }
+                if(this.ge > 20){
+                    this.ge = 20
+                }
+                this.location_sum = this.pai * this.ceng * this.ge;
+                this.ok = true;
+            },
+            clear_data:function(){
+                this.location_key = '';
+                this.location_name = '';
+                this.house_list_model = '';
+                this.qu = 'A';
+                this.pai = this.ceng = this.ge = 1;
+                this.ok = false;
+            },
+            save_data:function(){
+                if(this.location_key == null || this.location_name == null || this.house_list_model == null || this.location_key == '' || this.location_name == '' || this.house_list_model == ''){
+                    box.Alert('<{$Think.lang.提示}>','货位信息不能为空');
+                    return false;
+                }
+                $.ajax({
+                    type:"POST",
+                    async:false,
+                    url:"/index.php?m=stock&a=position_add",
+                    data:{
+                        location_key:this.location_key,
+                        location_name:this.location_name,
+                        location_id:this.house_list_model,
+                        qu:this.qu,
+                        pai:this.pai,
+                        ceng:this.ceng,
+                        ge:this.ge
+                    },
+                    success:function(res){
+                        var res_info = JSON.parse(res)['info'];
+                        box.Alert('<{$Think.lang.提示}>',res_info);
+                    },
+                    error:function(){
+                        alertNew('网络繁忙，请重试！')
+                    }
+
+
+                });
+            }
+        }
+    })
+</script>
+
+</body>
+</html>

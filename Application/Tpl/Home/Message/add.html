@@ -1,0 +1,306 @@
+<include file="Public:page_header_add" />
+<body class="order-detail">
+<style>
+    .btn-pink a {
+        color: #fff;
+    }
+    .row input{
+        border:1px solid #ddd;
+        font-size:14px;
+    }
+</style>
+
+<div class="order-tabs">
+    <ul>
+        <li class="active"><a href="javascript:void()">
+            <if condition="$is_new eq 1">
+            <{$Think.lang.add}>
+            <else />
+            <{$Think.lang.edit}>
+            </if>
+            </a></li>
+        <li></li>
+    </ul>
+</div>
+
+<?php
+$form_url = U('Message/submitadd');
+if(!$is_new){
+    $form_url = U('Message/submitedit');
+}
+?>
+
+<div class="pd-20">
+    <form action="<?php echo $form_url; ?>" method="post" enctype="" class="form form-horizontal" id="form_post_action">
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.平台}>：</label>
+            <div class="formControls col-10">
+                <select name="plat_cd" id="plat_cd" class="input-text" >
+                    <foreach name="plat_list" key="key" item="value">
+                    <?php $selected = ""; ?>
+                    <?php if(!$is_new){ ?>
+                    <?php  $selected=$edit_data['plat_cd']==$key?"selected":""; ?>
+                    <?php }else{ ?>
+                    <?php  $selected=PLAT_GSHOPPER_KR==$key?"selected":""; ?>
+                    <?php } ?>
+                    <option value="<{$key}>" <{$selected}> ><{$value}></option>
+                    </foreach>
+                </select>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.消息标题}>：</label>
+            <div class="formControls col-10">
+                <input type="text" class="input-text" value="<?php if(!$is_new){ echo $edit_data['title']; } ?>" placeholder="" id="" name="title" datatype="*" nullmsg="" errormsg="" style="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.消息内容}>：</label>
+            <div class="formControls col-10">
+                <textarea name="content" style="width:100%;height:76px;"><?php if(!$is_new){ echo $edit_data['content']; } ?></textarea>
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.目标URL}>：</label>
+            <div class="formControls col-10">
+                <input type="text" class="input-text" value="<?php if(!$is_new){ echo $edit_data['target_url']; } ?>" placeholder="" id="" name="target_url" style="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.发送时间}>：</label>
+            <div class="formControls col-10">
+                <input type="text" onfocus="WdatePicker({lang:'en',dateFmt:'yyyy-MM-dd HH:mm:ss'})" class="input-text" value="<?php if(!$is_new and $edit_data['send_time']){ echo date('Y-m-d H:i:s',$edit_data['send_time']); } ?>" placeholder="" id="" name="send_time" datatype="/^[\w\s-]*/" nullmsg="" errormsg="" style="">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.消息图片}>：</label>
+            <div class="formControls col-10 cls_upload_pic ">
+                <input type="file" name="file_pic" > 　 
+                <style>
+                #show_pic_block img{max-height:300px;max-width:300px;}
+                </style>
+                <span id="show_pic_block" >
+                <?php if(!$is_new and $edit_data['pic']){ ?>
+                <img src="<?php echo $edit_data['pic']; ?>" style="" >
+                <?php } ?>
+                </span>
+                &nbsp;&nbsp;
+                <a class="link_blue" href="javascript:;" onclick="js_rm_file_pic();" ><{$Think.lang.删除}></a>
+                &nbsp;&nbsp;
+                <a class="link_blue" href="javascript:;" onclick="js_up_file_pic();" ><{$Think.lang.上传}></a>
+                <input type="hidden" name="pic_format" value="<?php if(!$is_new){ echo $edit_data['pic']; } ?>" >
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-1"><{$Think.lang.发送客户}>：</label>
+            <div class="formControls col-10">
+                <?php $tmp_class = ''; ?>
+                <?php $user_num = ''; ?>
+                <?php if(!$is_new and $edit_data['is_all_send']==1){ ?>
+                    <?php $tmp_class = 'btn-pink'; ?>
+                    <?php $user_num = $edit_data['user_num']; ?>
+                <?php } ?>
+                <span id="click_user_all" class="btn <?php echo $tmp_class; ?>"  name="" onclick="pop_choose_user_all()"><{$Think.lang.所有用户}></span>
+                (<span id="user_show_num_all"> <?php echo $user_num; ?> </span>)
+
+                <?php $tmp_class = ''; ?>
+                <?php $user_num = ''; ?>
+                <?php if(!$is_new and $edit_data['is_all_send']!=1){ ?>
+                    <?php $tmp_class = 'btn-pink'; ?>
+                    <?php $user_num = $edit_data['user_num']; ?>
+                <?php } ?>
+                <span id="click_user_part" class="btn <?php echo $tmp_class; ?>"  name="" onclick="pop_choose_user()"><{$Think.lang.部分用户}></span>
+                (<span id="user_show_num"> <?php echo $user_num; ?> </span>)
+
+                <input type="hidden" name="user_num" id="user_num" value="<?php if(!$is_new){ echo $edit_data['user_num']; } ?>" datatype="/^[1-9]/" nullmsg="<{$Think.lang.发送对象用户不可为0}>" errormsg="<{$Think.lang.发送对象用户不可为0}>" >
+                <input type="hidden" name="is_all_send" id="is_all_send" value="<?php if(!$is_new){ echo $edit_data['is_all_send']; } ?>" >
+                <?php $relate_select_user_ids = ''; ?>
+                <?php if(!$is_new){ ?>
+                <?php  $relate_user_list = D('ZZmsmessagesend')->getUsersByMsgID($edit_data['id']); ?>
+                <?php  $relate_select_user_ids = implode('|',$relate_user_list); ?>
+                <?php } ?>
+                <input type="hidden" name="select_user_ids" id="select_user_ids" value="<?php echo $relate_select_user_ids; ?>" >
+            </div>
+        </div>
+
+        <div class="row cl" style="margin:40px auto;">
+            <div class="col-10 " style="text-align:center;">
+                <button type="submit" class="btn" id="admin-save-submit" name="admin-save-submit" style="background-color: #ed2d65;color: #fff;"> <{$Think.lang.提交}></button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit" class="btn" id="admin-save-draft" name="admin-save-draft" style="background-color: #000;color: #fff;"> <{$Think.lang.存草稿}></button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn" id="admin-save-reset" name="admin-save-reset" style="background-color: #000;color: #fff;"> <{$Think.lang.重置}></button>
+            </div>
+        </div>
+
+        <input type="hidden" name="send_status" id="send_status" value="2" />
+        <input type="hidden" name="msg_id" id="msg_id" value="<?php if(!$is_new){ echo $edit_id;} ?>">
+        <if condition="$is_new eq 0">
+        <input type="hidden" name="edit_id" value="<{$edit_id}>">
+        </if>
+        <input type="hidden" name="isgoback" value="1" />
+        <input type="hidden" name="backurl" value="<?php echo $_SERVER['HTTP_REFERER']; ?>" />
+        <input type="hidden" name="issubmit" value="1">
+    </form>
+</div>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/Validform/5.3.2/Validform.min.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js?v=<{$Think.config.VER_NUM}>"></script>
+<script>
+
+$(document).ready(function (){
+
+    $('#admin-save-submit').click(function(){
+        document.getElementById("send_status").value = 2;
+    });
+    $('#admin-save-draft').click(function(){
+        document.getElementById("send_status").value = 1;
+    });
+    $('#admin-save-reset').click(function(){
+        $('#form_post_action').get(0).reset();
+        $('#user_num').val(null);
+        $('#is_all_send').val(null);
+        $('#select_user_ids').val(null);
+        $('#click_user_all').removeClass('btn-pink');
+        $('#click_user_part').removeClass('btn-pink');
+        $('#user_show_num_all').html('');
+        $('#user_show_num').html('');
+    });
+    $('#form_post_action').Validform({
+        tiptype:function(msg){
+            if(msg)
+                alert(msg);
+        },
+        beforeSubmit:function(curform){
+
+        }
+
+    });
+
+});
+
+function pop_choose_user_all(){
+    document.getElementById("is_all_send").value = 1;
+    $('#click_user_all').addClass('btn-pink');
+    $('#click_user_part').removeClass('btn-pink');
+    var by_parent_plat_cd = $('#plat_cd').val();
+    var msg_id = $('#msg_id').val();
+    var url = '<{:U("Message/choosenewuserall",array('temp'=>''))}>'+'&by_parent_plat_cd='+by_parent_plat_cd+'&msg_id='+msg_id;
+    //发送数据
+    $.ajax({
+        url:url,
+        type:'GET',
+        data:{},
+        dataType: 'JSON',
+        cache: false,
+        contentType: false,        //不可缺参数
+        processData: false,        //不可缺参数
+        success:function(msg){
+            var num = 0;
+            if(msg.data.info){
+                num = msg.data.info;
+            }
+            document.getElementById("user_show_num_all").innerHTML = num;
+            document.getElementById("user_num").value = num;
+        },
+        error:function(){
+            alert('出错');
+        },
+        complete:function(){
+        }
+    });
+    //clean
+    $('#user_show_num').html('');
+    $('#select_user_ids').val('');
+}
+
+function pop_choose_user(){
+    document.getElementById("is_all_send").value = 0;
+    var by_parent_plat_cd = $('#plat_cd').val();
+    var msg_id = $('#msg_id').val();
+    var url = '<{:U("Message/choosenewuserlist",array('temp'=>''))}>'+'&by_parent_plat_cd='+by_parent_plat_cd+'&msg_id='+msg_id;
+    layer_show('&nbsp;&nbsp;',url,'1100','');
+    $('#click_user_all').removeClass('btn-pink');
+    $('#click_user_part').addClass('btn-pink');
+    //clean
+    $('#user_show_num_all').html('');
+}
+
+function js_rm_file_pic(){
+    document.getElementsByName('file_pic')[0].value = '';
+    var url = '<{:U("Message/deletepic",array("temp"=>""))}>';
+    // if(document.getElementsByName('edit_id')[0]){
+    //     var msgId = document.getElementsByName('edit_id')[0].value;
+    //     url += "&msgId="+msgId;
+    //     //发送数据
+    //     $.ajax({
+    //         url:url,
+    //         type:'GET',
+    //         data:{},
+    //         dataType: 'JSON',
+    //         cache: false,
+    //         contentType: false,        //不可缺参数
+    //         processData: false,        //不可缺参数
+    //         success:function(msg){
+    //             $('.cls_upload_pic').find("img").remove();
+    //         },
+    //         error:function(){
+    //             alert('出错');
+    //         },
+    //         complete:function(){
+    //         }
+    //     });
+    // }
+    set_pic_input('');
+}
+
+function js_up_file_pic(){
+    var url = '<{:U("Message/uploadpic",array("temp"=>""))}>';
+    //创建FormData对象
+    var data = new FormData();
+
+    if( document.getElementsByName('file_pic')[0].value ){
+        //为FormData对象添加数据
+        $.each($(document.getElementsByName('file_pic')[0])[0].files, function(i, file) {
+            data.append('upload_file', file);
+        });
+        //发送数据
+        $.ajax({
+            url:url,
+            type:'POST',
+            data:data,
+            dataType: 'JSON',
+            cache: false,
+            contentType: false,        //不可缺参数
+            processData: false,        //不可缺参数
+            success:function(data){
+                if(data.status=='y'){
+                    set_pic_input(data.pic);
+                    document.getElementsByName('file_pic')[0].value = '';
+                }
+            },
+            error:function(){
+                alert('上传出错');
+            }
+        });
+    }
+
+}
+
+function set_pic_input(v){
+    document.getElementsByName('pic_format')[0].value = v;
+    $('#show_pic_block').html('');
+    if(v){
+        $('#show_pic_block').html('<img src="'+v+'" >');
+    }
+}
+</script>
+
+</body>
+</html>
+

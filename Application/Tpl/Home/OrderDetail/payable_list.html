@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title></title>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css"/>
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../Public/css/purchase.css?=20170508"/>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css?=20170508"/>
+	<link rel="stylesheet" href="../Public/css/common.css?=20170508"/>
+	<style>
+		a span{color: white;font-size: 13px;}
+		.form-group{margin-bottom: 0px}
+		.form-control{font-size:13px;height:34px;padding-left:5px;}
+		.card table th,.card table td{text-align: center;vertical-align: middle}
+		.td_operation .btn{margin-bottom:2px}
+		form .card table tbody td{background:white;}
+		.row_search{margin-top:0px !important;margin:0px;}
+		.form-group .form-control{height:34px !important;color: #90A4AE;}
+		form .row_search .col-lg-12{margin-left: -12px;}
+	</style>
+</head>
+<body>
+<div class="wrap">
+	<div class="enter-line">
+		<form method="get" id="thisform" action="<{:U('payable_list')}>">
+			<div class="row row_menu">
+				<a href="javascript:void(0)" class="status_check <if condition='$param["status"] === "" or
+				$param["status"] === null'>active</if>" value ><{$Think.lang.全部}></a>
+				<a href="javascript:void(0)" class="status_check <if condition='$param["status"]=== "0"'>active</if>" value="0"><{$Think.lang.待确认}></a>
+				<a href="javascript:void(0)" class="status_check <if condition='$param["status"] == 1'>active</if>" value="1"><{$Think.lang.待付款}></a>
+				<a href="javascript:void(0)" class="status_check <if condition='$param["status"]== 2'>active</if>" value="2"><{$Think.lang.已付款}></a>
+				<input type="hidden" name="status" id="status" value="<{$param.status}>">
+			</div>
+				<div class="card order_list_row_top_input">
+					<div class="card-block" >
+						<blockquote class="card-blockquote">
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+									<tr>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+									</tr>
+									</thead>
+									<tbody>
+
+									<tr>
+										<td><{$Think.lang.应付单号}></td>
+										<td><input class="form-control" name="payment_no" value="<{$param.payment_no}>" ></td>
+										<td></td>
+										<td><{$Think.lang.采购单号}></td>
+										<td><input placeholder="" name="procurement_number" class="form-control" value="<{$param.procurement_number}>" ></td>
+										<td></td>
+										<td><{$Think.lang.供应商}></td>
+										<td><input class="form-control" name="supplier_id"  placeholder="" value="<{$param.supplier_id}>" ></td>
+										<td></td>
+										<td><{$Think.lang.我方公司}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="our_company" >
+													<option value=""><{$Think.lang.请选择}></option>
+													<volist name="our_company" id="v">
+														<option value="<{$v.CD}>" <{$param['our_company']==$v['CD']?'selected':''}>><{$v.CD_VAL}></option>
+													</volist>
+												</select>
+											</fieldset>
+										</td>
+									</tr>
+									<tr>
+										<td><{$Think.lang.采购团队}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="payment_company" >
+													<option value=""><{$Think.lang.请选择}></option>
+													<volist name="purchase_team" id="v">
+														<option value="<{$v.CD_VAL}>" <{$param['payment_company']==$v['CD_VAL']?'selected':''}>><{$v.CD_VAL}></option>
+													</volist>
+												</select>
+											</fieldset>
+										</td>
+										<td></td>
+										<td><{$Think.lang.采购员}></td>
+										<td><input type="text" class="form-control" name="prepared_by" value="<{$param.prepared_by}>" ></td>
+										<td></td>
+										<td><{$Think.lang.实际付款时间}></td>
+										<td class="common_data">
+											<input type="text" name="start_time" id="start_time"  value="<{$param.start_time}>"  onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.起始日期}>" class="form-control">
+											<span class="input-group-btn">
+												<button class="btn btn-secondary" type="button"><i ></i></button>
+											</span>
+										</td>
+										<td colspan="2" class="text-center"><div class="col-data_l">一</div></td>
+										<td class="common_data">
+											<input type="text" name="end_time" id="end_time" value="<{$param.end_time}>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.结束时间}>" class="form-control">
+											<span class="input-group-btn">
+												<button class="btn btn-secondary" type="button"><i></i></button>
+											</span>
+										</td>
+										<td></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</blockquote>
+					</div>
+				</div>
+				<div class="row row_search">
+					<div class="col-lg-12 text-left col-md-12 col-sm-12">
+						<input name="search" value="1" type="hidden">
+						<button type="button" class="btn-search" id="search"><{$Think.lang.查询}></button>
+						<button type="button" class="btn-reset" id="resetForm" ><{$Think.lang.重置}></button>
+					</div>
+				</div>
+		</form>
+	<p class="purchase_list_p"></p>
+	<div class="card purchase_list_card">
+		<div class="purchase_list_card_head">
+			<b><{$Think.lang.应付列表}></b>
+		</div>
+		<p class="payable_list_p"><{$Think.lang.结果}>:<{$Think.lang.共}><span><{$count}></span><{$Think.lang.条记录}></p>
+		<div class="card-block">
+			<blockquote class="card-blockquote">
+				<div class="table-responsive">
+					<table class="table table-bordered payable_list_table">
+						<thead>
+						<tr class="text-center">
+							<!--<th width=""><input type="checkbox"></th>-->
+							<th width=""><{$Think.lang.应付单号}></th>
+							<th width=""><{$Think.lang.采购单号}></th>
+							<th width=""><{$Think.lang.供应商}></th>
+							<th width=""><{$Think.lang.我方公司}></th>
+							<th width=""><{$Think.lang.预付款金额}></th>
+							<th width=""><{$Think.lang.预计付款时间}></th>
+							<th width=""><{$Think.lang.对应采购}></th>
+							<th width=""><{$Think.lang.应付状态}></th>
+							<th width=""><{$Think.lang.实际付款时间}></th>
+							<th width=""><{$Think.lang.操作}></th>
+						</tr>
+						</thead>
+						<tbody>
+						<volist name="list" id="v">
+                            <tr>
+                                <td><{$v.payment_no}></td>
+                                <td><{$v.procurement_number}></td>
+                                <td><{$v.supplier_id}></td>
+                                <td><{:cdVal($v['our_company'])}></td>
+                                <td><{$v.amount_currency}> <{:number_format($v['amount_payable'],2)}></td>
+								<td><{$v.payable_date}></td>
+								<td><{$v['prepared_by']}>(<{$v.payment_company}>)</td>
+                                <td>
+                                    <switch name="v.status">
+										<case value="0">待确认</case>
+										<case value="1">待付款</case>
+										<case value="2">已付款</case>
+									</switch>
+								</td>
+								<td><{$v.paid_date}></td>
+                                <td class="payable_list_cor">
+                                    <div>
+                                        <button onclick="location='<{:U("payable_detail",['id'=>$v['id']])}>'" class="btn-edit"><{$Think.lang.查看}></button>
+										<if condition="$v[status] eq 1">
+                                            <button onclick='location="<{:U('payable_write_off',['id'=>$v['id']])}>"' class="btn-edit"><{$Think.lang.付款}></button>
+										</if>
+                                    </div>
+                                </td>
+							</tr>
+						</volist>
+						</tbody>
+					</table>
+					<ul class="pagination" style="margin: 0;">
+						<{$page}>
+					</ul>
+				</div>
+			</blockquote>
+		</div>
+	</div>
+</div>
+<!--模态框-->
+
+<div class="modal fade" id="delete-modal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 360px;">
+			<div class="modal-header">
+				<h4 class="modal-title"><{$Think.lang.提示}></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span class="sr-only">Close</span>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p><{$Think.lang.确认要删除吗}>？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" onclick="order_del()"><{$Think.lang.确定}></button>
+				<input type="hidden" id="order_del"><!-- 隐藏域用来保存需要删除的订单ID-->
+				<button type="button" class="btn btn-secondary" data-dismiss="modal"><{$Think.lang.取消}></button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+
+
+<script>
+    $(function () {
+        //发货状态筛选
+        $('.status_check').click(function () {
+            var status = $(this).attr('value');
+            $('#status').val(status);
+            $('.status_check').removeClass('active');
+            $(this).addClass('active');
+        })
+        $(".perchase_list_select select").change(function () {
+            if($(this).val() && $(this).val().length>0){
+                $(this).css("color","#263238")
+            }else{
+                $(this).css("color","#90A4AE")
+            }
+        })
+        $(".payable_top_menu_checkbox span").click(function () {
+            $(this).addClass("active").siblings().removeClass("active")
+        })
+        //搜索按钮
+        $('#search').click(function () {
+            var data = $('#thisform').serialize();
+            var url = "<{:U('payable_list')}>&"+data;
+            location = url;
+        })
+        $('#resetForm').click(function() {
+            $('#thisform')[0].reset();
+            $('.status_check:eq(0)').click();
+        })
+
+    })
+</script>
+
+</html>

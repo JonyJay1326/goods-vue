@@ -1,0 +1,91 @@
+<include file="Public:page_header_list" />
+<body class="pos-r mr-20 ml-20">
+<style>
+
+</style>
+    <div>
+        <div class="">
+            <form action="" method="get" id="form_search">
+            <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+            <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+
+            <div class="row " style="">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state ">
+                    <ul>
+                        <li class="">
+                            <b><{$Think.lang.申请资质记录列表}></b>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="row col-search" id="">
+                <input type="text" name="keywords" value="<{$filterArr.keywords}>"  placeholder="<{$Think.lang.搜索关键字}>" style="width:400px;" class="input-text">
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <button name="" class="btn btn-pink" type="submit">&nbsp;&nbsp;<{$Think.lang.查询}>&nbsp;&nbsp;</button>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <input name="reset" type="reset" class="btn btn-clear" value="<{$Think.lang.重置}>">
+            </div>
+            </form>
+        </div>
+
+
+        <div class="row">
+            <table class="table table-border table-bordered table-bg table-hover table-sort" >
+                <thead>
+                <tr class="text-c no-wrap">
+                    <th><{$Think.lang.ID}></th>
+                    <th><{$Think.lang.姓名}></th>
+                    <th><{$Think.lang.电话}></th>
+                    <th><{$Think.lang.创建时间}></th>
+                    <th><{$Think.lang.状态}></th>
+                    <th><{$Think.lang.IP}></th>
+                    <th><{$Think.lang.操作}></th>
+                </tr>
+                </thead>
+                <tbody>
+
+<if condition="empty($list) eq 1">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap" colspan="19"><{$Think.lang.None}></td>
+                </tr>
+<else />
+<foreach name="list" key="key" item="value">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap"><{$value.id}></td>
+                    <td class="no-wrap"><{$value.name}></td>
+                    <td class="no-wrap"><{$value.tel}></td>
+                    <td class="no-wrap"><?php echo ($value['add_time']?(ZFun::t2date($value['add_time'])):''); ?></td>
+                    <td class="no-wrap"><?php echo D('ZZmsmerchantapplications')->htmStatusForApply($value['apply_status']); ?></td>
+                    <td class="no-wrap"><{$value.ip}></td>
+                    <td class="no-wrap">
+                        <a class="link_blue" href="<{:U('customer/editapplication',array('id'=>$value['id']))}>" ><{$Think.lang.操作}></a>
+                    </td>
+                </tr>
+</foreach>
+</if>
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="row">
+            <div>
+                <div class="col-md-5 search-num-wrap">
+
+                </div>
+                <ul class="pagination">
+                    <{$pages}>
+                </ul>
+            </div>
+        </div>
+        <div class="row" style="margin:40px auto;">
+            &nbsp;
+        </div>
+    </div>
+
+
+
+
+</body>
+</html>

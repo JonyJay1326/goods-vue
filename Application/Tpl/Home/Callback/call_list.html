@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE_IE678.js"></script>
+    <![endif]-->
+
+    <link href="../Public/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <title>资讯列表</title>
+    <style>.btn,.select,.select-box,.input-text{border-radius: 5px}</style>
+</head>
+<body>
+<nav class="breadcrumb"><i class="Hui-iconfont">&#xe67f;</i> Index <span class="c-gray en">&gt;</span> Pay <span class="c-gray en">&gt;</span> CallBack <a class="btn btn-success radius r mr-20" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
+<div class="pd-20">
+    <div class="text-c">
+        <form method="post" action="">
+            PayStatus：
+            <span class="select-box inline">
+                <select class="select" name="status">
+                    <option value="0">All</option>
+                    <option value="INIT">INIT</option>
+                    <option value="SUCCESS">SUCCESS</option>
+                    <option value="FAILED">FAILED</option>
+                    <option value="CANCEL">CANCEL</option>
+
+                </select>
+		    </span>
+            &nbsp;&nbsp;
+            PayChannel：
+            <span class="select-box inline">
+                <select class="select" name="channel">
+                    <option value="0">All</option>
+                    <option value="YHJ">YHJ</option>
+                </select>
+		    </span>
+            Date Range：
+            <input type="text" onfocus="WdatePicker()" id="logmin" placeholder="Start Time" name="starttime" class="input-text Wdate" style="width:120px;">
+            -
+            <input type="text" onfocus="WdatePicker()" id="logmax"  placeholder="End Time" name="endtime" class="input-text Wdate" style="width:120px;">
+            <input type="text" name="serialnumber" id="" placeholder="Serial number" style="width:250px" class="input-text">
+            <input type="text" name="payid" id="" placeholder="PayId" style="width:250px" class="input-text">
+            <button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i>Search</button>
+        </form>
+    </div>
+    <form action="<{:U('callback/article_del_all')}>" method="post">
+        <div class="cl pd-5 bg-1 bk-gray mt-20">
+
+            <span class="r">Data Nums：<strong><{$total}></strong></span> </div>
+        <div class="mt-20">
+            <table class="table table-border table-bordered table-bg table-hover table-sort">
+                <thead>
+                <tr class="text-c">
+                    <th width="80">PayId</th>
+                    <th width="120">Serial Number</th>
+                    <th width="80">Channel</th>
+                    <th width="80">Status</th>
+                    <th width="75">AddTime</th>
+                    <th width="75">UpdatedTime</th>
+                    <th width="120">Option</th>
+                </tr>
+                </thead>
+                <tbody>
+                <volist name="result" id="vo">
+                    <tr class="text-c">
+                        <td><{$vo.pay_id}></td>
+                        <td><{$vo.serial_number}></td>
+                        <td><{$vo.channel}></td>
+                        <td><{$vo.status}></td>
+                        <td><{$vo.complete_time}></td>
+                        <td><{$vo.created_time}></td>
+                        <td class="f-14 td-manage">
+                            <a title="回调参数" href="javascript:;" onclick="log_show('查看参数','<{:U("callback/call_view")}>&vid=<{$vo.id}>','',500)" class="ml-5" style="text-decoration:none"><i class="Hui-iconfont">&#xe60c;</i></a>
+                        </td>
+                    </tr>
+                </volist>
+
+                </tbody>
+            </table>
+            <div>
+                <ul class="pagination">
+                    <{$pages}>
+                </ul>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+    function log_show(title,url,w,h){
+        layer_show(title,url,w,h);
+    }
+
+</script>
+</body>
+</html>

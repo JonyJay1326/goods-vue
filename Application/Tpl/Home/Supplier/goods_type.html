@@ -1,0 +1,20 @@
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel"><{$Think.lang.供货品类}></h4>
+            </div>
+            <div class="modal-body goods-type init-goods-type">
+                <foreach name="cmnCat" item="vo" key="k" >
+                    <span class="btn btn-pink cmn<{$k}>" ischecked="false" value="<{$k}>" style="margin:5px 5px;"><{$Think.lang.$vo}></span>
+                </foreach>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-check" data-dismiss="modal"><{$Think.lang.确定}></button>
+                <!--<button type="button" class="btn btn-primary"><{$Think.lang.保存}></button>-->
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>货位档案</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css"/>
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css">
+    <style>.edit-btn{border-radius: 5px}</style>
+    <script type="text/javascript">if(document.all)alert('你的浏览器太旧了，恕不奉陪');</script>
+</head>
+
+<body>
+<div id="content">
+
+
+    <div class="ck-wrap">
+        <header>
+            <div><span class="new-add" @click="add()"><{$Think.lang.新增货位}></span></div>
+        </header>
+        <article>
+            <div class="data">
+                <table class="tabel table table-border table-bordered table-bg">
+                    <thead>
+                    <tr class="text-c">
+
+                        <th width="5%"><{$Think.lang.序号}></th>
+                        <th width="10%"><{$Think.lang.货位名称}></th>
+                        <th width="10%"><{$Think.lang.仓库名称}></th>
+                        <th width="10%"><{$Think.lang.货位数量}></th>
+                        <th width="10%"><{$Think.lang.SKU数量}></th>
+                        <th width="10%"><{$Think.lang.操作}></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="text-c "  v-for="(list,key,index) in location_data" >
+                            <td v-cloak>{{key+1}}</td>
+                            <td v-cloak>{{list.location_name}}</td>
+                            <td v-cloak>{{list.warehouse_name}}</td>
+                            <td v-cloak>{{list.l_sum}}</td>
+                            <td v-cloak>{{list.location_sum}}</td>
+                            <td><span class="edit-btn" @click="edit(list)"><{$Think.lang.编辑}></span>&nbsp;
+                                <span class="edit-btn" @click="del(list,key,index)"><{$Think.lang.删除}></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+</div>
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+<script type="text/javascript" >
+    var vm = new Vue({
+        el: '#content',
+        data:{
+            location_data:<{$location_data}>,
+            list:'',
+            key:'',
+            index:''
+        },
+        methods: {
+            add:function(){
+//                window.location.href = '/index.php?m=stock&a=position_add';
+                window.location.href = '/index.php?m=stock&a=position_import';
+            },
+            edit: function (list) {
+//                window.location.href = '/index.php?m=stock&a=position_edit&l_id='+list.l_id;
+                window.location.href = '/index.php?m=stock&a=position_show&location_id='+list.l_id;
+            },
+            del: function (list,index) {
+                this.list = list;
+                this.index = index;
+                box.Confirm('是否删除','是否确认删除',this.del_this)
+            },
+            del_this:function() {
+               $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "/index.php?m=stock&a=position_del",
+                    data: {id: this.list.l_id},
+                    success: function (GetRes) {
+
+                        box.Alert('删除状态',JSON.parse(GetRes)['info'])
+                        if(JSON.parse(GetRes)['status'] == 'y'){
+                            vm.location_data.splice(this.index,1);
+                        }
+                    },
+                    error: function () {
+                        alertNew('网络繁忙，请重试！')
+                    }
+                });
+            }
+        }
+    })
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<div class="gys-wrap basis-info">
+    <table class="table table-border table-bordered table-bg">
+        <thead>
+        <tr>
+            <th width="16.6%"></th>
+            <th width="16.8%"></th>
+            <th width="16.6%"></th>
+            <th width="16.6%"></th>
+            <th width="16.6%"></th>
+            <th width="16.8%"></th>
+        </tr>
+        </thead>
+        <tbody class="text-c">
+            <tr>
+                <td colspan="6"><{$Think.lang.审核信息}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.成立时间}></td>
+                <td colspan="2" id="a-EST_TIME"></td>
+                <td><{$Think.lang.认缴资本}></td>
+                <td colspan="2" id="a-money"></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.法人代表}></td>
+                <td colspan="2" id="a-LG_REP"></td>
+                <td><{$Think.lang.股东名称}></td>
+                <td colspan="2" id="a-SHARE_NAME"></td>
+            </tr>
+            <!--信用评级-->
+            <tr class="company-credit">
+                <td>
+                    <{$Think.lang.信用评分(境外公司必填)}>
+                </td>
+                <td class="credit-score" id="a-CREDIT_SCORE" colspan="2">
+                    <{$audit.CREDIT_SCORE}>
+                </td>
+                <td>
+                    <{$Think.lang.信用评级(境外公司必填)}>
+                </td>
+                <td colspan="2" class="credit-grade">
+                </td>
+            </tr>
+            <!--负面信息-->
+            <tr class="nagetive-info">
+                <td><{$Think.lang.是否有负面信息}></td>
+                <td class="is-have-nagetive-info" colspan="2">
+                    <if condition="$audit.IS_HAVE_NAGETIVE_INFO eq 1 ">
+                        <span><{$Think.lang.有}></span>
+                        <else /> <span><{$Think.lang.无}></span>
+                    </if>
+                </td>
+                <td>
+                    <{$Think.lang.负面信息项}>
+                </td>
+                <td colspan="2" class="choice-nagetive-option">
+                </td>
+            </tr>
+            <tr class="riskpun">
+                <td><{$Think.lang.风险评级}></td>
+                <td id="a-riskpun"></td>
+                <td><{$Think.lang.审核人}></td>
+                <td id="a-REVIEWER"><{$allUserInfo[$audit[REVIEWER]]}></td>
+                <td><{$Think.lang.审核时间}></td>
+                <td id="a-REV_TIME"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

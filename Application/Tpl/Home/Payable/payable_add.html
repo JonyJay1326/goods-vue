@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!--<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />-->
+	<link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+	<link rel="stylesheet" href="../Public/css/purchase.css" />
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css" />
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<title>推式采购应付</title>
+	<script src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="../Public/js/common.js">
+	</script>
+	<style>
+		.pad-0{
+			padding: 0;
+		}
+		.no-wrap{
+			white-space: nowrap;
+		}
+		.top{
+			margin-top: 20px
+		}
+		.table td label{
+			vertical-align: middle;
+			margin-top: 6px;
+		}
+		.table td input{
+			height: 32px;
+		}
+		.table td button i{
+			vertical-align:baseline;
+		}
+		.table td{
+			text-align: center;
+		}
+		.custom-file-control,
+		.custom-file-control::after,
+		.custom-file-control::before,
+		.custom-file-input {
+			cursor: pointer;
+			height: 36px;
+		}
+
+		.custom-file-control::after {
+			content: "文件名称..." !important;
+		}
+
+		.custom-file-control::before {
+			content: "浏览文件" !important;
+		}
+
+		.btn-danger {
+			color: #fff;
+			background-color: #ec2d64;
+			border-color: #d82c5d;
+		}
+
+		td .row .form-control {
+			width: 30px;
+			display: inline-block;
+		}
+		.card-header{
+			height: 40px;
+			padding: 5px 20px;
+		}
+		.input-group button>select {
+			width:100% !important;
+			border: none;
+		}
+		.card-header h4{
+			line-height: 28px;
+		}
+		.card + .card{
+			margin-top: 30px;
+		}
+		.bod-none input {
+			border: none;
+			text-align: center;
+		}
+		.inner-table {
+			margin-top: -24px;
+			margin-bottom: -5px;
+		}
+		.inner-table thead th{
+			border:none;
+
+		}
+		.inner-table tr{
+			white-space: nowrap;
+			background: none !important;
+		}
+		.inner-table td{
+			padding: 5px 4px;
+		}
+		.btn-wrap{
+			margin-top: 30px;
+			margin-bottom: 30px;
+		}
+		.btn-wrap button{
+			font-size: 15px;
+			margin-right: 40px;
+			padding: 8px 25px;
+		}
+		.col-lg-12 .payable_title{
+			font-weight: bold;
+			font-size:20px;
+			border-bottom:1px solid rgba(0,0,0,.125);
+			margin-bottom: 10px;
+		}
+		thead th{text-align: center;}
+		.btn-wrap .text-center .btn{margin-right:5%;margin-left: 10%;}
+	</style>
+</head>
+<body>
+<div class="col-lg-12 top">
+	<div class="payable_title">
+		单据详情
+	</div>
+	<form action="<{:U('Payable/payable_add')}>" method="post">
+		<!--采购信息-->
+		<div class="card">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-6 col-md-6">
+						<h4>基本信息</h4>
+					</div>
+					<!--<div class="col-lg-6 col-md-6 text-right">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#fileModal">上传附件</button>
+                    </div>-->
+				</div>
+			</div>
+			<div class="card-block">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered">
+						<thead>
+						<tr style="visibility: hidden;">
+							<th width="9%"></th>
+							<th width="24%"></th>
+							<th width="9%"></th>
+							<th width="24%"></th>
+							<th width="9%"></th>
+							<th width="24%"></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><label>单据编号</label></td>
+							<td>
+								<input type="text" id="receipt_number" readonly="readonly" class="form-control">
+							</td>
+							<td><label>单据日期 </label></td>
+							<td>
+								<div class="input-group">
+									<input type="text" name="prepared_time" id="prepared_time" id="procurement_date" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="请选择日期" class="form-control">
+												<span class="input-group-btn">
+		                                            <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+		                                        </span>
+								</div>
+
+							</td>
+							<td><label>往来户</label></td>
+							<td>
+								<select name="supplier_id" id="" class="form-control">
+									<option selected="" value="0">请选择付款公司</option>
+									<?php foreach($cmn_cd_info as $key=>$v){ ?>
+									<option value="<?=$v['CD_VAL'];?>"><?=$v['CD_VAL'];?></option>
+									<?php } ?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							</td>
+							<td><label>汇率</label></td>
+							<td>
+								<input type="text" name="exchange_rate" placeholder="汇率" class="form-control" />
+							</td>
+							<td><label>币种</label></td>
+							<td>
+								<select name="currency" id="currency" class="form-control">
+									<option selected="" value="">币种</option>
+									<?php foreach($currency as $key=>$v){ ?>
+									<option value="<?=$v['CD_VAL'];?>"><?=$v['CD_VAL'];?></option>
+									<?php } ?>
+								</select>
+							<td><label>原币金额</label></td>
+							<td>
+								<input type="text" name="money_total" readonly="readonly" id="original_currency" placeholder="原币金额" class="form-control" />
+							</td>
+						</tr>
+						<tr>
+							<td><label>本币金额</label></td>
+							<td>
+								<input type="text" name="domestic_currency" readonly="readonly" placeholder="本币金额" class="form-control" />
+							</td>
+							<td><label>数量</label></td>
+							<td>
+								<input type="text" name="number_total" id="number_goods" readonly="readonly" placeholder="数量" class="form-control" />
+							</td>
+							<td><label>付款方式</label></td>
+							<td>
+								<table class="inner-table">
+									<thead>
+									<tr>
+										<th width="10%"></th>
+										<th width="15%"></th>
+										<th width="5%"></th>
+										<th width="10%"></th>
+										<th width="15%"></th>
+										<th width="5%"></th>
+										<th width="10%"></th>
+										<th width="15%"></th>
+										<th width="5%"></th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr>
+										<td><label>预付</label></td>
+										<td><input type="text" value="0" id="prepayment" name="prepayment" class="form-control"/></td>
+										<td><label>%</label></td>
+										<td><label >第二笔</label></td>
+										<td><input type="text" value="0" id="second_payment" name="second_payment" class="form-control"/></td>
+										<td><label>%</label></td>
+										<td><label >尾款</label></td>
+										<td><input type="text" value="0" id="final_payment" name="final_payment" class="form-control"/></td>
+										<td><label>%</label></td>
+									</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td><label>采购单号</label></td>
+							<td>
+								<input type="text" name="procurement_number" id="procurement_number" placeholder="采购单号" class="form-control" />
+							</td>
+							<td><label>成本公司</label></td>
+							<td>
+								<select name="delivery_type" class="form-control">
+									<option selected="" value="">请选择成本公司</option>
+
+								</select>
+							</td>
+							<td><label>业务方向</label></td>
+							<td>
+								<select name="business_direction" class="form-control">
+									<option selected="" value="">业务方向</option>
+									<?php foreach($business_direction as $key=>$v){ ?>
+									<option value="<?=$v['CD_VAL'];?>"><?=$v['CD_VAL'];?></option>
+									<?php } ?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td><label>业务类型</label></td>
+							<td>
+								<select name="business_type" class="form-control">
+									<option selected="" value="">业务类型</option>
+									<?php foreach($business_direction as $key=>$v){ ?>
+									<option value="<?=$v['CD_VAL'];?>"><?=$v['CD_VAL'];?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td><label>采购部门</label></td>
+							<td>
+								<select name="payment_company" class="form-control">
+									<option selected="" value="">采购部门</option>
+									<?php foreach($cmn_cd_info as $key=>$v){ ?>
+									<option value="<?=$v['CD_VAL'];?>"><?=$v['CD_VAL'];?></option>
+									<?php } ?>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td><label>摘要</label></td>
+							<td colspan="5">
+								<input type="text" name="order_remark" class="form-control" />
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+		<!--商品信息-->
+		<div class="card">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-6 col-md-6">
+						<h4>商品信息</h4>
+					</div>
+					<!--<div class="col-lg-6 col-md-6 text-right">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#fileModal"><i class="fa fa-plus"></i> 模版导入</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                        <button type="button" class="btn btn-success"><i class="fa fa-download"></i> 模版下载</button>
+                    </div>-->
+				</div>
+			</div>
+			<div class="card-block">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered goods_detail">
+						<thead>
+						<tr>
+							<th width="10">No</th>
+							<th width="100">SKU编码</th>
+							<th width="100">商品名称</th>
+							<th width="50">属性</th>
+							<th width="50">图片</th>
+							<th width="60">单价</th>
+							<th width="50">币种</th>
+							<th width="50">数量</th>
+							<th width="100">金额</th>
+							<th width="100">备注</th>
+							<th width="80">操作</th>
+						</tr>
+						</thead>
+						<tbody class="goods_detail-main" >
+						<tr id="goods_info" data-name="goods_detail_1">
+							<td><label>1</label></td>
+							<td>
+								<div class="input-group">
+									<input type="text" name="sku_information[]" id="sku_information" class="form-control"/>
+                                    <span class="input-group-btn ">
+                                        <button class="btn btn-secondary" type="button" onclick="checkSku(this)"><i class="fa fa-search fa-lg"></i></button>
+                                    </span>
+								</div>
+							</td>
+							<td><input type="hidden" name="goods_name[]" class="form-control"></td>
+							<td>
+								<input type="hidden" name="goods_attribute[]" class="form-control">
+							</td>
+							<td><input type="hidden" name="image[]" class="form-control"></td>
+							<td>
+								<input type="number" name="unit_price[]" value="0" class="form-control unit_price"/>
+							</td>
+							<td class="goods_detail-main_bizhong">
+								<select name="curType" id="curType" class="form-control">
+									<option selected="" value="">币种</option>
+									<?php foreach($currency as $key=>$v){ ?>
+									<option value="<?=$v['CD_VAL'];?>"><?=$v['CD_VAL'];?></option>
+									<?php } ?>
+								</select>
+							</td>
+							<td>
+								<input type="number" name="goods_number[]" id="goods_number" value="0" class="form-control goods_number"/>
+							</td>
+							<td>
+								<input type="number" name="goods_money[]" readonly="readonly" onblur="predictProfit()" value="0" class="form-control goods_money"/>
+							</td>
+							<td>
+								<input type="text" name="remark[]" id="remark" class="form-control"/>
+							</td>
+							<td class="no-wrap text-center">
+								<button class="btn btn-success btn-sm"  type="button" onclick="addTr(this)">添加</button>
+								<button class="btn btn-danger btn-sm" name="goods_detail_1" type="button" onclick="deleteTr(this)">删除</button>
+							</td>
+						</tr>
+						<tr class="op-td-total">
+							<td colspan="7" style="text-align: left;font-weight: bold;">合计：</td>
+							<td><input type="hidden" value="0" name="number_total" class="number_total"><span class="number_totals"></span></td>
+							<td><input type="hidden" value="0" name="money_total" class="money_total"><span class="money_totals"></span></td>
+							<td></td>
+							<td></td>
+						</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+		<!--流程信息 -->
+		<div class="card">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-6 col-md-6">
+						<h4>流程信息 </h4>
+					</div>
+					<div class="col-lg-6 col-md-6 text-right">
+						<button type="button" class="btn btn-danger">审批流</button> &nbsp;&nbsp;&nbsp;&nbsp;
+						<button type="button" class="btn btn-success">工作流</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="card-block">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered bod-none">
+						<tbody>
+						<tr>
+							<td><label>制单人</label></td>
+							<td><input type="text" disabled="true"></td>
+							<td><label>制单时间</label></td>
+							<td><input type="text" disabled="true"></td>
+						</tr>
+						<tr>
+							<td><label>当前审批人</label></td>
+							<td><input type="text" disabled="true"></td>
+							<td><label>审批时间</label></td>
+							<td><input type="text" disabled="true"></td>
+						</tr>
+						<tr>
+							<td><label>最后修改人</label></td>
+							<td><input type="text" disabled="true"></td>
+							<td><label>最后修改时间</label></td>
+							<td><input type="text" disabled="true"></td>
+						</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+		<div class="row btn-wrap">
+			<div class="col-lg-12 text-center">
+				<button class="btn btn-success btn-lg" type="button" onclick="checkOuts()">保&nbsp;&nbsp;存</button>&nbsp;&nbsp;&nbsp;&nbsp;
+				<button class="btn btn-success btn-lg" type="button" onclick="">审&nbsp;&nbsp;核</button>&nbsp;&nbsp;&nbsp;&nbsp;
+				<button class="btn btn-danger btn-lg" type="button" onclick="quxiao()" name="goods_detail_1">取&nbsp;&nbsp;消</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<!--删除框-->
+<div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" id="myModalLabel">上传文件</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+					<span class="sr-only">Close</span>
+				</button>
+			</div>
+			<div class="modal-body" style="padding: 18px 100px;">
+				<label class="custom-file">
+					<input type="file" class="custom-file-input" onchange="Browse(this)">;
+					<span class="custom-file-control"></span>
+				</label>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+				<button type="button" class="btn btn-primary">上传</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--end-->
+
+<!--删除-->
+<div class="modal fade" id="delete-addModal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 360px;">
+			<div class="modal-header">
+				<h4 class="modal-title">提示</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span class="sr-only">Close</span>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p>最后一条数据，不可删除</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+<script>
+	function quxiao(){
+		window.location.href = "<{:U('Payable/payable_list')}>";
+	}
+
+	//付款方式验证
+	var checkOut_false = 0;
+	function checkOut(){
+		var prepayment = $('#prepayment').val();
+		var second_payment = $('#second_payment').val();
+		var final_payment = $('#final_payment').val();
+		var total_payment = parseInt(prepayment) + parseInt(second_payment) + parseInt(final_payment);
+		if (total_payment != 100) {
+			checkOut_false = 1;
+			//alert('总数必须为100%');
+			$('#reminder').html('总数必须为100%');
+			$('#reminder').css('color', 'red');
+			return false;
+		}
+		else if (total_payment == 100) {
+			checkOut_false = 2;
+		}
+	}
+
+
+
+	/**
+	 * 添加方法
+	 * @param（html） 获取当前行html
+	 * 通过循环方式添加序号
+	 */
+	function addTr(that){
+		var html= $(that).parents("tr")[0].outerHTML;
+		$(that).parents("tr").after(html);
+
+		$.each($(that).parents("tr").next().find("td"),function(key,value){
+			if(key != 0){
+				$(value).find("input[type='text']").val(null);
+				$(value).find("input[type='hidden']").val(null);
+				$(value).find("input[type='number']").val(0);
+				$(value).find("span.hideVal").text('');
+				$(value).find("img").remove();
+			}
+		})
+
+		$.each($(that).parents("tbody").find("tr"),function(key,value){
+			$(value).eq(0).find("label").text(key + 1)
+		})
+	}
+	/**
+	 * 删除方法
+	 * @param（tbody）首先获取tbody,因remove之后that参数将找不到。
+	 * 通过循环方式添加序号
+	 */
+	function deleteTr(that) {
+
+		if($(that).parents("tbody")[0].children.length>2){
+			var tbody = $(that).parents("tbody");
+			$(that).parents("tr").remove();
+			$.each($(tbody).find("tr"),function(key,value){
+				$(value).eq(0).find("label").text(key + 1)
+			})
+		}else{
+			$("#delete-addModal").modal('show');
+		}
+	}
+
+
+
+
+	var checkSku_false = 0;
+	var checkSku_sku = [];
+	//sku自编码查询
+	function checkSku(ts) {
+		var msg_index = 0;
+		var sku = $(ts).parent().prev().val();
+		var now_number = $(ts).parents("tr").eq(0).find("label").html();
+		var data = {sku: sku,now_number:now_number};
+		var async = {async: false};
+		var url = "<{:U('OrderDetail/order_add_ajax')}>";
+		$.post(url, data, function (msg) {
+			if (msg == 1) {
+				checkSku_false = 1;
+				//checkSku_sku.push(sku);
+				alert("sku编码不符合规范");
+				return false;
+			} else {
+				checkSku_false = 2;
+				$(ts).parents("tr").html(msg);
+				console.info(checkSku_false)
+			}
+
+		})
+
+	}
+	//循环验证sku正确性
+	var goods_name_index= 0,goods_attribute_index= 0,image_index=0;
+	function checkSkus(){
+		goods_name_index= 0,goods_attribute_index= 0,image_index=0;
+		$(".goods_detail .goods_detail-main tr td input[name='goods_name[]']").each(function(){
+			if($(this).val()){
+			}
+			else{
+				goods_name_index++;
+			}
+		});
+		$(".goods_detail .goods_detail-main tr td input[name='goods_attribute[]']").each(function(){
+			if($(this).val()){
+			}
+			else{
+				goods_attribute_index++;
+			}
+		});
+		$(".goods_detail .goods_detail-main tr td input[name='image[]']").each(function(){
+			if($(this).val()){
+			}
+			else{
+				image_index++;
+			}
+		});
+		if(goods_name_index==0 && goods_attribute_index==0 && image_index==0){
+			checkSku_false=2;
+		}
+		else{
+			checkSku_false=1;
+		}
+	}
+	//对于不符合验证的数据不让其提交
+	function checkOuts() {
+		checkOut();
+		checkSkus();
+		var goods_detail_main_index = 0;
+		if (checkOut_false == 1 || checkSku_false == 1) {
+			if (checkOut_false == 1) {
+				alert("总数必须为100%");
+			} else if (checkSku_false == 1) {
+				alert("sku编码不符合规范");
+			}
+			return false;
+		} else if(checkOut_false == 2 && checkSku_false == 2) {
+			$("form").submit();
+		}
+
+	}
+
+
+
+
+
+
+	$(".goods_detail .goods_detail-main").on("blur","tr .goods_number",function(){
+
+		$(".goods_detail .goods_detail-main tr").each(function(){
+			var unit_price=$(this).find("td input[name='unit_price[]']").val();
+			var goods_number=$(this).find("td input[name='goods_number[]']").val();
+			var goods_money=parseFloat(unit_price)*parseFloat(goods_number);
+			$(this).find("td input[name='goods_money[]']").val(goods_money);
+		})
+		var goods_number_total=0;
+		$(".goods_number").each(function(){
+			var goodsName=$(this).val();
+			goods_number_total +=parseInt(goodsName)
+		})
+		$(".number_total").val(goods_number_total);
+		$(".number_totals").html(goods_number_total);
+
+		var total_count_money=0;
+		$(".goods_detail .goods_detail-main tr td .goods_money").each(function(){
+			total_count_money +=parseFloat($(this).val());
+		})
+		$(".op-td-total .money_totals").html(total_count_money);
+		$(".op-td-total .money_total").val(total_count_money);
+//        purchaseMoney();
+
+	})
+
+
+	//商品的数量合计计算
+	$(".goods_detail .goods_detail-main").on("blur","tr .goods_number,tr td input[name='unit_price[]']",function(){
+		$(".goods_detail .goods_detail-main tr").each(function(){
+			var unit_price=$(this).find("td input[name='unit_price[]']").val();
+			var goods_number=$(this).find("td input[name='goods_number[]']").val();
+			var goods_money=parseFloat(unit_price)*parseFloat(goods_number);
+			$(this).find("td input[name='goods_money[]']").val(goods_money);
+		})
+		var goods_number_total=0;
+		$(".goods_number").each(function(){
+			var goodsName=$(this).val();
+			goods_number_total +=parseInt(goodsName)
+		})
+		$(".number_total").val(goods_number_total);
+		$(".number_totals").html(goods_number_total);
+		$("#number_goods").val(goods_number_total);
+		var total_count_money=0;
+		$(".goods_detail .goods_detail-main tr td .goods_money").each(function(){
+			console.log(total_count_money);
+			total_count_money +=parseFloat($(this).val());
+		})
+		$(".op-td-total .money_totals").html(total_count_money);
+		$(".op-td-total .money_total").val(total_count_money);
+		$("#original_currency").val(total_count_money);
+
+	})
+
+	//商品的金额合计计算
+	$(".goods_detail .goods_detail-main").on("blur"," tr .goods_money",function(){
+		var goods_money_total=0;
+		$(".goods_money").each(function(){
+			var goodsName=$(this).val();
+			goods_money_total +=parseInt(goodsName);
+		})
+		$(".money_total").val(goods_money_total); //合计金额
+		$(".money_totals").html(goods_money_total); //合计金额span标签中的
+		$("#original_currency").val(goods_money_total);
+	});
+
+
+
+</script>
+
+
+</html>

@@ -1,0 +1,287 @@
+html,body,div,span,table,tr,td,em,input,th{
+    font-family: "΢���ź� Bold","΢���ź�";
+}
+td{
+	font-size: 14px;
+	font-family: "Arial","Microsoft YaHei","黑体","宋体",sans-serif;
+}
+.col-md-11 ul li{
+    font-family: "΢���ź�" !important;
+}
+.new-kehu .col-md-1 {
+    width: 65px;
+}
+.new-kehu .col-md-1 span {
+    color: #333333;
+    display: inline-block;
+    font-family: "΢���ź� Bold","΢���ź�";
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 10px 0;
+    padding: 3px 0;
+}
+.link_blue{text-decoration:underline;color:#06c;}
+.menu-state .active a {
+    background: #ed2d65 none repeat scroll 0 0;
+    color: white;
+}
+.menu-state a {
+    color: #ed2d65;
+}
+.menu-state ul li {
+    display:inline-block;
+}
+.table-bordered th, .table-bordered td{text-align:center;}
+.cur{cursor: pointer;width:256px;}
+.cur-s{cursor: pointer;}
+a:hover{text-decoration: none !important;}
+input,
+select {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.detail-wrap {
+    padding:10px;
+    box-sizing: border-box;
+}
+
+.detail-title {
+    font-size: 1.55rem;
+    font-weight: 600;
+    border-bottom: 1px solid #b3b3b3;
+    padding: 6px 0;
+    margin-bottom: 10px;
+    color:#CCCCCC;
+}
+.detail-title a{
+	color:#CCCCCC;
+	margin-right:6%;
+}
+.detail-title a:nth-child(1){
+	color: black;
+}
+.basis-info {
+    margin: 0px 0;
+}
+
+.basis-info td:nth-of-type(odd),
+.com-info td:nth-of-type(odd) {
+    width: 15%;
+k
+}
+
+.basis-info td>input[type="text"],
+.basis-info td>select,
+.basis-info td>input-text {
+    
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 5px;
+    padding: 0 10px
+}
+
+.basis-info .sel-map>select {
+    width: 25%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 5px;
+    padding: 0 10px
+}
+
+.basis-info td>input[type="file"] {
+    width:98.1%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius:5px;
+}
+
+.basis-info td span {
+    display: inline-block;
+    width: 15%;
+    height:26px;
+    line-height: 26px;
+    text-align: center;
+    border-radius:5px;
+    background-color: #dddddd;
+    margin-right:1%;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.table caption {
+    text-align: left;
+    background: #F0FFFF;
+    border: 1px solid #e5e5e5;
+    margin-bottom: -1px;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 5px 10px;
+    margin-top: -1px;
+}
+
+.detail-btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.detail-btn>button {
+    margin: 0 50px;
+}
+
+.table td {
+    padding: 5px 10px;
+}
+.text-le td {
+    text-align: left;
+}
+.coop-info td input[type="text"],
+.coop-info td select{
+    width:70%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 5px;
+    padding: 0 10px
+}
+.add_select{
+	width:32.3%;
+}
+.team_select{
+	width: 98.8%;
+}
+.coop-info td input[type="file"]{
+    width: 70%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 5px;
+}
+.multiple_team li:hover{cursor: pointer;}
+.checked_card {background-color:#ff6600;}
+.multiple_team select{margin-right: 10px;}
+input{width:98%;}
+.addContract{margin-top: 10px;}
+.addContract a{
+	padding:5px 15px;
+	margin-top: 10px;
+	background:#ed2d65;
+	color:white !important;
+	font-weight: bold;
+	font-size: 1rem;
+}
+.basis-info td .add_active{
+	background-color:#ff6600;
+	color: white;
+}
+.detail_show_contract .btn{
+	background:#CCCCCC;
+	color: white;
+	border-radius: 5px;
+}
+.detail_show_contract .btn-pink{
+	background-color:#ed2d65;
+}
+.code_num img{
+	display: inline-block;
+	height:19px;
+	width: 21px;
+	margin-left: 5px;
+}
+.coor_supp span{
+	display: block;
+	width:70px;
+	height:23px;
+	line-height: 23px;
+	background:#ff6600;
+	color: white;
+	cursor: pointer;
+}
+.coop-info caption{position: relative;}
+.coop-info .btn_edit{
+	background: #ed2d65;
+	position: absolute;
+	right:5px;
+	top: 1px;
+	height:32px;
+	color:white;
+	width: 80px;
+	text-align: center;
+	line-height: 32px;
+	border-radius: 5px;
+}
+.account_period span{
+	display: block;
+	height:25px;
+	line-height:25px;
+	width:80px;
+	background: #CCCCCC;
+	color: white;
+	border-radius: 5px;
+}
+.auto_renew span{
+	display: block;
+	width:70px;
+	height:23px;
+	line-height: 23px;
+	background:#ff6600;
+	color: white;
+	cursor: pointer;
+	margin-left: 20%;
+}
+.c_address div{
+	margin-left: -15px;
+	margin-right: -18px;
+	width: 38.1%;
+}
+.text-le tr td:nth-child(odd){
+	text-align: center;
+}
+.row {
+	display: flex;
+}
+
+.table-bordered th {
+	white-space: nowrap;
+}
+
+.table-bordered td,
+.table-bordered th {
+	border: 1px solid #eceeef;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.btn-danger {
+	color: #fff;
+	background-color: #ec2d64;
+	border-color: #ed2d65;
+}
+
+.btn-sm {
+	font-size: 12px;
+}
+
+.td-icon div i {
+	padding-right: 5px;
+	color: #ec2d64;
+}
+
+td div+div {
+	margin: 3px 0;
+}
+
+.wrap {
+	padding: 20px;
+}
+
+.th-wrap th {
+	text-align: center;
+}

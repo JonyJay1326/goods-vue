@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>搜索关键字查询</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css" />
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css?=20170503">
+
+    <style>
+        .box-parent {
+            position: relative;
+        }
+
+        .xcl-box {
+            width: 415px;
+            height: 400px;
+            position: absolute;
+            top: 40px;
+            right: -132px;
+            background: white;
+            box-shadow: 2px 2px 18px #c3bebe;
+            border: 1px solid azure;
+            padding: 10px;
+            z-index: 50;
+            overflow: auto;
+        }
+
+
+        .xcl-box .search-row {
+            margin: 10px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .xcl-box .search-row input {
+            border: 1px solid #dedede;
+            height: 24px;
+            padding: 0 10px;
+            width: 180px;
+            border-radius: 2px;
+        }
+        .xcl-box .search-row input:focus{
+            box-shadow: 0 0 5px #33ccff;
+            border: 1px solid transparent;
+        }
+        .xcl-box .search-row .Hui-iconfont-search{
+            color: white;
+            font-size: 20px;
+            background: #ec2d64;
+            vertical-align: middle;
+            margin-left: -15px;
+            padding: 3px 4px;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+        }
+        .xcl-box .search-row .btn-close{
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            color: #666;
+            font-size: 20px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        .xcl-box .search-row .btn-close:hover{
+            color: #ec2d64;
+        }
+        .xcl-box .search-row button{
+            border: 1px solid #999;
+            padding: 0 5px;
+            height: 26px;
+            font-size: 14px;
+            width: auto;
+            margin-left: 15px;
+            background: #b3b3b3;
+            color: white;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+        .xcl-box table thead th{
+            height:25px;
+            line-height: 25px;
+            padding: 0 8px;
+        }
+        .xcl-box table tbody td{
+            height:20px;
+            line-height: 20px;
+            padding: 0 8px;
+        }
+        .showbg{
+            background-color: #ddd;
+        }
+        .td-linknum>a>span{
+            text-decoration: underline;
+        }
+
+        .xcl-btn-group{
+            position: absolute;
+            top: 28px;
+            right: 0;
+            z-index: 100;
+            display: none;
+        }
+        .xcl-btn-group span{
+            display: inline-block;
+            padding: 1px 10px 2px;
+            background: #5eb95e;
+            color: white;
+            border-radius: 2px;
+        }
+        .xcl-hover-btn{
+            display: inline-block;
+            padding: 1px 10px 2px;
+            background: #EC2D64;
+            color: white;
+            height: 20px;
+            border: 1px;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="xcl-wrap" id="xcl-wrap">
+    <div class="select-line">
+        <form action="" method="post" id="thisform">
+            <div class="row">
+                <div class="col-15">
+                    <select name="CD" v-model="selected">
+                        <option value=""><{$Think.lang.平台渠道}></option>
+                        <option v-for="option in options" :value="option.CD">{{option.CD_VAL}}</option>
+                    </select>
+                </div>
+                <div class="col-15">
+                    <input type="text" name="keyword" v-model="keyword" placeholder="<{$Think.lang.关键字}>">
+                </div>
+                <div class="col-15 text-c">
+                    <input type="text" name="startDate" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.起始日期}>" class="Wdate" v-model="startDate">
+                </div>
+                <div class="col-15 text-c">
+                    <input type="text" name="endDate" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.结束日期}>" class="Wdate" v-model="endDate">
+                </div>
+                <div class="col-20">
+                    <button onclick="submit()" type="button" name="query" class="button-pink"><{$Think.lang.查询}></button>
+                    <button type="button" @click="reset_order"  name="reset" class="button-black"><{$Think.lang.重置}></button>
+                </div>
+                <div class="col-15 text-c">
+                    <button type="button" class="button-pink" @click="pushMsg()"><{$Think.lang.推送}></button>
+                    <button type="button" class="button-pink" @click="add()"><{$Think.lang.新增}></button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-15 text-c">
+                    <{$Think.lang.排序}>：
+                    <select name="sortType" v-model="sortType">
+                        <option value=""><{$Think.lang.排序名称}></option>
+                        <option v-for="sortType in sortTypes" :value="sortType.key">{{sortType.val}}</option>
+                    </select>
+                </div>
+                <div class="col-15">
+                    <select name="sortDesc" v-model="sortDesc">
+                        <option value=""><{$Think.lang.排序顺序}></option>
+                        <option v-for="sortDesc in sortDescs" :value="sortDesc.key">{{sortDesc.val}}</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="cl pd-5"><span>共有数据：<strong id="total"><{$total}></strong> 条</span> </div>
+    <div class="xcl-tabel" id="xcl-table">
+        <table class="table table-border table-bordered table-hover table-bg table-sort dataTable no-footer" id="DataTables_Table_0" role="grid" aria-describedby="DataTables_Table_0_info">
+            <thead>
+            <tr class="text-c" role="row">
+                <th width="25"><input type="checkbox" name="" value=""></th>
+                <th width="30"><{$Think.lang.id}></th>
+                <th><{$Think.lang.平台渠道}></th>
+                <th><{$Think.lang.关键字}></th>
+                <th><{$Think.lang.排序}></th>
+                <th><{$Think.lang.创建时间}></th>
+                <th><{$Think.lang.操作}></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="(d,index) in stream_arr" v-cloak class="text-c odd" role="row" :data-id='d.recommendKeywordId' :data-index='index'>
+                <td><input type="checkbox" :value="d.recommendKeywordId" name=""></td>
+                <td>{{index+1}}</td>
+                <td>{{all_channel[d.CD].CD_VAL}}</td>
+                <td>{{d.keyword}}</td>
+                <td>{{d.sortVal}}</td>
+                <td>{{d.createDate}}</td>
+                <td>
+                    <input class="btn btn-link radius" type="button" value="上移" onclick="check(this,'MoveUp')">
+                    <input class="btn btn-link radius" type="button" value="下移" onclick="check(this,'MoveDown')">
+                    <span class="edit-btn" @click="edit(d)">修改</span>&nbsp;
+                    <!--<span class="edit-btn" @click="del(d,index)">删除</span>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-7 padding10-0">
+        <ul class="pagination">
+            <{$pages}>
+        </ul>
+    </div>
+    <div class="detailInfo-wrap" v-show="show" style="display: none;height: auto;">
+        <div class="row">
+            <div class="col-70"><span class="info-title">详情页</span></div>
+            <div class="col-30 text-r"><i  class="Hui-iconfont Hui-iconfont-close" @click="close()"></i></div>
+        </div>
+        <div class="info-context">
+            <div class="row">
+                <div class="col-50">
+                    <span><{$Think.lang.平台渠道}>：</span>
+                    <select v-model="cd_model" class="" name="acd"  datatype="s" errormsg="<{$Think.lang.平台渠道}>" >
+                        <option v-for="option in options" :value="option.CD">{{option.CD_VAL}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span><{$Think.lang.热词}>：</span> <input type="text" v-model="init_data.keyword"></div>
+                <div class="col-50"><span><{$Think.lang.排序}>：</span> <input type="text" v-model="init_data.sortVal" readonly class="input-text disabled"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50 text-c">
+                <button class="button-pink" @click="save()">保存</button>
+            </div>
+            <div class="col-50 text-c">
+                <button class="button-black" @click="close()">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/H-ui.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+
+
+<script type="text/javascript">
+    /*$(function(){
+        $('.table-sort').dataTable({
+            "aaSorting": [[ 5, "desc" ]],//默认第几个排序
+            "bStateSave": true,//状态保存
+            "aoColumnDefs": [
+                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                {"orderable":false,"aTargets":[0,1,2,3,6]}// 制定列不参与排序
+            ],
+            "bPaginate":true,
+            "bFilter":false,
+            "bInfo": false,
+            "bLengthChange":true,
+        });
+    });*/
+    var vm = new Vue({
+            el:"#xcl-wrap",
+
+            data:{
+                selected: '<{$cdCode}>',
+                options: <{$cdList}>,
+            stream_arr: <{$result}>,
+        all_channel:<{$all_channel}>,
+    keyword:"<{$params['keyword']}>",
+        startDate:"<{$params['startDate']}>",
+        endDate:"<{$params['endDate']}>",
+        cd_model:'<{$cdCode}>',
+        init_data: {"recommendKeywordId":0,"keyword":"","cd_model":"<{$cdCode}>","sortVal":<{$total + 1 }>},
+    init: {"recommendKeywordId":0,"keyword":"","cd_model":"<{$cdCode}>","sortVal":<{$total + 1}>},
+    show:false,
+        sortTypes:<{$sortTypes}>,
+    sortDescs:<{$sortDescs}>,
+    sortType:"<{$params['sortType']}>",
+        sortDesc:"<{$params['sortDesc']}>",
+    },
+    methods: {
+        add:function(){
+            this.show=true;
+        },
+        reset_order:function(){
+            this.keyword = '';
+            this.startDate = '';
+            this.endDate = '';
+        },
+        save:function(){
+            var i_data = this.init_data;
+            i_data.keyword = this.init_data.keyword;
+            i_data.cd_model = this.cd_model;
+            if (i_data.keyword == '' ) {
+                box.Alert('提示', '<{$Think.lang.搜索热词不能为空}>');
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/index.php?m=appRecord&a=setHotKeyword",
+                data: {
+                    keyword:i_data.keyword,
+                    cd:i_data.cd_model,
+                    id:i_data.recommendKeywordId,
+                    sortVal:i_data.sortVal,
+                },
+                success: function (res) {
+                    var res = JSON.parse(res);
+                    if(res['status'] == 'n'){
+                        box.Alert('提示', res['info']);
+                        return false;
+                    }
+                    location.reload();
+                    /*$(".button-black").click();
+                    i_data.recommendKeywordId = res['id'];
+                    i_data.keyword = res['data']['keyword'];
+                    i_data.CD = res['data']['CD'];
+                    i_data.sortVal = res['data']['sortVal'];
+                    i_data.createDate = res['data']['createDate'];
+                    console.log(res['data']['sortVal']);
+                    console.log(i_data.sortVal);
+                    vm.stream_arr.push(i_data);
+                    console.log(i_data.sortVal);
+                    vm.init_data.sortVal = res['total'];
+                    vm.init.sortVal = res['total'];
+                    res['total'] = res['total'] == 1 ? 1 : res['total'] - 1;
+                    $('#total').text(res['total']);*/
+                },
+                error: function () {
+                    box.Alert('提示','网络繁忙，请重试！');
+                }
+            });
+        },
+        edit:function (e) {
+            this.init_data = e;
+            this.show = true;
+            this.code_show = true;
+        },
+        close:function () {
+            this.init_data = this.init;
+            this.show = false;
+        },
+        del:function(e,key){
+            var remove_key = key;
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/index.php?m=appRecord&a=delHotKeyword",
+                data: {
+                    id:e.recommendKeywordId,
+                },
+                success: function (res) {
+                    var res_info = JSON.parse(res)['info'];
+                    box.Alert('提示', res_info);
+                    vm.stream_arr.splice(remove_key,1);
+                },
+                error: function () {
+                    box.Alert('提示','网络繁忙，请重试！');
+                }
+            });
+        },
+        pushMsg:function()
+        {
+            var jsonData = {};
+            var isEmpty = 1;
+            $('input:checked').each(function(index){
+                if($(this).val()!='')
+                {
+                    jsonData[index] = $(this).val();
+                    isEmpty = 0;
+                }
+            });
+            if(isEmpty == 1){
+                box.Alert('提示', '请选择推送的热搜词');
+                return false;
+            }
+            $.ajax({
+                type: "POST",
+                async: false,
+                url: "/index.php?m=appRecord&a=pushHotKeyword",
+                dataType:'json',
+                data:JSON.stringify(jsonData),
+                success: function (res) {
+                    var res_info = res.data;
+                    box.Alert('提示', res_info);
+                    return false;
+                },
+                error: function () {
+                    box.Alert('提示','网络繁忙，请重试！');
+                }
+            });
+        }
+    }
+    });
+    function opennewtab(o,title){
+        if($(o).attr('_href')){
+            var bStop=false;
+            var bStopIndex=0;
+            var _href=$(o).attr('_href');
+            var _titleName=$(o).html();
+            var topWindow=$(window.parent.document);
+            var show_navLi=topWindow.find("#min_title_list li");
+            show_navLi.each(function() {
+                if($(this).find('span').attr("data-href")==_href){
+                    bStop=true;
+                    bStopIndex=show_navLi.index($(o));
+                    return false;
+                }
+            });
+            if(!bStop){
+                var topWindow=$(window.parent.document);
+                var show_nav=topWindow.find('#min_title_list');
+                show_nav.find('li').removeClass("active");
+                var iframe_box=topWindow.find('#iframe_box');
+                show_nav.append('<li class="active"><span data-href="'+_href+'">'+title+'</span><i></i><em></em></li>');
+
+                var topWindow=$(window.parent.document);
+                var taballwidth=0,
+                    $tabNav = topWindow.find('.acrossTab'),
+                    $tabNavWp = topWindow.find(".Hui-tabNav-wp"),
+                    $tabNavitem = topWindow.find(".acrossTab li"),
+                    $tabNavmore =topWindow.find(".Hui-tabNav-more");
+                if (!$tabNav[0]){return}
+                $tabNavitem.each(function(index, element) {
+                    taballwidth+=Number(parseFloat($(this).width()+60))});
+                $tabNav.width(taballwidth+25);
+                var w = $tabNavWp.width();
+                if(taballwidth+25>w){
+                    $tabNavmore.show()}
+                else{
+                    $tabNavmore.hide();
+                    $tabNav.css({left:0})}
+                var iframeBox=iframe_box.find('.show_iframe');
+                iframeBox.hide();
+                iframe_box.append('<div class="show_iframe"><div class="loading"></div><iframe frameborder="0" src='+_href+'></iframe></div>');
+                var showBox=iframe_box.find('.show_iframe:visible');
+                showBox.find('iframe').attr("src",_href).load(function(){
+                    showBox.find('.loading').hide();
+                });
+
+            }
+            else{
+                show_navLi.removeClass("active").eq(bStopIndex).addClass("active");
+                var iframe_box=topWindow.find("#iframe_box");
+                iframe_box.find(".show_iframe").hide().eq(bStopIndex).show().find("iframe").attr("src",_href);
+            }
+        }
+    }
+    function show_page(e){
+        vm.show_page(e-1)
+    }
+    function check(t,oper){
+
+        var $data = false;
+        var _oindex = oid = osortval = oindex = 0;
+        var data_tr=$(t).parent().parent();
+        var sortval =  data_tr[0]['cells'][4]['innerText'];
+        var id =  $(data_tr).data('id');
+        var _index  =  $(data_tr).data('index');
+        var index  = data_tr[0]['cells'][1]['innerText'] - 1;
+        if(oper=="MoveUp"){
+            if($(data_tr).prev().html()==null){
+                box.Alert('提示','已经是最顶部了!');
+                return;
+            }else{
+                oid = $(data_tr).prev('tr').data('id');
+                _oindex = $(data_tr).prev('tr').data('index');
+                osortval = $(data_tr).prev('tr')[0]['cells'][4]['innerText'];
+                oindex  = $(data_tr).prev('tr')[0]['cells'][1]['innerText'] - 1;
+                data = changeSort(id,oid,sortval,osortval,'decr');
+                if(data) {
+                    data_tr[0]['cells'][4]['innerText'] = osortval;
+                    $(data_tr).prev()[0]['cells'][4]['innerText'] = sortval;
+                    $(data_tr).prev()[0]['cells'][1]['innerText'] = data_tr[0]['cells'][1]['innerText'];
+                    data_tr[0]['cells'][1]['innerText'] = data_tr[0]['cells'][1]['innerText'] - 1;
+                    $(data_tr).insertBefore($(data_tr).prev());
+                    vm.stream_arr[_index].sortVal = osortval;
+                    vm.stream_arr[_oindex].sortVal = sortval;
+
+                }
+            }
+        }else{
+            if($(data_tr).next().html()==null){
+                box.Alert('提示','已经是最低部了!');
+                return;
+            }else{
+                oid = $(data_tr).next('tr').data('id');
+                _oindex = $(data_tr).next('tr').data('index');
+                osortval = $(data_tr).next('tr')[0]['cells'][4]['innerText'];
+                oindex  = $(data_tr).next('tr')[0]['cells'][1]['innerText'] - 1;
+                $data = changeSort(id,oid,sortval,osortval,'add');
+                if($data) {
+                    data_tr[0]['cells'][4]['innerText'] = osortval;
+                    $(data_tr).next('tr')[0]['cells'][4]['innerText'] = sortval;
+                    $(data_tr).next('tr')[0]['cells'][1]['innerText'] = data_tr[0]['cells'][1]['innerText'];
+                    data_tr[0]['cells'][1]['innerText'] = parseInt(data_tr[0]['cells'][1]['innerText']) + 1;
+                    $(data_tr).insertAfter($(data_tr).next());
+                    vm.stream_arr[_index].sortVal = osortval;
+                    vm.stream_arr[_oindex].sortVal = sortval;
+                }
+            }
+        }
+    }
+    function changeSort(id,oid,sortval,osortval,type)
+    {
+        var result = false;
+        /*if(type == 'decr')
+        {
+            if(sortVal == 1)
+            {
+                box.Alert('提示', '推送的热搜词的排序字段已为1');
+                return  result;
+            }
+        }*/
+        $.ajax({
+            type: "POST",
+            async: false,
+            dataType:'json',
+            url: "/index.php?m=appRecord&a=changeSortVal&<{$params|http_build_query}>",
+            data:{'id':id,'oid':oid,'osortval':osortval,'sortval':sortval,'type':type},
+            success: function (res) {
+                var res_info = res.info;
+                if(res.status == 'n')
+                {
+                    box.Alert('提示',res_info);
+                    result = false;
+                }
+                result = true;
+            },
+            error: function () {
+                box.Alert('提示','网络繁忙，请重试！');
+                result = false;
+            }
+        });
+        return result;
+    }
+</script>
+</body>
+
+</html>

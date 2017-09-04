@@ -1,0 +1,358 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css" />
+    <title></title>
+</head>
+<body class="order-detail">
+<style>
+.bg_blue{background: #f5fafe none repeat scroll 0 0;}
+</style>
+<div class="order-tabs">
+    <ul>
+        <li class="active"><a href="javascript:void()"><{$Think.lang.客户信息}></a></li>
+        <li></li>
+    </ul>
+    <div class="show_btn_edit" style="">
+        <span class="btn btn-pink btn-pink-but"  ><{$Think.lang.编辑}></span>
+    </div>
+    <div class="show_btn_save" style="display:none;">
+        <span class="btn btn-pink-but click_not_edit"  ><{$Think.lang.取消}></span>
+        <span class="btn btn-pink btn-pink-but click_to_submit"  ><{$Think.lang.保存}></span>
+    </div>
+</div>
+
+<?php
+//STORE_NAME
+$store_name_arr = explode(',',$kehu_info['STORE_NAME']);
+$store_name_arr[0] = isset($store_name_arr[0])?$store_name_arr[0]:'';
+$store_name_arr[1] = isset($store_name_arr[1])?$store_name_arr[1]:'';
+$store_name_arr[2] = isset($store_name_arr[2])?$store_name_arr[2]:'';
+?>
+
+<form name="form_edit_kehu" method="post" action="<{:U("Customer/submitb5ckehu")}>" >
+<div class="table-wrap">
+    <div class="cus-info">
+        <table class="table table-border table-bg table-bordered">
+            <caption><{$Think.lang.基本信息}></caption>
+            <tbody class="text-c">
+            <tr>
+                <td width="10%" class="bg_blue"><{$Think.lang.用户ID}></td>
+                <td width="40%"><{$kehu_info.CUST_ID}> </td>
+                <td width="10%" class="bg_blue"><{$Think.lang.手机号码}></td>
+                <td width="40%">
+                    <span class="show_text_" style="display:;">
+                         <?= CrypMobile::transformation($kehu_info['CUST_CP_NO']);   ?> <?= CrypMobile::deCrypBtn($kehu_info['CUST_CP_NO']); ?>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                        <input type="text" name="kehu[CUST_CP_NO]" value="<?php echo $kehu_info['CUST_CP_NO']; ?>" >
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.客户姓名}></td>
+                <td>
+                    <span class="show_text_" style="display:;">
+                        <{$kehu_info.CUST_NM}>  
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                        <input type="text" name="kehu[CUST_NM]" value="<?php echo $kehu_info['CUST_NM']; ?>" >
+                    </span>
+                </td>
+                <td class="bg_blue"><{$Think.lang.电子邮箱}></td>
+                <td>
+                    <span class="show_text_" style="display:;">
+                        <{$kehu_info.CUST_EML}>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                        <input type="text" name="kehu[CUST_EML]" value="<?php echo $kehu_info['CUST_EML']; ?>" >
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.QQ}></td>
+                <td>
+                    <span class="show_text_" style="display:;">
+                        <{$kehu_info.QQ_NUM}>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                        <input type="text" name="kehu[QQ_NUM]" value="<?php echo $kehu_info['QQ_NUM']; ?>" >
+                    </span>
+                </td>
+                <td class="bg_blue"><{$Think.lang.店铺名称}>1</td>
+                <td>
+                    <span class="show_text_" style="display:;">
+                        <?php echo $store_name_arr[0]; ?>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                        <input type="text" name="kehu[store_name_arr][]" value="<?php echo $store_name_arr[0]; ?>" >
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.店铺名称}>2</td>
+                <td>
+                    <span class="show_text_" style="display:;">
+                        <?php echo $store_name_arr[1]; ?>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                        <input type="text" name="kehu[store_name_arr][]" value="<?php echo $store_name_arr[1]; ?>" >
+                    </span>
+                </td>
+                <td class="bg_blue"><{$Think.lang.店铺名称}>3</td>
+                <td>
+                    <span class="show_text_" style="display:;">
+                        <?php echo $store_name_arr[2]; ?>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                        <input type="text" name="kehu[store_name_arr][]" value="<?php echo $store_name_arr[2]; ?>" >
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.销售渠道}></td>
+                <td colspan="3" style="text-align:left;">
+                    <span class="show_text_" style="display:;">
+                    <?php
+                        $distri_channel = $kehu_info['DISTRI_CHANNEL'];
+                        $channel_datas = explode(',',$distri_channel);
+                        foreach( $sale_ch_list as $key=>$val ){
+                            if(in_array($key,$channel_datas)){
+                                echo $val;
+                                echo '&nbsp;&nbsp;';
+                            }
+                        }
+                    ?>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                    <?php foreach( $sale_ch_list as $key=>$val){ ?>
+                    <input type="checkbox" name="kehu[DISTRI_CHANNEL][]" value="<?php echo $key; ?>" <?php if(in_array($key,$channel_datas)){ ?>checked<?php } ?> > <?php echo $val; ?>
+                    <?php } ?>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.商品类目}></td>
+                <td colspan="3" style="text-align:left;">
+                    <span class="show_text_" style="display:;">
+                    <?php
+                        $tmp_data = $kehu_info['INTENT_CAT'];
+                        $tmp_datas = explode(',',$tmp_data);
+                        foreach( $cat_list as $key=>$val ){
+                            if(in_array($val['CAT_CD'],$tmp_datas)){
+                                echo $val['CAT_CNS_NM'];
+                                echo '&nbsp;&nbsp;';
+                            }
+                        }
+                    ?>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                    <?php foreach( $cat_list as $key=>$val){ ?>
+                    <input type="checkbox" name="kehu[INTENT_CAT][]" value="<?php echo $val['CAT_CD']; ?>" <?php if(in_array($val['CAT_CD'],$tmp_datas)){ ?>checked<?php } ?> > <?php echo $val['CAT_CNS_NM']; ?>
+                    <?php } ?>
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cus-info">
+        <table class="table table-border table-bg table-bordered">
+            <caption><{$Think.lang.审核信息}></caption>
+            <tbody class="text-c">
+            <tr>
+                <td width="10%" class="bg_blue"><{$Think.lang.客户状态}></td>
+                <td width="40%"> 
+                    <?php $show_status_name = D("ZZmscmncd")->getNameFromCode($kehu_info['CUST_STAT_CD']); ?>
+                    <span class="show_text_" style="display:;">
+                        <?php echo $show_status_name; ?>
+                    </span>
+                    <span class="show_edit_" style="display: none;">
+                        <select id="" name="kehu[CUST_STAT_CD]" style="">
+                            <?php $ms_cust_obj = new ZZmscustModel(); ?>
+                            <?php foreach( $ms_cust_obj::$stat_cd_b5ckehu as $key=>$val){ ?>
+                                <option value="<?php echo $val; ?>" <if condition="$kehu_info.CUST_STAT_CD eq $val">selected="selected"</if> ><?php echo D("ZZmscmncd")->getNameFromCode($val); ?></option>
+                            <?php } ?>
+                        </select>
+                    </span>
+                </td>
+                <td width="10%" class="bg_blue"><{$Think.lang.客户类型}></td>
+                <td width="40%">
+                    <span class="show_text_" style="display:;">
+                        <?php echo D('ZZmscmncd')->getNameFromCode($kehu_info['CUST_DIV_CD']); ?>
+                    </span>
+                    <span class="show_edit_" style="display: none;">
+                        <select id="" name="kehu[CUST_DIV_CD]" style="">
+                            <?php foreach( $kehu_type_list as $key=>$val){ ?>
+                                <option value="<?php echo $key; ?>" <if condition="$kehu_info.CUST_DIV_CD eq $key">selected="selected"</if> ><?php echo $val; ?></option>
+                            <?php } ?>
+                        </select>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.定价类型}></td>
+                <td>
+                    <span class="show_text_" style="display:;">
+                        <?php echo D('ZZmscmncd')->getNameFromCode($kehu_info['PRICE_TYPE']); ?>
+                    </span>
+                    <span class="show_edit_" style="display: none;">
+                        <select id="" name="kehu[PRICE_TYPE]" style="">
+                            <?php foreach( $price_type_list as $key=>$val){ ?>
+                                <option value="<?php echo $key; ?>" <if condition="$kehu_info.PRICE_TYPE eq $key">selected="selected"</if> ><?php echo $val; ?></option>
+                            <?php } ?>
+                        </select>
+                    </span>
+                </td>
+                <td class="bg_blue"><{$Think.lang.上海负责人}></td>
+                <td>
+                    <span class="show_text_" style="display:;">
+                        <?php echo D('ZZmscmncd')->getNameFromCode($kehu_info['SH_SALER']); ?>
+                    </span>
+                    <span class="show_edit_" style="display: none;">
+                        <select id="" name="kehu[SH_SALER]" style="">
+                                <option value="" ><{$Think.lang.Please_select}></option>
+                            <?php foreach( $fuzeren_list as $key=>$val){ ?>
+                                <option value="<?php echo $key; ?>" <if condition="$kehu_info.SH_SALER eq $key">selected="selected"</if> ><?php echo $val; ?></option>
+                            <?php } ?>
+                        </select>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.批量支付}></td>
+                <td>
+                    <span class="show_text_" style="display:;">
+                        <?php echo DataMain::getStatusYN($kehu_info['IS_BULK_PAYMENT']); ?>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                        <select id="" name="kehu[IS_BULK_PAYMENT]" style="">
+                            <?php foreach( DataMain::getStatusYN() as $key=>$val ){ ?>
+                                <option value="<?php echo $key; ?>" <?php if($key==$kehu_info['IS_BULK_PAYMENT']){ ?>selected="selected"<?php } ?> ><?php echo $val; ?></option>
+                            <?php } ?>
+                        </select>
+                    </span>
+                </td>
+                <td class="bg_blue">YHJ MemberID</td>
+                <td>
+                    <?php echo $kehu_info['MEMBER_ID']; ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.第三方平台}></td>
+                <td colspan="3" style="text-align:left;">
+                    <span class="show_text_" style="display:;">
+                    <?php
+                        $tmp_data = $kehu_info['AUTH_SITE'];
+                        $tmp_datas = explode(',',$tmp_data);
+                        foreach( $plat_list as $key=>$val ){
+                            if(in_array($key,$tmp_datas)){
+                                echo $val;
+                                echo '&nbsp;&nbsp;';
+                            }
+                        }
+                    ?>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                    <?php foreach( $plat_list as $key=>$val){ ?>
+                    <input type="checkbox" name="kehu[AUTH_SITE][]" value="<?php echo $key; ?>" <?php if(in_array($key,$tmp_datas)){ ?>checked<?php } ?> > <?php echo $val; ?>
+                    <?php } ?>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.审核意见}></td>
+                <td colspan="3" style="text-align:left;">
+                    <span class="show_text_" style="display:;">
+                        <{$kehu_info.ETC_CONT}>
+                    </span>
+                    <span class="show_edit_" style="display:none;">
+                        <textarea name="kehu[ETC_CONT]" style="width:100%;height:76px;"><{$kehu_info.ETC_CONT}></textarea>
+                    </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="bg_blue"><{$Think.lang.创建时间}></td>
+                <td><?php echo date('Y-m-d H:i',strtotime($kehu_info['SYS_REG_DTTM'])); ?></td>
+                <td class="bg_blue"><{$Think.lang.审核时间}></td>
+                <td><{$kehu_info.JOIN_APRV_DT}> </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<input type="hidden" name="cust_id" value="<{$kehu_info.CUST_ID}>">
+<input type="hidden" name="issubmit" value="1">
+</form>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/alert.js"></script>
+<script>
+function btn_form_show(){
+    $('.show_btn_edit').hide();
+    $('.show_btn_save').show();
+    $('.show_text_').hide();
+    $('.show_edit_').show();
+}
+function btn_form_hide(){
+    $('.show_btn_edit').show();
+    $('.show_btn_save').hide();
+    $('.show_text_').show();
+    $('.show_edit_').hide();
+}
+
+$(document).ready(function (){
+
+    $('.show_btn_edit').click(function(){
+        btn_form_show();
+    });
+    $('.click_not_edit').click(function(){
+        btn_form_hide();
+    });
+    $('.click_to_submit').click(function(){
+        $.ajax({
+            type: 'post',
+            url: $("form").attr('action'),
+            data: $("form").serialize(),
+            success: function(data) {
+                if(data.status=='y'){
+                    $.load('<{$Think.lang.保存成功}>');
+                    setTimeout($.loaded,2000);
+                    setTimeout(function(){
+                        location.replace(location.href);
+                    },1000);
+                }else{
+                    $.load('error');
+                    setTimeout($.loaded,2000);
+                }
+            }
+        });
+    });
+
+
+});
+</script>
+
+</body>
+</html>
+

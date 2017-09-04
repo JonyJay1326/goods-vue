@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/jqeury-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170306" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/supplier.css?v=20170307" />
+    <title></title>
+</head>
+<body class="pos-r mt-20">
+<style>
+    .custom-bme{
+        text-align: left;
+    }
+    select,.select-box,input,button,.btn{border-radius: 5px}
+    table td{
+        max-width: 300px;
+        overflow: auto;
+    }
+</style>
+<?php
+    $t = function($data) {
+        $arr = json_decode($data, true);
+        return $arr ['msg']['uri'];
+    }
+?>
+<div style="margin-right:20px;">
+    <img src="../Public/images/ajax-loader.gif" width="" height="" alt="" class="img_load-pos hide"/>
+    <!--载入搜索模块-->
+    <include file="search" />
+    <br />
+    <br />
+    <!--数据列表 -->
+    <div class="row">
+        <include file="search_result" />
+        <table class="table table-border table-bordered table-bg table-hover table-sort">
+            <thead>
+                <tr class="text-c no-wrap">
+                    <foreach name="model:attributes" key="k" item="val">
+                        <th><{$Think.lang.$val}></th>
+                    </foreach>
+                </tr>
+            </thead>
+            <tbody class="show-data">
+                <foreach name="result" key="k" item="vo">
+                    <tr>
+                        <foreach name="model:attributes" key="ks" item="val">
+                                
+                            <?php
+                                if ($ks == 'model') {
+                                    echo '<td class="no-wrap">'. $rule_menu[$vo['model']] .'</td>';
+                                } elseif ($ks == 'action') {
+                                    echo '<td class="no-wrap">'. $c_name[$vo['action']] .'</td>';
+                                } elseif ($ks == 'noteType') {
+                                    echo '<td class="no-wrap">业务</td>';
+                                } elseif ($ks == 'source') {
+                                    echo '<td class="no-wrap">B5C-ERP</td>';
+                                } elseif ($ks == 'msg') {
+                                    $query = parse_url($t($vo ['msg']))['query'];
+                                    parse_str($query, $ret);
+                                    echo '<td class="no-wrap">' . $ret ['m'] . '/' . $ret['a'] . '</td>';
+                                } else {
+                            ?>
+                                <td class="no-wrap"><{$vo[$ks]}></td>
+                            <?php
+                                }
+                            ?>
+                            
+                        </foreach>
+                    </tr>
+                </foreach>
+            </tbody>
+        </table>
+        <include file="search_result" />
+    </div>
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<include file="Public:page_header_add" />
+<body class="order-detail">
+<style>
+.bg_blue{background: #f5fafe none repeat scroll 0 0;}
+.showNum{background: white;float: right;width: 60px;height: 30px;border: 1px solid #dad3d3;cursor: pointer;}
+</style>
+<div class="order-tabs">
+    <ul>
+        <li class="active"><a href="javascript:void()"><{$Think.lang.客户信息}></a></li>
+        <li></li>
+    </ul>
+    <div class="show_btn_edit" >
+        <span class="btn btn-pink-but click_to_cancel" style="margin:12px auto 12px;" ><{$Think.lang.取消}></span>
+        <span class="btn btn-pink btn-pink-but click_to_save" style="margin:12px auto 12px;" ><{$Think.lang.保存}></span>
+    </div>
+    <div class="show_btn_save" style="display:none;">
+
+    </div>
+</div>
+<form name="form_edit_kehu" method="post" action="<{:U("Customer/submitnewkehu")}>" >
+<div class="table-wrap">
+    <div class="cus-info">
+        <table class="table table-border table-bg table-bordered">
+            <caption><{$Think.lang.基本信息}></caption>
+            <tbody class="text-c">
+            <tr>
+                <td width="10%" class="bg_blue"><{$Think.lang.用户ID}></td>
+                <td width="40%">
+                    <{$kehu_info.CUST_ID}> 
+                </td>
+                <td width="10%" class="bg_blue"><{$Think.lang.登录密码}></td>
+                <td width="40%">
+                    <input type="text" name="kehu[CUST_PWD]" value="" class="input-text" placeholder="<{$Think.lang.修改用户密码、请谨慎操作}>" >
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.用户昵称}></td>
+                <td>
+                    <input type="text" name="kehu[CUST_NICK_NM]" value="<?php echo $kehu_info['CUST_NICK_NM']; ?>" class="input-text" >
+                </td>
+                <td class="bg_blue"><{$Think.lang.用户状态}></td>
+                <td>
+                    <?php echo L(D("ZZmscmncd")->getNameFromCode($kehu_info['CUST_STAT_CD'])); ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.客户邮箱}></td>
+                <td>
+                    <input type="text" name="kehu[CUST_EML]" value="<?php echo $kehu_info['CUST_EML']; ?>" class="input-text" >
+                </td>
+                <td class="bg_blue"><{$Think.lang.邮箱审核状态}></td>
+                <td>
+                    <select id="" name="kehu[AUTH_EMAIL]" class="input-text" style="">
+                        <?php foreach( D('ZZmsthrdcust')->getStatusForCertified() as $key=>$val ){ ?>
+                            <option value="<?php echo $key; ?>" <?php if($key==$kehu_info['AUTH_EMAIL']){ ?>selected="selected"<?php } ?> ><?php echo L($val); ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.客户手机}></td>
+                <td>
+                      <input type="hidden" id="customerNum" value="<?php echo  $kehu_info['CUST_CP_NO'];?>">
+                      <input  type="text" id = ctnum name="kehu[CUST_CP_NO]"   style="width: 88%;float: left;" value="<?php echo CrypMobile::transformation($kehu_info['CUST_CP_NO']); ?>" class="input-text"  >
+                    <input type="button" value="显示号码" class="showNum" onclick="showNum()">
+                </td>
+                <td class="bg_blue"><{$Think.lang.手机审核状态}></td>
+                <td>
+                    <select id="" name="kehu[AUTH_MOBILE]" class="input-text" style="">
+                        <?php foreach( D('ZZmsthrdcust')->getStatusForCertified() as $key=>$val ){ ?>
+                            <option value="<?php echo $key; ?>" <?php if($key==$kehu_info['AUTH_MOBILE']){ ?>selected="selected"<?php } ?> ><?php echo L($val); ?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.通关符}></td>
+                <td>
+                    <{$kehu_info.CUST_CERT_NO}>
+                </td>
+                <td class="bg_blue"><{$Think.lang.接受渠道}></td>
+                <td>
+                    <?php
+                        $recieve_datas = array();
+                        if( $kehu_info['receive_sms'] == 'Y' ){
+                            $recieve_datas[] = 1;
+                        }
+                        if( $kehu_info['receive_email'] == 'Y' ){
+                            $recieve_datas[] = 2;
+                        }
+                        if( $kehu_info['receive_push'] == 'Y' ){
+                            $recieve_datas[] = 3;
+                        }
+                    ?>
+                    <?php foreach( D('ZZmsthrdcust')->getTypeForRecieve() as $key=>$val){ ?>
+                    <input type="checkbox" name="kehu[recieve_types][]" value="<?php echo $key; ?>" class="cls_recieve_types" <?php if(in_array($key,$recieve_datas)){ ?>checked<?php } ?> > <?php echo L($val); ?>
+                    <?php } ?>
+
+                    <input type="checkbox" name="" class="cls_recieve_types_no_subscribe" value="" > <{$Think.lang.不订阅}>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.销售平台}></td>
+                <td>
+                    <?php echo D('ZZmscmncd')->getNameFromCode($kehu_info['PLAT_FORM']); ?>
+                </td>
+                <td class="bg_blue"><{$Think.lang.所属店铺}></td>
+                <td>
+                    <?php echo D('ZZmsstore')->gainStoreName($kehu_info['parent_store_id']); ?>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cus-info">
+        <table class="table table-border table-bg table-bordered">
+            <caption><{$Think.lang.扩展信息}></caption>
+            <tbody class="text-c">
+            <tr>
+                <td width="10%" class="bg_blue"><{$Think.lang.登录类型}></td>
+                <td width="40%"> 
+                    <{$kehu_info.LOGIN_TYPE}>
+                </td>
+                <td width="10%" class="bg_blue"><{$Think.lang.第三方扩展ID}></td>
+                <td width="40%">
+                    <{$kehu_info.EXTERNAL_ID}>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.来源渠道}></td>
+                <td>
+                    <{$kehu_info.PLATFORM_ID}>
+                </td>
+                <td class="bg_blue"><{$Think.lang.所属客户}></td>
+                <td>
+                    <?php echo D('ZZmscmncd')->getNameFromCode($kehu_info['parent_plat_cd']); ?>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.注册时间}></td>
+                <td> 
+                    <{$kehu_info.JOIN_REQ_DT}>
+                </td>
+                <td class="bg_blue"><{$Think.lang.最新登录时间}></td>
+                <td>
+                    <{$kehu_info.SYS_REG_DTTM}>
+                </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.备注信息}></td>
+                <td colspan="3"> 
+                    <{$kehu_info.ETC_CONT}>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<input type="hidden" name="cust_id" value="<{$kehu_info.CUST_ID}>">
+<input type="hidden" name="issubmit" value="1">
+</form>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/alert.js?v=<{$Think.config.VER_NUM}>"></script>
+<script>
+
+$(document).ready(function (){
+
+    $('.click_to_cancel').click(function(){
+        //find window place
+        if($('#iframe_box', window.parent.document)){
+            if($('#iframe_box', window.parent.document).attr('id')!=undefined){
+                $('#iframe_box', window.parent.document).children('.show_iframe').each(function(){
+                    if ($(this).css("display") == "none")  {
+
+                    }else{
+                        var tmpNum = $(this).index();
+                        $('#min_title_list li', window.parent.document).eq(tmpNum).find('i').click();
+                    }
+                });
+            }
+        }
+    });
+
+    $('.click_to_save').click(function(){
+        $.ajax({
+            type: 'post',
+            url: $("form").attr('action'),
+            data: $("form").serialize(),
+            success: function(data) {
+                if(data.status=='y'){
+                    $.load('<{$Think.lang.保存成功}>');
+                    setTimeout($.loaded,2000);
+                }else{
+                    $.load('error');
+                    if(data.info){
+                        $.load(data.info);
+                    }
+                    setTimeout($.loaded,3000);
+                }
+            }
+        });
+    });
+
+    $('.cls_recieve_types_no_subscribe').click(function(){
+        if(this.checked){
+            $('.cls_recieve_types').attr('checked',false);
+        }else{
+        }
+    });
+
+    $('.cls_recieve_types').click(function(){
+        if(this.checked){
+            $('.cls_recieve_types_no_subscribe').attr('checked',false);
+        }else{
+        }
+    });
+
+});
+
+var aPhone = document.getElementById('ctnum');
+var jiemi = document.getElementById('customerNum').value;
+function showNum() {
+    //alert(jiemi)
+    $.ajax({
+         'url': '<{:U("customer/decryption")}>',
+                'data': {phone: jiemi},
+                'type': 'POST',
+                'dataType': 'json',
+                success: function (data) {
+                    aPhone.value = data.data;
+                }
+
+        }) 
+    }
+
+</script>
+
+</body>
+</html>
+

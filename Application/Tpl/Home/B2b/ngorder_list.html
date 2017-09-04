@@ -1,0 +1,204 @@
+<style>
+    [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak, .ng-hide {
+        display: none !important;
+    }
+
+    ng\:form {
+        display: block;
+    }
+
+    .ng-animate-start {
+        clip: rect(0, auto, auto, 0);
+        -ms-zoom: 1.0001;
+    }
+
+    .ng-animate-active {
+        clip: rect(-1px, auto, auto, 0);
+        -ms-zoom: 1;
+    }
+
+    .wrap {
+        box-sizing: border-box;
+        padding: 20px;
+        margin: 0;
+    }
+
+    .row {
+        margin: 0;
+    }
+
+    .row + .row {
+        margin-top: 20px;
+    }
+    [class*="col-"]{
+        padding: 0;
+    }
+</style>
+
+<div class="wrap" ng-cloak>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12" ng-cloak>
+            <div class="use-btn-wrap use-form pd-l-10">
+                <label class="label-name"><{$Think.lang.发货状态}>：</label>
+                <button ng-repeat="i in data.order_fh track by $index" ng-class="$index == initData.order_fh?'active':false" ng-click="upd_date('order_fh',$index)"> {{i.CD_VAL}}</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="use-btn-wrap use-form pd-l-10">
+                <label class="label-name"><{$Think.lang.理货确认}>：</label>
+                <button ng-repeat="i in data.warehouse_state track by $index" ng-class="$index == initData.warehouse_state?'active':false" ng-click="upd_date('warehouse_state',$index)"> {{i.CD_VAL}}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12" ng-cloak>
+            <div class="use-btn-wrap use-form pd-l-10">
+                <label class="label-name"><{$Think.lang.收款状态}>：</label>
+                <button ng-repeat="i in data.order_sk track by $index" ng-class="$index == initData.order_sk?'active':false" ng-click="upd_date('order_sk',$index)"> {{i.CD_VAL}}</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12" ng-cloak>
+            <div class="use-btn-wrap use-form pd-l-10">
+                <label class="label-name"><{$Think.lang.退税状态}>：</label>
+                <button ng-repeat="i in data.order_ts track by $index" ng-class="$index == initData.order_ts?'active':false" ng-click="upd_date('order_ts',$index)"> {{i.CD_VAL}}</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row b2b-form">
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label><{$Think.lang.PO单号}></label>
+            <input type="text" ng-model="initData.PO_ID">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label><{$Think.lang.客户名称}></label>
+            <input type="text" ng-model="initData.CLIENT_NAME">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label><{$Think.lang.销售人员}></label>
+            <input type="text" ng-model="initData.PO_USER">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3" ng-cloak>
+            <label><{$Think.lang.销售团队}></label>
+            <select ng-model="initData.SALES_TEAM" class="ng-pristine ng-valid ng-empty ng-touched">
+                <option selected value="" disabled>---<{$Think.lang.请选择销售团队}>---</option>
+                <option ng-repeat="s in data.sales_team" ng-value="s.CD">{{s.CD_VAL}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row b2b-form">
+        <div class="col-lg-3 col-md-3 col-sm-3" ng-cloak>
+            <label class=""><{$Think.lang.账期}></label>
+            <select ng-model="initData.BILLING_CYCLE_STATE" class="ng-pristine ng-valid ng-empty ng-touched">
+                <option selected value="" disabled>---<{$Think.lang.请选择账期}>---</option>
+                <option ng-repeat="d in data.period" ng-value="d.CD+1">{{d.CD_VAL}}</option>
+            </select>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3" style="width: 100%" >
+            <select ng-model="initData.search_type" class="ng-pristine ng-valid ng-empty ng-touched" style="width: 140px;min-width: 140px;">
+                <option style="width: 100px" selected value="" disabled>-<{$Think.lang.请选择类型}>-</option>
+                <option style="width: 100px" ng-repeat="(key,d) in data.search_type_arr" ng-value="key">{{d}}</option>
+            </select>
+            <input type="text" ng-model="initData.goods_title_info" class="use-input" style="width: auto">
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3">
+            <label class="label-name"><{$Think.lang.PO时间}></label>
+            <span style="white-space: nowrap;">
+                <input id="po_time_action" type="text" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="date">
+                <span style="width: 10px">-</span>
+                <input id="po_time_end" type="text" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="date">
+            </span>
+        </div>
+        <div class="col-lg-3 col-md-3 col-sm-3" ng-cloak>
+            <label class=""><{$Think.lang.逾期}></label>
+            <select ng-model="initData.yq" class="ng-pristine ng-valid ng-empty ng-touched">
+                <option selected value="" disabled>---<{$Think.lang.请选择逾期}>---</option>
+                <option ng-repeat="d in data.yq_arr" ng-value="d.CD">{{d.CD_VAL}}</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 use-btn">
+            <button class="btn-pub btn-green" ng-click="search()"><{$Think.lang.查询}></button>
+            <button class="btn-pub btn-default mg-l-20" ng-click="reset()"><{$Think.lang.重置}></button>
+        </div>
+    </div>
+    <div class="baseline"></div>
+    <div class="row">
+        <div class="col-lg-6 result-num">
+            <span><{$Think.lang.结果}>:<{$Think.lang.共}>&nbsp;&nbsp;<b>{{data.count}}</b>&nbsp;&nbsp;<{$Think.lang.条记录}></span>
+        </div>
+        <div class="col-lg-6 text-right use-btn">
+            <a href="/index.php?m=b2b&a=order_list#/b2badd">
+                <button class="btn-pub btn-blue"><{$Think.lang.新建订单}></button>
+            </a>
+        </div>
+    </div>
+    <!--查询结果-->
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <table class="b2b-table">
+                <thead class="use-head">
+                <tr>
+                    <th><{$Think.lang.PO编号}></th>
+                    <th><{$Think.lang.客户}></th>
+                    <th><{$Think.lang.商品标题}></th>
+                    <th><{$Think.lang.商品数}></th>
+                    <th><{$Think.lang.订单金额}></th>
+                    <th><{$Think.lang.预估毛利}></th>
+                    <th><{$Think.lang.实际毛利}></th>
+                    <th><{$Think.lang.销售}></th>
+                    <th><{$Think.lang.发货}></th>
+                    <!--<th><{$Think.lang.到港}></th>-->
+                    <!--<th><{$Think.lang.入库}></th>-->
+                    <th><{$Think.lang.理货确认}></th>
+                    <th><{$Think.lang.付款周期}></th>
+                    <th><{$Think.lang.是否逾期}></th>
+                    <th><{$Think.lang.退税}></th>
+                    <th><{$Think.lang.PO时间}></th>
+                    <th><{$Think.lang.操作}></th>
+                </tr>
+                </thead>
+                <tbody class="use-body">
+                <tr ng-repeat="item in data.order">
+                    <td>{{item.PO_ID}}</td>
+                    <td>{{item.CLIENT_NAME}}</td>
+                    <td>{{item.goods_title}}</td>
+                    <td>{{item.order_num}}</td>
+                    <td>{{data.currency[item.po_currency].CD_VAL}}&nbsp;{{king(item.po_amount)}}</td>
+                    <td>{{item.ygml}}%</td>
+                    <td ng-if="item.receipt_operation_status">{{item.sjml}}%</td>
+                    <td ng-if="!item.receipt_operation_status"></td>
+                    <td ng-if="item.SALES_TEAM">{{item.PO_USER}}-{{data.sales_team[item.SALES_TEAM].CD_VAL}}</td>
+                    <td ng-if="!item.SALES_TEAM"></td>
+                    <td ng-switch="item.shipping_status">
+                        <span ng-switch-when="2"><{$Think.lang.已发货}></span>
+                        <span ng-switch-when="3"><{$Think.lang.发货完成}></span>
+                        <span ng-switch-default><{$Think.lang.待发货}></span>
+                    </td>
+                    <td ng-switch="item.warehouse_status">
+                        <span ng-switch-when="1"><{$Think.lang.已确认}></span>
+                        <span ng-switch-default><{$Think.lang.未确认}></span>
+                    </td>
+                    <td ng-if="item.BILLING_CYCLE_STATE">{{data.period[item.BILLING_CYCLE_STATE-1].CD_VAL}}</td>
+                    <td ng-if="!item.BILLING_CYCLE_STATE"></td>
+                    <td ng-if="item.order_overdue_statue == 1" style="color: #f00;"><{$Think.lang.有逾期}></td>
+                    <td ng-if="item.order_overdue_statue != 1"><{$Think.lang.未逾期}></td>
+                    <td ng-switch="item.receipt_operation_status">
+                        <span ng-switch-when="1"><{$Think.lang.已收到}></span>
+                        <span ng-switch-default><{$Think.lang.未收到}></span>
+                    </td>
+                    <td>{{item.po_time}}</td>
+                    <td class="use-btn no-wrap"><a href="/index.php?m=b2b&a=order_list&order_id={{item.ORDER_ID}}#/b2bsend" class="btn-pub btn-green"><{$Think.lang.查看}></a></td>
+                </tr>
+                </tbody>
+            </table>
+            <ul uib-pagination boundary-links="true" ng-click="search('',page.currentPage)" total-items="initData.count" ng-model="page.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></ul>
+        </div>
+    </div>
+</div>

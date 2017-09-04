@@ -1,0 +1,293 @@
+<include file="Public:page_header_list" />
+<body class="pos-r mr-20 ml-20">
+<style>
+    html,body,div,span,table,tr,td,em,input,th{font-family: "微软雅黑 Bold","微软雅黑";}
+    .col-md-11 ul li{font-family: "微软雅黑" !important;}
+    .new-kehu .col-md-1 {width:65px;}
+    .new-kehu .col-md-1 span {
+        color: #333333;display: inline-block;
+        font-family: "微软雅黑 Bold","微软雅黑";
+        font-size: 13px;font-style: normal;
+        font-weight: 400;line-height: normal;
+        margin: 10px 0;padding: 3px 0;
+    }
+    .link_blue{text-decoration:underline;color:#06c;}
+    .menu-state .active a {
+        background: #ed2d65 none repeat scroll 0 0;
+        color: white;
+    }
+    .menu-state a {color: #ed2d65;}
+    .menu-state ul li {display:inline-block;}
+    .row .menu-state_span{
+        display: block;float: left;
+        height:32px;width:68px;
+        line-height: 32px;
+    }
+    .menu-state > ul > li:nth-child(1) {
+        color: #ED2D65;cursor: pointer;
+        white-space: nowrap;margin:2px 5px;
+        padding: 3px 8px;
+    }
+    .row .menu-state_ul{
+        display: block;float: left;
+        width:85%;margin-top: 3px;
+    }
+    .menu-state{
+        min-height:32px;width:100%;
+        margin-top: 10px;
+    }
+    .row .menu-state_ul li{
+        margin:2px 5px;border-radius: 5px;
+    }
+    input,select,button,.select-box{border-radius:5px;}
+    #rowSearch{margin:10px 0px;}
+</style>
+<img src="../Public/images/ajax-loader.gif" width="" height="" alt="" class="img_load-pos hide"/>
+<div>
+    <div>
+        <form action="" method="get" id="form_kehu">
+            <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+            <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+            <div class="row ">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state ">
+                    <span class="menu-state_span show_title"><{$Think.lang.客户状态}>：</span>
+                    <ul class="menu-state_ul">
+                        <li class="<?php if(empty($filterArr['by_stat_cd'])){ ?>active<?php } ?>" >
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_stat_cd='); ?>"><{$Think.lang.全部}></a>
+                        </li>
+                        <foreach name="stat_cd_thirdkehu" item="vo">
+                        <?php $now_str = implode(',',ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_stat_cd'],$key) ))); ?>
+                        <?php $now_exists = ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_stat_cd']) )); ?>
+                        <li class="<?php if(in_array($key,$now_exists)){ ?>active<?php } ?>" >
+                            <?php if(in_array($key,$now_exists)){ ?>
+                                <?php $now_clean_arr = Mainfunc::arrRmByVal($now_exists,$key); ?>
+                                <?php $now_clean_str = implode(',',$now_clean_arr); ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_stat_cd='.$now_clean_str); ?>"><{$vo}></a>
+                            <?php }else{ ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_stat_cd='.$now_str); ?>"><{$vo}></a>
+                            <?php } ?>
+                        </li>
+                        </foreach>
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" name="by_stat_cd" value="<?php echo $filterArr['by_stat_cd']; ?>" >
+
+            <div class="row ">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state ">
+                    <span class="menu-state_span show_title"><{$Think.lang.所属平台}>：</span>
+                    <ul class="menu-state_ul">
+                        <li class="<?php if(empty($filterArr['by_plat_cd'])){ ?>active<?php } ?>" >
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_plat_cd='); ?>"><{$Think.lang.全部}></a>
+                        </li>
+                        <foreach name="plat_list" key="key" item="value">
+                        <?php $now_str = implode(',',ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_plat_cd'],$key) ))); ?>
+                        <?php $now_exists = ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_plat_cd']) )); ?>
+                        <li class="<?php if(in_array($key,$now_exists)){ ?>active<?php } ?>" >
+                            <?php if(in_array($key,$now_exists)){ ?>
+                                <?php $now_clean_arr = Mainfunc::arrRmByVal($now_exists,$key); ?>
+                                <?php $now_clean_str = implode(',',$now_clean_arr); ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_plat_cd='.$now_clean_str); ?>"><{$value}></a>
+                            <?php }else{ ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_plat_cd='.$now_str); ?>"><{$value}></a>
+                            <?php } ?>
+                        </li>
+                        </foreach>
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" name="by_plat_cd" value="<?php echo $filterArr['by_plat_cd']; ?>" >
+            <div class="row ">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state ">
+                    <span class="menu-state_span show_title"><{$Think.lang.所属店铺}>：</span>
+                    <ul class="menu-state_ul">
+                        <li class="<?php if(empty($filterArr['by_store'])){ ?>active<?php } ?>" style="display:;">
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_store='); ?>"><{$Think.lang.全部}></a>
+                        </li>
+                        <foreach name="store_list" key="key" item="value">
+                        <?php $now_str = implode(',',ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_store'],$value['ID']) ))); ?>
+                        <?php $now_exists = ZFun::arrNormalUnique(ZFun::arrToIdsArr( array($filterArr['by_store']) )); ?>
+                        <li class="show_li <?php if(in_array($value['ID'],$now_exists)){ ?>active<?php } ?>" style="display:none;">
+                            <?php if(in_array($value['ID'],$now_exists)){ ?>
+                                <?php $now_clean_arr = Mainfunc::arrRmByVal($now_exists,$value['ID']); ?>
+                                <?php $now_clean_str = implode(',',$now_clean_arr); ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_store='.$now_clean_str); ?>"><{$value.STORE_NAME}></a>
+                            <?php }else{ ?>
+                            <a href="<?php echo ZFun::addQueryStrParam($form_base_url,'by_store='.$now_str); ?>"><{$value.STORE_NAME}></a>
+                            <?php } ?>
+                        </li>
+                        </foreach>
+                        <li class="openli"><{$Think.lang.展开}>>></li>
+                    </ul>
+                </div>
+            </div>
+            <input type="hidden" name="by_store" value="<?php echo $filterArr['by_store']; ?>" >
+
+            <div class="row" id="rowSearch">
+                <span><{$Think.lang.注册时间}>：
+                  <input type="text" onfocus="WdatePicker({})" id="logmin"  name="starttime" value="<{$filterArr.starttime}>" class="input-text Wdate" style="width:120px;">
+                  -
+                  <input type="text" onfocus="WdatePicker({})" id="logmax"  name="endtime" value="<{$filterArr.endtime}>" class="input-text Wdate" style="width:120px;">
+                </span>
+                <span class="select-box inline">
+                    <select name="keyword_type" class="select">
+                        <option value="1" <if condition="$filterArr.keyword_type eq 1">selected="selected"</if> ><{$Think.lang.手机号码}></option>
+                        <option value="2" <if condition="$filterArr.keyword_type eq 2">selected="selected"</if> ><{$Think.lang.昵称}></option>
+                        <option value="3" <if condition="$filterArr.keyword_type eq 3">selected="selected"</if> ><{$Think.lang.电子邮箱}></option>
+                        <option value="4" <if condition="$filterArr.keyword_type eq 4">selected="selected"</if> ><{$Think.lang.姓名}></option>
+                        <option value="5" <if condition="$filterArr.keyword_type eq 5">selected="selected"</if> ><{$Think.lang.用户ID}></option>
+                        <option value="6" <if condition="$filterArr.keyword_type eq 6">selected="selected"</if> ><{$Think.lang.所属客户}></option>
+                        <option value="7" <if condition="$filterArr.keyword_type eq 7">selected="selected"</if> ><{$Think.lang.第三方用户编号}></option>
+                    </select>
+                </span>
+                <input type="text" name="keywords" value="<{$filterArr.keywords}>"  placeholder="<{$Think.lang.搜索关键字}>" style="width:100px" class="input-text">
+                <button name="" class="btn btn-pink" type="submit"><i class="Hui-iconfont">&#xe665;</i> <{$Think.lang.搜索}></button>
+                <button name="reset" class="btn btn-clear"><{$Think.lang.重置}></button>
+            </div>
+
+
+            </form>
+        </div>
+
+        <div class="row">
+            <table class="table table-border table-bordered table-bg table-hover table-sort" >
+                <thead>
+                <tr class="text-c no-wrap">
+                    <th><input name="" type="checkbox" value=""></th>
+                    <th><{$Think.lang.用户ID}></th>
+                    <th><{$Think.lang.手机号码}></th>
+                    <th><{$Think.lang.昵称}></th>
+                    <th><{$Think.lang.电子邮箱}></th>
+                    <th><{$Think.lang.姓名}></th>
+                    <th><{$Think.lang.注册时间}></th>
+                    <th><{$Think.lang.所属客户}></th>
+                    <th><{$Think.lang.所属店铺}></th>
+                    <th><{$Think.lang.所属平台}></th>
+                    <th><{$Think.lang.客户状态}></th>
+                    <th><{$Think.lang.第三方用户编号}></th>
+                    <th><{$Think.lang.操作}></th>
+                </tr>
+                </thead>
+                <tbody>
+
+<if condition="empty($kehu_list) eq 1">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap" colspan="12">None</td>
+                </tr>
+<else />
+<foreach name="kehu_list" key="key" item="value">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap"><input name="" type="checkbox" value=""></td>
+                    <td class="no-wrap"><{$value.CUST_ID}></td>
+                    <td class="no-wrap"><{$value.CUST_CP_NO}></td>
+                    <td class="no-wrap"><{$value.CUST_NICK_NM}></td>
+                    <td class="no-wrap"><{$value.CUST_EML}></td>
+                    <td class="no-wrap"><{$value.CUST_NM}></td>
+                    <td class="no-wrap"><?php echo date('Y-m-d H:i',strtotime($value['SYS_REG_DTTM'])); ?></td>
+                    <td class="no-wrap"><{$value.parent_cust_id}></td>
+                    <td class="no-wrap"><?php echo D('ZZmsstore')->gainStoreName($value['parent_store_id']); ?></td>
+                    <td class="no-wrap"><?php echo D('ZZmscmncd')->getNameFromCode($value['parent_plat_cd']); ?></td>
+                    <td class="no-wrap"><{$value.show_status_name}></td>
+                    <td class="no-wrap"><{$value.THIRD_UID}></td>
+                    <td class="no-wrap"><a class="link_blue" onclick="opennewtab(this,'<{$Think.lang.编辑}><?php echo $value["CUST_ID"];?>')" _href="<{:U("customer/editthirdkehu",array('cust_id'=>$value['CUST_ID']))}>" ><{$Think.lang.查看}></a></td>
+                </tr>
+</foreach>
+</if>
+
+                </tbody>
+            </table>
+            <div>
+                <div class="col-md-5 search-num-wrap">
+                    <span class="search-num"><{$Think.lang.搜索结果}>：&nbsp;&nbsp;<{$Think.lang.共}></span>
+                    <span class="search-num-t"><{$count}></span>
+                    <span class="search-num"><{$Think.lang.条记录}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+                <ul class="pagination">
+                    <{$pages}>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script>
+    $(document).ready(function (){
+
+        //form reset
+        $("button[name='reset']").click(function(){
+            $("#form_kehu input").each(function(){
+                var is_reset = true;
+                var n = $(this).attr('name');
+                if(n=='m' || n=='a'){
+                    is_reset = false;
+                }
+                if(n=='by_stat_cd' || n=='by_plat_cd' || n=='by_store'){
+                    is_reset = false;
+                }
+                if(is_reset){
+                    $(this).val(null);
+                }
+            });
+            $("#form_kehu select").val(0);
+            return false;
+        });
+
+        $('.openli').click(function(){
+            if($(this).text()=='<{$Think.lang.展开}>>>'){
+                $(this).siblings(".show_li").show();
+                $(this).text('<{$Think.lang.收起}><<');
+            }else{
+                $(this).siblings(".show_li").hide();
+                $(this).text('<{$Think.lang.展开}>>>');
+            }
+        });
+
+        /***********************************
+         ***复选框选项
+         ***********************************/
+        function editCheck(param1,param2){
+            param1.click(function () {
+                var checkAll= $(this).prop('checked');
+                if(checkAll == true){
+                    param2.prop("checked",true);
+                }else{
+                    param2.prop("checked",false);
+                }
+            });
+            param2.each(function () {
+                $(this).click(function () {
+                    if($(this).prop("checked") != true){
+                        param1.prop("checked",false);
+                    }else{
+                        var flag = true;
+                        for(var j=0;j<param2.length;j++){
+                            if($(param2[j]).prop("checked") == false){
+                                flag = false;
+                                break;
+                            }
+                        }
+                        if(!flag){
+                            $(".table>thead>tr>th>input").prop("checked",false);
+                        }else{
+                            $(".table>thead>tr>th>input").prop("checked",true);
+                        }
+                    }
+
+                })
+            });
+
+        }
+        editCheck($(".table>thead>tr>th>input"),$(".table>tbody>tr>td:first-child>input[type = checkbox]"));
+
+    });
+
+</script>
+</body>
+</html>

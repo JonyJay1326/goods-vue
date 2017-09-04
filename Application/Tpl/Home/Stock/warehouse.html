@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>仓库档案</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.7/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/vew.1.7.css"/>
+    <!--<link rel="stylesheet" href="<{$HI_PATH}>css/stock.css?v=2">-->
+    <link rel="stylesheet" href="../Public/utils/css/public.style.css">
+    <style type="text/css">
+        [v-cloak] {
+            display: none;
+        }
+        .wrap {
+            box-sizing: border-box;
+            padding: 20px;
+            margin: 0;
+        }
+        .use-row + .use-row{
+            margin: 20px 0;
+        }
+        .result-num span{
+            margin-right: 40px;
+        }
+        /*仓库弹窗详情页css*/
+        .pop-wrap {
+            width: 600px;
+            box-sizing: border-box;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 2px 3px 5px #ddd;
+            cursor: move;
+            background: white;
+        }
+
+        .pop-wrap .title {
+            font-size: 0.9rem;
+        }
+
+        .pop-wrap .contetn {
+            background: #F6F9FA;;
+            padding: 10px;
+            box-sizing: border-box;
+            margin: 10px 0 0;
+            border: 1px solid #ddd;
+        }
+
+        .pop-wrap .contetn .col-100 > div {
+            margin: 15px 0;
+        }
+
+        .pop-wrap .contetn div > span {
+            display: inline-block;
+            height: 30px;
+            width: 100px;
+            font-size: 14px;
+            color: #546E7A;
+        }
+        .pop-wrap .contetn div > input[type="text"],
+        .pop-wrap .contetn div > select {
+            height: 30px;
+            background: #FFFFFF;
+            border: 1px solid #D7DADD;
+            border-radius: 4px;
+            width: 380px;
+            vertical-align: top;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+
+        .pop-wrap .contetn div:nth-child(2) > select {
+            width: 128px;
+        }
+
+        .pop-wrap .contetn div label{
+            cursor: pointer;
+        }
+        .pop-wrap .contetn div  input[type="checkbox"] {
+            margin-left: 105px;
+            margin-right: 8px;
+        }
+        .pop-wrap .contetn div  input[type="checkbox"]::before{
+            content: url("../Public/utils/css/img/check-default.png");
+        }
+        .pop-wrap .contetn div  input[type="checkbox"]:checked::before{
+            content: url("../Public/utils/css/img/check.png");
+        }
+        .pop-wrap .contetn div > textarea {
+            height: 65px;
+            background: #FFFFFF;
+            border: 1px solid #D7DADD;
+            border-radius: 4px;
+            width: 380px;
+            vertical-align: top;
+            padding: 0 10px;
+            box-sizing: border-box;
+        }
+        #modal {
+            background-color: #fff;
+            position: fixed;
+            margin-left: -300px;
+            left: 50%;
+            top: 160px;
+        }
+    </style>
+    <script type="text/javascript">if(document.all)alert('你的浏览器太旧了，恕不奉陪');</script>
+</head>
+
+<body>
+<div id="content" v-cloak>
+    <div class="wrap">
+        <header style="margin-bottom: 20px">
+            <div class="use-row">
+                <div class="col-100 text-right use-btn">
+                    <span class="btn-pub btn-blue" onClick="show_window('#modal')"><{$Think.lang.新增仓库}></span>
+                </div>
+            </div>
+        </header>
+        <article>
+            <div class="data">
+                <table class="b2b-table">
+                    <thead class="use-head">
+                    <tr class="text-c">
+                        <th width="30"><{$Think.lang.序号}></th>
+                        <th><{$Think.lang.仓库名称}></th>
+                        <th><{$Think.lang.管理员}></th>
+                        <th><{$Think.lang.区域}></th>
+                        <th><{$Think.lang.是否货位管理}></th>
+                        <th><{$Think.lang.SKU数量}></th>
+                        <th><{$Think.lang.库存数}></th>
+                        <th><{$Think.lang.总价}></th>
+                        <!--<th><{$Think.lang.计价方式}></th>-->
+                        <th><{$Think.lang.备注}></th>
+                        <th width="270"><{$Think.lang.操作}></th>
+                    </tr>
+                    </thead>
+                    <tbody class="use-body">
+                        <tr v-cloak class="text-c" v-for="(key,list) in json_list" v-on:load="load_this">
+                            <td v-cloak>{{key+1}}</td>
+                            <td v-cloak>{{list.warehouse}}</td>
+                            <td>{{list.contacts}}</td>
+                            <td v-cloak>{{list.place}} - {{list.address}}</td>
+                            <td v-cloak>
+                                <span v-if="list.location_switch == 1">是</span>
+                                <span v-else>否</span>
+                            </td>
+                            <!-- -->
+                            <td v-if="list.CD.length >5">{{all_house_sku[list.CD]['sku_count']}}</td>
+                            <td v-else>0</td>
+                            <td v-if="list.CD.length >5">{{all_house_sku[list.CD]['total_inventory_all']}}</td>
+                            <td v-else>0</td>
+                            <td v-if="list.CD.length >5">¥{{king((all_house_sku[list.CD]['all_num']).toFixed(2))}}</td>
+                            <td v-else>0</td>
+                            <!--<td v-if="valuation_arr[list.attribute_id]"  v-cloak>{{valuation_arr[list.attribute_id]}}</td>-->
+                            <td v-cloak>{{list.remarks}}</td>
+                            <td v-cloak class="use-btn" style="white-space: nowrap;text-align: left;">
+                                <a class="btn-pub btn-green mg-l-10" href="<{:U('Stock/existing_extend', array('DELIVERY_WAREHOUSE' => '{{list.CD}}'))}>">查看库存</a>
+                                <span class="btn-pub btn-blue mg-l-10" v-on:click="edit_this('#modal',list)"><{$Think.lang.编辑}></span>&nbsp;
+                                <span v-if="all_house_sku[list.CD]"></span>
+                                <span class="btn-pub btn-default mg-l-10" v-on:click="del_this('#modal',list)" v-else ><{$Think.lang.删除}></span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </article>
+    </div>
+    <div id="modal" class="" style="display: none">
+        <div class="pop-wrap">
+            <form action="#" id="modal-paly" >
+                <div class="row">
+                    <div class="col-90">
+                        <span class="use-title"><{$Think.lang.详情页}></span>
+                    </div>
+                </div>
+                <div class="use-row contetn" >
+
+                    <div class="col-100">
+                        <div>
+                            <input type="hidden" name="id"  value="{{ms.id}}" />
+                            <span class="Validform_label"><{$Think.lang.仓库名称}>：</span>
+
+                            <input type="text" name="warehouse"  value="{{ms.warehouse}}"   datatype="*" @blur="check_name($event)">
+                        </div>
+                        <div>
+                            <Row>
+                                <i-col span="5" class="Validform_label"><span><{$Think.lang.区域}>：</span></i-col>
+                                <input type="hidden" name="place" datatype="*" v-model="city_name">
+                                <i-col span="19" style="margin-left: -9px;">
+                                    <i-col span="24" style="width: 375px;"><Cascader :data.sync="getCountry" :value.sync="value_city"  change-on-select ></Cascader></i-col>
+                                </i-col>
+                            </Row>
+                            <input type="hidden" name="city"  v-model="value_city">
+                        </div>
+                        <div>
+                            <span class="Validform_label"><{$Think.lang.具体地址}>：</span> <input type="text" name="address" value="{{ms.address}}" class="add-text" datatype="s">
+                        </div>
+                        <div style="display: none;">
+                            <span class="Validform_label"><{$Think.lang.仓库属性}>：</span>
+                            <select class="" name="attribute_id"  datatype="n" errormsg="<{$Think.lang.请选择仓库属性}>">
+                                <option v-for="attribute in attribute_arr" value=" {{ $index }}">{{attribute}}</option>
+                            </select>
+                        </div>
+                        <div style="display: none;">
+                            <span><{$Think.lang.计价方式}>：</span>
+                            <select class="" name="valuation"  datatype="n" errormsg="<{$Think.lang.请选择计价方式}>">
+                                <option v-for="valuation in valuation_arr" value=" {{ $index }}">{{valuation}}</option>
+                            </select>
+                        </div>
+                        <div>
+                            <span class="Validform_label"><{$Think.lang.联系人}>：</span>
+                            <input type="text" v-model="warehouse_model" placeholder="请输入联系人">
+                            <!--<select v-model="warehouse_model" class="" name="contacts"  datatype="s" errormsg="<{$Think.lang.请选择管理员}>" >-->
+                            <!--<option   v-for="(key, warehouse) in warehouseContacts" value="{{warehouse}}" >{{warehouse}}</option>-->
+                            <!--</select>-->
+                        </div>
+                        <div>
+                            <span class="Validform_label"><{$Think.lang.电话}>：</span> <input type="text" name="phone" value="{{ms.phone}}" >
+                        </div>
+                        <div>
+                            <span><{$Think.lang.备注}>：</span> <textarea name="remarks">{{ms.remarks}}</textarea>
+                        </div>
+                        <div class="row">
+                            <div class="col-50">
+                                <label>
+                                    <input type="checkbox" name="location_switch" v-model="location_checkbox" value="1"  v-if="ms.location_switch == 1" checked>
+                                    <input type="checkbox" name="location_switch" v-model="location_checkbox" value="1" v-else >
+                                    <span><{$Think.lang.启用货位管理}></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="use-row use-btn">
+                    <div class="col-100 text-center">
+                        <button type="submit" name="save" class="btn-pub btn-blue"  ><{$Think.lang.保存}></button>
+                        <button type="button" name="cancel" onclick="close_window('#modal')" class="btn-pub btn-default mg-l-20"><{$Think.lang.取消}></button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/geo.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.1.7.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vew.1.7.min.js"></script>
+<script type="text/javascript" >
+
+    /* 弹出层控制 */
+    function show_window(this_id) {
+        $(this_id).show();
+    }
+
+    function close_window(this_id) {
+        $(this_id).hide();
+        vm.ms = '';
+        vm.value_city = [];
+        $(".ivu-input").val('')
+//        preselect('上海市');
+        vm.city_model = '上海市';
+        vm.company_model = 'N000980100';
+    }
+    $("#modal-paly").Validform({
+                ajaxPost: true,
+                callback: function (data) {
+                    document.getElementById("modal-paly").reset();
+                    close_window('#modal')
+                    setTimeout(function(){history.go(0)},2000)
+
+                }
+            }
+    );
+    $("#modal").draggable();
+
+</script>
+
+<script type="text/javascript" >
+    var vm = new Vue({
+        el: '#content',
+        data: {
+            ms:[],
+            json_list: <{$json_list}>,
+            company_arr: <{$company_arr}>,
+            attribute_arr: <{$attribute_arr}>,
+            valuation_arr: <{$valuation_arr}>,
+            all_house_sku: <{$all_house_sku}>,
+            various:<{$various}>,
+            city_model:'',
+            company_model:'N000980100',
+            location_checkbox:'',
+            show_check:'',
+            attribute:'',
+            getCountry:<{$getCountry}>,
+            Countrykey:<{$Countrykey}>,
+            citykey:[],
+            areakey:[],
+            value_city: [],
+            city_name:[],
+            warehouseContacts: <{$warehouseContacts}>,
+            warehouse_model: '',
+
+        },
+        watch:{
+            value_city:function(e){
+                var l = e.length - 1
+                switch (l){
+                    case 0:
+                        this.get_province(e,l)
+                        break
+                    case 1:
+                        this.get_city(e,l)
+                        break
+                    case 2:
+                        this.get_area(e,l)
+                        break
+                }
+
+            }
+        },
+        methods: {
+
+            load_this: function () {
+                console.log('a')
+            },
+            edit_this: function (show_id,list) {
+                this.ms = list;
+                if(this.all_house_sku[list.CD]){
+                    this.ms.sku_count = false;
+                }else{
+                    this.ms.sku_count = true;
+                }
+                this.warehouse_model = list.contacts;
+//                preselect(this.ms.place);
+                this.city_model = this.ms.city;
+                this.company_model = this.ms.company_id;
+                if(this.ms.city.indexOf(',') > 0){
+                    $(".ivu-input").val(this.ms.place)
+                }
+                show_window(show_id)
+            },
+            del_this: function (del_id, list) {
+                var del_start = confirm('是否确认删除');
+                if (del_start) {
+                    // upd
+                    $.ajax({
+                        type:"POST",
+                        async:false,
+                        url:"/index.php?m=stock&a=warehouse_del",
+                        data:{id:list.id},
+                        success:function(GetRes){
+                            alert(JSON.parse(GetRes)['info'])
+                        },
+                        error:function(){
+                            alertNew('网络繁忙，请重试！')
+                        }
+
+
+                    });
+
+                    this.json_list.$remove(list);
+                }
+            },
+            check_name:function(e){
+             var warehouse_name =   e.path[0].value;
+                $.ajax({
+                    type:"POST",
+                    async:false,
+                    url:"/index.php?m=stock&a=check_warehouse",
+                    data:{warehouse_name:warehouse_name},
+                    success:function(GetRes){
+                        if(JSON.parse(GetRes)['status'] == 'n'){
+                            alert(JSON.parse(GetRes)['info']);
+                            e.path[0].value = '';
+                        }
+                    },
+                    error:function(){
+                        alertNew('网络繁忙，请重试！')
+                    }
+
+
+                })
+            },
+            king:function(e){
+                var k = e.toString().split('.')
+                if(e.toString().indexOf('.') > 0){
+                    var s = '.'+k[1]
+                }else{
+                    var s = ''
+                }
+                return k[0].toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')+s;
+            },
+            get_province:function(e,l){
+                var province = e[l];
+                var c_key = this.Countrykey.indexOf(province);
+                if(this.getCountry[c_key]['children'].length == 1){
+                $.ajax({
+                    type:"POST",
+                    async:false,
+                    url:"/index.php?m=stock&a=getCity",
+                    data:"provinces="+province,
+                    success:function(GetRes){
+                        if(GetRes['status'] == 1){
+                            vm.getCountry[c_key]['children'] = GetRes['data'];
+                            vm.citykey[province] = GetRes['info']['keys'];
+                            $(event.target).click();
+                        }else{
+                            vm.$Message.info(GetRes['info']['msg']);
+                        }
+                    },
+                    error:function(){
+                        alertNew('网络繁忙，请重试！')
+                    }
+                })
+                }
+                this.city_name  = this.getCountry[c_key].label
+            },
+            get_city:function(e,l){
+                var province = e[0];
+                var c_key = this.Countrykey.indexOf(province);
+                var cityp = e[1];
+                var p_key = this.citykey[province].indexOf(cityp);
+                if(this.getCountry[c_key]['children'][p_key]['children'].length == 1){
+                    $.ajax({
+                        type:"POST",
+                        async:false,
+                        url:"/index.php?m=stock&a=getCity",
+                        data:"provinces="+cityp+"&end=end",
+                        success:function(GetRes){
+                            if(GetRes['status'] == 1){
+                                vm.getCountry[c_key]['children'][p_key]['children'] = GetRes['data']
+                                vm.areakey[cityp] =  GetRes['info']['keys']
+                                $(event.target).click();
+                            }else{
+                                vm.$Message.info(GetRes['info']['msg']);
+                            }
+                        },
+                        error:function(){
+                            alertNew('网络繁忙，请重试！')
+                        }
+
+
+                    })
+                }
+                this.city_name = this.getCountry[c_key].label+'-'+this.getCountry[c_key]['children'][p_key].label
+            },
+            get_area:function(e,l){
+                var c_key = this.Countrykey.indexOf(e[0])
+                if(this.citykey.length > 0 && this.citykey[e[0]] != ''){
+                    var p_key = this.citykey[e[0]].indexOf(e[1])
+                    var province = e[0];
+                    var c_key = this.Countrykey.indexOf(province);
+                    var cityp = e[1];
+                    var p_key = this.citykey[province].indexOf(cityp);
+                    var tityp = e[2];
+                    if(this.areakey.length > 0 && this.areakey[cityp] != ''){
+                        var t_key = this.areakey[cityp].indexOf(tityp)
+                        this.city_name = this.getCountry[c_key].label+'-'+this.getCountry[c_key]['children'][p_key].label + '-'+this.getCountry[c_key].children[p_key].children[t_key].label
+                    }else{
+                        vm.$Message.info("<{$Think.lang.无数据}>");
+                    }
+                }
+
+            }
+        }
+    })
+
+
+
+
+</script>
+
+</body>
+
+</html>

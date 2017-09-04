@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title></title>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css"/>
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../Public/css/purchase.css?=20170508"/>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css?=20170508"/>
+	<link rel="stylesheet" href="../Public/css/common.css"/>
+	<style>
+		a span{color: white;font-size: 13px;}
+		.form-group{margin-bottom: 0px}
+		.form-control{font-size:13px;height:34px;padding-left:5px;}
+		.input-group .input-group-btn .btn{padding:6px;}
+		.card{margin-left:0px;width:100%; }
+		.card table th,.card table td{text-align: center;vertical-align: middle}
+		.td_operation .btn{margin-bottom:2px}
+		form .card table tbody td{background:white;}
+		.ship_status_check{text-decoration:none !important;}
+		.row_search{margin-top:0px !important;}
+		.form-group .form-control{height:34px !important;color: #90A4AE;}
+		form .row_search .col-lg-12{margin-left: 0px;}
+	</style>
+</head>
+<body>
+<div class="wrap">
+	<div class="enter-line">
+		<form method="get" id="thisform" action="<{:U('list')}>">
+			<div class="row row_menu">
+				<a href="javascript:void(0)" class="ship_status_check active" value="">全部</a>
+				<a href="javascript:void(0)" class="ship_status_check" value="0">草稿</a>
+				<a href="javascript:void(0)" class="ship_status_check" value="1">待认领</a>
+				<a href="javascript:void(0)" class="ship_status_check" value="2">待处理</a>
+				<a href="javascript:void(0)" class="ship_status_check" value="0">部分处理</a>
+				<a href="javascript:void(0)" class="ship_status_check " value="1">已处理</a>
+				<a href="javascript:void(0)" class="ship_status_check " value="2">审批通过</a>
+				<a href="javascript:void(0)" class="ship_status_check " value="0">审批中</a>
+				<a href="javascript:void(0)" class="ship_status_check " value="1">审批失败</a>
+			</div>
+				<div class="card order_list_row_top_input">
+					<div class="card-block" >
+						<blockquote class="card-blockquote">
+							<div class="table-responsive">
+								<table class="table">
+									<thead>
+									<tr>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr>
+										<td><{$Think.lang.销售团队}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="" id="" >
+													<option value=""><{$Think.lang.请选择}></option>
+												</select>
+											</fieldset>
+										</td>
+										<td></td>
+										<td><{$Think.lang.采购类型}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="" id="" >
+													<option value=""><{$Think.lang.请选择}></option>
+												</select>
+											</fieldset>
+										</td>
+										<td></td>
+										<td><{$Think.lang.合同}></td>
+										<td class="topMenu_contract">
+											<div>
+												<span  value="0" class="topMenu_contract_checkBox">有</span>
+												<span value="1" class="topMenu_contract_checkBox  topMenu_contract_checkBox_active">无</span>
+											</div>
+										</td>
+										<td></td>
+										<td><{$Think.lang.业务类型}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="" id="" >
+													<option value=""><{$Think.lang.请选择}></option>
+												</select>
+											</fieldset>
+										</td>
+									</tr>
+									<tr>
+										<td><{$Think.lang.客户}></td>
+										<td><input type="text" class="form-control" value="" placeholder="" name=""></td>
+										<td></td>
+										<td><{$Think.lang.销售PO}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" >
+													<option value=""><{$Think.lang.请选择}></option>
+												</select>
+											</fieldset>
+										</td>
+										<td></td>
+										<td><{$Think.lang.商品名称}></td>
+										<td><input type="text" class="form-control" value="" placeholder="" name=""></td>
+										<td></td>
+										<td><{$Think.lang.需求发起人}></td>
+										<td><input type="text" class="form-control" value="" placeholder="" name=""></td>
+									</tr>
+
+									<tr>
+										<td><{$Think.lang.创建时间}></td>
+										<td class="common_data">
+												<input type="text" name="start_time" id="start_time"  value="<?php echo $start_time;?>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.起始日期}>" class="form-control">
+												<span class="input-group-btn">
+													<button class="btn btn-secondary" type="button"><i></i></button>
+												</span>
+										</td>
+										<td colspan="2" class="text-center"><div class="col-data_l">一</div></td>
+										<td class="common_data">
+												<input type="text" name="end_time" id="end_time" value="<?php echo $end_time;?>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.结束时间}>" class="form-control">
+												<span class="input-group-btn">
+													<button class="btn btn-secondary" type="button"><i ></i></button>
+												</span>
+										</td>
+										<td></td>
+										<td><{$Think.lang.商品名称}></td>
+										<td><input type="text" class="form-control" value="" placeholder="" name=""></td>
+										<td></td>
+										<td><{$Think.lang.需求发起人}></td>
+										<td><input type="text" class="form-control" value="" placeholder="" name=""></td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</blockquote>
+					</div>
+				</div>
+				<div class="row row_search">
+					<div class="col-lg-12 text-left col-md-12 col-sm-12">
+						<input name="search" value="1" type="hidden">
+						<button type="button" class="btn-search" id="search"><{$Think.lang.查询}></button>
+						<button type="button" class="btn-reset id="resetForm"><{$Think.lang.重置}></button>
+					</div>
+				</div>
+		</form>
+	<p class="purchase_list_p"></p>
+	<div class="card purchase_list_card">
+		<div class="purchase_list_card_head">
+			<b ><{$Think.lang.需求列表}></b>
+			<a  href="<{:U('OrderDetail/order_add')}>">
+				<i>+</i>
+				<span><{$Think.lang.创建订单}></span>
+			</a>
+		</div>
+		<p class="seach_result">搜索结果：共 <span>394</span>条记录</p>
+		<div class="card-block">
+			<blockquote class="card-blockquote">
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+						<tr class="text-center">
+							<!--<th width=""><input type="checkbox"></th>-->
+							<th width=""><{$Think.lang.销售团队}></th>
+							<th width="">PO/<{$Think.lang.商品}></th>
+							<th width=""><{$Think.lang.销售金额}></th>
+							<th width=""><{$Think.lang.需求类型}></th>
+							<th width=""><{$Think.lang.客户}></th>
+							<th width=""><{$Think.lang.需求发起人}></th>
+							<th width=""><{$Think.lang.需求提交人}></th>
+							<th width=""><{$Think.lang.采购人}></th>
+							<th width=""><{$Think.lang.需求状态}></th>
+							<th width=""><{$Think.lang.操作}></th>
+						</tr>
+						</thead>
+						<tbody>
+						<?php if($purchase_info){ ?> <!--start 如果搜索的数据不存在，不让其显示分页-->
+						<?php foreach($purchase_info as $key=>$v){ ?>
+						<tr class="text-c" id="<?php echo $v['relevance_id'];?>">
+							<td></td>
+							<td style="position:relative;" class="goods_name_td">
+								<?php foreach($v['goods_information'] as $key1=>$v1){ ?>
+								<div class="goods_name"><?php echo $v1['goods_name'];?></div>
+								<?php } ?>
+								<div style="position:absolute;right:10px;bottom:10px" class="goods_name_img">
+								<img src="../Public/images/moreGoodes.png" alt="" width="20" height="20">
+								</div>
+							</td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td></td>
+							<td class="td-icon">
+								<div><!--<i class="fa fa-star fa-lg" style="color: #ec2d64;"></i>--><span><{$Think.lang.未付款}></span></div>
+								<div><!--<i class="fa fa-star fa-lg" style="color: #FFC107;"></i>--><span><{$Think.lang.未发货}></span></div>
+								<div><!--<i class="fa fa-star fa-lg" style="color: #5cb85c"></i>--><span><{$Think.lang.未开票}></span></div>
+								<div><!--<i class="fa fa-star fa-lg" style="color: #5cb85c"></i>--><span><{$Think.lang.未入库}></span></div>
+							</td>
+							<td  style="white-space: nowrap" class="td_operate">
+                                    <button class="btn btn-edit btn-sm" onclick="location='<{:U(\'OrderDetail/order_detail\')}>&id=<{$v[\'relevance_id\']}>'"><{$Think.lang.查看}></button><br />
+								<if condition="$v['order_status'] neq 'N001320300'">
+                                    <if condition="$v['order_status'] neq 'N001320200'">
+									<button class="btn btn-edit btn-sm" onclick="location='<{:U(\'OrderDetail/order_update\')}>&id=<{$v[\'relevance_id\']}>&is_edit=1'"><{$Think.lang.编辑}></button><br />
+                                    </if>
+									<button class="btn btn-check btn-sm" onclick="screening(<{$v['relevance_id']}>)"><{$Think.lang.提交}></button><br />
+									<if condition="$v['order_status'] neq 'N001320200'">
+                                    <button class="btn btn-danger btn-sm" onclick="reminder(<?php echo $v['relevance_id'];?>)"><{$Think.lang.删除}></button>
+									</if>
+                                    <elseif condition="$v['ship_status'] neq 2" />
+                                    <button class="btn btn-check btn-sm" onclick="location='<{:U("ship",["id"=>$v["relevance_id"]])}>'"><{$Think.lang.发货}></button><br />
+                                </if>
+							</td>
+						</tr>
+						<?php } ?>
+						</tbody>
+					</table>
+					<ul class="pagination" style="margin: 0;">
+						<?php echo $show;?>
+					</ul>
+					<?php } ?> <!--end 如果搜索的数据不存在，不让其显示分页-->
+				</div>
+			</blockquote>
+		</div>
+	</div>
+</div>
+<!--模态框-->
+</div>
+<div class="modal requirement_modal" id="delete-modal" style="display: block;">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" id="submit-modal-content" style="display:none;">
+			<div class="modal-header ">
+				<h4 class="modal-title"><{$Think.lang.提交需求}></h4>
+				<!--<h4 class="modal-title2"><{$Think.lang.提示}></h4>-->
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span class="sr-only">Close</span>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p><{$Think.lang.你即将需求提交给}><span></span>,<{$Think.lang.是否确认}>？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-check btn-sm" >确定<{$Think.lang.确定}></button>
+				<input type="hidden" id="order_del"><!-- 隐藏域用来保存需要删除的订单ID-->
+				<button type="button" class="btn btn-cancel btn-sm" data-dismiss="modal"><{$Think.lang.取消}></button>
+			</div>
+		</div><!-- /.modal-content -->
+		<div class="modal-content" id="delete-modal-content" style="display: none;">
+			<div class="modal-header ">
+				<h4 class="modal-title"><{$Think.lang.删除需求}></h4>
+				<!--<h4 class="modal-title2"><{$Think.lang.提示}></h4>-->
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span class="sr-only">Close</span>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p><{$Think.lang.你即将删除采购需求，是否确认}>？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-check btn-sm" ><{$Think.lang.确定}></button>
+				<input type="hidden" id="order_del"><!-- 隐藏域用来保存需要删除的订单ID-->
+				<button type="button" class="btn btn-cancel btn-sm" data-dismiss="modal"><{$Think.lang.取消}></button>
+			</div>
+		</div><!-- /.modal-content -->
+		<div class="modal-content" id="sucess-modal-content" style="display: none;">
+			<p>您的采购需求已经提交成功，并邮件通知<span>tiezhu</span>。</p>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+<script>
+    $(function() {
+        //多商品隐藏
+        $(".goods_name_td").each(function(){
+            var goods_name_length=$(this).find(".goods_name").length;
+            if(goods_name_length > 1){
+                $(this).find(".goods_name_img").show();
+                $(this).find(".goods_name").hide();
+                $(this).find(".goods_name:nth-child(1)").show();
+            }
+            else{
+                $(this).find(".goods_name_img").hide();
+            }
+        })
+
+	$(".perchase_list_select select").change(function () {
+		if($(this).val() && $(this).val().length>0){
+			$(this).css("color","#263238")
+		}else{
+		    $(this).css("color","#90A4AE")
+		}
+    })
+	//多选框
+	$(".topMenu_contract .topMenu_contract_checkBox").on("click",function () {
+		$(this).addClass("topMenu_contract_checkBox_active").siblings().removeClass("topMenu_contract_checkBox_active")
+    })
+    })
+</script>
+
+</html>

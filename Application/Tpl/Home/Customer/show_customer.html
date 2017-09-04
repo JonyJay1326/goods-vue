@@ -1,0 +1,197 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css" />
+    <title></title>
+</head>
+<body class="order-detail">
+<style>
+.bg_blue{background: #f5fafe none repeat scroll 0 0;}
+thead th{text-align: center;}
+</style>
+<div class="order-tabs">
+    <ul>
+        <li class="active"><a href="javascript:void()"><{$Think.lang.客户信息}></a></li>
+        <li></li>
+    </ul>
+</div>
+<?php
+    $plats = explode(',', $result['PLAT_CDS'])
+?>
+<div class="table-wrap">
+    <div class="cus-info">
+        <table class="table table-border table-bg table-bordered">
+            <caption><{$Think.lang.基本信息}></caption>
+            <tbody class="text-c">
+                <tr>
+                    <td width="10%" class="bg_blue"><{$Think.lang.用户ID}></td>
+                    <td width="40%"><{$result.ID}> </td>
+                    <td class="bg_blue"><{$Think.lang.手机号码}></td>
+
+                    <td class="font-tag">  <?= CrypMobile::transformation($result['REL_TEL_NUM']);   ?>  <?= CrypMobile::deCrypBtn($result['REL_TEL_NUM']); ?>  </td>
+                </tr>
+                <tr>
+                    <td class="bg_blue"><{$Think.lang.姓名}></td>
+                    <td><span class="font-tag"><{$result.RES_NAME}></span> </td>
+                    <td class="bg_blue"><{$Think.lang.电子邮箱}></td>
+                    <td><{$result.RES_EMAIL}> </td>
+    
+                </tr>
+                <tr>
+                    <td class="bg_blue"><{$Think.lang.创建时间}></td>
+                    <td><{$result.CREATE_TIME}> </td>
+                    <td class="bg_blue"><{$Think.lang.来源平台}></td>
+                    <td><?= BaseModel::getBtbtcCustomerStore()[$result['CREATE_PLAT_CD']] ?></td>
+                </tr>
+                <tr>
+                    <td class="bg_blue"><{$Think.lang.最新消费}></td>
+                    <td><{$result.UPDATE_TIME}> </td>
+                    <td class="bg_blue"><{$Think.lang.消费平台}></td>
+                    <td>
+                        <?php
+                            foreach ($plats as $key => $value) {
+                                $str .= BaseModel::getBtbtcCustomerStore()[$value] . ',';
+                            }
+                            
+                            echo rtrim($str, ',');
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="bg_blue"><{$Think.lang.待付款订单数}></td>
+                    <td><{$result.wait_pay_num}> </td>
+                    <td class="bg_blue"><{$Think.lang.待付款金额}></td>
+                    <td>RMB <?= format_for_currency($result['NOT_PAY_AMOUNT']) ?></td>
+                </tr>
+                <tr>
+                    <td class="bg_blue"><{$Think.lang.已取消订单数}></td>
+                    <td><{$result.cancel_order_num}> </td>
+                    <td class="bg_blue"><{$Think.lang.已取消金额}></td>
+                    <td>RMB <?= format_for_currency($result['ALL_PAY_AMOUNT'] - $result['PAY_AMOUNT'] - $result['NOT_PAY_AMOUNT']) ?></td>
+                </tr>
+                <tr>
+                    <td class="bg_blue"><{$Think.lang.已付款订单数}></td>
+                    <td><{$result.paid_order_num}> </td>
+                    <td class="bg_blue"><{$Think.lang.已付款金额}></td>
+                    <td>RMB <?= format_for_currency($result['ALL_PAY_AMOUNT']) ?></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <form action="" method="post" id="show_order">
+        <input type="hidden" name="ORD_STAT_CD" value="<{$params.ORD_STAT_CD}>"/>
+        <input type="hidden" name="ID" value="<{$params.ID}>"/>
+    </form>
+    
+    <?php
+        $state = $model::state();
+    ?>
+    <div class="cus-info">
+        <foreach name="state" key="k" item="val">
+            <span onclick="search('<{$k}>', this);" class='sendwarning <if condition="$params.ORD_STAT_CD eq $k">sendwarning_selected</if>' style="margin: 8px 0px;border-radius: 8px;color: black;margin-right: 10px;"><{$val}></span>
+        </foreach>
+    </div>
+    
+    <div class="cus-info">
+        <table class="table table-border table-bg table-bordered">
+            <caption><{$Think.lang.订单信息}></caption>
+            <thead>
+                <th><{$Think.lang.B5C订单号}></th>
+                <th><{$Think.lang.第三方订单号}></th>
+                <th><{$Think.lang.消费平台}></th>
+                <th><{$Think.lang.B5C商品ID}></th>
+                <th><{$Think.lang.商品标题}></th>
+                <th><{$Think.lang.订单金额}></th>
+                <th><{$Think.lang.订单状态}></th>
+                <th><{$Think.lang.下单时间}></th>
+                <th><{$Think.lang.支付时间}></th>
+            </thead>
+            <tbody class="text-c">
+                <foreach name="orders" key="key" item="value">           
+                    <tr class="text-c va-m "  >
+                        <td class="no-wrap">
+                            <a style="text-decoration:underline;color:#06c;" onclick="opennewtab(this,'<?php echo $value["ORD_ID"];?>')" _href="<{:U($detail_url, array('ordId'=>$value['ORD_ID'], 'pageId'=>$value['ORD_TYPE_CD'], 'delop'=>$value['DELIVERY_WAREHOUSE']))}>">
+                                <{$value.ORD_ID}>
+                            </a>
+                        </td>
+                        <td class="no-wrap"><{$value.THRD_ORDER_ID}></td>
+                        <td class="no-wrap"><?= $store[$value['PLAT_FORM']] ?></td>
+                        <td class="no-wrap"><{$value.GUDS_OPT_ID}></td>
+                        <td class="no-wrap td-pos"><{$value.GUDS_NM}>
+                            <if condition="$value.GUDS_NUM gt 1">
+                                <a style="text-decoration:underline;color:#06c;" onclick="opennewtab(this,'<?php echo $value["ORD_ID"];?>')" _href="<{:U($detail_url, array('ordId'=>$value['ORD_ID'], 'pageId'=>$value['ORD_TYPE_CD'], 'delop'=>$value['DELIVERY_WAREHOUSE']))}>"><img src="../Public/images/u266.png" alt="" class="icon-link"></a>
+                            </if>
+                        </td>
+                        <td class="no-wrap"><?= BaseModel::getCurrency()[$value['currency_cd']] ?>&nbsp;&nbsp;<?= format_for_currency($value['PAY_AMOUNT']) ?></td>
+                        <td class="no-wrap"><{$model::state()[$value[ORD_STAT_CD]]}></td>
+                        <td class="no-wrap"><{$value.SYS_REG_DTTM}></td>
+                        <td class="no-wrap"><{$value.PAY_DTTM}></td>
+                    </tr>
+                </foreach>
+            </tbody>
+            
+        </table>
+        <div>
+            <div class="col-md-5 search-num-wrap">
+                <span class="search-num"><{$Think.lang.搜索结果}>：&nbsp;&nbsp;<{$Think.lang.共}></span>
+                <span class="search-num-t"><{$count}></span>
+                <span class="search-num"><{$Think.lang.条记录}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+            </div>
+            <ul class="pagination">
+                <{$pages}>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script>
+
+
+
+function search(plat_cds, obj){
+    var _this = obj;
+    if (_this.className == 'sendwarning sendwarning_selected') {
+        _this.className = 'sendwarning';
+        $('input[name="ORD_STAT_CD"]').val(null);
+    } else {
+        $('input[name="ORD_STAT_CD"]').val(plat_cds);
+    }
+    $('#show_order').submit();
+};
+
+
+
+
+
+
+
+
+
+   
+</script>
+
+
+</body>
+</html>
+

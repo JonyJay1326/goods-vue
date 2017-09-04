@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<link rel="stylesheet" href="../Public/utils/css/public.style.css">
+	<link rel="stylesheet" href="../Public/css/element-ui.css?v=0823">
+	<link rel="stylesheet" href="../Public/../Hr/hrstyle.css?v=0831">
+	<link rel="stylesheet" href="../Public/icon/css/font-awesome.min.css">
+	<style>
+		[v-cloak] {
+			display: none;
+		}
+	</style>
+</head>
+<body>
+	<div id="showList" class="show-list" v-cloak>
+		<div class="use-title">查询人员</div>
+		<el-form ref="form" :model="form" :label-position="labelPosition" label-width="85px">
+			<div class="use-row">
+				<div class="col-100">
+					<table class="search-table">
+						<tbody>
+						<tr>
+							<td><el-form-item label="工号"><el-input v-model="form.seWorkNum"></el-input></el-form-item></td>
+							<td><el-form-item label="部门"><el-input v-model="form.seDept"></el-input></el-form-item></td>
+							<td>
+								<el-form-item label="办公地点">
+									<el-select :filterable="true" placeholder="工作地点" v-model="form.seWorkplace" clearable>
+										<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.workPlace"></el-option>
+									</el-select>
+								</el-form-item>
+							</td>
+							<td>
+								<el-form-item label="状态">
+									<el-select :filterable="true" placeholder="状态" v-model="form.seStatus" clearable>
+										<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.status"></el-option>
+									</el-select>
+								</el-form-item>
+							</td>
+						</tr>
+						<tr>
+							<td><el-form-item label="花名"><el-input v-model="form.seScNm"></el-input></el-form-item></td>
+							<td>
+								<el-form-item label="直接上级">
+									<el-select placeholder="部门总监" v-model="form.seLeader" clearable filterable>
+										<el-option :key="item.EMP_SC_NM" :label="item.EMP_SC_NM" :value="item.EMP_SC_NM" v-for="item in selData.leader"></el-option>
+									</el-select>
+								</el-form-item>
+							</td>
+							<td><el-form-item label="办公电话"><el-input v-model="form.seComPh"></el-input></el-form-item></td>
+							<td>
+								<el-form-item label="职位">
+									<el-select filterable placeholder="职位" v-model="form.seJobCd" clearable >
+										<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.job"></el-option>
+									</el-select>
+								</el-form-item>
+							</td>
+						</tr>
+						<tr>
+							<td><el-form-item label="真名"><el-input v-model="form.seTrName"></el-input></el-form-item></td>
+							<td><el-form-item label="E-mail"><el-input v-model="form.seEmail"></el-input></el-form-item></td>
+							<td><el-form-item label="移动电话"><el-input v-model="form.seCellPh"></el-input></el-form-item></td>
+							<td>
+								<el-form-item label="职位类别">
+									<el-select :filterable="true" placeholder="职位类别" v-model="form.seJobType" clearable>
+										<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.jobCdType"></el-option>
+									</el-select>
+								</el-form-item>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<el-form-item label="性别">
+									<el-select v-model="form.seName" placeholder="请选择" clearable>
+										<el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in selData.sex"></el-option>
+									</el-select>
+								</el-form-item>
+							</td>
+							<td>
+								<el-form-item label="奖惩情况">
+									<el-select v-model="form.seMonk" placeholder="请选择" clearable>
+										<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.ThingName"></el-option>
+									</el-select>
+								</el-form-item>
+							</td>
+							<td><el-form-item label="关键词搜索"><el-input v-model="form.seKey"></el-input></el-form-item></td>
+							<td></td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<div class="use-row">
+				<div class="col-100 use-btn">
+					<button type="button" class="btn-pub btn-green" @click="search()">查询</button>
+					<button type="button" class="btn-pub btn-default mg-l-20" @click="reset()">重置</button>
+				</div>
+			</div>
+		</el-form>
+		<div class="baseline"></div>
+		<div class="use-row">
+			<div class="col-15 result-num">
+				搜索结果：&nbsp;&nbsp;共 <b>{{data.length}}</b> 条
+			</div>
+			<div class="col-30">
+				<el-button type="text" @click="exportEmp()">导出</el-button>&nbsp;&nbsp;
+				<el-upload class="upload-demo" action="/index.php?m=Api&a=import_emp" :show-file-list="false" style="display: inline-block" :on-success="importExcel">
+					<el-button slot="trigger" size="small" type="text">导入</el-button>
+				</el-upload>&nbsp;&nbsp;
+				<el-button type="text" @click="batchEdit()">批量操作</el-button>
+			</div>
+			<div class="col-55 text-right">
+				<el-button @click="downloadTemp()"><i class="fa fa-download"></i>&nbsp;&nbsp;下载模板</el-button>
+			</div>
+		</div>
+		<div class="use-row">
+			<div class="col-100">
+				<table class="table-list">
+					<thead>
+					<tr>
+						<th><el-checkbox v-model="edit.checkedAll" @change="checkAll()"></el-checkbox></th>
+						<th>工号</th>
+						<th>入职时间</th>
+						<th>司龄</th>
+						<th>花名</th>
+						<th>中文职位</th>
+						<th>部门</th>
+						<th>组别</th>
+						<th>工作地点</th>
+						<th>身份证号</th>
+						<th>出生日期</th>
+						<th>性别</th>
+						<th>户籍</th>
+						<th>手机号码</th>
+						<th width="85px">毕业院校</th>
+						<th>学历</th>
+						<th>操作</th>
+					</tr>
+					</thead>
+					<tbody>
+					<tr v-for="(item,index) in data" v-if="index < form.pageSize * form.sePage && index >= form.pageSize * (form.sePage - 1)">
+							<td><el-checkbox v-model="item.checked"></el-checkbox></td>
+							<td>{{item.WORK_NUM}}</td>
+							<td>{{item.PER_JOB_DATE}}</td>
+							<td>{{item.COMPANY_AGE}}</td>
+							<td>{{item.EMP_SC_NM}}</td>
+							<td>{{item.JOB_CD}}</td>
+							<td>{{item.DEPT_NAME}}</td>
+							<td>{{item.DEPT_GROUP}}</td>
+							<td>{{item.WORK_PALCE}}</td>
+							<td>{{item.PER_CART_ID}}</td>
+							<td>{{item.PER_BIRTH_DATE}}</td>
+							<td>{{item.SEX}}</td>
+							<td>{{item.PER_RESIDENT}}</td>
+							<td>{{item.PER_PHONE}}</td>
+							<td style="white-space: normal">{{item.GRA_SCHOOL}}</td>
+							<td>{{item.EDU_BACK}}</td>
+							<td class="use-btn">
+								<button class="btn-pub btn-blue" @click="seeDetail(item.EMPL_ID)">查看</button>
+								<button class="btn-pub btn-default mg-l-10" @click="delInfo(item.EMPL_ID)">删除</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="use-row">
+			<div class="col-100 text-right">
+				<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="form.sePage" :page-sizes="[20, 50, 100, 200,300]" :page-size="form.pageSize" layout="sizes, prev, pager, next" :total="data.length"></el-pagination>
+			</div>
+		</div>
+		<!--按筛选条件导出-->
+		<el-dialog title="请筛选导出选项" :visible.sync="exportDialog" size="tiny" class="export">
+			<el-transfer filterable :titles=['导出选项','已选择'] :props="{ key: 'value', label: 'label' }" filter-placeholder="请输入名称" v-model="exportCheckList" :data="exportOption"></el-transfer>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="exportDialog = false">取 消</el-button>
+				<el-button type="primary" @click="confirmExport()">确 定</el-button>
+		   </span>
+		</el-dialog>
+
+		<!--批量编辑框-->
+		<el-dialog  :visible.sync="edit.status">
+			<span slot="title" class="el-dialog__title">
+				批量编辑（选中 {{edit.checkNum}} 人）
+			</span>
+			<el-form :model="editForm">
+				<div class="use-row">
+					<div class="col-40">
+						<p>修改选项</p>
+						<el-form-item>
+							<el-select v-model="editForm.editOption" placeholder="请选择修改选项" style="width: 90%">
+								<el-option v-for="item in batch"  :key="item.value" :label="item.label" :value="item.value"></el-option>
+							</el-select>
+						</el-form-item>
+					</div>
+					<div class="col-60 edit-cont">
+						<p>修改内容</p>
+						<el-form-item v-if="editForm.editOption == 'perJobDate'"><el-date-picker v-model="editForm.perJobDate" placeholder="选择日期"></el-date-picker></el-form-item>  </el-form-item>
+						<el-form-item v-if="editForm.editOption == 'deptName'"> <el-input v-model="editForm.deptName" placeholder="请输入"></el-input> </el-form-item>
+						<el-form-item v-if="editForm.editOption == 'emplGroup'"><el-input v-model="editForm.emplGroup" placeholder="请输入"></el-input> </el-form-item>
+						<el-form-item v-if="editForm.editOption == 'jobCd'">
+							<el-select placeholder="中文职位" v-model="editForm.jobCd" clearable filterable @change="checkJob(editForm.jobCd)">
+								<el-option  :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL"  v-for="item in selData.job"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'workPlace'">
+							<el-select placeholder="工作地点" v-model="editForm.workPlace" clearable filterable>
+								<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.workPlace"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'directLeader'">
+							<el-select placeholder="直接领导" v-model="editForm.directLeader" clearable filterable>
+								<el-option :key="item.EMP_SC_NM" :label="item.EMP_SC_NM" :value="item.EMP_SC_NM" v-for="item in selData.leader"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'departHead'">
+							<el-select placeholder="部门总监" v-model="editForm.departHead" clearable filterable>
+								<el-option :key="item.EMP_SC_NM" :label="item.EMP_SC_NM" :value="item.EMP_SC_NM" v-for="item in selData.leader"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'dockingHr'"> <el-input v-model="editForm.emplGroup" placeholder="请输入"></el-input> </el-form-item>
+						<el-form-item v-if="editForm.editOption == 'rank'">
+							<el-select placeholder="职级" v-model="editForm.rank" clearable >
+								<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.rank"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'sex'">
+							<el-radio-group v-model="editForm.sex" placeholder="请选择">
+								<el-radio label="0">男</el-radio>
+								<el-radio label="1">女</el-radio>
+							</el-radio-group>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'perIsSmoking'">
+							<el-radio-group v-model="editForm.perIsSmoking">
+								<el-radio label="1">是</el-radio>
+								<el-radio label="0">否</el-radio>
+							</el-radio-group>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'perIsMarried'">
+							<el-select placeholder="婚姻状况" v-model="editForm.perIsMarried" clearable>
+								<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.married"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'perPolitical'">
+							<el-select placeholder="政治面貌" v-model="editForm.perPolitical" clearable>
+								<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.ID" v-for="item in selData.pot"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'hosehold'">
+							<el-radio-group v-model="editForm.hosehold">
+								<el-radio label="0">城镇户籍</el-radio>
+								<el-radio label="1">农业户籍</el-radio>
+								<el-radio label="2">其他</el-radio>
+							</el-radio-group>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'perNational'">
+							<el-select :filterable="true" placeholder="民族" v-model="editForm.perNational">
+								<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.peoples"></el-option>
+							</el-select>
+						</el-form-item>
+						<el-form-item v-if="editForm.editOption == 'status'">
+							<el-select :filterable="true" placeholder="状态" v-model="editForm.status" clearable>
+								<el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.status"></el-option>
+							</el-select>
+						</el-form-item>
+					</div>
+				</div>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="edit.status = false">取 消</el-button>
+				<el-button type="primary" @click="saveBatch()">保 存</el-button>
+			</div>
+		</el-dialog>
+	</div>
+	<script type="text/javascript" src="../Public/js/vue-2.4.2.js"></script>
+	<script type="text/javascript" src="../Public/js/axios.min.js"></script>
+	<script type="text/javascript" src="../Public/js/element-ui.js"></script>
+	<script type="text/javascript" src="../Public/../Hr/showList.js?v=0901"></script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+html,body,div,span,table,tr,td,em,input,th{
+    font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+}
+.col-md-11 ul li{
+    font-family: "΢���ź�" !important;
+}
+.new-kehu .col-md-1 {
+    width: 65px;
+}
+.new-kehu .col-md-1 span {
+    color: #333333;
+    display: inline-block;
+    font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 10px 0;
+    padding: 3px 0;
+}
+.link_blue{text-decoration:underline;color:#06c;}
+.menu-state .active a {
+    background: #ed2d65 none repeat scroll 0 0;
+    color: white;
+}
+.menu-state a {
+    color: #ed2d65;
+}
+.menu-state ul li {
+    display:inline-block;
+}
+.table-bordered th, .table-bordered td{text-align:center;}
+.cur{cursor: pointer;width:256px;}
+.cur-s{cursor: pointer;}
+input,
+textarea,
+select {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.gys-wrap {
+    padding: 10px 20px;
+    box-sizing: border-box;
+}
+
+.gys-title {
+    font-size: 1.55rem;
+    font-weight: 600;
+    border-bottom: 1px solid #b3b3b3;
+    padding: 6px 0;
+    margin-bottom: 10px;
+}
+
+.basis-info {
+    margin: 0px 0;
+}
+
+.basis-info td:nth-of-type(odd),
+.com-info td:nth-of-type(odd) {
+    width: 10%;
+}
+
+
+.basis-info td>input[type="text"],
+.basis-info td>select,
+.basis-info td>input-text {
+
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+    padding: 0 10px
+}
+.basis-info td>textarea {
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+    padding: 0 10px;
+    padding-top: 5px;
+}
+
+.basis-info .sel-map>select {
+    width: 23%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+    padding: 0 10px;
+}
+
+.basis-info td>input[type="file"] {
+    width: 65%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+}
+
+.basis-info td span {
+    margin-top: 5px;
+    display: inline-block;
+    padding: 0 5px;
+    height: 26px;
+    border: 1px solid #b3b3b3;
+    text-align: center;
+    line-height: 26px;
+    border-radius: 2px;
+    background: #dddddd;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.table caption {
+    text-align: left;
+    background: #F0FFFF;
+    border: 1px solid #e5e5e5;
+    margin-bottom: -1px;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 5px 10px;
+    margin-top: -1px;
+}
+
+.gys-btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.gys-btn>button {
+    margin: 0 50px;
+}
+
+.table td {
+    padding: 5px 10px;
+}
+.text-le td {
+    text-align: left;
+}
+.coop-info td input[type="text"],
+.coop-info td select{
+    width: 70%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+    padding: 0 10px
+}
+.coop-info td input[type="file"]{
+    width: 70%;
+    height: 26px;
+    border: 1px solid #ccc;
+    vertical-align: top;
+    border-radius: 2px;
+}
+.multiple_team li:hover{cursor: pointer;}
+.checked_card {background-color:#ff6600;}
+.multiple_team select{margin-right: 10px;}
+input {width: 100%;}
+
+.supplier-info span{
+    width: 150px;
+    font-family: "Arial", "Microsoft YaHei", "黑体", "宋体", sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    padding: 8px 0;
+}
+.supplier-info .active>a{
+    color: #000000;
+}
+.supplier-info a{
+    color: #999999;
+    text-decoration: none;
+}

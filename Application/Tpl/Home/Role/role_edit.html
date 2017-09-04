@@ -1,0 +1,157 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="lib/html5.js"></script>
+    <script type="text/javascript" src="lib/respond.min.js"></script>
+    <script type="text/javascript" src="lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="../Public/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/style.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/Hui-iconfont/1.0.7/iconfont.css" rel="stylesheet" type="text/css" />
+    <!--[if IE 6]>
+    <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+    <script>DD_belatedPNG.fix('*');</script>
+    <![endif]-->
+    <title>新建网站角色</title>
+</head>
+<body>
+<div class="pd-20">
+    <form action="<{:U('Role/role_edit')}>" method="post" class="form form-horizontal" id="form-user-character-add">
+        <input type="hidden" name="role_id" value="<{$detail.ROLE_ID}>">
+        <input type="hidden" name="role_status" value="<{$detail.ROLE_STATUS}>">
+        <div class="row cl">
+            <label class="form-label col-2"><span class="c-red">*</span>角色名称：</label>
+            <div class="formControls col-10">
+                <input type="text" class="input-text" value="<{$detail.ROLE_NAME}>" placeholder="" id="user-name" name="role_name" datatype="*4-16" nullmsg="角色名称不能为空">
+            </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-2">备注：</label>
+            <div class="formControls col-10">
+                <input type="text" class="input-text" value="<{$detail.ROLE_REMARK}>" placeholder="" id="" name="role_remark">
+            </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-2">网站角色：</label>
+            <div class="col-10">
+                <volist name="node_list" id="node" >
+                    <dl class="codeView docs-custom">
+                        <dt class="prettyprint">
+                            <label class="checkbox"><input class="auth_rules rules_all" type="checkbox" name="rules[]" value="<?php echo $node['ID'] ?>"
+                            <?php if(in_array($node['ID'], $act_arr)){ echo 'checked';}?>><{$node.NAME}>管理</label>
+                        </dt>
+                        <dd>
+                            <volist name="node['child']" id="child" >
+                                <if condition="$child.ACT EQ 'orders' and $detail.ROLE_STATUS neq 2"><else />
+                                <div class="rule_check">
+                                    <div>
+                                        <label class="checkbox" <notempty name="child['tip']">title='{$child.tip}'</notempty>>
+                                        <input class="auth_rules rules_row" type="checkbox" name="rules[]" value="<?php echo $child['ID'] ?>"
+                                        <?php if(in_array($child['ID'], $act_arr)){ echo 'checked';}?>/><{$child.NAME}>
+                                        </label>
+                                    </div>
+                                    <notempty name="child['operator']">
+                                        <span class="divsion">&nbsp;</span>
+                                        <span class="child_row">
+                                           <volist name="child['operator']" id="op">
+                                               <label class="checkbox" <notempty name="op['tip']">title='{$op.tip}'</notempty>>
+                                                   <input class="auth_rules" type="checkbox" name="rules[]"
+                                               <?php if(in_array($op['ID'], $act_arr)){ echo 'checked';}?> value="<?php echo $op['ID'] ?>"/><{$op.NAME}>
+                                               </label>
+                                           </volist>
+                                       </span>
+                                    </notempty>
+                                </div>
+                                </if>
+                            </volist>
+                        </dd>
+                    </dl>
+                </volist>
+            </div>
+        </div>
+        <div class="row cl">
+            <div class="col-10 col-offset-2">
+                <button type="submit" class="btn btn-success radius" id="admin-role-save" name="admin-role-save"><i class="icon-ok"></i> 确定</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script>
+    $(function(){
+        $('#form-user-character-add').Validform({
+            tiptype:2,
+            callback:function(form){
+                setTimeout(function() {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.$('.btn-refresh').click();
+                    parent.layer.close(index);
+                    //parent.parent.location.reload();
+                }, 1000);
+            }
+        });
+
+        $(":checkbox[cka]").click(function(){
+            cka = $(this).attr('cka');
+            if($(this).is(':checked')){
+                $('.mod-'+cka).prop("checked",true)
+            } else {
+                $('.mod-'+cka).removeAttr('checked');
+            }
+        });
+
+        //全选节点
+        $('.rules_all').on('change',function(){
+            $(this).closest('dl').find('dd').find('input').prop('checked',this.checked);
+        });
+        $('.rules_row').on('change',function(){
+            $(this).closest('.rule_check').find('.child_row').find('input').prop('checked',this.checked);
+            var top_status = $(this).closest('dl').find('dt').find('input:checkbox:checked').length;
+            var top= $(this).closest('dl').find('input:checkbox[class*="rules_row"]:checked').length;
+            //console.log(top_status+"__"+top);
+            if((top_status == 0 && top != 0) || (top_status !=0 && top == 0)){
+                $(this).closest('dl').find('dt').find('input').prop('checked',this.checked);
+            }
+            //$(this).closest('dl').find('dt').find('input').prop('checked',this.checked);
+        });
+        $('.auth_rules').on('change',function(){
+            var list= $(this).closest('.rule_check').find('input:checkbox[class="auth_rules"]:checked').length;
+            var part= $(this).closest('.rule_check').find('input:checkbox[class*="rules_row"]:checked').length;
+            if((list==0 && part != 0) || (list == 1 && part == 0)){
+                $(this).closest('.rule_check').find('input[class*="rules_row"]').prop('checked',this.checked);
+            }
+            var top_status = $(this).closest('dl').find('dt').find('input:checkbox:checked').length;
+            var top= $(this).closest('dl').find('input:checkbox[class*="rules_row"]:checked').length;
+            //console.log(top_status+"__"+top);
+            if((top_status == 0 && top != 0) || (top_status !=0 && top == 0)){
+                $(this).closest('dl').find('dt').find('input').prop('checked',this.checked);
+            }
+
+        });
+    });
+
+    function choosebox(o){
+        var vt = $(o).is(':checked');
+        if(vt){
+            $('input[type=checkbox]').prop('checked',vt);
+        }else{
+            $('input[type=checkbox]').removeAttr('checked');
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+/nbproject/private/
+.phpstorm.meta.php
+.idea/
+Application/Runtime/
+/ThinkPHP/Src
+Application/Tpl/Orders/~$import.xlsx
+FE/
+/Public/

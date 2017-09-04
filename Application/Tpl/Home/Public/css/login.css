@@ -1,0 +1,231 @@
+*{
+	margin:0;
+	padding:0;
+}
+body{
+	font-family:"Trebuchet MS", "Myriad Pro", Arial, sans-serif;
+	font-size:14px;
+	background:#FBFEFF;
+	color:#333;
+	overflow-y:scroll;
+}
+h1{
+	font-size:56px;
+}
+h2{
+	font-size:20px;
+	padding:0px 0px 40px 0px;
+	color:#aaa;
+}
+h2 span{
+	color:#ffa800;
+}
+a{
+	color:#777;
+}
+a:hover{
+	color:#222;
+}
+p{
+	padding:5px 0px;
+}
+.wrapper{
+	width:960px;
+	margin:20px auto;
+	min-height:550px;
+}
+.box{
+	width:49%;
+}
+.left{
+	float:left;
+}
+.right{
+	float:right;
+}
+.clear{
+	clear:both;
+}
+a.back{
+	color:#777;
+	position:fixed;
+	top:5px;
+	right:10px;
+	text-decoration:none;
+}
+/* Form Style */
+.form_wrapper{
+	margin:0 auto;
+	width:360px;
+	font-size:16px;
+}
+.form_wrapper .login_erp_logo{
+	width:360px;
+	height:49px;
+	background:url("../images/login_logo.png") no-repeat;
+	background-size: 360px 49px;
+}
+.form_wrapper .login_erp_tip{
+	display: block;
+	width:100%;
+	height:30px;
+	line-height: 30px;
+	text-align: center;
+	font-size: 12px;
+	color: #A87F5F;
+	letter-spacing: 0;
+	margin-top:20px;
+	margin-bottom:15px;
+}
+
+.form_wrapper form{
+	display:none;
+	background:#FBFEFF;
+}
+.form_wrapper .column{
+	width:47%;
+	float:left;
+}
+form.active{
+	display:block;
+}
+form.login{
+	width:360px;
+	margin-top: 15%;
+}
+form.register{
+	width:550px;
+}
+form.forgot_password{
+	width:300px;
+}
+.form_wrapper a{
+	text-decoration:none;
+	color:#777;
+	font-size:12px;
+}
+.form_wrapper a:hover{
+	color:#000;
+}
+.form_wrapper label{
+	display:block;
+	padding:10px 30px 0px 30px;
+	margin:10px 0px 0px 0px;
+}
+.form_wrapper input[type="text"],
+.form_wrapper input[type="password"]{
+	border: solid 1px #E5E5E5;
+	background: #FFFFFF;
+	margin:0 auto;
+	display:block;
+	font-size:16px;
+	width:300px;
+	height:40px;
+	line-height: 40px;
+	border-radius: 4px;
+	text-indent: 38px;
+}
+.form_wrapper #username{
+	background-image:url("../images/userImg.png") !important;
+	background-repeat: no-repeat;
+	background-size: 16px 16px;
+	background-position: 12px 12px;
+	font-size: 14px;
+	color: #90A4AE;
+}
+.form_wrapper #password{
+	background-image:url("../images/password.png") !important;
+	background-repeat: no-repeat;
+	background-size: 16px 16px;
+	background-position: 12px 12px;
+	font-size: 14px;
+	color: #90A4AE;
+}
+input:-webkit-autofill{
+	text-indent:12px !important;
+}
+.form_wrapper .bottom{
+	margin-top:16px;
+}
+.form_wrapper .bottom a{
+	display:block;
+	clear:both;
+	padding:10px 30px;
+	text-align:right;
+	color:#ffa800;
+	text-shadow:1px 1px 1px #000;
+}
+.form_wrapper a.forgot{
+	float:right;
+	font-style:italic;
+	line-height:24px;
+	color:#ffa800;
+	text-shadow:1px 1px 1px #fff;
+}
+.form_wrapper a.forgot:hover{
+	color:#000;
+}
+.form_wrapper div.remember{
+	width:300px;
+	margin-left: 30px;
+	height:20px;
+	text-align: left;
+	color: #546E7A;
+	position: relative;
+}
+.form_wrapper div.remember .remember_tips{
+	color: #546E7A;
+	position: absolute;
+	left:20px;
+	bottom: 0px;
+	font-size: 12px;
+}
+.form_wrapper  .remember_checkbox{
+	display: block;
+	width:14px;
+	height:14px;
+	background: url("../images/checkbox_default.png");
+	z-index: 2;
+	position: absolute;
+	left:0px;
+	bottom: 0px;
+}
+.form_wrapper  .remember_checkbox_active{
+	background: url("../images/check_login.png") !important;
+}
+.form_wrapper div.remember input{
+	position: absolute;
+	float:left;
+	display: inline-block;
+	width:14px;
+	height:14px;
+	z-index: 88;
+	left:0px;
+	bottom:0px;
+	opacity: 0;
+	filter: alpha(opacity=0);
+}
+.form_wrapper span.error{
+	visibility:hidden;
+	color:red;
+	font-size:11px;
+	font-style:italic;
+	display:block;
+	margin:4px 30px;
+}
+.form_wrapper input[type="submit"] {
+	background: #1E7EB4;
+	border-radius: 4px;
+	font-family: "Trebuchet MS", "Myriad Pro", sans-serif;
+	font-weight: bold;
+	width:300px;
+	font-size: 16px;
+	color: #FFFFFF;
+	text-align: center;
+	display: block;
+	height:40px;
+	border:none;
+	outline:none;
+	margin:0 auto;
+	cursor: pointer;
+}

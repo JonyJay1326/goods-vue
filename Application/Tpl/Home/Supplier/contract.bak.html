@@ -1,0 +1,614 @@
+<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../Public/css/supplier.css" />
+<link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170306" />
+<style>
+.error{
+    background-color: #fbe2e2;
+    border-color: #c66161;
+    color: #c00;
+}
+label.error {
+    right: 18px;
+    top: 5px;
+    color: #ef392b;
+    font-size: 12px;
+}
+.lev-low{
+    color: green;
+}
+.lev-in{
+    color: #FFCC66;
+}
+.lev-hight{
+    color: red;
+}
+</style>
+<form action="" method="post" id="contract">
+    <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+    <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+    <input type="hidden" name="ID" value="<{$result.ID}>"/>
+    <div class="gys-wrap">
+        <!--<img src="../Public/images/ajax-loader.gif" width="" height="" alt="" class="img_load-pos hide"/>-->
+        <include file="contract_model" />
+        <br />
+        <!--添加供应商模块-->
+        <!--<div id="brief_supplier">-->
+        <!--    <include file="brief_supplier" />-->
+        <!--</div>-->
+        <!--<br />-->
+        <!--添加审核信息模块-->
+        <!--<div id="brief_audit">-->
+        <!--    <include file="brief_audit" />-->
+        <!--</div>-->
+        <!--<br />-->
+        <div>
+            <button class="btn btn-success" type="submit"><{$Think.lang.提交}></button>
+            <button class="btn" type="reset" id="reset"><{$Think.lang.重置}></button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../Public/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="../Public/js/validate-methods.js"></script>
+<script type="text/javascript" src="../Public/js/messages_zh.min.js"></script>
+<script type="text/javascript" src="../Public/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../Public/js/ajaxupload.js"></script>
+<script>
+$(function() {
+    var is_check = false;
+    $("#contract").validate({
+        rules: {
+            REMARK: "required",
+            EST_TIME: "required",
+            SUB_CAPITAL: "required",
+            LG_REP: "required",
+            SHARE_NAME: "required",
+            ADM_PUN: "required",
+            CRI_PUN: "required",
+            COM_PUN: "required",
+            RISK_RATING: "required",
+            SP_NAME: "required",
+            SP_CHARTER_NO: "required",
+            COPANY_TYPE_CD: "required",
+            SP_YEAR_SCALE_CD: "required",
+            SP_TEAM_CD: "required",
+            SP_ANNEX_ADDR: "required",
+            
+            ADM_TIME: {
+                required: function() {
+                    if ($("#ADM_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            COM_TIME: {
+                required: function() {
+                    if ($("#COM_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            CRI_TIME: {
+                required: function() {
+                    if ($("#CRI_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            ADM_DUC: {
+                required: function() {
+                    if ($("#ADM_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            COM_DUC: {
+                required: function() {
+                    if ($("#COM_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            CRI_DUC: {
+                required: function() {
+                    if ($("#CRI_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+        },
+        messages: {
+            REMARK: "<{$Think.lang.请输入备注}>",
+            SP_ANNEX_ADDR1: "<{$Think.lang.请选择合同}>",
+            EST_TIME: "<{$Think.lang.请输入成立时间}>",
+            SUB_CAPITAL: "<{$Think.lang.请输入认缴金额}>",
+            LG_REP: "<{$Think.lang.请输入法人代表}>",
+            SHARE_NAME: "<{$Think.lang.请输入股东}>",
+            ADM_PUN: "<{$Think.lang.请选择是否有行政处罚}>",
+            CRI_PUN: "<{$Think.lang.请选择是否有工商异常}>",
+            COM_PUN: "<{$Think.lang.请选择是否有刑事处罚}>",
+            RISK_RATING: "<{$Think.lang.请进行风险评级}>",
+            SP_NAME: "<{$Think.lang.请输入供应商名称}>",
+            SP_CHARTER_NO: "<{$Think.lang.请输入营业执照号}>",
+            COPANY_TYPE_CD: "<{$Think.lang.请选择企业类型}>",
+            SP_YEAR_SCALE_CD: "<{$Think.lang.请选择供应商年业务规模}>",
+            SP_TEAM_CD: "<{$Think.lang.请选择采购团队}>",
+            SP_JS_TEAM_CD: "<{$Think.lang.请选择介绍团队}>"
+        },
+        submitHandler:function(form){
+            var url = '<{:U("<?= $edit_url ?>")}>';
+            if (is_check == false) {
+                layer.msg("未完成合同验证，无法提交");
+                return false;
+            }
+            $.ajax({
+                    'url':url,
+                    'type':'POST',
+                    'data':$("#contract").serialize(),
+                    beforeSend:function(XMLHttpRequest){
+                          index = layer.load(2, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                     },
+                    success: function (data) {
+                        if (data.status == 1) {
+                            layer.msg(data.info);
+                        } else {
+                            layer.msg(data.data);
+                        }
+                        layer.close(index);
+                    },
+                    error:function(XMLHttpRequest,textStatus,errorThrown){
+                        layer.close(index);
+                        layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                    }
+            },'json');
+        }
+    });
+    
+    // 供应商模块
+    $(".img_load-con").click(function() {
+        var sp_charter_no = $("#SP_CHARTER_NO").val();
+        if (sp_charter_no.length < 1) {
+            layer.msg('<{$Think.lang.请输入营业执照号}>'); 
+        } else {
+            $.ajax({
+                    'url': '<{:U("Supplier/autoload_supplier")}>',
+                    'type':'POST',
+                    'data':{'sp_charter_no': sp_charter_no},
+                    beforeSend:function(XMLHttpRequest){
+                          index = layer.load(2, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                     },
+                    success: function (data) {
+                        // 查询到供应商
+                        if (data.status == 1) {
+                            layer.msg(data.data);
+                            $(".gys-wrap #add_supplier").remove();
+                            // 无审核信息
+                            if (data.info.audit == null) {
+                                // 新增审核信息
+                            } else {
+                                // 有审核信息,在供应商名称后面显示风险等级 
+                                $(".gys-wrap #add_audit").remove();
+                                var ag = $('#audit-grade');
+                                var content = '123';
+                                if (data.info.audit.RISK_RATING == 1) {
+                                    content = '该供应商法务风险评级为低风险!';
+                                    ag.removeClass("lev-hight");
+                                    ag.removeClass("lev-in");
+                                    ag.addClass("lev-low");
+                                }
+                                if (data.info.audit.RISK_RATING == 2) {
+                                    content = '该供应商法务风险评级为中等风险!';
+                                    ag.removeClass("lev-hight");
+                                    ag.removeClass("lev-low");
+                                    ag.addClass("lev-in");
+                                }
+                                if (data.info.audit.RISK_RATING == 3) {
+                                    content = '该供应商法务风险评级为高风险!';
+                                    ag.removeClass("lev-in");
+                                    ag.removeClass("lev-low");
+                                    ag.addClass("lev-hight");
+                                }
+                                ag.text(content);
+                            }
+                        } else {
+                            // 未查询到供应商，加载供应商、审核信息模块
+                            var brief_supplier_model = data.info.brief_supplier;
+                            var brief_audit_model = data.info.brief_audit;;
+                            $(brief_supplier_model).appendTo($('#brief_supplier'));
+                            $(brief_audit_model).appendTo($('#brief_audit'));
+                            layer.msg(data.data);
+                        }
+                        layer.close(index);
+                    },
+                    error:function(XMLHttpRequest,textStatus,errorThrown){
+                        layer.close(index);
+                        layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                    }
+            },'json');
+        }
+        
+    });
+    
+    // 合同加载模块
+    $(".search-contract").click(function() {
+        var con_no = $("#CON_NO").val();
+        if (con_no.length < 1) {
+            layer.msg('<{$Think.lang.请输入合同编号}>');    
+        } else {
+            $.ajax({
+                    'url': '<{:U("Contract/check_contract")}>',
+                    'type':'POST',
+                    'data':{'CON_NO': con_no},
+                    beforeSend:function(XMLHttpRequest){
+                          index = layer.load(2, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                     },
+                    success: function (data) {
+                        if (data.status == 1) {
+                            is_check = true;
+                            _dataPush(data.data);
+                        } else {
+                            layer.msg(data.data);
+                        }
+                        layer.close(index);
+                    },
+                    error:function(XMLHttpRequest,textStatus,errorThrown){
+                        layer.close(index);
+                        layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                    }
+            },'json');
+        }
+        
+    });
+    
+    function _dataPush(oa_data)
+    {
+        // 供应商名称
+        $("#SP_NAME").val(oa_data.YF);
+        // 是否自动续约
+        if (oa_data.SFZDXY == 1) {
+            $(".sysc span:eq(0)").addClass("gys_check_item_active").siblings().removeClass('gys_check_item_active');
+        } else if (oa_data.SFZDXY == 0){
+            $(".sysc span:eq(1)").addClass("gys_check_item_active").siblings().removeClass('gys_check_item_active');
+        }
+        // 我方公司
+        $("#CON_COMPANY_CD").val(oa_data.GSMC);
+        $(".OUR_COMPANY").val(oa_data.GSMC);
+        // 合同类型
+        $("#CON_TYPE").val(oa_data.HTLX);
+        var spanLen = $(".contract_coo_type span").length;
+        for (var i = 0; i < spanLen; i ++) {
+            var now = $(".contract_coo_type span:eq("+ i +")");
+            if (now.attr('value') == oa_data.HTLX) {
+                now.addClass("gys_check_item_active").siblings().removeClass('gys_check_item_active');
+            }
+        }
+        // 签约人
+        $("#CONTRACTOR").val(oa_data.SQR + '-' + oa_data.LASTNAME);
+        //开始时间
+        $("#START_TIME").val(oa_data.PERIOD_FROM);
+        //结束时间
+        $("#END_TIME").val(oa_data.PERIOD_TO);   
+    }
+    
+    $(".ctcd span").click(function() {
+        $(this).css({'background':'#ff6600'}).siblings().css({'background':'#dddddd'});
+        $(".CON_TYPE").val($(this).attr('value'));
+    });
+    
+    $(".sysc span").click(function() {
+        $(this).css({'background':'#ff6600'}).siblings().css({'background':'#dddddd'});
+        $(".IS_RENEWAL").val($(this).attr('value'));
+    });
+});
+
+// 供应商模块js
+$(function() {
+    var App = function() {
+        
+        var app = this;
+        // 企业类型选择
+        var ct = function () {
+            
+        };
+        // 供应商年业务规模
+        var sysc = function () {
+            
+        };
+        // 采购团队增加团队
+        var create_select = function () {
+            
+            var ops = '<?= json_encode($spTeamCd) ?>';
+            var options = '';
+            ops = eval("(" + ops + ")");
+            $.each(ops, function (i, e) {
+                options += '<option value="'+i+'">' + e + '</option>';     
+            });
+            
+            var shtml = '<select name="SP_TEAM_CD[]"  class="required">';
+            shtml += options;
+            shtml += '</select>';
+            
+            return shtml; 
+        };
+        
+        app.selCt = function () {
+            return ct();
+        };
+        
+        app.selSysc = function () {
+            return sysc();
+        };
+        
+        app.add = function () {
+            return create_select();
+        };
+    };
+    $().ready(function() {
+       //$('<option selected=selected><{$Think.lang.请选择采购团队}></option>').prependTo($('.multiple_team select'));
+       //$('<option selected=selected><{$Think.lang.请选择介绍团队}></option>').prependTo($('.multiple_spt select'));
+    });
+    
+    var app = new App();
+    
+    $('.multiple_team li').click(function() {
+        $(app.add()).insertBefore($('.add_nodes'));
+    });
+    
+    $(".ctcd span").click(function() {
+        $(this).addClass("gys_check_item_active").siblings().removeClass("gys_check_item_active");
+        $(".COPANY_TYPE_CD").val($(this).attr('value'));
+        $("#COPANY_TYPE_CD-error").css('display', 'none');
+    });
+    
+    $(".sysc span").click(function() {
+        $(this).addClass("gys_check_item_active").siblings().removeClass("gys_check_item_active");
+        $(".SP_YEAR_SCALE_CD").val($(this).attr('value'));
+        $("#SP_YEAR_SCALE_CD-error").css('display', 'none');
+    });
+    
+    var sydata = '';
+    // 国、省、市、县
+    var area = function (conf) {
+        
+        var ar = this;
+        this.conf = conf;
+        this.defineName = ["国别", '省', '市', '县'];
+        
+        this.curlRequest = function (url, id) {
+            $.ajax({
+                url: url,
+                type: "post",
+                // iframe: true,
+                dataType:'json',
+                data: {'id': id},
+                async: false,
+                beforeSend:function(XMLHttpRequest){
+                 },
+                success: function (data) {
+                    sydata = data.data;
+                },
+                error:function(XMLHttpRequest,textStatus,errorThrown){
+                    layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                }
+            });
+            return sydata;
+        };
+        
+        this.getData = function (checkId, id) {
+            switch (checkId) {
+                case 1:
+                    return ar.getProvince(id);
+                    break;
+                case 2:
+                    return ar.getCity(id);
+                    break;
+                case 3:
+                    return ar.getCounty(id);
+                    break;
+            }
+        };
+        
+        this.getProvince = function (id) {
+            var url = '<{:U("supplier/get_province")}>';
+            return ar.curlRequest(url, id);
+        };
+        
+        this.getCity = function (id) {
+            var url = '<{:U("supplier/get_city")}>';
+            return ar.curlRequest(url, id);
+        };
+        
+        this.getCounty = function (id) {
+            var url = '<{:U("supplier/get_county")}>';
+            return ar.curlRequest(url, id);
+        };
+        
+        this.ze_me = function setOptions (index, cfg, dName) {
+            var s_country = document.getElementById(cfg[index]);
+            with(s_country) {
+                var str = '';
+                length = 0;
+                options [0] = new Option(ar.defineName[index], "");
+                if(index && document.getElementById(cfg[index-1]).selectedIndex > 0 || !index){
+                    if(true){
+                        var data = '';
+        				if (index == 0) {
+        				    data = eval('<?= json_encode($country) ?>');
+        				    $(data).each(function (i, e) {
+                                i ++;
+                                options [i] = new Option(e.NAME, e.ID);
+                            });
+        				}
+                        else if (index == 1) {
+                            var p_i = document.getElementById(cfg[index-1]).value;
+                            var sindex = document.getElementById(cfg[index-1]).selectedIndex;
+                            var p_v = document.getElementById(cfg[index-1]).options[sindex].text;
+                            data = [{"NAME": p_v, "ID": p_i}];
+                            $(data).each(function (i, e) {
+                                i ++;
+                                options [i] = new Option(e.NAME, e.ID);
+                            });
+                        } else if (index == 2) {
+                            str = document.getElementById(cfg[index - 1]).value;
+                            var ret = ar.getCity(str);
+                            data = ret;
+                            $(data).each(function (i, e) {
+                                i ++;
+                                options [i] = new Option(e.NAME, e.ID);
+                            });
+                        } else if (index ==3) {
+                            str = document.getElementById(cfg[index - 2]).value + ',';
+                            str += document.getElementById(cfg[index - 1]).value;
+                            var ret = ar.getCounty(str);
+                            data = ret;
+                            $(data).each(function (i, e) {
+                                i ++;
+                                options [i] = new Option(e.NAME, e.ID);
+                            });
+                        }
+
+                        if(index){ options[0].selected = true; }
+        			}
+        		}
+                
+                if(++index < cfg.length){setOptions(index, cfg, dName);}
+            }
+        };
+        
+        // construct
+        (function(){
+            $(document.getElementById(ar.conf[0])).bind('change',function(){
+                ar.ze_me(1, ar.conf, ar.defineName);
+            });
+            $(document.getElementById(ar.conf[1])).bind('change',function(){
+                ar.ze_me(2, ar.conf, ar.defineName);
+            });
+            $(document.getElementById(ar.conf[2])).bind('change',function(){
+                ar.ze_me(3, ar.conf, ar.defineName);
+            });
+            ar.ze_me(0, ar.conf, ar.defineName);
+    	})();
+    };
+    
+    new area(['s_country', 's_province', 's_city', 's_county']);
+    
+    var cmnCatArr = new Array();
+    
+    // 保存选中的商品类型
+    var goodsType = new Array();
+    var spanObj = new Array();
+    $('#myModal .goods-type span').click(function() {
+        _this = $(this);
+        var goodsCd = _this.attr('value');
+        if (_this.attr('ischecked') == 'false') {
+            _this.css('background', '#00CC99');
+            _this.attr('ischecked', true);
+            goodsType.push(goodsCd);
+            spanObj.push(_this);
+        } else {
+            _this.css('background', '#ed2d65');
+            _this.attr('ischecked', false);
+            if (spanObj.length > 0) {
+                for (var i = 0; i < spanObj.length; i ++) {
+                    if (_this[0] == spanObj[i][0]) {
+                        spanObj.splice(i, 1);
+                    }
+                }
+            }
+            $.each(goodsType, function(i, e) {
+                if (goodsCd == e) {
+                    goodsType.splice(i, 1);
+                }
+            });
+        }
+        //_dynamicRender();
+        _dynamicSpan();
+        _writeInput();
+    });
+    
+    // 动态生成span商品框
+    function  _dynamicSpan()
+    {
+        // 生成span之前，需要清理
+        _clean();
+        var show = $("#goods_type-show");
+        var shtml = '';
+        if (spanObj.length > 0) {
+            $.each(spanObj, function(i, e) {
+                 shtml += '<span style="background:#00CC99;color:white;">' + e.text() + '</span>';
+            });
+        }
+        
+        $(shtml).insertBefore(show);
+    }
+    
+    // 清理已生成的，避免重复
+    function _clean()
+    {   
+        $("#goods_type-td span").remove();
+    }
+    
+    function _writeInput()
+    {
+        $("#SP_CAT_CD").val(goodsType);
+    }
+    
+    $('#myModal').on('show.bs.modal', function (e) {
+      // do something...
+        if (cmnCatArr.length > 0) {
+            
+        }
+    });
+});
+
+// 审核模块js
+$(function() {
+    $(".admpun span").click(function() {
+        $(this).css({'background':'#ff6600'}).siblings().css({'background':'#dddddd'});
+        $(".adm").val($(this).attr('value'));
+        $("#ADM_PUN-error").css('display', 'none');
+    });
+    
+    $(".cripun span").click(function() {
+        $(this).css({'background':'#ff6600'}).siblings().css({'background':'#dddddd'});
+        $(".cri").val($(this).attr('value'));
+        $("#CRI_PUN-error").css('display', 'none');
+    });
+    
+    $(".compun span").click(function() {
+        $(this).css({'background':'#ff6600'}).siblings().css({'background':'#dddddd'});
+        $(".com").val($(this).attr('value'));
+        $("#COM_PUN-error").css('display', 'none');
+    });
+    
+    $(".riskpun span").click(function() {
+        $(this).css({'background':'#ff6600'}).siblings().css({'background':'#dddddd'});
+        $(".risk").val($(this).attr('value'));
+        $("#RISK_PUN-error").css('display', 'none');
+    });
+});
+</script>

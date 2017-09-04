@@ -1,0 +1,336 @@
+<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../Public/css/supplier.css?v=20170728" />
+<link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170306" />
+<style>
+.error{
+    background-color: #fbe2e2;
+    border-color: #c66161;
+    color: #c00;
+}
+label.error {
+    right: 18px;
+    top: 5px;
+    color: #ef392b;
+    font-size: 12px;
+}
+.lev-low{
+    color: green;
+}
+.lev-in{
+    color: #FFCC66;
+}
+.lev-hight{
+    color: red;
+}
+td{
+    width: 30%;
+}
+</style>
+<form action="" method="post" id="contract">
+    <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+    <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+    <input type="hidden" name="ID" value="<{$result.ID}>"/>
+    <div class="gys-wrap">
+        <!--<img src="../Public/images/ajax-loader.gif" width="" height="" alt="" class="img_load-pos hide"/>-->
+        <include file="update_contract_model" />
+        <div>
+            <button class="btn btn-success" type="submit"><{$Think.lang.提交}></button>
+            <button class="btn" type="reset" id="reset"><{$Think.lang.重置}></button>
+        </div>
+    </div>
+</form>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../Public/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="../Public/js/validate-methods.js"></script>
+<script type="text/javascript" src="../Public/js/messages_zh.min.js"></script>
+<script type="text/javascript" src="../Public/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../Public/js/ajaxupload.js"></script>
+<script src="../Public/js/dynamicGeneratePaymentNode.js?v=1231242"></script>
+<script>
+
+$(function() {
+    window.onload = function() {
+        init(); // 初始化
+    };
+    var au;
+    var is_check = false;
+    var is_change = false;
+    
+    function init() {
+        var btnImg = document.getElementById("btnUploadImg");
+        var hidImgName = document.getElementById("hidImgName");
+        g_AjxUploadImg(btnImg, hidImgName);
+    };
+    $("#btndel").click(function() {
+        au.file = '';
+        $("#btnUploadImg").val('请选择文件');
+    });
+    //图片上传
+    function g_AjxUploadImg(btn, hidPut) {
+        var button = btn, interval;
+        au = new AjaxUpload(button, {
+            action: '<{:U("$edit_url")}>',
+            data: {},
+            name: 'myfile',
+            autoSubmit: false,
+            onChange: function (file, extension) {
+                if (file) {
+                    au.file = file;
+                    $("#btnUploadImg").val(file);
+                } else {
+                    au.file = '';
+                    $("#btnUploadImg").val('请选择文件');
+                }
+            },
+            onSubmit: function(file, ext) {
+                if (!(ext && /^(jpg|JPG|png|PNG|gif|GIF|zip|pdf)$/.test(ext))) {
+                    layer.msg("您上传的图片格式不对，请重新选择！");
+                    au.file = '';
+                    $("#btnUploadImg").val('请选择文件');
+                    return false;
+                }
+            },
+            onComplete: function(file, response) {
+                response = eval("("+response+")");
+                if (response.status == 1) {
+                    layer.msg(response.msg);
+                } else {
+                    layer.msg(response.data);
+                }
+            }
+        });
+    };
+    
+    $("#contract").validate({
+        rules: {
+            //REMARK: "required",
+            EST_TIME: "required",
+            SUB_CAPITAL: "required",
+            LG_REP: "required",
+            SHARE_NAME: "required",
+            ADM_PUN: "required",
+            CRI_PUN: "required",
+            COM_PUN: "required",
+            RISK_RATING: "required",
+            SP_NAME: "required",
+            SP_CHARTER_NO: "required",
+            COPANY_TYPE_CD: "required",
+            SP_YEAR_SCALE_CD: "required",
+            SP_TEAM_CD: "required",
+            SP_ANNEX_ADDR: "required",
+            ADM_TIME: {
+                required: function() {
+                    if ($("#ADM_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            COM_TIME: {
+                required: function() {
+                    if ($("#COM_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            CRI_TIME: {
+                required: function() {
+                    if ($("#CRI_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            ADM_DUC: {
+                required: function() {
+                    if ($("#ADM_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            COM_DUC: {
+                required: function() {
+                    if ($("#COM_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            CRI_DUC: {
+                required: function() {
+                    if ($("#CRI_PUN").val() == 1) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+        },
+        messages: {
+            REMARK: "<{$Think.lang.请输入备注}>",
+            SP_ANNEX_ADDR1: "<{$Think.lang.请选择合同}>",
+            EST_TIME: "<{$Think.lang.请输入成立时间}>",
+            SUB_CAPITAL: "<{$Think.lang.请输入认缴金额}>",
+            LG_REP: "<{$Think.lang.请输入法人代表}>",
+            SHARE_NAME: "<{$Think.lang.请输入股东}>",
+            ADM_PUN: "<{$Think.lang.请选择是否有行政处罚}>",
+            CRI_PUN: "<{$Think.lang.请选择是否有工商异常}>",
+            COM_PUN: "<{$Think.lang.请选择是否有刑事处罚}>",
+            RISK_RATING: "<{$Think.lang.请进行风险评级}>",
+            SP_NAME: "<{$Think.lang.请输入供应商名称}>",
+            SP_CHARTER_NO: "<{$Think.lang.请输入营业执照号}>",
+            COPANY_TYPE_CD: "<{$Think.lang.请选择企业类型}>",
+            SP_YEAR_SCALE_CD: "<{$Think.lang.请选择供应商年业务规模}>",
+            SP_TEAM_CD: "<{$Think.lang.请选择采购团队}>",
+            SP_JS_TEAM_CD: "<{$Think.lang.请选择介绍团队}>"
+        },
+        submitHandler:function(form){
+            var url = '<{:U("<?= $edit_url ?>")}>';
+            var con_no = $("#CON_NO").val();
+            var old_con_no = $("#OLD_CON_NO").val();
+            if (is_change == true && $(".PAY_TYPE").val() != '0' && !calcu() != '0') {
+                return false;
+            }
+            if (au.file) {
+                au.setData({'data': $("#contract").serialize()});
+                au.submit();
+            } else {
+                $.ajax({
+                        'url':url,
+                        'type':'POST',
+                        'data':$("#contract").serialize(),
+                        beforeSend:function(XMLHttpRequest){
+                              index = layer.load(2, {
+                                shade: [0.1,'#fff']
+                            });
+                         },
+                        success: function (data) {
+                            data = eval("("+data+")");
+                            if (data.status == 1) {
+                                layer.msg(data.msg);
+                            } else {
+                                layer.msg(data.data);
+                            }
+                            layer.close(index);
+                        },
+                        error:function(XMLHttpRequest,textStatus,errorThrown){
+                            layer.close(index);
+                            layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                        }
+                },'json');
+            }
+        },
+    });
+    
+    function calcu()
+    {
+        var len = $('#payment_node div').length;
+        var selfVal = 0;
+        for (var i = 0; i < len; i ++) {
+            selfVal += parseInt($('#payment_node div:eq(' + i + ') select:eq(2)').val());
+        }
+        if (selfVal != 100) {
+            layer.msg('付款百分比相加必须等于100%');
+            return false;
+        }
+        
+        return true;
+    }
+    
+    $(".payment_method span").click(function() {
+        is_change = true;
+        $('#payment_node div').remove();
+        $(this).css({'background':'#ff6600'}).siblings().css({'background':'#dddddd'});
+        $(".PAY_TYPE").val($(this).attr('value'));
+        $("#PAY_TYPE-error").css('display', 'none');
+        if ($(this).attr('value') == 0) {
+            return;
+        }
+        var data = {"periods":[<?= json_encode(BaseModel::periods()) ?>], 'day':[<?= json_encode(BaseModel::day()) ?>], 'workday':[<?= json_encode(BaseModel::workday()) ?>], 'percentage':[<?= json_encode(BaseModel::percentage()) ?>]};
+        var span = $('#payment_node');
+        var conf = {
+            pnumber: parseInt($(this).attr('value')), //期数
+            data: data, //基础数据
+            name: 'PAY_NODS[]', //生成节点名
+        };
+        var pn = new PayNode(span, conf);
+    });
+});
+
+$(function() {
+    // 合同加载模块
+    $(".search-contract").click(function() {
+        var con_no = $("#CON_NO").val();
+        if (con_no.length < 1) {
+            layer.msg('<{$Think.lang.请输入合同编号}>');    
+        } else {
+            $.ajax({
+                    'url': '<{:U("Contract/check_contract")}>',
+                    'type':'POST',
+                    'data':{'CON_NO': con_no},
+                    beforeSend:function(XMLHttpRequest){
+                          index = layer.load(2, {
+                            shade: [0.1,'#fff']
+                        });
+                     },
+                    success: function (data) {
+                        if (data.status == 1) {
+                            is_check = true;
+                            _dataPush(data.data);
+                        } else {
+                            layer.msg(data.data);
+                        }
+                        layer.close(index);
+                    },
+                    error:function(XMLHttpRequest,textStatus,errorThrown){
+                        layer.close(index);
+                        layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                    }
+            },'json');
+        }
+    });
+    
+    function _dataPush(oa_data)
+    {
+        // 供应商名称
+        $("#SP_NAME").val(oa_data.DFGSMCKESHANG);
+        // 是否自动续约
+        if (oa_data.SFZDXY == 1) {
+            $(".sysc span:eq(0)").css('background', '#ff6600').siblings().css('background', '#dddddd');
+        } else if (oa_data.SFZDXY == 0){
+            $(".sysc span:eq(1)").css('background', '#ff6600').siblings().css('background', '#dddddd');
+        }
+        // 我方公司
+        $("#CON_COMPANY_CD").val(oa_data.GSMC);
+        $(".OUR_COMPANY").val(oa_data.GSMC);
+        // 合同类型
+        $("#CON_TYPE").val(oa_data.HTLX);
+        var spanLen = $(".contract_coo_type span").length;
+        for (var i = 0; i < spanLen; i ++) {
+            var now = $(".contract_coo_type span:eq("+ i +")");
+            if (now.attr('value') == oa_data.HTLX) {
+                now.css('background', '#ff6600').siblings().css('background', '#dddddd');
+            }
+        }
+        // 签约人
+        $("#CONTRACTOR").val(oa_data.SQR + '-' + oa_data.LASTNAME);
+        //开始时间
+        $("#START_TIME").val(oa_data.PERIOD_FROM);
+        //结束时间
+        $("#END_TIME").val(oa_data.PERIOD_TO);   
+    }
+});
+</script>

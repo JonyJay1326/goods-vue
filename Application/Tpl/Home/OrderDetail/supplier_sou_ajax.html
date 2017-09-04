@@ -1,0 +1,6 @@
+
+    <!--<div style="width: 340px;border:1px solid #C0C0C0;background-color:#FCFCFC;position:absolute;" id="supplier_sou">-->
+        <?php foreach($supper_info as $key=>$v){ ?>
+        <p onclick="selectSupper(this)" sp_charter_no="<{$v.SP_CHARTER_NO}>" sp_team_cd="<{$v.SP_TEAM_CD}>" risk_rating="<{$v.RISK_RATING}>" has_cooperate=<{$v.has_cooperate}>><?php echo $v['SP_NAME'];?></p>
+        <?php } ?>
+   <!-- </div>--> <!--联想搜索下拉框-->

@@ -1,0 +1,212 @@
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-reboot.min.css">
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<link href="../Public/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="../Public/icon/css/font-awesome.min.css">
+	<title>已付详情</title>
+	<style>
+		.btn{cursor: pointer;
+			height: 26px;
+			padding: 0px 10px;
+			font-size: 13px}
+		.payable_title {
+			font-weight: bold;
+			font-size: 20px;
+			border-bottom: 1px solid rgba(0, 0, 0, .125);
+			margin-bottom: 10px;
+		}
+		.card-header{
+			height: 40px;
+			padding: 5px 20px;
+			font-size: 13px;
+		}
+		.card-header h4{
+			font-size: 15px;
+			margin-top: 8px;
+		}
+		.card-block thead {
+			visibility: hidden;
+		}
+		.card-block tbody td label{margin-bottom: 0px;}
+		.card-block tbody td{
+			font-size: 13px;
+		}
+		.card-block tbody td:nth-child(odd){
+			text-align: center;
+		}
+		.card-header .row .col-md-6 .btn{
+			height: 26px;
+			padding: 0px 10px;
+			font-size: 13px;
+			font-weight: bold;
+		}
+		.th_hidden th{
+			padding:0px;
+		}
+		.fa-lg{font-size: 16px;color: red}
+		.form-group{margin-bottom: 0px}
+		.card + .card {
+			margin-top: 5px;
+		}
+		.card_set {
+			border: none;
+			padding-top: 20px;
+		}
+		.card_set .btn {
+			padding: 0px 0px;
+			height: 32px;
+			width: 88px;
+			font-size: 14px;
+		}
+	</style>
+	<link rel="stylesheet" href="../Public/css/Purchase_list.css"/>
+</head>
+<body>
+<div class="col-lg-12 top col-md-12 col-sm-12">
+	<div class="payable_title">支付详情</div>
+	<form action="" method="post" class="tobepaid">
+		<div class="card">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6">
+						<h4>基础信息</h4>
+					</div>
+					<if condition="$payable_info['payable_status'] neq 1">
+                        <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+                            <button type="button" class="btn btn-danger" onclick="location='<{:U(\'payment_write_off\',[\'id\'=>$payable_info[\'payable_id\']])}>'" id="payment">付款</button>
+                        </div>
+					</if>
+				</div>
+			</div>
+			<div class="card-block">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered">
+						<thead>
+						<tr class="th_hidden">
+							<th width="15%"></th>
+							<th width="35%"></th>
+							<th width="15%"></th>
+							<th width="35%"></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><label>应付单号</label></td>
+							<td><{$payable_info.receipt_number}></td>
+							<td><label> 本期节点 </label></td>
+							<td>应付款（100%）</td>
+						</tr>
+						<tr>
+							<td><label>采购单号</label></td>
+							<td><{$payable_info.procurement_number}></td>
+
+							<td><label>采购总金额</label></td>
+							<td><{$payable_info.curType}> <{:number_format($payable_info['money_total'],2)}></td>
+						</tr>
+						<tr>
+							<td><label>供应商名称</label></td>
+							<td><{$payable_info.supplier_id}></td>
+
+							<td><label>我方公司</label></td>
+							<td><{$our_companys[$order_info['our_company']]}></td>
+						</tr>
+						<tr>
+							<td><label>采购人</label></td>
+							<td><{$payable_info.prepared_by}>(<{$payable_info.payment_company}>)</td>
+							<td><label>应付生成时间</label></td>
+							<td><{$payable_info.creation_times}></td>
+						</tr>
+						<tr>
+							<td><label>本期应付金额</label></td>
+							<td><{$payable_info.curType}> <{:number_format($payable_info['money_total'],2)}></td>
+							<td><label>总利润率(退税后)</label></td>
+							<td><{$total_profit_margin*100}>%</td>
+						</tr>
+						<tr>
+							<td><label>供应商开户行</label></td>
+							<td><{$order_info.supplier_opening_bank}></td>
+
+							<td><label>银行账号</label></td>
+							<td><{$order_info.supplier_card_number}></td>
+						</tr>
+						<tr>
+							<td><label>SWIFT CODE</label></td>
+							<td><{$order_info.supplier_swift_code}></td>
+
+							<td><label>备注</label></td>
+							<td><{$order_info.order_remark}></td>
+						</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+		<if condition="$payable_info['payable_status'] eq 1">
+		<div class="card">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6">
+						<h4>付款信息</h4>
+					</div>
+				</div>
+			</div>
+			<div class="card-block card-block-detail">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered">
+						<thead>
+						<tr class="th_hidden">
+							<th width="15%"></th>
+							<th width="35%"></th>
+							<th width="15%"></th>
+							<th width="35%"></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><label>本期付款</label></td>
+							<td><{$payable_info.curType}> <{$payable_info.payment_amount}></td>
+							<td><label>付款时间</label></td>
+							<td><{$payable_info.payment_time}></td>
+						</tr>
+						<tr>
+							<td><label>我方公司</label></td>
+							<td><{$our_companys[$payable_info['payment_company_pay']]}></td>
+
+							<td><label>付款凭证</label></td>
+                            <td>
+								<a id="download-url" style="float: left;line-height: 30px" href="<{:U('orderDetail/download',['file'=>$payable_info['payment_voucher']])}>"><{$payable_info.payment_voucher}></a>
+							</td>
+						</tr>
+						<tr>
+							<td><label>备注</label></td>
+							<td><{$payable_info.payment_remarks}></td>
+							<td><label></label></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><label>提交时间</label></td>
+							<td><{$payable_info.payment_submit_time}></td>
+							<td><label>提交人</label></td>
+							<td><{$payable_info.payment_submit_by}></td>
+						</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+		</if>
+	</form>
+</div>
+</body>
+<script>
+
+</script>
+</html>

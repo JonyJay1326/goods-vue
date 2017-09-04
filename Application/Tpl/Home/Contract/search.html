@@ -1,0 +1,89 @@
+<?php
+$suTeam = BaseModel::saleTeamCd();
+$cuTeam = BaseModel::spJsTeamCd();
+$st = function () use ($suTeam, $cuTeam) {
+    foreach ($suTeam as $k => $v) {
+        $suTeam [$k] = $v . '-采购';
+    }
+    foreach ($cuTeam as $k => $v) {
+        $cuTeam [$k] = $v . '-销售';
+    }
+    
+    return array_merge($suTeam, $cuTeam);
+};
+?>
+<div class="row">
+    <form action="" method="get" id="form_btbtc">
+        <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+        <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+        
+        <input type="text" name="CON_NO" value="<{$params.CON_NO}>"  placeholder="<{$Think.lang.合同编号号}>" style="width:100px" class="input-text keywords" />
+        <input type="text" name="CON_NAME" value="<{$params.CON_NAME}>"  placeholder="<{$Think.lang.合同名称}>" style="width:100px" class="input-text keywords" />
+        <input type="text" name="SP_NAME" value="<{$params.SP_NAME}>"  placeholder="<{$Think.lang.合作方名称}>" style="width:100px" class="input-text keywords" />
+        
+        <span class="select-box inline">
+            <select name="CON_TYPE" class="select" id="CON_TYPE">
+                <option value="" selected="selected"><{$Think.lang.请选择合同类型}></option>
+            <?php
+                foreach (BaseModel::conType() as $cd => $nm) {
+            ?>
+                <option value="<?= $cd+1 ?>" <if condition="$params.CON_TYPE eq $cd+1">selected="selected"</if> ><?= $nm ?></option>
+            <?php
+                }
+            ?>
+            </select>
+        </span>
+        
+        <span class="select-box inline">
+            <select name="CON_COMPANY_CD" class="select" id="CON_COMPANY_CD">
+                <option value=""><{$Think.lang.我方合作公司}></option>
+            <?php
+                foreach (BaseModel::conCompanyCd() as $cd => $nm) {
+            ?>
+                    <option value="<?= $cd+1 ?>" <if condition="$params.CON_COMPANY_CD eq $cd+1">selected="selected"</if> ><?= $nm ?></option>
+            <?php
+                }
+            ?>
+            </select>
+        </span>
+        
+        <span class="select-box inline">
+            <select name="SP_TEAM_CD" class="select" id="SP_TEAM_CD">
+                <option value=""><{$Think.lang.请选择签约团队}></option>
+            <?php
+                foreach ($st() as $cd => $nm) {
+            ?>
+                    <option value="<?= $cd ?>" <if condition="$params.SP_TEAM_CD eq $cd">selected="selected"</if> ><?= $nm ?></option>
+            <?php
+                }
+            ?>
+            </select>
+        </span>
+        
+        <input type="text" name="CONTRACTOR" value="<{$params.CONTRACTOR}>"  placeholder="<{$Think.lang.签约人}>" style="width:100px" class="input-text keywords" />
+        
+        <span class="select-box inline">
+            <select name="TIME_TYPE" class="select" id="TIME_TYPE">
+                <option value=""  <if condition="$params.TIME_TYPE eq ''">selected="selected"</if>><{$Think.lang.请选择时间}></option>
+                <option value="1"  <if condition="$params.TIME_TYPE eq 1">selected="selected"</if>><{$Think.lang.合同归档时间}></option>
+                <option value="2"  <if condition="$params.TIME_TYPE eq 2">selected="selected"</if>><{$Think.lang.合同起始时间}></option>
+                <option value="3"  <if condition="$params.TIME_TYPE eq 3">selected="selected"</if>><{$Think.lang.合同结束时间}></option>
+            </select>
+        </span>
+        <span>
+          <input type="text" onfocus="WdatePicker({maxDate:'#F{$dp.$D(\'d4314\')||\'%y-%M-%d\'}'})" id="d4313"  name="CONTRACT_START_TIME" value="<{$params.CONTRACT_START_TIME}>" class="input-text Wdate" style="width:120px;" />
+          -
+          <input type="text" onfocus="WdatePicker({minDate:'#F{$dp.$D(\'d4313\')}',maxDate:'%y-%M-%d'})" id="d4314"  name="CONTRACT_END_TIME" value="<{$params.CONTRACT_END_TIME}>" class="input-text Wdate" style="width:120px;" />
+        </span>
+        <!--<span class="select-box inline">
+            <select name="time_type" class="select" id="jin_xing">
+                <option value=""><{$Think.lang.是否有进行中订单}></option>
+                <option value="1"><{$Think.lang.是}></option>
+                <option value="0"><{$Think.lang.否}></option>
+            </select>
+        </span>-->
+        <button name="" class="btn btn-pink" type="submit"><i class="Hui-iconfont">&#xe665;</i> <{$Think.lang.搜索}></button>
+        <button type="button" value="" class="btn btn-clear btn-reset-clear"><{$Think.lang.重置}></button>
+        <input type="hidden" name="CREATE_PLAT_CD" value="<{$params.CREATE_PLAT_CD}>"/>
+    </form>
+</div>

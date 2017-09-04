@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../Public/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Public/icon/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../Public/css/send.css"/>
+    <link rel="stylesheet" href="../Public/utils/css/public.style.css">
+    <link href="/Application/Tpl/Home/Public/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">
+    <title><{$Think.lang.理货确认}></title>
+    <script type="text/javascript">
+        var url = window.location.href;
+    </script>
+    <style>
+        .wrap {
+            box-sizing: border-box;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .row {
+            margin: 0;
+        }
+
+        .row + .row {
+            margin-top: 20px;
+        }
+
+        [class*="col-"] {
+            padding: 0;
+        }
+    </style>
+</head>
+<div id="warehousing_detail" v-cloak="" class="wrap">
+
+    <form :action="'<{:U('warehouseing_save')}>'+url" method="post" id="form" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 use-title">
+                <span><{$Think.lang.理货确认}></span>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12">
+                <table class="b2b-table-one">
+                    <caption><{$Think.lang.基础信息}></caption>
+                    <tbody class="use-body">
+                    <tr>
+                        <td><label><{$Think.lang.发货子单号}></label></td>
+                        <td>{{warehousing_info.DOSHIP_ID}}</td>
+                        <td><label><{$Think.lang.PO编号}></label></td>
+                        <td>{{warehousing_info.PO_ID}}</td>
+                    </tr>
+                    <tr>
+                        <td><label><{$Think.lang.客户名称}></label></td>
+                        <td>{{warehousing_info.CLIENT_NAME}}</td>
+                        <td><label><{$Think.lang.目的地}></label></td>
+                        <td>{{join_ares(warehousing_info.TARGET_PORT)}}</td>
+                    </tr>
+                    <tr>
+                        <td><label><{$Think.lang.PO发起人}></label></td>
+                        <td>{{warehousing_info.PO_USER}}( <span v-if="warehousing_info.SALES_TEAM">{{initdata.sales_team[warehousing_info.SALES_TEAM].CD_VAL}}</span>)
+                        </td>
+                        <td><label><{$Think.lang.交货方式}></label></td>
+                        <td>{{warehousing_info.DELIVERY_METHOD}}</td>
+
+                    </tr>
+
+                    <tr>
+                        <td><label><{$Think.lang.PO时间}></label></td>
+                        <td>{{warehousing_info.po_time}}</td>
+                        <td><label><{$Think.lang.订单备注}></label></td>
+                        <td>{{warehousing_info.REMARKS}}</td>
+                    </tr>
+                    <tr>
+                        <td><label><{$Think.lang.提单号}></label></td>
+                        <td>{{ship_list[0].BILL_LADING_CODE}}</td>
+                        <td><label><{$Think.lang.发货时间}></label></td>
+                        <td>{{GetDateStr(ship_list[0].ship_delivery_time)}}</td>
+                    </tr>
+                    <tr>
+                        <td><label><{$Think.lang.发货数量}></label></td>
+                        <td>{{king(warehousing_info.SHIPMENTS_NUMBER_all)}}</td>
+                        <td><label><{$Think.lang.商品成本}></label></td>
+                        <td>RMB
+                            <input type="text" name="power_all_sum"  @change="upd('power_all_sum')" v-model="warehousing_info.power_all_sum" class="input-form" style="width: auto">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label><{$Think.lang.物流成本}></label></td>
+                        <td>
+                            <span v-if="warehousing_info.LOGISTICS_CURRENCY in initdata.currency">
+                                <select style="background: #FFFFFF;    border: 1px solid #C8D2D7;    display: inline-block;    width: 75px;    height: 1.6rem;    box-sizing: border-box;    border-right: none;    border-radius: 0.25rem 0 0 0.25rem;    margin-right: -5px;"
+                                        name="LOGISTICS_CURRENCY" v-model="warehousing_info.LOGISTICS_CURRENCY">
+                                <option v-for="c in initdata.currency" :value="c.CD">{{c.CD_VAL}}</option>
+                                </select>
+                            </span>
+                            <span v-else>
+                                <select style="background: #FFFFFF;    border: 1px solid #C8D2D7;    display: inline-block;    width: 75px;    height: 1.6rem;    box-sizing: border-box;    border-right: none;    border-radius: 0.25rem 0 0 0.25rem;    margin-right: -5px;"
+                                        name="LOGISTICS_CURRENCY" v-model="warehousing_info.LOGISTICS_CURRENCY">
+                                <option v-for="c in initdata.currency" :value="c.CD">{{c.CD_VAL}}</option>
+                                </select>
+                            </span>
+                            <input type="text" name="logistics_costs_sum" @change="upd('logistics_costs_sum')" v-model="warehousing_info.logistics_costs_sum" class="input-form" style="width: auto">
+                            <input type="hidden" name="ship_list_id" v-model="warehousing_info.SHIP_LIST_ID" >
+                        </td>
+                        <!--<td><label><{$Think.lang.发货总成本}></label></td>
+                        <td>RMB&nbsp;
+                            <input type="text" name="power_all_sum"  @change="upd('power_all_sum')" v-model="warehousing_info.power_all_sum" class="input-form" style="width: auto">
+                        </td>-->
+                        <td><label><{$Think.lang.发货人}></label></td>
+                        <td>{{warehousing_info.AUTHOR}}</td>
+                    </tr>
+                    <tr>
+                        <td><label><{$Think.lang.发货提交时间}></label></td>
+                        <td>{{warehousing_info.SUBMIT_TIME}}</td>
+                        <td><label><{$Think.lang.预计到港时间}></label></td>
+                        <td>{{GetDateStr(ship_list[0].Estimated_arrival_DATE)}}</td>
+                    </tr>
+                    <tr>
+                        <td><label><{$Think.lang.发货备注}></label></td>
+                      <td style="color: #263238;border-right: 1px solid #CADEE7;">{{ship_list[0].REMARKS}}</td>
+
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12" v-for="(s,key) in ship_list" v-if="!s.submit_user">
+                <table class="b2b-table-three">
+                    <caption><{$Think.lang.商品信息}></caption>
+                    <thead class="use-head">
+                    <tr>
+                        <th><{$Think.lang.商品自编码}></th>
+                        <th><{$Think.lang.商品名称}></th>
+                        <th><{$Think.lang.SKU信息}></th>
+                        <th><{$Think.lang.发货数}></th>
+                        <th><{$Think.lang.入库数量}></th>
+                        <th><{$Think.lang.销售价}></th>
+                        <th><{$Think.lang.结算金额}></th>
+                        <th><{$Think.lang.差异数}></th>
+                        <th><{$Think.lang.残次品可入库数量}></th>
+
+                        <!--<th><{$Think.lang.是否有偏差}></th>
+                        <th><{$Think.lang.偏差数}></th>
+                        <th><{$Think.lang.偏差原因}></th>
+                        <th><{$Think.lang.是否可再次入库}></th>
+                        <th><{$Think.lang.再入库数量}></th>
+                        <th><{$Think.lang.预计收回金额}></th>-->
+                    </tr>
+                    </thead>
+                    <tbody class="use-body">
+                    <tr v-for="(g,gkey) in s.goods">
+                        <td v-if="g.sku_show">{{g.sku_show}}</td>
+                        <td v-else>{{g.warehouse_sku}}</td>
+                        <td>{{g.goods_title}}</td>
+                        <td>{{g.goods_info}}</td>
+                        <td>{{king(g.TOBE_WAREHOUSING_NUM)}}</td>
+                        <td>
+                            <input type="text" name="" placeholder="" class="input-form" v-model="g.DELIVERED_NUM" @change="upd_end_amount(key,gkey)" >
+                        </td>
+                        <td>{{g.price_goods}}</td>
+                        <td>
+                            <input type="text" v-model="g.end_amount">
+                        </td>
+                        <td>{{}}</td>
+                        <td><input type="text"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-lg-12 col-md-12" v-for="(s,key) in ship_list">
+                <table class="b2b-table-one">
+                    <caption><{$Think.lang.入库信息}></caption>
+                    <tbody class="use-body">
+                    <tr>
+                        <td><{$Think.lang.预计入库时间}></td>
+                        <td>{{GetDateStr(s.Estimated_arrival_DATE)}}</td>
+                        <td class="must"><{$Think.lang.实际入库时间}></td>
+                        <td>
+                            <input type="text" name="WAREING_DATE" id="WAREING_DATE"  onfocus="WdatePicker({maxDate:'%y-%M-%d'})" @focus="checkdata" placeholder="请选择日期"  >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><{$Think.lang.入库凭证}></td>
+                        <td class="use-btn">
+                            <button onclick="javascript:$('#payment_voucher').click();" type="button" class="btn-pub btn-yellow" data-toggle="modal" data-target="#fileModal"><{$Think.lang.上传凭证}></button>
+                            <span id="showfile"></span>
+                            <input style="display: none" onchange="javascript:$('#showfile').html($('#payment_voucher').val());" id="payment_voucher" type="file" name="file">
+                        </td>
+                        <td><{$Think.lang.操作}>&<{$Think.lang.状态}></td>
+                        <td colspan="3" class="use-btn">
+                            <input type="hidden" name="wareshousing_goods" id="wareshousing_goods">
+                            <button @click="save(key)" type="button" class="btn-pub btn-green"><{$Think.lang.确定}></button>
+                            <button @click="clean_this(key)" type="button" class="btn btn-blue mg-l-10"><{$Think.lang.取消}></button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script src="../Public/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="../Public/js/stock/alert.js"></script>
+<script type="text/javascript" src="../Public/js/vue.js"></script>
+<script type="text/javascript" src="../Public/js/axios.min.js"></script>
+<script src="/Application/Tpl/Home/Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script>
+    var vm = new Vue({
+        el: '#warehousing_detail',
+        data: {
+            warehousing_info: <{$warehousing_info}>,
+            initdata: <{$initdata}>,
+            ship_list: <{$ship_list}>,
+            url: "<{$url}>",
+            dd:[]
+    },
+        methods: {
+            save(key){
+                if(this.check_null(vm.ship_list[0])){
+                    $("#wareshousing_goods").val(JSON.stringify(vm.ship_list[0]))
+                    $("#form").submit()
+                }
+            },
+            check_null(e){
+                for(v in e.goods){
+                    if(e.goods[v].DEVIATION_NUM <= 0 && e.goods[v].DELIVERED_NUM <= 0){
+                        box.Alert('<{$Think.lang.提示}>','<{$Think.lang.入库数量异常}>')
+                        return false
+                    }
+                    if(e.goods[v].DEVIATION_NUM != 0 && e.goods[v].DEVIATION_REASON == null){
+                        box.Alert('<{$Think.lang.提示}>','<{$Think.lang.第}>'+(parseInt(v)+1)+'<{$Think.lang.行}><{$Think.lang.偏差原因未选择}>')
+                        return false
+                    }
+                }
+                 var wareing_date_val = $("#WAREING_DATE").val()
+                if(wareing_date_val == '' || wareing_date_val == null || wareing_date_val == 'undefined' || wareing_date_val == 'null'){
+                    box.Alert('<{$Think.lang.提示}>','<{$Think.lang.实际入库时间未选择}>')
+                    return false
+                }
+                return true
+            },
+            clean_this(){
+                history.go(0)
+            },
+            buttongroups_ben(name,key,e){
+                var name_arr = name.split('-')
+                var key_arr = key.split('_')
+                var show_key = 'SHOW_'+key_arr[1]
+                this.ship_list[name_arr[0]].goods[name_arr[1]][show_key] = 0
+                if(e === 0)this.ship_list[name_arr[0]].goods[name_arr[1]][show_key] = 1
+                this.ship_list.splice(1,0)
+            },
+            join_ares(e){
+                if(e != null){
+                    e_data = JSON.parse(e)
+                    var initdata = this.initdata
+                    var area = ''
+                    if (e_data.country) area = initdata.area[e_data.country]
+                    if (e_data.stareet) area += '-'+initdata.area[e_data.stareet]
+                    if (e_data.city) area += '-'+initdata.area[e_data.city]
+                    if (e_data.targetCity) area += '-'+e_data.targetCity
+                    return area
+                }
+                return e
+            },
+            king:function(e){
+                if(!e)return null
+                var k = e.toString().split('.')
+                if(e.toString().indexOf('.') > 0){
+                    var s = '.'+k[1]
+                }else{
+                    var s = ''
+                }
+                return k[0].toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')+s;
+            },
+            time_to_date(e){
+
+                return e
+            },
+            GetDateStr(times) {
+                var dd = new Date(times);
+                dd.setDate(dd.getDate());
+                var y = dd.getFullYear();
+                var m = dd.getMonth()+1;
+                var d = dd.getDate();
+                return y+"-"+m+"-"+d;
+            },
+            upd_end_amount(k,gk){
+                var kgk  = this.ship_list[k].goods[gk]
+                kgk.end_amount = this.unking(kgk.price_goods) * kgk.DELIVERED_NUM
+            },
+            upd_num(k,gk){
+                var kgk  = this.ship_list[k].goods[gk]
+                if(!this.check_val(kgk.DELIVERED_NUM,'int')){
+                    box.Alert('<{$Think.lang.提示}>','<{$Think.lang.入库数量非正整数}>')
+                    kgk.DELIVERED_NUM = 0
+                }
+                kgk.DEVIATION_NUM = Math.abs(kgk.TOBE_WAREHOUSING_NUM - kgk.DELIVERED_NUM)
+                if(kgk.DEVIATION_NUM != 0){
+                    this.$children[k+2*gk].actions = 0
+                }
+            },
+            check_val(v,type){
+                switch (type){
+                    case 'int':
+                        var re = /^[1-9]+[0-9]*]*$/
+                        break
+                    default:
+                        return false
+                }
+                return re.test(v)
+            },
+            unking(num) {
+                if (isNaN(num) && typeof(num) == 'string') {
+                    var x = num.split(',');
+                    return parseFloat(x.join(""));
+                } else {
+                    return num
+                }
+            },
+            upd(e){
+                var uk = this.unking(this.warehousing_info[e])
+                this.warehousing_info[e] = this.king(uk)
+            },
+            checkdata(){
+                var wareing_date = $("#WAREING_DATE").val()
+                if((wareing_date != null && wareing_date != '') && wareing_date < this.ship_list[0].DELIVERY_TIME){
+                    box.Alert('<{$Think.lang.提示}>','<{$Think.lang.实际入库时间不能小于发货时间}>')
+                    $("#WAREING_DATE").val('')
+                    return false
+                }
+            }
+        }
+    })
+</script>
+</body>
+
+</html>

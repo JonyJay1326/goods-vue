@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title></title>
+    <script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+    <script type="text/javascript" src="../Public/utils/utils.js"></script>
+    <script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+</head>
+<style>
+    html,body{
+        font-family: "微软雅黑 Bold","微软雅黑";
+    }
+</style>
+<body>
+
+<div id="modalContent" class="hide">
+    <div class="row text-center" style="margin: 0;">
+        <div class="col-lg-4">
+            <div class="alert alert-info">
+                <h6>发货订单数</h6> <strong>(<{$orderlist_num}>)</strong>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="alert alert-success">
+                <h6>成功订单</h6> <strong>(<{$orderlist_success}>)</strong>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="alert alert-danger">
+                <h6>失败订单</h6> <strong>(<{$orderlist_false}>)</strong>
+            </div>
+        </div>
+    </div>
+    <table class="table  table-bordered">
+        <thead style="font-size: 15px;">
+        <tr >
+            <th width="6%" class="text-center">No</th>
+            <th width="20%" class="text-center">第三方订单号</th>
+            <th class="text-center">失败原因</th>
+        </tr>
+        </thead>
+        <tbody class="text-center" style="font-size: 14px;">
+        <?php foreach($message_orders as $key=>$v){ ?>
+        <tr>
+            <td><?php echo $key+1;?></td>
+            <td><?php echo $v[0];?></td>
+            <td><?php if($v[1]=='接口处理异常:该订单不存在占用'){ ?>
+                该订单没有库存
+                <?php }else if($v[1]=='B5C订单号缺失'){ ?>
+                B5C订单号缺失
+                <?php }else{ ?>
+                该订单没有勾选一件代发
+                <?php } ?>
+            </td>
+        </tr>
+        <?php } ?>
+        </tbody>
+    </table>
+    <!-- <a href="<{:U('Orders/orders_self')}>" style="text-decoration: none;"> <center>返回自营列表</center></a>-->
+</div>
+</body>
+</html>

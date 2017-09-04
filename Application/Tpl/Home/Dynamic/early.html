@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>库存预警</title>
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../Public/icon/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="../Public/css/vew.css"/>
+    <link rel="stylesheet" href="../Public/css/new_add_client.css"/>
+    <style>
+        .detail-title a:nth-child(1) {
+            color: black;
+        }
+
+        .card_addWork .col-lg-11 .btn {
+            margin-left: 20px;
+        }
+
+        .btn {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="col-lg-12 top" id="col-lg-12" v-cloak>
+    <div class="payable_title">库存预警</div>
+    <form action="#" method="post">
+        <!--采购信息-->
+        <div class="card top_nav">
+            <div class="row">
+                <span>库存状态:</span>
+                <ul>
+                    <li v-for="(i,key) in inventory_status" @click="go(key,'inventory_status')"  :class="key==action.inventory_status?'row_li1':''" ><a>{{i}}</a></li>
+                </ul>
+            </div>
+            <div class="row">
+                <span>所属仓库:</span>
+                <ul>
+                    <li v-for="w in house_list" @click="go(w.CD,'warehouse')" :class="w.CD==action.warehouse?'row_li1':''"><a>{{w.warehouse}}</a></li>
+                </ul>
+            </div>
+          <!--  <div class="row1">
+                <span>是否按渠道展示</span>
+
+                    <i-switch v-model="action.switch1" ></i-switch>
+
+            </div>-->
+            <div class="row" >
+                <span>销售渠道:</span>
+                <ul>
+                    <li v-for="c in all_channel" @click="go(c.CD,'all_channel')" :class="c.CD==action.all_channel?'row_li1':''"><a>{{c.CD_VAL}}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="card card_serachReset">
+            <div class="row">
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="SKU"  placeholder="SKUID" v-model="action.SKU" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2">
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="GUDS_CNS_NM"  v-model="action.GUDS_CNS_NM" placeholder="商品名称" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-2_btn col-lg-3 col-md-3 col-sm-3">
+                    <input type="hidden" name="ks_ico"  v-model="action.ks_ico"  >
+                    <input type="hidden" name="jx_ico"  v-model="action.jx_ico"  >
+
+                    <button type="submit" @click="alertmsg" id="submit"  class="btn btn-danger">查询</button>
+                    <button type="reset" @click="clear" class="btn">重置</button>
+                </div>
+                <div class="col-lg-2_btn col-lg-5 text-right col-md-5 col-sm-5">
+                    <button type="submit"  class="btn btn-danger">刷新</button>
+                    <button type="button" class="btn btn-danger">批量操作</button>
+                    <!--<button type="button" class="btn">取消</button>-->
+                </div>
+            </div>
+        </div>
+        <div class="card card_kucun">
+            <div class="card_title">
+                <span><{$Think.lang.共计}>:&nbsp;&nbsp;<{$count}></span>&nbsp;&nbsp;&nbsp;&nbsp;
+            </div>
+            <div class="card-block">
+                <blockquote class="card-blockquote">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="text-center">
+                                <th width="2%"><input type="checkbox" class="all_checkbox"/></th>
+                                <th width="10%">SKUID</th>
+                                <th width="10%">商品名称</th>
+                                <th width="6%">属性</th>
+                                <th width="6%">仓库</th>
+                                <th width="6%">销售渠道</th>
+                                <th width="6%" v-if="action.ks_ico == 'arrow-down-b'" @click="upd_order('ks_ico')">当前可售数<Icon type="arrow-down-b" ></Icon></th>
+                                <th width="6%" v-else @click="upd_order('ks_ico')">当前可售数<Icon type="arrow-up-b" ></Icon></th>
+                                <th width="6%">7Day销量</th>
+                                <th width="8%" v-if="action.jx_ico == 'arrow-down-b'" @click="upd_order('jx_ico')">7天平均销量<Icon type="arrow-down-b" ></Icon></th>
+                                <th width="8%" v-else @click="upd_order('jx_ico')">7天平均销量<Icon type="arrow-up-b" ></Icon></th>
+                                <th width="6%">可售天数</th>
+                                <th width="6%">采购周期/天</th>
+                                <th width="6%">系数</th>
+                                <th width="3%">安全天数</th>
+                                <th width="3%">安全库存</th>
+                                <th width="3%">库存状态</th>
+                                <th width="6%">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="" v-for="(d,key) in stream_arr">
+                                <td><input type="checkbox" name=""  value="" class="checkBox"/></td>
+                                <td>{{d.SKU_ID}}</td>
+                                <td>{{d.guds[0].Guds.GUDS_NM}}</td>
+                                <td>{{d.guds.opt_val[0].val}}</td>
+                                <td>{{house_all_list[d.warehouse_id].warehouse}}</td>
+                                <td v-if="d.channel in all_channel">{{all_channel[d.channel].CD_VAL}}</td>
+                                <td v-else></td>
+                                <td>{{d.sale}}</td>
+                                <td v-if="d.day7_sales">{{d.day7_sales}}</td>
+                                <td v-else>0</td>
+                                <td>{{(d.day7_sales/7).toFixed(2)}}</td>
+                                <td v-if="d.day7_sales != 0 && d.day7_sales != '' && d.day7_sales != null">{{Math.floor((d.sale/(d.day7_sales/7)))}}</td>
+                                <td v-else>&infin;</td>
+                                <td>
+                                    <div class="input-group input-group-lg"  >
+                                        <input  type="number"  placeholder="0"  v-model="d.buy_date" class="form-control" @change="upd_ratio(key)" :disabled="!d.upd">
+                                    </div>
+                                </td>
+                                <td>
+                                    <fieldset class="form-group team_select">
+                                        <select class="form-control"  v-model="d.ratio" @change="upd_ratio(key)" :disabled="!d.upd" >
+                                            <option v-for="r in ratio"  :value="r">{{r}}</option>
+                                        </select>
+                                    </fieldset>
+                                </td>
+                                <td>{{d.buy_date*d.ratio}}</td>
+                                <td>{{Math.ceil(d.buy_date*d.ratio*d.day7_sales/7)}}</td>
+                                <td>
+                                    <span class="shortage" v-if="d.inventory_status in inventory_status && d.inventory_status != 0">{{inventory_status[d.inventory_status]}}</span>
+                                    <span class="shortage" v-else>滞销（待）</span></td>
+                                <td  v-if="!d.upd" @click="upd_save(key)">
+                                    <div class="sku_edit" ><span>编辑</span></div>
+                                </td>
+                                <td v-if="d.upd">
+                                    <div class="sku_pc" ><span @click="save(key)">保存</span><span @click="cancel(key,1)">取消</span></div>
+                                </td>
+                            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+        <div class="col-md-7 padding10-0">
+            <ul class="pagination">
+                <{$pages}>
+            </ul>
+        </div>
+
+        <input type="hidden" name="DELIVERY_WAREHOUSE" v-model="action.warehouse" >
+        <input type="hidden" name="channel" v-model="action.switch1" >
+        <input type="hidden" name="all_channel" v-model="action.all_channel" >
+        <input type="hidden" name="inventory_status" v-model="action.inventory_status" >
+    </form>
+</div>
+<script type="text/javascript" src="../Public/js/vue.js"></script>
+<script type="text/javascript" src="../Public/js/vew.min.js"></script>
+<script type="text/javascript" src="../Public/js/axios.min.js"></script>
+<script src="../Public/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var vm = new Vue({
+        el:"#col-lg-12",
+        data:{
+            all_channel:<{$all_channel}>,
+            house_all_list:<{$house_all_list}>,
+            house_list:<{$house_list}>,
+            inventory_status:<{$inventory_status}>,
+            stream_arr:<{$stream_arr}>,
+            action:<{$action}>,
+            param:<{$param}>,
+            ratio:<{$ratio}>,
+            post_id:0,
+
+        },
+        methods:{
+            go:function (e,type) {
+                this.action[type] = e
+            },
+            clear:function(){
+                this.action = {"inventory_status":0,"warehouse":0,"all_channel":0,"switch1":false,"GUDS_CNS_NM":"","SKU":""}
+            },
+            upd_ratio:function(e){
+                var this_s =  this.stream_arr[e]
+                if(this_s.buy_date < 0){
+                    this.$Message.error('采购天数不能小于0')
+                    this_s.buy_date = 0
+                    return false
+                }
+                var safe_date = this_s.buy_date * this_s.ratio
+                var sell = this_s.sale/(this_s.day7_sales/7)
+                if (sell < (safe_date * 1)) {
+                    this_s.inventory_status = 1;
+                }
+                if ((safe_date * 1) <= sell && sell < (safe_date * 2)) {
+                    this_s.inventory_status = 2;
+                }
+                if ((safe_date * 2) <= sell && sell < (safe_date * 4)) {
+                    this_s.inventory_status = 3;
+                }
+                if (sell >= (safe_date * 4)) {
+                    this_s.inventory_status = 4;
+                }
+            },
+            upd_save:function(k){
+                this.stream_arr[k].upd = !this.stream_arr[k].upd
+                this.stream_arr.splice(1,0)
+                this.$Message.warning('开始编辑');
+            },
+            cancel:function(k,s){
+                this.stream_arr[k].upd = !this.stream_arr[k].upd
+                this.stream_arr.splice(1,0)
+                if(s)this.$Message.error('操作取消');
+            },
+            save:function(k){
+                var this_k = this.stream_arr[k]
+                var  k = k
+                if(!this_k.channel){
+                    vm.$Notice.error({title: '渠道未存在或未展开'})
+                    return false
+                }
+                axios.post('/index.php?m=dynamic&a=get_early',{
+                    sku: this_k.SKU_ID,
+                    channel: this_k.channel,
+                    buy_date:this_k.buy_date,
+                    ratio:this_k.ratio,
+                    inventory_status:this_k.inventory_status
+                }).then(function(response){
+                    var res = response.data;
+                    if(res['code'] == '2000'){
+                        vm.channel_sku_arr = res['data']
+                        vm.cancel(k)
+                        vm.$Notice.success({title: '保存成功'});
+                    }else{
+                        vm.$Notice.error({title: '保存失败:'+res['msg']});
+                    }
+                })
+            },
+            tips:function(){
+                if(<{$count}> == 0){
+                    vm.$Notice.warning({title: '查询无数据'});
+                }
+            },
+            alertmsg:function(){
+                this.$Message.loading('Loading...')
+            },
+            upd_order:function(e){
+                console.log(this.action[e])
+                if(this.action[e] == 'arrow-down-b'){
+                    this.action[e] = 'arrow-up-b'
+                }else{
+                    this.action[e] = 'arrow-down-b'
+                }
+                this.alertmsg()
+                $('#submit').click();
+            }
+        }
+    })
+    setTimeout(vm.tips,300)
+    //全选checkbox;
+    $(".all_checkbox").on("click",function(){
+        if($(this).prop("checked")){
+            $(this).prop("checked",true);
+            $(".checkBox").prop("checked",true);
+
+        }else{
+            $(this).prop("checked",false);
+            $(".checkBox").prop("checked",false);
+        }
+    })
+    //单选，反选
+    $(".table tbody .checkBox").on("click",function () {
+        if($(this).prop("checked")){
+            var index=0;
+            $(".table tbody .checkBox").each(function(){
+                if($(this).prop("checked")){
+                    index++;
+                }
+            })
+            if(index==$(".table tbody .checkBox").length){
+                $(".all_checkbox").prop("checked",true);
+            }
+        }else{
+            $(this).prop("checked",false);
+            $(".all_checkbox").prop("checked",false);
+        }
+
+    })
+
+
+</script>
+</body>
+</html>

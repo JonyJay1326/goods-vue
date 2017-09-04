@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<!--<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css"/>-->
+	<!--<link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css"/>-->
+	<!--<link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css"/>-->
+	<link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css"/>
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../Public/lib/webuploader/0.1.5/webuploader.css"/>
+	<title><{$Think.lang.详情}></title>
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+    <link rel="stylesheet" href="../Public/css/purchase.css"/>
+    <link rel="stylesheet" href="../Public/css/purchaseDetail.css"/>
+    <link rel="stylesheet" href="../Public/css/common.css"/>
+</head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"/>
+<body>
+<div class="col-lg-12 top purchase_add payable_add">
+	<form action="<{:U('OrderDetail/order_add')}>" method="post" enctype="multipart/form-data">
+		<div class="card">
+			<div class="card-header"><{$Think.lang.应付信息}></div>
+			</div>
+			<div class="card-block">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th width="10%"></th>
+                            <th width="11.6%"></th>
+                            <th width="11.7%"></th>
+                            <th width="10%"></th>
+                            <th width="11.6%"></th>
+                            <th width="11.7%"></th>
+                            <th width="10%"></th>
+                            <th width="11.6%"></th>
+                            <th width="11.8%"></th>
+                        </tr>
+                        </thead>
+						<tbody>
+                        <tr>
+                            <td><{$Think.lang.采购}>PO</td>
+                            <td class="payable_add_po" colspan="2">
+                                <span value="" class="active"><{$Think.lang.有销售PO}></span>
+                                <span value="" class=""><{$Think.lang.无销售PO/提前囤货}></span>
+                            </td>
+                            <td>PO/<{$Think.lang.采购单号}></td>
+                            <td colspan="2" class="payable_add_search">
+                                    <div class="input-group">
+                                        <input type="text" name="procurement_number" placeholder="手工录入" class="form-control ">
+                                        <span class="input-group-btn" id="search_po">
+                                        <button class="btn btn-secondary" type="button"><i class="fa fa-search fa-lg"></i></button>
+                                    </span>
+                                    </div>
+                            </td>
+                            <td><{$Think.lang.供应商}></td>
+                            <td colspan="2">
+                                <div class="input-group">
+                                     <input type="text" name="supp_id" id="" class="form-control"/>
+                                     <span></span>
+                                </div>
+                            </td>
+                        </tr>
+						<tr>
+                            <td><{$Think.lang.采购金额}></td>
+                            <td class="add_bizhong payable_add_add_bizhong" colspan="2">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <div>
+											<select name="curr" class="form-control" onchange="">
+                                                <option selected="" value=""><{$Think.lang.币种}></option>
+                                                <option selected="" value="USD">USD</option>
+                                                <option value="CNY">CNY</option>
+                                                <option value="JPY">JPY</option>
+											</select>
+										</div>
+                                    </span>
+                                    <input type="text" id="" readonly="readonly" onclick=""   autocomplete="off" class="form-control" style="background:rgba(0, 0, 0, 0);"/>
+                                    <input type="hidden"  value="0" name="" readonly="readonly" id=""  /> <!--用于保存数据库需要的数据-->
+                                    <input type="hidden"  value="0" name="" id=""  /> <!--用于保存外币换算成人民币的金额，以供下面的预计利润的计算-->
+                                    <input type="hidden"  value="0" name=""  class="" /> <!--用于保存实际的的汇率数据，用于换算成人民币-->
+                                    <span class="input-group-btn">
+										  <input type="hidden" class="show_exchange" name="show_curr_rate">  <!--该数据是为了将显示的汇率保存起来，然后在修改界面显示的-->
+										   <button class="btn btn-secondary pad-0 btn-label" type="button">
+										   </button>
+									</span>
+                                </div>
+                            </td>
+							<td><{$Think.lang.采购团队}></td>
+                            <td class="purchase_select" colspan="2">
+                                <select class="form-control" name="sell_team">
+                                    <option value=""><{$Think.lang.请选择}></option>
+                                </select>
+                            </td>
+                            <td><{$Think.lang.采购合同}></td>
+                            <td class="payable_add_contract" colspan="2">
+                               <div>
+                                   <p><span value="" class=""><{$Think.lang.无采购合同}></span></p>
+                                   <p><span value="" class="active has_contract"><{$Think.lang.有采购合同}></span><input type="text" ></p>
+                               </div>
+                            </td>
+						</tr>
+                        <tr>
+                            <td><{$Think.lang.供应商开户行}></td>
+                            <td colspan="2"><input type="text" name="supp_id" id=""  class="form-control"/></td>
+                            <td><{$Think.lang.银行账号}></td>
+                            <td colspan="2"><input type="text" name="supp_id" id=""  class="form-control"/></td>
+                            <td><{$Think.lang.SWIFT CODE（选填）}></td>
+                            <td colspan="2"><input type="text" name="supp_id" id=""  class="form-control"/></td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.发票类型}></td>
+                            <td class="purchase_select" colspan="2">
+                                <select class="form-control" name="sell_team">
+                                    <option value=""><{$Think.lang.请选择}></option>
+                                </select>
+                            </td>
+                            <td><{$Think.lang.是否含税}></td>
+                            <td class="purchase_select" colspan="2">
+                                <select class="form-control" name="sell_team">
+                                    <option value=""><{$Think.lang.请选择}></option>
+                                </select>
+                            </td>
+                            <td><{$Think.lang.税点}></td>
+                            <td class="purchase_select" colspan="2">
+                                <select class="form-control" name="sell_team">
+                                    <option value=""><{$Think.lang.请选择}></option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.我方公司}></td>
+                            <td class="purchase_select" colspan="2">
+                                <select class="form-control" name="sell_team">
+                                    <option value=""><{$Think.lang.请选择}></option>
+                                </select>
+                            </td>
+                            <td><{$Think.lang.交易形式}></td>
+                            <td class="purchase_select" colspan="2">
+                                <select class="form-control" name="sell_team">
+                                    <option value=""><{$Think.lang.请选择}></option>
+                                </select>
+                            </td>
+                            <td><{$Think.lang.物流/服务/保险费用（选填)}></td>
+                            <td class="add_bizhong payable_add_add_bizhong_wfb" colspan="2">
+                                <div class="input-group">
+                                    <span class="input-group-btn">
+                                        <div>
+											<select name="curr" class="form-control" onchange="">
+												<option selected="" value=""><{$Think.lang.币种}></option>
+											</select>
+										</div>
+                                    </span>
+                                    <input type="text" id="" readonly="readonly" onclick="sellCheck()"   autocomplete="off" class="form-control" style="background:rgba(0, 0, 0, 0);"/>
+                                    <input type="hidden"  value="0" name="" readonly="readonly" id=""  /> <!--用于保存数据库需要的数据-->
+                                    <input type="hidden"  value="0" name="" id=""  /> <!--用于保存外币换算成人民币的金额，以供下面的预计利润的计算-->
+                                    <input type="hidden"  value="0" name=""  class="" /> <!--用于保存实际的的汇率数据，用于换算成人民币-->
+                                    <span class="input-group-btn">
+										  <input type="hidden" class="show_exchange" name="show_curr_rate">  <!--该数据是为了将显示的汇率保存起来，然后在修改界面显示的-->
+										   <button class="btn btn-secondary pad-0 btn-label" type="button">
+										   </button>
+									</span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.业务方向}></td>
+                            <td class="purchase_select" colspan="2">
+                                <select class="form-control" name="sell_team">
+                                    <option value=""><{$Think.lang.请选择}></option>
+                                </select>
+                            </td>
+                            <td><{$Think.lang.采购日期}></td>
+                            <td colspan="2" class="payable_add_data">
+                                <div class="input-group" >
+                                    <input type="text" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                            <td><{$Think.lang.到货日期}></td>
+                            <td colspan="2" class="payable_add_data">
+                                <div class="input-group">
+                                    <input type="text" name=""  onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                    <span class="input-group-btn">
+                                            <button class="btn btn-secondary" type="button"><i></i></button>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.付款账期}></td>
+                            <td class="payable_add_payment_period" colspan="3">
+                                <div>
+                                    <span value="" class="active" data-name="payable_add_payment_period_time"><{$Think.lang.指定时间付款}></span>
+                                    <span value="" class="" data-name="payable_add_payment_period_reality"><{$Think.lang.按实际情况付款}></span>
+                                    <select class="form-control" name="sell_team">
+                                        <option value=""><{$Think.lang.请选择}></option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td><{$Think.lang.具体节点}></td>
+                            <td colspan="4" class="payable_add_data">
+                                <div  class="payable_add_payment_period_time">
+                                   <div>
+                                        <div class="input-group">
+                                            <input type="text" name="" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                            <span class="input-group-btn">
+                                                    <button class="btn btn-secondary" type="button"><i></i></button>
+                                              </span>
+                                        </div>
+                                        <div class="period_time"><input type="text" name="" class="form-control "></div>
+                                   </div>
+                                    <div>
+                                        <div class="input-group">
+                                            <input type="text" name="" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                            <span class="input-group-btn">
+                                                        <button class="btn btn-secondary" type="button"><i></i></button>
+                                                  </span>
+                                        </div>
+                                        <div class="period_time"><input type="text" name="" class="form-control "></div>
+                                    </div>
+                                    <div>
+                                        <div class="input-group">
+                                            <input type="text" name="" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                            <span class="input-group-btn">
+                                                        <button class="btn btn-secondary" type="button"><i></i></button>
+                                                  </span>
+                                        </div>
+                                        <div class="period_time"><input type="text" name="" class="form-control "></div>
+                                    </div>
+                                </div>
+
+                                <div  class="payable_add_payment_period_reality">
+                                   <div>
+                                       <select class="form-control select1" name="">
+                                           <option value=""><{$Think.lang.合同后}></option>
+                                       </select>
+                                       <select class="form-control select2" name="">
+                                           <option value=""><{$Think.lang.7}></option>
+                                       </select>
+                                       <select class="form-control select3" name="">
+                                           <option value=""><{$Think.lang.天}></option>
+                                       </select>
+                                       <select class="form-control select4" name="">
+                                           <option value=""><{$Think.lang.30%}></option>
+                                       </select>
+                                   </div>
+                                    <div>
+                                        <select class="form-control select1" name="">
+                                            <option value=""><{$Think.lang.合同后}></option>
+                                        </select>
+                                        <select class="form-control select2" name="">
+                                            <option value=""><{$Think.lang.7}></option>
+                                        </select>
+                                        <select class="form-control select3" name="">
+                                            <option value=""><{$Think.lang.天}></option>
+                                        </select>
+                                        <select class="form-control select4" name="">
+                                            <option value=""><{$Think.lang.30%}></option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select class="form-control select1" name="">
+                                            <option value=""><{$Think.lang.合同后}></option>
+                                        </select>
+                                        <select class="form-control select2" name="">
+                                            <option value=""><{$Think.lang.30}></option>
+                                        </select>
+                                        <select class="form-control select3" name="">
+                                            <option value=""><{$Think.lang.工作日}></option>
+                                        </select>
+                                        <select class="form-control select4" name="">
+                                            <option value=""><{$Think.lang.30%}></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.附件}></td>
+                            <td colspan="8">
+                                <div class="upload-box" style="display: inline-block;">
+                                    <div class="upload-box-child">
+                                        <input type="file" name="attachment[]" class="attachment" style="display: inline-block;">
+                                        <div style="display: inline-block">
+                                            <i class="upload-minus fujian_delete" onclick="uploadMinus(this)"><img src="../Public/images/delete.png" alt=""></i>&nbsp;
+                                            <i class="upload-plus fujian_add" onclick="uploadPlus(this)"><img src="../Public/images/add.png" alt=""></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span class="upload-box_tip">文件最大不超过20M，支持JPG,GIF,PNG,JPEG,ZIP,PDF,WORD,EXCEL格式</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.备注}></td>
+                            <td colspan="8"><input type="text" name="" class="form-control " placeholder='填写说明：添加销售预期，例如"预计在B5C平台销售"、"销售给WYKL"、"热销品囤货"'等></td>
+                        </tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+		<div class="row btn-wrap">
+			<div class="col-lg-12 text-center">
+				<button class="btn btn-sure " type="button" ><{$Think.lang.保   存}></button>&nbsp;&nbsp;&nbsp;&nbsp;
+				<button class="btn btn-cancel "  type="button"  name=""><{$Think.lang.取  消}></button>
+			</div>
+		</div>
+	</form>
+</div>
+</body>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../Public/utils/utils.js"></script>
+<script type="text/javascript" src="../Public/lib/jquery.form.min.js"></script>
+<script type="text/javascript" src="../Public/lib/webuploader/0.1.5/webuploader.js"></script>
+<script>
+    //上传组件
+    function uploadPlus(ts) {
+        var html = '<div class="upload-box-child">'+
+            '<input type="file" name="attachment[]"  class="attachment" style="display: inline-block"/>'+
+            '<div style="display: inline-block;margin-left:4px" class="">'+
+            '<i class="upload-minus fujian_delete" onclick="uploadMinus(this)"><img src="../Public/images/delete.png" alt=""></i>&nbsp;' +
+            '<i class="upload-plus fujian_add" onclick="uploadPlus(this)" style="margin-left: 5px"><img src="../Public/images/add.png" alt=""></i>'+
+            '</div>'+
+            '</div>';
+        $('.upload-box').append(html);
+    }
+    function uploadMinus(ts) {
+        var number = $('.upload-box-child').size();
+        if(number == 1) {
+            alert('<{$Think.lang.必须保留一个上传按钮}>');
+            return false;
+        }
+        $(ts).parents('.upload-box-child').remove();
+    }
+    $(function () {
+        //采购合同单选框
+        $(".payable_add .card-block .payable_add_po span").click(function () {
+            $(this).addClass("active").siblings().removeClass("active")
+        })
+        //采购合同单选款
+        $(".payable_add .card-block .payable_add_contract span").each(function () {
+            $(this).addClass("active").parent().siblings().find("span").removeClass("active");
+            if($(this).hasClass("has_contract")){
+                $(this).parent().find("input").css({"opacity":"1","filter":"alpha(opacity=0)"})
+            }else{
+                $(this).parent().parent().find("input").css({"opacity":"0","filter":"alpha(opacity=1)"})
+            }
+        })
+        $(".payable_add .card-block .payable_add_contract span").click(function () {
+            if($(this).hasClass("has_contract")){
+                $(this).parent().find("input").css({"opacity":"1","filter":"alpha(opacity=0)"})
+            }else{
+                $(this).parent().parent().find("input").css({"opacity":"0","filter":"alpha(opacity=1)"})
+            }
+        })
+        //付款账期单选框
+        $(".payable_add .card-block .payable_add_payment_period span").click(function () {
+            $(this).addClass("active").siblings().removeClass("active");
+            var data_name=$(this).attr("data-name");
+            $("."+data_name).show().siblings().hide()
+        })
+        //币种处input框问题
+        $(".payable_add .payable_add_add_bizhong .input-group select").change(function () {
+            if($(this).val()){
+                $(this).parent().parent().parent().find("input").attr("readonly",false)
+                $(this).parent().parent().parent().find(".input-group-btn button").addClass("button");
+            }else{
+                $(this).parent().parent().parent().find("input").attr("readonly",true)
+                $(this).parent().parent().parent().find(".input-group-btn button").removeClass("button")
+            }
+        })
+
+    })
+
+</script>
+</html>

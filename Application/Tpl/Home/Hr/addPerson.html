@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../Public/utils/css/public.style.css?v=<{$Think.config.VER_NUM}>">
+    <link rel="stylesheet" href="../Public/css/element-ui.css?v=<{$Think.config.VER_NUM}>">
+    <link rel="stylesheet" href="../Public/../Hr/hrstyle.css?v=<{$Think.config.VER_NUM}>">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<input type="hidden" value="<?php echo $menu; ?>" id="ctrl"/>
+<div id="hrAdd" class="addPerson" v-cloak>
+    <div class="use-row" style="margin-bottom: 20px;">
+        <div class="col-50 use-title">{{title}}<span v-if="title == '员工名片'"> — {{form.EmpScNm}}</span></div>
+        <div class="col-50 text-right use-btn">
+            <div class="use-row">
+                <!--第一页保存-->
+                <div class="col-100" v-if="menu.personInfo && edit.show || menu.personInfo && control.admin && !control.id">
+                    <button class="btn-pub btn-blue" type="button" @click="saveForm()">&nbsp;保存&nbsp;</button>
+                    <button class="btn-pub btn-default mg-l-20" type="button" @click="cancel()">&nbsp;取消&nbsp;</button>
+                </div>
+                <!--第二页保存-->
+                <div class="col-100 use-btn" v-if="!menu.personInfo && edit.show || !menu.personInfo && control.admin && !control.id" >
+                    <button class="btn-pub btn-blue" type="button" @click="saveForm2()">&nbsp;&nbsp;保存&nbsp;&nbsp;</button>
+                    <button class="btn-pub btn-default mg-l-20" type="button" @click="cancel()">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+                </div>
+                <div class="col-100" v-if="!edit.show && control.admin && control.id || control.staff">
+                    <button type="button" class="btn-pub btn-blue" @click="editContent()">编辑</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="use-row text-center tab-title"  v-if="control.admin && control.id">
+        <div class="col-50" @click="menu.personInfo = true"><p :class="menu.personInfo ? 'active':'default'">个人信息<i></i></p></div>
+        <div class="col-50" @click="menu.personInfo = false"><p :class="menu.personInfo ? 'default':'active'">HR跟踪信息<i></i></p></div>
+    </div>
+    <!---------------------------------------------------华丽的分割线----------------------------------------------------------->
+    <!--
+        个人信息展示模块
+        control.admin      管理员(新建状态)
+        menu.personInfo    个人信息/跟踪信息
+        edit.show          编辑/展示
+        control.id         管理员(携带员工ID进入查看/编辑)
+    -->
+    <!--hr 模块-->
+    <div v-if="control.staff || (control.admin && control.id && !edit.show && menu.personInfo)" style="margin-bottom: 20px">
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :rules="rules" ref="form" label-width="95px" :model="form">
+                    <table class="hr-table">
+                        <tbody>
+                        <tr>
+                            <td v-if="!edit.show" rowspan="6" class="first-td"><img :src="form.Pic" width="108" height="164"></td>
+                            <td v-if="edit.show" rowspan="6" class="first-td">
+                                <el-upload class="avatar-uploader"  action="/index.php?m=Api&a=hrUpload" :show-file-list="false" :on-success="uploadFileFun" name="Pic" ref="pic">
+                                    <img v-if="url.Pic" :src="url.Pic" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+                            </td>
+                            <td><el-form-item label="工号"><p class="text-value">{{form.workNum}}</p></el-form-item> </td>
+                            <td><el-form-item label="花名"><p class="text-value">{{form.EmpScNm}}</p></el-form-item> </td>
+                            <td><el-form-item label="入职时间"><p class="text-value">{{form.perJobDate}}</p></el-form-item></td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="部门"><p class="text-value">{{form.deptName}}</p></el-form-item> </td>
+                            <td><el-form-item label="组别"><p class="text-value">{{form.deptGroup}}</p></el-form-item> </td>
+                            <td><el-form-item label="司龄"><p class="text-value">{{form.companyAge}} 月</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="中文职位"><p class="text-value">{{form.jobCd}}</p></el-form-item></td>
+                            <td><el-form-item label="英文职位"><p class="text-value">{{form.JobEnCd}}</p></el-form-item></td>
+                            <td><el-form-item label="工作地点"><p class="text-value">{{form.workPlace}}</p></el-form-item></td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="直接领导"><p class="text-value">{{form.directLeader}}</p></el-form-item> </td>
+                            <td><el-form-item label="部门总监"><p class="text-value">{{form.departHead}}</p></el-form-item> </td>
+                            <td><el-form-item label="对接HR"><p class="text-value">{{form.dockingHr}}</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="职级"><p class="text-value">{{form.rank}}</p></el-form-item> </td>
+                            <td><el-form-item label="离职时间"><p class="text-value">{{form.depJobDate}}</p></el-form-item> </td>
+                            <td><el-form-item label="离职编号"><p class="text-value">{{form.depJobNum}}</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="ERP账号"><p class="text-value">{{form.erpAct}}</p></el-form-item> </td>
+                            <td v-if="!edit.show">
+                                <el-form-item label="ERP密码">
+                                    <p class="text-value">{{form.erpPwd}}</p>&nbsp;&nbsp;
+                                    <!--<el-button  size="mini" style="vertical-align: middle;">解密</el-button>-->
+                                </el-form-item>
+                            </td>
+                            <td v-if="edit.show"><el-form-item label="ERP密码" prop="erpPwd"> <el-input v-model="form.erpPwd"></el-input> </el-form-item> </td>
+                            <td><el-form-item label="状态"><p class="text-value">{{form.status}}</p></el-form-item></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+    </div>
+    <!--个人信息模块-->
+    <div v-if="control.staff && !edit.show || (control.admin && control.id && !edit.show && menu.personInfo)" style="margin-bottom: 20px">
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" label-width="100px" :model="form" :rules="rules" ref="form">
+                    <table class="per-table">
+                        <tbody>
+                        <tr>
+                            <td><el-form-item label="真名"><p class="text-value">{{form.empNm}}</p></el-form-item></td>
+                            <td><el-form-item label="联系方式"><p class="text-value">{{form.prePhone}}</p></el-form-item> </td>
+                            <td><el-form-item label="分机号"><p class="text-value"><span v-if="form.offTel">{{form.offTel}}</span><span v-else></span></p></el-form-item> </td>
+                            <td> <el-form-item label="职位类别"><p class="text-value">{{form.jobTypeCd}}</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><el-form-item label="身份证号码"><p class="text-value">{{form.perCartId}}</p></el-form-item> </td>
+                            <td>
+                                <el-form-item label="性别">
+                                    <p class="text-value">
+                                        <span v-if="form.sex == 0">男</span>
+                                        <span v-if="form.sex == 1">女</span>
+                                    </p>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item label="是否吸烟">
+                                    <p class="text-value">
+                                        <span v-if="form.perIsSmoking == 1">是</span>
+                                        <span v-else-if="form.perIsSmoking == 2"> </span>
+                                        <span v-else>否</span>
+                                    </p>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="出生日期"><p class="text-value">{{form.perBirthDate}}</p></el-form-item> </td>
+                            <td><el-form-item label="年龄"><p class="text-value"><span v-if="form.age!=0">{{form.age}}</span><span v-else></span></p></el-form-item> </td>
+                            <td><el-form-item label="籍贯"><p class="text-value">{{form.perAddress}}</p></el-form-item> </td>
+                            <td><el-form-item label="户籍"><p class="text-value">{{form.perResident}}</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="婚姻状态"><p class="text-value">{{form.perIsMarried}}</p></el-form-item> </td>
+                            <td>
+                                <el-form-item label="子女数">
+                                    <p class="text-value">
+                                        <span v-if="form.childNum!=0">{{form.childNum}}</span>
+                                        <span v-else></span>
+                                    </p>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item label="孩子性别">
+                                    <p class="text-value">
+                                        <span v-if="form.childBoyNum!=0">{{form.childBoyNum}}男</span>
+                                        <span v-if="form.childGirlNum!=0">{{form.childGirlNum}}女</span>
+                                        <span v-if="form.childBoyNum==0 && form.childGirlNum==0"></span>
+                                    </p>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item label="政治面貌"><p class="text-value">{{form.perPolitical}}</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <el-form-item label="户口性质" >
+                                    <p class="text-value">
+                                        <span v-if="form.hosehold == 0">城镇户籍</span>
+                                        <span v-else-if="form.hosehold == 1">农业户籍</span>
+                                        <span v-else-if="form.hosehold == 2">其他</span>
+                                        <span v-else></span>
+                                    </p>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item label="民族" ><p class="text-value">{{form.perNational}}</p></el-form-item> </td>
+                            <td><el-form-item label="公积金账号" ><p class="text-value">{{form.fundAccount}}</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="花名邮箱"><p class="text-value">{{form.scEmail}}</p></el-form-item> </td>
+                            <td><el-form-item label="私人邮箱"><p class="text-value">{{form.email}}</p></el-form-item> </td>
+                            <td><el-form-item label="微信"><p class="text-value">{{form.weChat}}</p></el-form-item> </td>
+                            <td><el-form-item label="QQ"><p class="text-value">{{form.qqAccount}}</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <el-form-item label="户籍地址">
+                                    <p class="text-value">{{form.houAdderss.proh}}&nbsp;&nbsp;{{form.houAdderss.cityH}}&nbsp;&nbsp;{{form.houAdderss.areaH}}&nbsp;&nbsp;{{form.houAdderss.detailH}}</p>
+                                </el-form-item>
+                            </td>
+                            <td colspan="2">
+                                <el-form-item label="现居住地址">
+                                    <p class="text-value">{{form.livingAddress.provL}}&nbsp;&nbsp;{{form.livingAddress.cityL}}&nbsp;&nbsp;{{form.livingAddress.areaL}}&nbsp;&nbsp;{{form.livingAddress.detailL}}</p>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <el-form-item label="语言能力">
+                                    <p class="text-value">
+                                        <span v-if="form.firstLan">第一外语</span>&nbsp;&nbsp;
+                                        <span>{{form.firstLan}}</span>&nbsp;&nbsp;
+                                        <span v-if="form.firstLanLevel == 0">精通</span>
+                                        <span v-if="form.firstLanLevel == 1">熟练</span>
+                                        <span v-if="form.firstLanLevel == 2">一般</span>
+                                    </p>
+                                </el-form-item>
+                            </td>
+                            <td colspan="2">
+                                <el-form-item label="">
+                                    <p class="text-value">
+                                        <span v-if="form.secondLan">第二外语</span>&nbsp;&nbsp;
+                                        <span>{{form.secondLan}}</span>&nbsp;&nbsp;
+                                        <span v-if="form.secondLanLevel == 0">精通</span>
+                                        <span v-if="form.secondLanLevel == 1">熟练</span>
+                                        <span v-if="form.secondLanLevel == 2">一般</span>
+                                    </p>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"> <el-form-item label="爱好及特长"><p class="text-value">{{form.hobbySpa}}</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <el-form-item label="身份证正反面"><p class="text-value"><el-button style="padding: 0" type="text" @click="previewAnnex('perCardPic',form)">查看</el-button></p></el-form-item>
+                            </td>
+                            <td colspan="2">
+                                <el-form-item label="简历附件"><p class="text-value"><el-button style="padding: 0" type="text" @click="previewAnnex('resume',form)">查看</el-button></p></el-form-item>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--紧急联系人-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" label-width="95px" :model="form" :rules="rules" ref="form">
+                    <table class="contact-person">
+                        <caption>紧急联系人</caption>
+                        <tbody>
+                        <tr>
+                            <td><el-form-item label="与本人关系"><p class="text-value">{{form.concatRel}}</p></el-form-item> </td>
+                            <td><el-form-item label="姓名"><p class="text-value">{{form.concatName}}</p></el-form-item> </td>
+                            <td><el-form-item label="联系方式"><p class="text-value">{{form.concatWay}}</p></el-form-item> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--教育经历-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="experience">
+                        <caption>
+                            <div class="use-row"> <div class="col-50">教育经历</div> </div>
+                        </caption>
+                        <tbody>
+                        <tr>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>学校名称</th>
+                            <th>专业</th>
+                            <th>学历性质</th>
+                            <th>学历验证结果</th>
+                            <th>是否学位</th>
+                            <th>毕业证书编号</th>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr v-for="item  in form.eduExp">
+                            <td><el-form-item><p class="text-value">{{item.eduStartTime}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.eduEndTime}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.schoolName}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.eduMajors}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.eduDegNat}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.validateRes}}</p></el-form-item> </td>
+                            <td>
+                                <el-form-item>
+                                    <p class="text-value">
+                                        <span v-if="item.isDegree == 1">是</span>
+                                        <span v-if="item.isDegree == 0">否</span>
+                                    </p>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item><p class="text-value">{{item.certiNo}}</p></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <el-form-item label="最高学历毕业证书附件"> <p class="text-value"><el-button style="padding: 0" type="text" @click="previewAnnex('graCert',form.eduExp[0])">查看</el-button></p></el-form-item>
+                            </td>
+                            <td colspan="2">
+                                <el-form-item label="最高学历学位证书附件"><p class="text-value"><el-button style="padding: 0" type="text" @click="previewAnnex('degCert',form.eduExp[0])">查看</el-button></p></el-form-item>
+                            </td>
+                            <td colspan="4">
+                                <el-form-item label="学信网验证附件"><p class="text-value"><el-button style="padding: 0" type="text" @click="previewAnnex('learnProve',form.eduExp[0])">查看</el-button></p></el-form-item>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--工作经历-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row"> <div class="col-50">工作经历</div> </div>
+                        </caption>
+                        <tbody>
+                        <tr>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>公司名称</th>
+                            <th>职位</th>
+                            <th>离职原因</th>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr v-for="item  in form.workExp">
+                            <td><el-form-item><p class="text-value">{{item.wordStartTime}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.wordEndTime}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.companyName}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.posi}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.depReason}}</p></el-form-item> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--家庭情况-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row"> <div class="col-50">家庭情况</div></div>
+                        </caption>
+                        <tbody>
+                        <tr>
+                            <th>与本人关系</th>
+                            <th>姓名</th>
+                            <th>年龄</th>
+                            <th>职业</th>
+                            <th>工作单位</th>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr v-for="item in form.home">
+                            <td><el-form-item><p class="text-value">{{item.homeRes}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.homeName}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.homeAge}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.occupa}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.workUnits}}</p></el-form-item> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--培训经验-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row"> <div class="col-50">培训经验</div></div>
+                        </caption>
+                        <tbody>
+                        <tr>
+                            <th>培训名称</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>培训机构</th>
+                            <th>培训描述</th>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr v-for="item  in form.training">
+                            <td><el-form-item><p class="text-value">{{item.trainingName}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.trainingStartTime}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.trainingEndTime}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.trainingIns}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.trainingDes}}</p></el-form-item> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--资格证书-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row"> <div class="col-50">资格证书</div></div>
+                        </caption>
+                        <tbody>
+                        <tr>
+                            <th>名称</th>
+                            <th>颁发时间</th>
+                            <th>颁发单位</th>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr v-for="item  in form.certificate">
+                            <td><el-form-item><p class="text-value">{{item.certiName}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.certifiTime}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.certifiunit}}</p></el-form-item> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--银行卡信息-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row"> <div class="col-50">银行卡信息</div></div>
+                        </caption>
+                        <tbody>
+                        <tr>
+                            <th>账号</th>
+                            <th>中文名拼音</th>
+                            <th>SWIFT CODE</th>
+                            <th>开户行</th>
+                            <th>开户行（英文）</th>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr v-for="item  in form.bankCard">
+                            <td><el-form-item><p class="text-value">{{item.bankAct}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.bankName}}</p></el-form-item></td>
+                            <td><el-form-item><p class="text-value">{{item.swiftCood}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.bankDeposit}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.BankEndeposit}}</p></el-form-item> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+    </div>
+    <!--跟踪信息模块-->
+    <div v-if="!menu.personInfo && !edit.show && control.admin && control.id">
+        <!--合同信息-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" label-width="115px" :model="form2">
+                    <table class="contact-person">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-100">合同信息</div>
+                            </div>
+                        </caption>
+                        <tbody>
+                        <tr v-for="(item,key) in form2.contract">
+                            <td><el-form-item label="公司"><p class="text-value">{{item.conCompany}}</p></el-form-item> </td>
+                            <td><el-form-item label="用工性质"><p class="text-value">{{item.natEmploy}}</p></el-form-item> </td>
+                            <td><el-form-item label="试用期结束日期"><p class="text-value">{{item.trialEndTime}}</p></el-form-item> </td>
+                            <td><el-form-item label="合同开始日期"><p class="text-value">{{item.conStartTime}}</p></el-form-item> </td>
+                            <td><el-form-item label="合同结束日期"><p class="text-value">{{item.conEndTime}}</p></el-form-item> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--工作内奖惩-->
+        <div class="use-row record">
+            <div class="col-10"><label>工作内奖惩</label></div>
+            <div class="col-85">
+                <div class="use-row" v-for="item in form2.reward">
+                    <div class="col-20"><p class="text-value">{{item.rewardName}}</p></div>
+                    <div class="col-80"><p class="text-value">{{item.rewardContent}}</p></div>
+                </div>
+            </div>
+        </div>
+        <!--晋升记录-->
+
+        <div class="use-row record">
+            <div class="col-10"><label>晋升记录</label></div>
+            <div class="col-85">
+                <div class="use-row" v-for="item in form2.promo">
+                    <div class="col-20"><p class="text-value">{{item.promoType}}</p></div>
+                    <div class="col-20"><p class="text-value">{{item.promoTime}}</p></div>
+                    <div class="col-60"><p class="text-value">{{item.promoContent}}</p></div>
+                </div>
+            </div>
+        </div>
+        <!--日报缺失-->
+        <div class="use-row record">
+            <div class="col-10"><label>日报缺失</label></div>
+            <div class="col-85">
+                <div class="use-row" v-for="item in form2.paperMiss">
+                    <div class="col-20"><p class="text-value">{{item.paperMissTime}}</p></div>
+                    <div class="col-80"><p class="text-value">{{item.paperMissCon}}</p></div>
+                </div>
+            </div>
+        </div>
+        <!--员工交流-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form2">
+                    <table class="inter">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-100">员工交流</div>
+                            </div>
+                        </caption>
+                        <tbody>
+                        <tr>
+                            <th>类型</th>
+                            <th>时间</th>
+                            <th>谈话对象</th>
+                            <th>谈话人</th>
+                            <th>具体内容</th>
+                            <th>后续情况</th>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr v-for="item in form2.interArr">
+                            <td><el-form-item><p class="text-value">{{item.interType}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.interTime}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.interObj}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.interPerson}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.interContent}}</p></el-form-item> </td>
+                            <td><el-form-item><p class="text-value">{{item.afterCase}}</p></el-form-item> </td>
+                        </tr>
+                        <tr></tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+    </div>
+    <!---------------------------------------------------华丽的分割线----------------------------------------------------------->
+    <!--
+         个人信息编辑模块
+         control.admin      管理员(新建状态)
+         menu.personInfo    个人信息/跟踪信息
+         edit.show          编辑/展示
+         control.id         管理员(携带员工ID进入查看/编辑)
+    -->
+    <!--hr 模块-->
+    <div v-if="(menu.personInfo && control.admin && edit.show) || (menu.personInfo && control.admin && !control.id)" style="margin-bottom: 20px">
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :rules="rules" ref="form" label-width="95px" :model="form">
+                    <table class="hr-table">
+                        <tbody>
+                        <tr>
+                            <td rowspan="6" class="first-td">
+                                <el-upload class="avatar-uploader"  action="/index.php?m=Api&a=hrUpload" :show-file-list="false" :on-success="uploadFileFun" name="Pic" ref="pic">
+                                    <img v-if="url.Pic" :src="url.Pic" class="avatar">
+                                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+                                </el-upload>
+                            </td>
+                            <td>
+                                <el-form-item label="工号" prop="workNum">
+                                    <el-input  type="number" v-model="form.workNum" placeholder="请输入数字"></el-input>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item label="花名" prop="EmpScNm"><el-input v-model="form.EmpScNm"></el-input></el-form-item> </td>
+                            <td><el-form-item label="入职时间" prop="perJobDate"><el-date-picker v-model="form.perJobDate"  placeholder="选择日期" @change="countComAge(form.perJobDate)"></el-date-picker></el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="部门" prop="deptName"><el-input v-model="form.deptName"></el-input></el-form-item> </td>
+                            <td><el-form-item label="组别" prop="deptGroup"><el-input v-model="form.deptGroup"></el-input></el-form-item> </td>
+                            <td><el-form-item label="司龄" prop="companyAge"><el-input v-model="form.companyAge" placeholder="请输入数字"></el-input></el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <el-form-item label="中文职位" prop="jobCd">
+                                    <el-select :filterable="true" placeholder="中文职位" v-model="form.jobCd" clearable @change="checkJob(form.jobCd)">
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.job"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item label="英文职位" prop="JobEnCd"> <el-input v-model="form.JobEnCd"></el-input> </el-form-item> </td>
+                            <td>
+                                <el-form-item label="工作地点" prop="workPlace">
+                                    <el-select :filterable="true" placeholder="工作地点" v-model="form.workPlace" clearable>
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.workPlace"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <el-form-item label="直接领导" prop="directLeader">
+                                    <el-select :filterable="true" placeholder="直接领导" v-model="form.directLeader" clearable>
+                                        <el-option :key="item.EMP_SC_NM" :label="item.EMP_SC_NM" :value="item.EMP_SC_NM" v-for="item in selData.leader"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item label="部门总监" prop="departHead">
+                                    <el-select :filterable="true" placeholder="部门总监" v-model="form.departHead" clearable>
+                                        <el-option :key="item.EMP_SC_NM" :label="item.EMP_SC_NM" :value="item.EMP_SC_NM" v-for="item in selData.leader"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item label="对接HR" prop="dockingHr">
+                                    <el-input v-model="form.dockingHr"></el-input>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <el-form-item label="职级" prop="rank">
+                                    <el-select :filterable="true" placeholder="职级" v-model="form.rank" clearable>
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.rank"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item label="离职时间">
+                                    <el-date-picker v-model="form.depJobDate" type="date" placeholder="选择日期"></el-date-picker>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item label="离职编号"> <el-input type="number" v-model="form.depJobNum" placeholder="请输入数字"></el-input> </el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="ERP账号" prop="erpAct"> <el-input v-model="form.erpAct"></el-input> </el-form-item> </td>
+                            <td><el-form-item label="ERP密码" prop="erpPwd"> <el-input v-model="form.erpPwd"></el-input> </el-form-item> </td>
+                            <td>
+                                <el-form-item label="状态" prop="status">
+                                    <el-select :filterable="true" placeholder="状态" v-model="form.status" clearable>
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.status"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+    </div>
+    <!--个人信息模块-->
+    <div v-if="(menu.personInfo && control.admin && edit.show) || (control.staff && edit.show) || (menu.personInfo && control.admin && !control.id)">
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" label-width="95px" :model="form" :rules="rules" ref="form">
+                    <table class="per-table">
+                        <tbody>
+                        <tr>
+                            <td><el-form-item label="真名" prop="empNm"><el-input v-model="form.empNm"></el-input></el-form-item> {{form.name}}</td>
+                            <td><el-form-item label="联系方式" prop="prePhone"><el-input v-model="form.prePhone"></el-input></el-form-item> </td>
+                            <td><el-form-item label="分机号"><el-input v-model="form.offTel"></el-input></el-form-item> </td>
+                            <td>
+                                <el-form-item label="职位类别" prop="jobTypeCd">
+                                    <el-select :filterable="true" placeholder="职位类别" v-model="form.jobTypeCd" clearable>
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.jobCdType"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><el-form-item label="身份证号码" prop="perCartId"><el-input v-model="form.perCartId" placeholder="请输入18位身份证号码" @blur="readCardId()"></el-input></el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item label="性别" prop="sex">
+                                    <el-radio-group v-model="form.sex">
+                                        <el-radio label="0">男</el-radio>
+                                        <el-radio label="1">女</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item label="是否吸烟" prop="perIsSmoking">
+                                    <el-radio-group v-model="form.perIsSmoking">
+                                        <el-radio label="1">是</el-radio>
+                                        <el-radio label="0">否</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="出生日期" prop="perBirthDate"><el-date-picker v-model="form.perBirthDate" placeholder="选择日期"></el-date-picker> </el-form-item> </td>
+                            <td>
+                                <el-form-item label="年龄" v-bind:class="{ 'is-required': this.control.staff && !form.empNm }">
+                                    <el-input type="number" placeholder="请输入数字" v-model="form.age"></el-input>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item label="籍贯" prop="perAddress"> <el-input v-model="form.perAddress"></el-input> </el-form-item> </td>
+                            <td><el-form-item label="户籍" prop="perResident"> <el-input v-model="form.perResident"></el-input> </el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <el-form-item label="婚姻状态" prop="perIsMarried">
+                                    <el-select :filterable="true" placeholder="婚姻状态" v-model="form.perIsMarried" clearable>
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.married"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item label="子女数"> <el-input v-model="form.childNum"></el-input> </el-form-item> </td>
+                            <td>
+                                <el-form-item label="孩子性别">
+                                    <el-input style="width:50px" v-model="form.childBoyNum"></el-input><label class="el-form-item__label inner-cus-label">男</label>
+                                    <el-input style="width:50px" v-model="form.childGirlNum"></el-input><label class="el-form-item__label inner-cus-label">女</label>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item label="政治面貌"  prop="perPolitical">
+                                    <el-select :filterable="true" placeholder="政治面貌" v-model="form.perPolitical" clearable>
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.pot"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <el-form-item label="户口性质" prop="hosehold">
+                                    <el-radio-group v-model="form.hosehold">
+                                        <el-radio label="0">城镇户籍</el-radio>
+                                        <el-radio label="1">农业户籍</el-radio>
+                                        <el-radio label="2">其他</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item label="民族" prop="perNational">
+                                    <el-select :filterable="true" placeholder="请选择" v-model="form.perNational">
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.peoples"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item label="公积金账号" prop="fundAccount"> <el-input v-model="form.fundAccount"></el-input> </el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td><el-form-item label="花名邮箱" prop="scEmail"> <el-input  v-model="form.scEmail"></el-input> </el-form-item> </td>
+                            <td><el-form-item label="私人邮箱" prop="email"> <el-input  v-model="form.email"></el-input> </el-form-item> </td>
+                            <td><el-form-item label="微信" prop="weChat"> <el-input  v-model="form.weChat"></el-input> </el-form-item> </td>
+                            <td><el-form-item label="QQ" prop="qqAccount"> <el-input  v-model="form.qqAccount"></el-input> </el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="select-input-group">
+                                <el-form-item label="户籍地址"  v-bind:class="{ 'is-required': this.control.staff && !form.empNm }">
+                                   <!-- <el-select :filterable="true" placeholder="省" v-model="form.houAdderss.proh" @change="getAdd(form.houAdderss.proh,'houCityData')">
+                                        <el-option :key="item.areaNo" :label="item.zhName" :value="item.areaNo" v-for="item in address.houProvinceData"></el-option>
+                                    </el-select>
+                                    <el-select  :filterable="true" placeholder="市、县" v-model="form.houAdderss.cityH" @change="getAdd(form.houAdderss.cityH,'houAreaData')">
+                                        <el-option :key="item.areaNo" :label="item.zhName" :value="item.areaNo" v-for="item in address.houCityData"></el-option>
+                                    </el-select>
+                                    <el-select :filterable="true" placeholder="区" v-model="form.houAdderss.areaH">
+                                        <el-option :key="item.areaNo" :label="item.zhName" :value="item.areaNo" v-for="item in address.houAreaData"></el-option>
+                                    </el-select>-->
+                                    <el-input v-model="form.houAdderss.detailH"></el-input>
+                                </el-form-item>
+                            </td>
+                            <td colspan="2" class="select-input-group required">
+                                <el-form-item label="现居住地址"  v-bind:class="{ 'is-required': this.control.staff && !form.empNm }">
+                                 <!--   <el-select  :filterable="true" placeholder="省" v-model="form.livingAddress.provL" @change="getAdd(form.livingAddress.provL,'livingCityData')">
+                                        <el-option :key="item.areaNo" :label="item.zhName" :value="item.areaNo" v-for="item in address.livingProvinceData"></el-option>
+                                    </el-select>
+                                    <el-select :filterable="true" placeholder="市、县" v-model="form.livingAddress.cityL" @change="getAdd(form.livingAddress.cityL,'livingAreaData')">
+                                        <el-option :key="item.areaNo" :label="item.zhName" :value="item.areaNo" v-for="item in address.livingCityData"></el-option>
+                                    </el-select>
+                                    <el-select :filterable="true" placeholder="区" v-model="form.livingAddress.areaL">
+                                        <el-option :key="item.areaNo" :label="item.zhName" :value="item.areaNo" v-for="item in address.livingAreaData"></el-option>
+                                    </el-select>-->
+                                    <el-input v-model="form.livingAddress.detailL"></el-input>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <el-form-item label="语言能力">
+                                    <el-select placeholder="第一外语" style="width: 40%; margin-right: 10%;" v-model="form.firstLan">
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.langa"></el-option>
+                                    </el-select>
+                                    <el-radio-group v-model="form.firstLanLevel">
+                                        <el-radio label="0">精通</el-radio>
+                                        <el-radio label="1">熟练</el-radio>
+                                        <el-radio label="2">一般</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </td>
+                            <td colspan="2">
+                                <el-form-item label="">
+                                    <el-select placeholder="第二外语" style="width: 40%; margin-right: 10%;"  v-model="form.secondLan">
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.langa"></el-option>
+                                    </el-select>
+                                    <el-radio-group v-model="form.secondLanLevel">
+                                        <el-radio label="0">精通</el-radio>
+                                        <el-radio label="1">熟练</el-radio>
+                                        <el-radio label="2">一般</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4"><el-form-item label="爱好及特长" prop="hobbySpa"> <el-input v-model="form.hobbySpa"></el-input> </el-form-item> </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <div class="use-row">
+                                    <el-upload style="display: inline-block;" class="upload-demo" action="/index.php?m=Api&a=hrUpload" name="perCardPic" :on-success="uploadFileFun" ref="perCardPic">
+                                        <el-button size="small">上传身份证正反面</el-button>
+                                        <span slot="tip" class="el-upload__tip">&nbsp;&nbsp;&nbsp;&nbsp;(文件支持PDF，JPG，PNG)&nbsp;&nbsp;</span>
+                                    </el-upload>
+                                    <div> <el-button style="padding: 0" type="text" @click="preview('perCardPic')">查看</el-button> </div>
+                                </div>
+                            </td>
+                            <td colspan="2">
+                                <div class="use-row">
+                                    <el-upload style="display: inline-block;" class="upload-demo"  action="/index.php?m=Api&a=hrUpload" name="resume" :on-success="uploadFileFun" ref="resume">
+                                        <el-button size="small">上传简历</el-button>
+                                        <span slot="tip" class="el-upload__tip">&nbsp;&nbsp;&nbsp;&nbsp;(文件支持PDF，word)&nbsp;&nbsp;</span>
+                                    </el-upload>
+                                    <div> <el-button style="padding: 0" type="text" @click="preview('resume')">查看</el-button> </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--紧急联系人-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" label-width="95px" :model="form" :rules="rules" ref="form">
+                    <table class="contact-person">
+                        <caption>紧急联系人</caption>
+                        <tbody>
+                        <tr>
+                            <td><el-form-item label="与本人关系" prop="concatRel"> <el-input v-model="form.concatRel"></el-input> </el-form-item> </td>
+                            <td><el-form-item label="姓名" prop="concatName"> <el-input v-model="form.concatName"></el-input> </el-form-item> </td>
+                            <td><el-form-item label="联系方式" prop="concatWay"> <el-input v-model="form.concatWay"></el-input> </el-form-item> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--教育经历-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="experience">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-50">教育经历</div>
+                                <div class="col-50 text-right">
+                                    <el-button type="text" @click="addEntry('eduExp')"><i class="el-icon-plus" style="color: white;"></i>&nbsp;</el-button>
+                                </div>
+                            </div>
+                        </caption>
+                        <thead>
+                        <tr>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>开始时间</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>结束时间</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>学校名称</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>专业</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>学历性质</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>学历验证结果</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>是否学位</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>毕业证书编号</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,key) in form.eduExp">
+                            <td>
+                                <el-form-item>
+                                    <el-date-picker v-model="item.eduStartTime" type="date" placeholder="选择日期"></el-date-picker>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item>
+                                    <el-date-picker v-model="item.eduEndTime" type="date" placeholder="选择日期"></el-date-picker>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item> <el-input v-model="item.schoolName"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.eduMajors"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.eduDegNat"></el-input> </el-form-item> </td>
+                            <td>
+                                <el-form-item>
+                                    <el-form-item>
+                                        <el-select placeholder="请选择" v-model="item.validateRes" clearable filterable>
+                                            <el-option  :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL"  v-for="item in selData.validateRes"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                </el-form-item>
+                            </td>
+                            <td>
+                                <el-form-item>
+                                    <el-radio-group v-model="item.isDegree">
+                                        <el-radio label="1">是</el-radio>
+                                        <el-radio label="0">否</el-radio>
+                                    </el-radio-group>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item prop="certiNo"> <el-input v-model="item.certiNo"></el-input> </el-form-item> </td>
+                            <td class="text-right"><el-button type="text" @click="delEntry('eduExp',item)" v-if="key != 0"><i class="el-icon-minus"></i></el-button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <div class="use-row">
+                                    <div>
+                                        <el-upload style="display: inline-block;" class="upload-demo" action="/index.php?m=Api&a=hrUpload" name="graCert" :on-success="uploadFileFun" ref="graCert">
+                                            <el-button size="small">最高学历毕业证书附件</el-button>
+                                            <span slot="tip" class="el-upload__tip">(文件支持PDF，JPG，PNG)&nbsp;&nbsp;</span>
+                                        </el-upload>
+                                    </div>
+                                    <div> <el-button style="padding: 0" type="text"  @click="preview('graCert')">查看</el-button> </div>
+                                </div>
+                            </td>
+                            <td colspan="2">
+                                <div class="use-row">
+                                    <el-upload style="display: inline-block;" class="upload-demo" action="/index.php?m=Api&a=hrUpload" name="degCert" :on-success="uploadFileFun" ref="degCert">
+                                        <el-button size="small">最高学历学位证书附件</el-button>
+                                        <span slot="tip" class="el-upload__tip">(文件支持PDF，JPG，PNG)</span>
+                                    </el-upload>
+                                    <div> <el-button style="padding: 0" type="text" @click="preview('degCert')">查看</el-button> </div>
+                                </div>
+                            </td>
+                            <td colspan="4">
+                                <div class="use-row">
+                                    <el-upload style="display: inline-block;" class="upload-demo" action="/index.php?m=Api&a=hrUpload"  name="learnProve" :on-success="uploadFileFun" ref="learnProve">
+                                        <el-button size="small">学信网验证附件</el-button>
+                                        <span slot="tip" class="el-upload__tip">(文件支持PDF，word)</span>
+                                    </el-upload>
+                                    <div> <el-button style="padding: 0" type="text"  @click="preview('learnProve')">查看</el-button> </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--工作经历-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-50">工作经历</div>
+                                <div class="col-50 text-right">
+                                    <el-button type="text" @click="addEntry('workExp')"><i class="el-icon-plus" style="color: white;"></i>&nbsp;</el-button>
+                                </div>
+                            </div>
+                        </caption>
+                        <thead>
+                        <tr>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>公司名称</th>
+                            <th>职位</th>
+                            <th>离职原因</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,key) in form.workExp">
+                            <td> <el-form-item> <el-date-picker v-model="item.wordStartTime" type="date" placeholder="选择日期"></el-date-picker> </el-form-item> </td>
+                            <td> <el-form-item> <el-date-picker v-model="item.wordEndTime" type="date" placeholder="选择日期"></el-date-picker> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.companyName"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.posi"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.depReason"></el-input> </el-form-item> </td>
+                            <td class="text-right"><el-button type="text" @click="delEntry('workExp',item)" v-if="key != 0"><i class="el-icon-minus"></i></el-button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--家庭情况-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-50">家庭情况</div>
+                                <div class="col-50 text-right">
+                                    <el-button type="text" @click="addEntry('home')"><i class="el-icon-plus" style="color: white;"></i>&nbsp;</el-button>
+                                </div>
+                            </div>
+                        </caption>
+                        <thead>
+                        <tr>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>与本人关系</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>姓名</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>年龄</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>职业</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>工作单位</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,key) in form.home">
+                            <td><el-form-item> <el-input v-model="item.homeRes"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.homeName"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.homeAge"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.occupa"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.workUnits"></el-input> </el-form-item> </td>
+                            <td class="text-right"><el-button type="text" @click="delEntry('home',item)" v-if="key != 0"><i class="el-icon-minus"></i></el-button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--培训经验-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-50">培训经验</div>
+                                <div class="col-50 text-right">
+                                    <el-button type="text" @click="addEntry('training')"><i class="el-icon-plus" style="color: white;"></i>&nbsp;</el-button>
+                                </div>
+                            </div>
+                        </caption>
+                        <thead>
+                        <tr>
+                            <th>培训名称</th>
+                            <th>开始时间</th>
+                            <th>结束时间</th>
+                            <th>培训机构</th>
+                            <th>培训描述</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,key) in form.training">
+                            <td><el-form-item> <el-input v-model="item.trainingName"></el-input> </el-form-item> </td>
+                            <td> <el-form-item> <el-date-picker v-model="item.trainingStartTime" type="date" placeholder="选择日期"></el-date-picker> </el-form-item> </td>
+                            <td> <el-form-item> <el-date-picker v-model="item.trainingEndTime" type="date" placeholder="选择日期"></el-date-picker> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.trainingIns"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.trainingDes"></el-input> </el-form-item> </td>
+                            <td class="text-right"><el-button type="text" @click="delEntry('training',item)" v-if="key != 0"><i class="el-icon-minus"></i></el-button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--资格证书-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-50">资格证书</div>
+                                <div class="col-50 text-right">
+                                    <el-button type="text" @click="addEntry('certificate')"><i class="el-icon-plus" style="color: white;"></i>&nbsp;</el-button>
+                                </div>
+                            </div>
+                        </caption>
+                        <thead>
+                        <tr>
+                            <th style="width:33%">名称</th>
+                            <th style="width:33%">颁发时间</th>
+                            <th style="width:33%">颁发单位</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,key) in form.certificate">
+                            <td><el-form-item> <el-input v-model="item.certiName"></el-input> </el-form-item> </td>
+                            <td> <el-form-item> <el-date-picker v-model="item.certifiTime" type="date" placeholder="选择日期"></el-date-picker> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.certifiunit"></el-input> </el-form-item> </td>
+                            <td class="text-right"><el-button type="text" @click="delEntry('certificate',item)" v-if="key != 0"><i class="el-icon-minus"></i></el-button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--银行卡信息-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form" :rules="rules" ref="form">
+                    <table class="info-multiple">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-50">银行卡信息</div>
+                                <div class="col-50 text-right">
+                                    <el-button type="text" @click="addEntry('bankCard')"><i class="el-icon-plus" style="color: white;"></i>&nbsp;</el-button>
+                                </div>
+                            </div>
+                        </caption>
+                        <thead>
+                        <tr>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>账号</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>中文名拼音</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>SWIFT CODE</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>开户行</th>
+                            <th><span v-if="this.control.staff && !form.empNm" style="color: #ff4949; margin-right: 4px;font-size: 12px;">*</span>开户行（英文）</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(item,key) in form.bankCard">
+                            <td><el-form-item> <el-input v-model="item.bankAct"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.bankName"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.swiftCood"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.bankDeposit"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.BankEndeposit"></el-input> </el-form-item> </td>
+                            <td class="text-right"><el-button type="text" @click="delEntry('bankCard',item)" v-if="key != 0"><i class="el-icon-minus"></i></el-button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+    </div>
+    <!---------------------------------------------------华丽的分割线----------------------------------------------------------->
+    <!--跟踪信息模块-->
+    <div v-if="!menu.personInfo && !control.id　||  (!menu.personInfo && edit.show && control.id)">
+        <!--合同信息-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" label-width="115px" :model="form2">
+                    <table class="contact-person">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-50">合同信息</div>
+                                <div class="col-50 text-right"><el-button type="text" @click="addContract()"><i class="el-icon-plus" style="color: white;"></i></el-button> </div>
+                            </div>
+                        </caption>
+                        <tbody>
+                        <tr v-for="(item,key) in form2.contract">
+                            <td><el-form-item label="公司"> <el-input v-model="item.conCompany"></el-input> </el-form-item> </td>
+                            <td>
+                                <el-form-item label="用工性质">
+                                    <el-select :filterable="true" placeholder="请选择" v-model="item.natEmploy">
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.employNat"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item label="试用期结束日期"> <el-date-picker v-model="item.trialEndTime" placeholder="选择日期"></el-date-picker></el-form-item> </td>
+                            <td><el-form-item label="合同开始日期"> <el-date-picker v-model="item.conStartTime" placeholder="选择日期"></el-date-picker></el-form-item> </td>
+                            <td><el-form-item label="合同结束日期"> <el-date-picker v-model="item.conEndTime" placeholder="选择日期"></el-date-picker></el-form-item> </td>
+                            <td><el-button type="text" @click="delContract(item)" v-if="key != 0"><i class="el-icon-minus"></i></el-button> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+        <!--工作内奖惩-->
+        <div class="use-row record">
+            <div class="col-10"><label>工作内奖惩</label></div>
+            <div class="col-85">
+                <div class="use-row" v-for="item in form2.reward">
+                    <div class="col-20">
+                        <el-select v-model="item.rewardName" placeholder="请选择">
+                            <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.ThingName"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-80">
+                        <el-input v-model="item.rewardContent" placeholder="请输入内容"></el-input>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 text-right"><el-button type="text" @click="addReward()"><i class="el-icon-plus"></i></el-button></div>
+        </div>
+        <!--晋升记录-->
+
+        <div class="use-row record">
+            <div class="col-10"><label>晋升记录</label></div>
+            <div class="col-85">
+                <div class="use-row" v-for="item in form2.promo">
+                    <div class="col-20">
+                        <el-select v-model="item.promoType" placeholder="请选择">
+                            <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.recordType"></el-option>
+                        </el-select>
+                    </div>
+                    <div class="col-20">
+                        <el-date-picker v-model="item.promoTime" placeholder="选择日期"></el-date-picker>
+                    </div>
+                    <div class="col-60">
+                        <el-input v-model="item.promoContent" placeholder="请输入内容"></el-input>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 text-right"><el-button type="text" @click="addPromo()"><i class="el-icon-plus"></i></el-button></div>
+        </div>
+        <!--日报缺失-->
+        <div class="use-row record">
+            <div class="col-10"><label>日报缺失</label></div>
+            <div class="col-85">
+                <div class="use-row" v-for="item in form2.paperMiss">
+                    <div class="col-20">
+                        <el-date-picker v-model="item.paperMissTime"  placeholder="请选择日期"></el-date-picker></el-form-item>
+                    </div>
+                    <div class="col-80">
+                        <el-input v-model="item.paperMissCon" placeholder="请输入内容"></el-input>
+                    </div>
+                </div>
+            </div>
+            <div class="col-5 text-right"><el-button type="text" @click="addPaperMiss()"><i class="el-icon-plus"></i></el-button></div>
+        </div>
+        <!--员工交流-->
+        <div class="use-row">
+            <div class="col-100">
+                <el-form :label-position="labelPosition" :model="form2">
+                    <table class="inter">
+                        <caption>
+                            <div class="use-row">
+                                <div class="col-50">员工交流</div>
+                                <div class="col-50 text-right"><el-button type="text" @click="addChat()"><i class="el-icon-plus" style="color: white;"></i></el-button> </div>
+                            </div>
+                        </caption>
+                        <tbody>
+                        <tr>
+                            <th>类型</th>
+                            <th>时间</th>
+                            <th>谈话对象</th>
+                            <th>谈话人</th>
+                            <th>具体内容</th>
+                            <th>后续情况</th>
+                        </tr>
+                        </tbody>
+                        <tbody>
+                        <tr v-for="item in form2.interArr">
+                            <td>
+                                <el-form-item>
+                                    <el-select v-model="item.interType" placeholder="请选择">
+                                        <el-option :key="item.CD_VAL" :label="item.CD_VAL" :value="item.CD_VAL" v-for="item in selData.sayType"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </td>
+                            <td><el-form-item> <el-date-picker v-model="item.interTime"  placeholder="选择日期"></el-date-picker></el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.interObj"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.interPerson"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.interContent"></el-input> </el-form-item> </td>
+                            <td><el-form-item> <el-input v-model="item.afterCase"></el-input> </el-form-item> </td>
+                        </tr>
+                        <tr></tr>
+                        </tbody>
+                    </table>
+                </el-form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--引入js-->
+<!-- 引入组件库 -->
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js?v=<{$Think.config.VER_NUM}>"></script>
+<script src="../Public/js/H-ui.js?v=<{$Think.config.VER_NUM}>"></script>
+<script src="../Public/js/H-ui.admin.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/vue-2.4.2.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/axios.min.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/element-ui.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/../Hr/addPerson.js?v=<{$Think.config.VER_NUM}>"></script>
+</body>
+
+</html>

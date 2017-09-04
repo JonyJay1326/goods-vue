@@ -1,0 +1,353 @@
+
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css">
+	<link rel="stylesheet" href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<link href="../Public/lib/My97DatePicker/skin/WdatePicker.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="../Public/icon/css/font-awesome.min.css">
+	<title>已付详情</title>
+	<style>
+        .must:after{
+            content: '*';
+            color:red;
+            display: inline;
+            vertical-align: middle;
+            font-size:20px;
+        }
+		.btn{cursor: pointer;
+			height: 26px;
+			padding: 0px 10px;
+			font-size: 13px}
+		.payable_title {
+			font-weight: bold;
+			font-size: 20px;
+			border-bottom: 1px solid rgba(0, 0, 0, .125);
+			margin-bottom: 10px;
+		}
+		.card-header{
+			height: 40px;
+			padding: 5px 20px;
+			font-size: 13px;
+		}
+		.card-header h4{
+			font-size: 15px;
+			margin-top: 8px;
+		}
+		.card-block thead {
+			visibility: hidden;
+		}
+		.card-block tbody td label{margin-bottom: 0px;}
+		.card-block tbody td{
+			font-size: 13px;
+		}
+		.card-block tbody td:nth-child(odd){
+			text-align: center;
+		}
+		.card-header .row .col-md-6 .btn{
+			height: 26px;
+			padding: 0px 10px;
+			font-size: 13px;
+			font-weight: bold;
+		}
+		.th_hidden th{
+			padding:0px;
+		}
+		.fa-lg{font-size: 16px;color: red}
+		.form-group{margin-bottom: 0px}
+		.card + .card {
+			margin-top: 5px;
+		}
+		.card_set {
+			border: none;
+			padding-top: 20px;
+		}
+		.card_set .btn {
+			padding: 0px 0px;
+			height: 32px;
+			width: 88px;
+			font-size: 14px;
+		}
+	</style>
+	<link rel="stylesheet" href="../Public/css/Purchase_list.css"/>
+</head>
+<body>
+<div class="col-lg-12 top col-md-12 col-sm-12">
+	<div class="payable_title">支付详情</div>
+	<form action="" method="post" class="tobepaid"  enctype="multipart/form-data">
+		<div class="card">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6">
+						<h4>基础信息</h4>
+					</div>
+				</div>
+			</div>
+			<div class="card-block">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered">
+						<thead>
+						<tr class="th_hidden">
+							<th width="15%"></th>
+							<th width="35%"></th>
+							<th width="15%"></th>
+							<th width="35%"></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><label>应付单号</label></td>
+							<td><{$payable_info.receipt_number}></td>
+							<td><label> 本期节点 </label></td>
+							<td>应付款（100%）</td>
+						</tr>
+						<tr>
+							<td><label>采购单号</label></td>
+							<td><{$payable_info.procurement_number}></td>
+
+							<td><label>采购总金额</label></td>
+							<td><{$payable_info.curType}> <{:number_format($payable_info['money_total'],2)}></td>
+						</tr>
+						<tr>
+							<td><label>供应商名称</label></td>
+							<td><{$payable_info.supplier_id}></td>
+
+							<td><label>我方公司</label></td>
+							<td><{$our_companys[$order_info['our_company']]}></td>
+						</tr>
+						<tr>
+							<td><label>采购人</label></td>
+							<td><{$payable_info.prepared_by}>(<{$payable_info.payment_company}>)</td>
+							<td><label>应付生成时间</label></td>
+							<td><{$payable_info.creation_times}></td>
+						</tr>
+						<tr>
+							<td><label>本期应付金额</label></td>
+							<td><{$payable_info.curType}> <{:number_format($payable_info['money_total'],2)}></td>
+							<td><label>总利润率(退税后)</label></td>
+							<td><{$total_profit_margin*100}>%</td>
+						</tr>
+						<tr>
+							<td><label>供应商开户行</label></td>
+							<td><{$order_info.supplier_opening_bank}></td>
+
+							<td><label>银行账号</label></td>
+							<td><{$order_info.supplier_card_number}></td>
+						</tr>
+						<tr>
+							<td><label>SWIFT CODE</label></td>
+							<td><{$order_info.supplier_swift_code}></td>
+
+							<td><label>备注</label></td>
+							<td><{$order_info.order_remark}></td>
+						</tr>
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+		<div class="card">
+			<div class="card-header">
+				<div class="row">
+					<div class="col-lg-6 col-md-6 col-sm-6">
+						<h4>付款信息</h4>
+					</div>
+				</div>
+			</div>
+			<div class="card-block card-block-detail">
+				<blockquote class="card-blockquote">
+					<table class="table table-bordered">
+						<thead>
+						<tr class="th_hidden">
+							<th width="15%"></th>
+							<th width="35%"></th>
+							<th width="15%"></th>
+							<th width="35%"></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td><label class="must">本期付款</label></td>
+							<td class="pay_detail">
+								<div class="row">
+									<div class="col-lg-10 col-md-10 col-sm-10">
+										<fieldset class="form-group">
+                                            <input disabled value="<{$payable_info.curType}>" style="text-align: center">
+										</fieldset>
+										<input type="text" class="form-control" id="payment_amount_format" value="<{:number_format($payable_info['money_total'])}>"/>
+										<input type="text" class="form-control" name="payment_amount" value="<{$payable_info.money_total}>" style="display: none" />
+									</div>
+
+								</div>
+							</td>
+							<td><label class="must">付款时间</label></td>
+							<td>
+								<div class="row">
+									<div class="col-lg-10 col-md-10 col-sm-10">
+										<div class="input-group input-group-lg">
+											<input type="text" name="payment_time"  value="" onfocus="WdatePicker({firstDayOfWeek:1,maxDate:'<{:date(\'Y-m-d\')}>'})" placeholder="" class="form-control">
+											<span class="input-group-btn">
+                                                <button class="btn btn-secondary" type="button" style="height:30px;"><i class="fa  fa-calendar fa-lg"></i></button>
+                                             </span>
+										</div>
+									</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><label class="must">我方公司</label></td>
+							<td>
+								<div class="row">
+									<div class="col-lg-10 col-md-10 col-sm-10">
+										<fieldset class="form-group">
+											<select name="payment_company_pay" class="form-control currency" >
+												<option value="">请选择我方合作公司</option>
+                                                <volist name="our_companys" id="v" >
+													<option value="<{$key}>" <if condition="$order_info['our_company'] eq $key">selected</if>><{$v}></option>
+												</volist>
+											</select>
+										</fieldset>
+									</div>
+								</div>
+							</td>
+
+							<td><label class="must">付款凭证</label></td>
+							<td>
+								<input type="file" name="payment_voucher" id="payment_voucher">
+							</td>
+						</tr>
+						<tr>
+							<td><label>备注</label></td>
+							<td>
+								<div class="row">
+									<div class="col-lg-10 col-md-10 col-sm-10">
+										<input type="text" name="payment_remarks" class="form-control" />
+									</div>
+								</div>
+							</td>
+							<td><label></label></td>
+							<td><input name="payable_id" style="display: none" value="<{$payable_info.payable_id}>"></td>
+						</tr>
+
+						</tbody>
+					</table>
+				</blockquote>
+			</div>
+		</div>
+		<div class="card card_set">
+			<div class="row">
+				<div class="col-lg-4 col-md-4 col-sm-4"></div>
+				<div class="col-lg-2 col-md-2 col-sm-2 text-center"><button type="submit" class="btn btn-danger btn-lg">提交</button></div>
+				<div class="col-lg-2 col-md-2 col-sm-2 text-center"><button type="button" class="btn btn-default btn-lg" id="clear">清空</button></div>
+			</div>
+		</div>
+	</form>
+</div>
+</body>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/utils/utils.js"></script>
+<script type="text/javascript" src="../Public/lib/jquery.form.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../Public/js/jquery.validate.min.js"></script>
+<script>
+	$(document).ready(function(){
+	    /*
+        $('form').validate({
+            rules : {
+                payment_amount : {
+                    required : true,
+                }
+            },
+            messages : {
+                payment_amount : {
+                    required : '请输入金额',
+                }
+            },
+            showErrors : function(errorMap, errorList){
+                consle.log(errorList);
+                    alert(v.message);
+                    alert(i);
+                    return false;
+                return false;
+            }
+        })
+        */
+	    $('form').ajaxForm({
+			dataType : 'json',
+            beforeSubmit : function() {
+			    if(!validate()) {
+			        return false;
+				}
+			},
+			success : function(res) {
+			    if(res.status == 1) {
+                    utils.modal(true, {width:500,title:"支付核销结果",content:res.info,confirmFn:function() {
+                        window.location = "<{:U('payable_list')}>";
+                    }},false)
+				}else{
+                    utils.modal(true, {width:500,title:"支付核销结果",content:res.info},false)
+				}
+
+			},
+		})
+	    $('#payment_voucher').change(function() {
+            var filepath = $('#payment_voucher').val();
+            if (filepath) {
+                var extStart = filepath.lastIndexOf(".");
+                var ext = filepath.substring(extStart, filepath.length).toUpperCase();
+                if (ext != ".ZIP" && ext != ".PNG" && ext != ".GIF" && ext != ".JPG" && ext != ".JPEG" && ext != ".PDF" && ext != ".DOC" && ext != ".DOCX" && ext != ".XLS" && ext != ".XLSX") {
+                    alert("该格式目前不支持");
+                    return false;
+                }
+                var file_size = $('#payment_voucher')[0].files[0].size;
+                if (file_size > 20971520) {
+                    alert("文件太大，上传失败！");
+                    return false;
+                }
+            }
+            return true;
+        });
+	    $('#payment_amount_format').change(function () {
+			var val = utils.convertNum($(this).val());
+            var val_format = utils.numberFormat(val);
+            $(this).val(val_format);
+            $('input[name="payment_amount"]').val(val);
+        });
+	    $('#clear').click(function(){
+	        $('#payment_amount_format').val('');
+            $('input[name="payment_amount_format"]').val('');
+            $('input[name="payment_time"]').val('');
+            $('select[name="payment_company_pay"]').val('');
+            $('input[name="payment_voucher"]').val('');
+            $('input[name="payment_remarks"]').val('');
+        });
+    });
+
+	function validate() {
+	    if(!$('input[name="payment_amount"]').val())  {
+	        alert('本期付款必须');
+	        return false;
+		}
+		if(!$('input[name="payment_time"]').val()){
+	        alert('付款时间必须');
+            return false;
+		}
+        if($('input[name="payment_time"]').val() > '<{:date("Y-m-d")}>'){
+            alert('付款时间不能大于今天');
+            return false;
+        }
+		if($('select[name="payment_company_pay"]').val() == '') {
+	        alert('请选择我方公司');
+            return false;
+		}
+		if(!$('input[name="payment_voucher"]').val()) {
+	        alert('付款凭证必须');
+            return false;
+		}
+		return true;
+	}
+</script>
+</html>

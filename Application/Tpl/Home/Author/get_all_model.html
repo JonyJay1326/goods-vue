@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>All author</title>
+    <link rel="stylesheet" href="../Public/css/bootstrap.min.css">
+</head>
+<body>
+<table class="table table-hover">
+    <tbody>
+    <foreach name="customer_functions" item="cf">
+        <tr>
+            <table class="table table-hover">
+                <tr class="active">
+                    <td class="active"><{$key}></td>
+                </tr>
+                <foreach name="cf" item="c">
+                    <tr>
+                        <td><{$c['action']}></td>
+                        <td><{$c['doc']}></td>
+                    </tr>
+                </foreach>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+                <tr>
+                    <td>&nbsp;</td>
+                </tr>
+            </table>
+        </tr>
+
+    </foreach>
+    </tbody>
+</table>
+
+</body>
+</html>

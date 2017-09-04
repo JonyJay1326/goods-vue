@@ -1,0 +1,95 @@
+<link rel="stylesheet" href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
+<link rel="stylesheet" href="../Public/icon/css/font-awesome.min.css">
+<link rel="stylesheet" href="../Public/css/new_add_client.css"/>
+<div class="col-lg-12 top" ng-controller="dynamicpin">
+    <div class="payable_title">动销查询</div>
+    <form action="" method="post" style="margin-top: 50px;">
+        <!--采购信息-->
+        <div class="card card_topSearch">
+            <div class="row row_search">
+                <div class="col-lg-4 col-md-4 col-sm-4">
+                    <fieldset class="form-group team_select">
+                        <select class="form-control" name="" ng-model="data.state"
+                                style="width:100px;height: 35px;padding-left: 0">
+                            <option value="0">无动销筛选</option>
+                            <option value="1">有销售筛选</option>
+                        </select>
+                    </fieldset>
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="start_date" onfocus="WdatePicker({maxDate:'%y-%M-%d'})"
+                               ng-model="data.start_date" onchange="" placeholder="单据起始日期" class="form-control">
+                        <span class="input-group-btn">
+	                            <button class="btn btn-secondary" type="button"><i
+                                        class="fa  fa-calendar fa-lg"></i></button>
+	                        </span>
+                    </div>
+                    <span class="span_group">-</span>
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="end_date" onfocus="WdatePicker({maxDate:'%y-%M-%d'})"
+                               ng-model="data.end_date" onchange="" placeholder="单据结束日期" class="form-control">
+                        <span class="input-group-btn">
+	                            <button class="btn btn-secondary" type="button"><i
+                                        class="fa  fa-calendar fa-lg"></i></button>
+	                        </span>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="input-group input-group-lg" ng-repeat="(key,d) in datelist">
+                        <label ng-click="upd_date(key,event)"
+                               ng-class="data.upd_date == key?'label_active':''">{{d}}</label>
+                    </div>
+                </div>
+                <div class="col-lg-2_btn col-lg-2 col-md-2 col-sm-2">
+                    <button ng-click="sub()" class="btn btn-danger" style="margin-left:12%;" type="button">查询</button>
+                    <button ng-click="reset()" class="btn btn_reset">重置</button>
+                </div>
+            </div>
+        </div>
+        <div class="card card_kucun">
+            <div class="card_title">
+                共计：<span>{{king(data.count)}}</span>
+                <span >合计总库存：{{king(data.all_existing)}}</span>
+                <span >合计总金额：￥{{king((data.all_sum).toFixed(4))}}</span>
+            </div>
+            <div class="card-block">
+                <blockquote class="card-blockquote">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr class="text-center">
+                                <th width="16.666%">SKUID</th>
+                                <th width="16.666%">商品名称</th>
+                                <th width="16.666%">属性</th>
+                                <th width="16.666%">总库存数</th>
+                                <th ng-show="gostate == 0" width="16.666%">成本价</th>
+                                <th ng-show="gostate == 0" width="16.666%">库存成本</th>
+                                <th ng-show="gostate != 0" width="16.666%">总销量</th>
+                                <th ng-show="gostate != 0 " width="16.666%">平均销量</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr class="" ng-repeat="d in list">
+                                <td>{{d.SKU_ID}}</td>
+                                <td>{{d.guds[0].Guds.GUDS_NM}}</td>
+                                <td>{{d.guds.opt_val[0].val}}</td>
+                                <td>{{king(d.total_inventory)}}</td>
+                                <td ng-show="gostate == 0">{{king(d.weight)}}</td>
+                                <td ng-show="gostate == 0">{{king((d.weight*d.total_inventory).toFixed(4))}}</td>
+                                <td ng-show="gostate != 0">{{res_key[d.SKU_ID]}}</td>
+                                <td ng-show="gostate != 0">{{(res_key[d.SKU_ID]/date_diff).toFixed(4)}}</td>
+
+                            </tr>
+
+                            </tbody>
+                        </table>
+
+                        <ul class="pagination" uib-pagination boundary-links="true" total-items="data.count" ng-model="data.firstRow" max-size="10" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;" ng-change="sub()"></ul>
+                    </div>
+                </blockquote>
+            </div>
+        </div>
+    </form>
+</div>
+
+

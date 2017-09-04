@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .error span{color: red}
+</style>
+<body>
+    <h3>审批提醒：采购订单需要审批 - （ID：<{$order.procurement_number}>）-<{$relevance.prepared_by}>-<{:date('Y/m/d',strtotime($order['create_time']))}></h3>
+    <hr>
+    <br>
+    <strong>一、Deal Summary如下：</strong>
+    <br>
+    <table style="border-right:1px solid;border-bottom:1px solid "  border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <th style="background-color: #0070C0;text-align: center;color: white;line-height: 46px" class="tableth" colspan="3" align="left"><{$order.payment_company}> Purchase Application - Deal Summary</th>
+        </tr>
+        <tr>
+            <td colspan="3" style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;background-color: #FFE799" class="transaction">Purchase Order No. [<{$order.procurement_number}>]</td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Purchase Contract</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">
+                <if condition="$order['has_contract'] eq 1">
+                    YES
+                    <else /><span style="color: red;">NO</span>
+                </if>
+            </td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Sales PO</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">
+                <if condition="$sell['has_sell_number'] eq 1">
+                    YES
+                <else />
+                    <span style="color: red;"><{$Think.lang.热销品囤货}></span>
+                </if>
+            </td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Sales Contract</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">
+                <if condition="$sell['has_sell_contract'] eq 1">
+                    YES
+                <else />
+                    <span style="color: red;">NO</span>
+                </if>
+            </td>
+        </tr>
+        <if condition="$sell['has_sell_contract'] neq 1">
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">CEO approve</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">
+                <if condition="($sell['has_sell_contract'] neq 1) AND ($sell['approve_credential'] neq '')">
+                    YES
+                <else />
+                    <span>NO</span>
+                </if>
+            </td>
+        </tr>
+        </if>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Sales Team</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{:cdVal($sell['sell_team'])}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Sales Method</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{:L(cdVal($sell['sell_mode']))}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Business Type</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{$order['business_type']}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Expected Purchase Date</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{:str_replace('-','/',$order['procurement_date'])}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Total Purchase Amount (incl. VAT)</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($info['purchase_total_money'],2)}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Logistic, Service, Insurance and other Cost</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($order['logistics_rmb']+$sell['sell_logistics_rmb'],2)}></td>
+        </tr>
+        <tr style="background-color: #92D050">
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Total Revenue Amount</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($info['total_money'],2)}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Pure Gross Margin Amount</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><span style="color: #ff3a00">RMB <{:number_format($info['pure_profit'],2)}></span></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Pure Gross Margin Rate</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><?php echo $info['profit_margin']*100;?>%</td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">VAT Return Amount</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($drawback['drawback_rmb'],2)}></td>
+        </tr>
+        <tr style="background-color: #92D050">
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Total Gross Margin Amount</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($info['total_profit'],2)}></td>
+        </tr>
+        <tr style="background-color: #92D050">
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Total Gross Margin Rate</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{$info['total_profit_margin']*100}>%</td>
+        </tr>
+        <tr style="background-color: #FFC000">
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Estimated Cash-in Date</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{:str_replace('-','/',$sell['gathering_date'])}></td>
+        </tr>
+        <tr style="background-color: #FFC000">
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Payment Period of Days</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{$sell.payment_days}></td>
+        </tr>
+        <tr style="background-color: #FFC000">
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Estimated VAT Return Date</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{:str_replace('-','/',$drawback['drawback_date'])}></td>
+        </tr>
+        <tr style="background-color: #FFC000">
+             <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">VAT Period of Days</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{$drawback['drawback_period']}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Cost of Cash, Purchase & Logistics (15% interest, 25% for longer than 90 days)</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($info['payment_interest'],2)}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Cost of Cash, VAT (15% interest, 25% for longer than 90 days)</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($info['drawback_interest'],2)}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Cost of Cash, Total</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($info['interest_total'],2)}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Client (Buyer)</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{$sell.supp_id}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"># of Orders with this Client (Buyer) in Past 12 Months）</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><!--<{$sell.order_quantity}>--></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Average Revenue Amount per Order with this Client (Buyer) in Past 12 Months</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><!--RMB <{$sell.order_moneys}>--></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Average Total Gross Margin Amount per Order with this Client (Buyer) in Past 12 Months</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><!--RMB <{$order.order_profis}>--></td>
+        </tr>
+        <tr style="background-color: #92D050">
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Net Margin Amount (Total Margin Amount - Cost of Cash, Total)</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($info['net_profit'],2)}></td>
+        </tr>
+        <tr style="background-color: #92D050">
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Net Margin %</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{$info['retained_profits']*100}>%</td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Inventory</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right">RMB <{:number_format($inventory,2)}></td>
+        </tr>
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{++$n}></td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;">Remark</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="right"><{$order.order_remark}></td>
+        </tr>
+    </table>
+    <br>
+    <br>
+    <strong>二、商品详情如下表：</strong>
+    <br>
+    <table style="border-right:1px solid;border-bottom:1px solid;min-width:800px"  border="0" cellspacing="0" cellpadding="0">
+        <tr>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">SKU</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Currency</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Unit Price</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Quantity</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Account</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">Inventory</td>
+            <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="center">shipping goods</td>
+        </tr>
+        <volist name="goods" id="v">
+            <if condition="$v['sku_information'] neq null">
+                <tr <if condition="$v['goods_number'] lt $v['sale_num']">class="error"</if>>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="left"><span><{$v.goods_name}></span></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><span><{$order.amount_currency}></span></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><span><{:number_format($v['unit_price'],2)}></span></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><span><{:number_format($v['goods_number'])}></span></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><span><{:number_format($v['goods_money'],2)}></span></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><span><{:number_format($v['sale_num'])}></span></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><span><{:number_format($v['on_way_num'])}></span></td>
+            </tr>
+            </if>
+            <?php $sale_num_total += $v['sale_num'];?>
+            <?php $on_way_num_total += $v['on_way_num'];?>
+        </volist>
+        <if condition="$order['amount_currency'] eq 'RMB'">
+            <tr>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="left"><strong>Total（<{:count($goods)}>SKU）</strong></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><strong><{$order.amount_currency}></strong></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><{:number_format($relevance['number_total'])}></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><{:number_format($order['amount'],2)}></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><{:number_format($sale_num_total)}></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><{:number_format($on_way_num_total)}></td>
+            </tr>
+        <else />
+            <tr>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="left"><strong>Total（<{:count($goods)}>SKU）-采购人员录入</strong></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" colspan="2" align="center"><strong><{$order.amount_currency}></strong></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><{:number_format($relevance['number_total'])}></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><{:number_format($order['amount']-$order['expense'],2)}></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" rowspan="2"><{:number_format($sale_num_total)}></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" rowspan="2"><{:number_format($on_way_num_total)}></td>
+            </tr>
+            <tr>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" align="left"><strong>Total（<{:count($goods)}>SKU）-RMB换算后</strong></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;" colspan="2" align="center"><strong>RMB</strong></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><{:number_format($relevance['number_total'])}></td>
+                <td style="border-left:1px solid;border-top:1px solid;padding: 2px 8px 2px 8px;"><{:number_format($order['amount_rmb']-$order['logistics_rmb'],2)}></td>
+            </tr>
+        </if>
+    </table>
+    <hr>
+    <a href="<{:U('review@'.$_SERVER['HTTP_HOST'],['secret'=>$secret,'status'=>1])}>">同意</a>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="<{:U('review@'.$_SERVER['HTTP_HOST'],['secret'=>$secret,'status'=>0])}>">拒绝</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="<{:U('order_update@'.$_SERVER['HTTP_HOST'],['id'=>$relevance['relevance_id']])}>">查看订单</a>
+</body>
+</html>

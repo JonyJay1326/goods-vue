@@ -1,0 +1,901 @@
+html {
+    font-size: 62.5%;
+    font-family: "Microsoft YaHei";
+}
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, form, fieldset, legend, input, button, textarea, hr, pre, code, p, blockquote, th, td {
+    margin: 0;
+    padding: 0;
+    font-size: 1.35rem;
+    font-family: "Microsoft YaHei";
+}
+
+a, a:hover, a:link {
+    text-decoration: none;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+/*---------显示一行和宽度--------start----------------*/
+
+.row {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -moz-box;
+    /*display: -moz-flex;*/
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    margin:0;
+}
+
+.col-5 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 5%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 5%;
+    -ms-flex: 0 0 5%;
+    flex: 0 0 5%;
+    max-width: 5%;
+}
+
+.col-10 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 10%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 10%;
+    -ms-flex: 0 0 10%;
+    flex: 0 0 10%;
+    max-width: 10%;
+}
+
+.col-15 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 15%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 15%;
+    -ms-flex: 0 0 15%;
+    flex: 0 0 15%;
+    max-width: 15%;
+}
+
+.col-20 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 20%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 20%;
+    -ms-flex: 0 0 20%;
+    flex: 0 0 20%;
+    max-width: 20%;
+}
+
+.col-25 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 25%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 25%;
+    -ms-flex: 0 0 25%;
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.col-30 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 30%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 30%;
+    -ms-flex: 0 0 30%;
+    flex: 0 0 30%;
+    max-width: 30%;
+}
+
+.col-35 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 35%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 35%;
+    -ms-flex: 0 0 35%;
+    flex: 0 0 35%;
+    max-width: 35%;
+}
+
+.col-40 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 40%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 40%;
+    -ms-flex: 0 0 40%;
+    flex: 0 0 40%;
+    max-width: 40%;
+}
+
+.col-45 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 45%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 45%;
+    -ms-flex: 0 0 45%;
+    flex: 0 0 45%;
+    max-width: 45%;
+}
+
+.col-50 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 50%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 50%;
+    -ms-flex: 0 0 50%;
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.col-55 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 55%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 55%;
+    -ms-flex: 0 0 55%;
+    flex: 0 0 55%;
+    max-width: 55%;
+}
+
+.col-60 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 60%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 60%;
+    -ms-flex: 0 0 60%;
+    flex: 0 0 60%;
+    max-width: 60%;
+}
+
+.col-65 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 65%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 65%;
+    -ms-flex: 0 0 65%;
+    flex: 0 0 65%;
+    max-width: 65%;
+}
+
+.col-70 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 70%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 70%;
+    -ms-flex: 0 0 70%;
+    flex: 0 0 70%;
+    max-width: 70%;
+}
+
+.col-75 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 75%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 75%;
+    -ms-flex: 0 0 75%;
+    flex: 0 0 75%;
+    max-width: 75%;
+}
+
+.col-80 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 80%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 80%;
+    -ms-flex: 0 0 80%;
+    flex: 0 0 80%;
+    max-width: 80%;
+}
+
+.col-85 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 85%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 85%;
+    -ms-flex: 0 0 85%;
+    flex: 0 0 85%;
+    max-width: 85%;
+}
+
+.col-90 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 90%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 90%;
+    -ms-flex: 0 0 90%;
+    flex: 0 0 90%;
+    max-width: 90%;
+}
+
+.col-100 {
+    -webkit-box-flex: 0;
+    -webkit-flex: 0 0 100%;
+    -moz-box-flex: 0;
+    -moz-flex: 0 0 100%;
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+    max-width: 100%;
+}
+.margin-left-10{
+    margin-left:10px;
+}
+.margin-right-10{
+    margin-right:10px;
+}
+
+.tabel thead > tr > th {
+    background: #F5FAFE;
+}
+/*仓库管理界面*/
+
+.ck-wrap {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.ck-wrap header {
+    background: #F5FAFE;
+    padding: 5px 10px;
+    margin: 10px 0;
+    border: 1px solid #e5e5e5;
+}
+
+.ck-wrap .new-add {
+    font-family: "Microsoft YaHei";
+    background: #ED2D65;
+    border-radius: 3px;
+    color: white;
+    display: inline-block;
+    padding: 2px 10px 3px;
+    font-size: 1.45rem;
+    cursor: pointer;
+}
+
+.ck-wrap th, td {
+    font-size: 1.325rem;
+}
+
+.ck-wrap .edit-btn {
+    font-family: "Microsoft YaHei";
+    background: #ED2D65;
+    color: white;
+    display: inline-block;
+    padding: 2px 16px 3px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px !important;
+}
+/*入库管理样式*/
+.rk-wrap {
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 0;
+}
+
+.rk-wrap .enter-line > .row {
+    margin: 10px 0 20px
+}
+
+.xcl-wrap .col-15 input{
+    border: 1px solid #ccc;
+    height: 26px;
+    padding: 0 5px;
+    width: 80%;
+}
+
+
+.rk-wrap .enter-line .col-15 input {
+    border: 1px solid #ccc;
+    height: 26px;
+    padding: 0 5px;
+    width: 80%;
+}
+.rk-wrap .enter-line .col-55 input {
+    border: 1px solid #ccc;
+    height: 26px;
+    padding: 0 5px;
+    width: 12.5rem;
+}
+
+.rk-nowrap {
+    white-space: nowrap;
+}
+
+.rk-wrap .enter-line input + img {
+    margin-left: -5px;
+    cursor: pointer;
+}
+
+.rk-wrap .enter-line select {
+    border: 1px solid #ccc;
+    height: 28px;
+    padding: 0 5px;
+    width: 85%;
+    font-size: 13px;
+}
+
+.rk-wrap .button-wrap {
+    background: #F5FAFE;
+    padding: 5px 10px;
+    margin: 10px 0;
+    border: 1px solid #e5e5e5;
+}
+
+.rk-wrap .button-wrap button {
+    margin: 0 20px;
+}
+
+.button-pink {
+    background: #EC2D64;
+    width: 100px;
+    border: none;
+    height: 30px;
+    color: white;
+    font-size: 1.45rem;
+    cursor: pointer;
+}
+
+.button-pink-by {
+    background: #EC2D64;
+    width: 80%;
+    border: none;
+    height: 30px;
+    color: white;
+    font-size: 1.45rem;
+    cursor: pointer;
+}
+
+.button-black {
+    background: #b3b3b3;
+    width: 100px;
+    border: none;
+    height: 30px;
+    color: white;
+    font-size: 1.45rem;
+    cursor: pointer;
+}
+
+.button-black-by {
+    background: #b3b3b3;
+    width: 80%;
+    border: none;
+    height: 30px;
+    color: white;
+    font-size: 1.45rem;
+    cursor: pointer;
+}
+
+.button-sky {
+    background: #33CCFF;
+    width: 100px;
+    border: none;
+    height: 30px;
+    color: white;
+    font-size: 1.45rem;
+    cursor: pointer;
+}
+
+.button-gray {
+    background: gray;
+    width: 100px;
+    border: none;
+    height: 30px;
+    color: white;
+    font-size: 1.45rem;
+    cursor: pointer;
+}
+
+.rk-wrap th, td {
+    font-size: 1.325rem;
+}
+
+.rk-wrap .td-rela {
+    position: relative;
+}
+
+.rk-wrap .td-djnum > span {
+    color: #EC2D64;
+    /*text-decoration: underline;*/
+}
+
+.rk-wrap .td-linknum > a > span {
+    text-decoration: underline;
+}
+
+.rk-wrap .td-rela > span {
+    position: absolute;
+    top: 21%;
+    left: 31%;
+    color: white;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.td-rela > img {
+    position: absolute;
+    top: 24%;
+    left: 31%;
+}
+
+.td-confirm {
+    display: inline-block;
+    background: #EC2D64;
+    color: white;
+    font-size: 1.3rem;
+    padding: 1px 10px 2px;
+    cursor: pointer;
+}
+
+.td-print {
+    display: inline-block;
+    background: #000000;
+    color: white;
+    font-size: 1.3rem;
+    padding: 1px 10px 2px;
+}
+
+.td-tobecof {
+    display: inline-block;
+    border: 1px solid #EC2D64;
+    color: #EC2D64;
+    font-size: 1.3rem;
+    padding: 1px 8px 2px;
+    border-radius: 3px;
+}
+
+.td-alrecof {
+    display: inline-block;
+    border: 1px solid #000000;
+    color: #000000;
+    font-size: 1.3rem;
+    padding: 1px 8px 2px;
+    border-radius: 3px;
+}
+
+/*库存锁定*/
+
+.kc-lock {
+    box-sizing: border-box;
+    padding: 10px;
+    margin: 0;
+}
+
+.kc-lock .select-line {
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.kc-lock .select-line .col-30 select {
+    border: 1px solid #ccc;
+    height: 28px;
+    padding: 0 5px;
+    margin-right:10px;
+    width: 40%;
+}
+
+.kc-lock .select-line .col-30 input {
+    border: 1px solid #ccc;
+    height: 26px;
+    padding: 0 5px;
+    margin-left:10px;
+    width: 40%;
+    vertical-align: top;
+}
+.kc-lock .select-line .col-15 select {
+    border: 1px solid #ccc;
+    height: 28px;
+    padding: 0 5px;
+    width: 90%;
+}
+
+.kc-lock .select-line .col-15 input {
+    border: 1px solid #ccc;
+    height: 26px;
+    padding: 0 5px;
+    width: 90%;
+    vertical-align: top;
+}
+
+.kc-lock .button-wrap {
+    background: #F5FAFE;
+    padding: 5px 10px;
+    margin: 10px 0;
+    border: 1px solid #e5e5e5;
+}
+
+.kc-lock .td-sku > input {
+    border: 1px solid #e5e5e5;
+    padding: 5px;
+    height: 12px;
+}
+
+.kc-lock .td-sku > img {
+    height: 24px;
+    width: 24px;
+    margin-left: -5px;
+    vertical-align: top;
+}
+
+.kc-lock table tr > td:last-child > input:first-child {
+    display: inline-block;
+    padding: 1px 10px 2px;
+    background: #EC2D64;
+    color: white;
+    font-size: 1.35rem;
+    border: none;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.kc-lock table tr > td:last-child > input:last-child {
+    display: inline-block;
+    padding: 1px 10px 2px;
+    background: #000000;
+    border: none;
+    color: white;
+    font-size: 1.35rem;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+/*现存量查询界面样式*/
+
+.xcl-wrap {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.xcl-wrap .select-line {
+    margin: 15px 0;
+    padding: 10px 0;
+    border-bottom: 1px solid #dddddd;
+}
+
+.xcl-wrap .select-line .col-30 select {
+    border: 1px solid #ccc;
+    height: 28px;
+    padding: 0 5px;
+    margin-right: 10px;
+    width: 40%;
+}
+
+.xcl-wrap .select-line .col-30 input {
+    border: 1px solid #ccc;
+    height: 26px;
+    padding: 0 5px;
+    margin-left: 10px;
+    width: 40%;
+    vertical-align: top;
+}
+
+.xcl-wrap .select-line .col-15 select {
+    border: 1px solid #ccc;
+    height: 28px;
+    padding: 0 5px;
+    width: 80%;
+}
+
+
+.xcl-wrap .select-line button {
+    margin-left: 20px;
+}
+
+.xcl-wrap .select-line input + img {
+    margin-left: -5px;
+    vertical-align: top;
+}
+
+.xcl-wrap .xcl-tabel tbody > tr > td:last-child > span {
+    display: inline-block;
+    padding: 1px 10px 2px;
+    background: #EC2D64;
+    color: white;
+}
+
+/*仓库弹窗详情页css*/
+.pop-wrap {
+    width: 600px;
+    height: 680px;
+    box-sizing: border-box;
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 2px 3px 5px #ddd;
+    cursor: move;
+    background: white;
+}
+
+.pop-wrap .title {
+    font-size: 2.85rem;
+}
+
+.pop-wrap .contetn {
+    background: #F5FAFE;
+    padding: 10px;
+    box-sizing: border-box;
+    margin: 10px 0 0;
+    border: 1px solid #ddd;
+}
+
+.pop-wrap .contetn .col-100 > div {
+    margin: 15px 0;
+}
+
+.pop-wrap .contetn div > span {
+    display: inline-block;
+    height: 30px;
+    width: 100px;
+    font-size: 1.45rem;
+}
+
+.pop-wrap .contetn div > input[type="text"],
+.pop-wrap .contetn div > select {
+    height: 30px;
+    width: 260px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.pop-wrap .contetn div:nth-child(2) > select {
+    width: 128px;
+}
+
+.pop-wrap .contetn div > input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+}
+
+.pop-wrap .contetn div > textarea {
+    height: 65px;
+    width: 400px;
+    border: 1px solid #ddd;
+    vertical-align: top;
+    padding: 0 10px;
+    box-sizing: border-box;
+}
+
+.pop-wrap .add-search {
+    width: 230px !important;
+}
+
+.pop-wrap .add-text {
+    width: 400px !important;
+}
+
+.pop-wrap .buttons {
+    margin-top: 20px;
+}
+
+#modal {
+    background-color: #fff;
+    position: fixed;
+    margin-left: -300px;
+    left: 50%;
+    top: 160px;
+}
+
+/* 货位界面样式 */
+
+.hw-wrap {
+    width: 100%;
+    padding: 10px;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.hw-wrap .text-line {
+    margin-bottom: 10px;
+}
+
+.hw-wrap .text-line .title {
+    background: #F5FAFE;
+    border: 1px solid #ddd;
+    height: 40px;
+    width: 100%;
+    line-height: 40px;
+    padding: 0 10px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    box-sizing: border-box;
+}
+
+.hw-wrap .text-line .row {
+    margin: 15px 0;
+}
+
+.hw-wrap .text-line span {
+    display: inline-block;
+    height: 30px;
+    width: 150px;
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+.hw-wrap .text-line .first-row input {
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    width: 200px;
+    height: 28px;
+    font-size: 1.325rem;
+}
+
+.hw-wrap .second-row input {
+    border: 1px solid #ddd;
+    padding: 0 10px;
+    width: 50px;
+    height: 28px;
+    font-size: 1.325rem;
+    text-align: center;
+    margin: 0 10px;
+}
+
+.hw-wrap .col-60 .first-input {
+    margin-left: 0;
+}
+
+.hw-wrap .text-line button:first-child {
+    margin-right: 50px;
+}
+
+.hw-tabel caption {
+    height: 40px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    background: #F5FAFE;
+    line-height: 40px;
+    border: 1px solid #ddd;
+    margin-bottom: -1px;
+    padding-left: 20px;
+}
+
+.hw-tabel tr {
+    white-space: nowrap;
+}
+
+.hw-tabel td {
+    min-width: 180px;
+}
+
+.hw-tabel td > img {
+    margin: 0 15px;
+}
+
+.hw-tabel td > select {
+    margin-left: 20px;
+    /*display: none;*/
+}
+
+.hw-btn {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.hw-btn > button {
+    margin: 0 50px;
+}
+
+.text-c {
+    margin-bottom: 5px;
+}
+
+.hw-tabel {
+    max-height: 580px;
+    width: 100%;
+    overflow: auto;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+/* 详情页弹框 */
+.detailInfo-wrap {
+    background-color: #fff;
+    width: 818px;
+    height: 613px;
+    border: 1px solid gray;
+    padding: 15px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: absolute;
+    top: 20%;
+    left: 20%;
+}
+
+.detailInfo-wrap .info-title {
+    font-family: "Microsoft Yahei";
+    font-size: 3rem;
+    font-weight: 500;
+}
+
+.detailInfo-wrap .Hui-iconfont-close {
+    background: darkgray;
+    color: white;
+    font-size: 1.8rem;
+    font-weight: 600;
+    padding: 3px;
+}
+
+.detailInfo-wrap .info-context {
+    background: rgba(240, 255, 255, 1);
+    padding: 15px;
+    border: 1px solid #e5e5e5;
+    margin: 10px 0;
+}
+
+.info-context .row {
+    margin: 15px 0;
+}
+
+.info-context .row .col-50 span {
+    display: inline-block;
+    width: 85px;
+    font-size: 1.45rem;
+}
+
+.info-context .col-50 input[type="text"] {
+    display: inline-block;
+    width: 242px;
+    height: 25px;
+    border: 1px solid #ccc;
+    padding-left: 10px;
+    font-size: 13px;
+}
+
+.info-context .col-50 select {
+    display: inline-block;
+    width: 244px;
+    height: 28px;
+    border: 1px solid #ccc;
+    padding-left: 5px;
+}
+
+.info-context .info-checkbox .col-50 span {
+    display: inline-block;
+    width: 100px;
+    font-size: 1.45rem;
+}
+
+.info-context .row .col-50 .addIcon {
+    display: inline-block;
+    width: 218px;
+    height: 25px;
+    border: 1px solid #ccc;
+    margin-right: -1px;
+    vertical-align: top;
+}
+
+.info-context .row .col-50 .unit {
+    display: inline-block;
+    width: 215px;
+    height: 25px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+}
+
+th {
+    padding: 5px;
+    white-space: nowrap;
+}
+
+.td-wrap td {
+    padding: 4px;
+    white-space: nowrap;
+}
+
+.th-wrap th {
+    padding: 5px;
+    white-space: nowrap;
+}
+
+td {
+    padding: 4px;
+    white-space: nowrap;
+}

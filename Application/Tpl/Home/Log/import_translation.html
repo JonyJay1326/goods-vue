@@ -1,0 +1,15 @@
+<html>
+<body>
+    <form method="post" enctype="multipart/form-data">
+        <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+        <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+        <input type="file" name="file"/>
+        <button type="submit">导入翻译</button>
+    </form>
+</body>
+</html>
+<?php
+if ($is_translation) {
+    echo '新增翻译：' . $newAddedLength . '个<br />';
+    echo '<pre/>'; var_dump($newAdded);
+}

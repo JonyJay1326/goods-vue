@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-grid.min.css">
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap-reboot.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<link rel="stylesheet" href="../Public/lib/webuploader/0.1.5/webuploader.css"/>
+	<title><{$Think.lang.采购信息}></title>
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css?v=20170816"/>
+	<link rel="stylesheet" href="../Public/css/common.css"/>
+</head>
+<body>
+<div class="col-lg-12 col-md-12 col-sm-12 commom_detail">
+	<div class="row row_title">
+		<a class="col-lg-2 col-md-2 col-sm-2"><{$Think.lang.入库详情}></a>
+	</div>
+	<div class="detail_form">
+        <form action="<{:U('warehouse')}>" id="warehouse_form">
+        <input name="id" value="<{$detail.id}>" type="hidden">
+		<table class="table table-noBorder table-bg">
+			<thead>
+			<th width="11%"></th>
+			<th width="23%"></th>
+			<th width="13%"></th>
+			<th width="20%"></th>
+			<th width="11%"></th>
+			<th width="22%"></th>
+			</thead>
+			<tbody>
+			<tr>
+				<td colspan="6"><{$Think.lang.发货信息}></td>
+			</tr>
+			<tr>
+				<td><{$Think.lang.PO/采购单号}></td>
+				<td><{$detail.relevance.orders.procurement_number}></td>
+				<td><{$Think.lang.入库单号}></td>
+				<td><{$detail.warehouse_id}></td>
+				<td><{$Think.lang.对应采购}></td>
+				<td><{$detail.relevance.prepared_by}>（<{$detail.relevance.orders.payment_company}>）</td>
+			</tr>
+			<tr>
+                <td><{$Think.lang.采购时间}></td>
+                <td><{$detail.relevance.orders.procurement_date}></td>
+                <td><{$Think.lang.销售团队}></td>
+                <td><{:cdVal($detail['relevance']['sell_information']['sell_team'])}></td>
+                <td>订单备注</td>
+                <td colspan="5"><{$detail.relevance.order.remark}></td>
+            </tr>
+            <tr>
+				<td><{$Think.lang.提单号(或其他单号)}></td>
+				<td><{:L($detail['bill_of_landing'])}></td>
+                <td><{$Think.lang.本次发货数量}></td>
+                <td><{:number_format($detail['shipping_number'])}></td>
+                <td><{$Think.lang.发货操作人}></td>
+                <td><{$detail.create_user}></td>
+			</tr>
+			<tr>
+                <td><{$Think.lang.发货时间}></td>
+                <td><{:L($detail['shipment_date'])}></td>
+                <td><{$Think.lang.预计到港/到货时间}></td>
+                <td><{:L($detail['arrival_date'])}></td>
+                <td><{$Think.lang.发货备注}></td>
+                <td><{$detail.remark}></td>
+			</tr>
+			<tr>
+				<td><{$Think.lang.一对一关联的销售单号}></td>
+				<td class="warehouse_td_input">
+					<input type="text" name="sale_no_correct" value="<{$detail.sale_no}>" class="form-control"/>
+				</td>
+				<td><{$Think.lang.是否需要入我方库}></td>
+				<td class="warehouse_td_select">
+					<select name="need_warehousing_correct" class="form-control"  >
+						<option <if condition="$detail['need_warehousing'] eq 1">selected</if> value="1"><{$Think.lang.是}></option>
+						<option <if condition="$detail['need_warehousing'] eq 0">selected</if> value="0"><{$Think.lang.否}></option>
+					</select>
+				</td>
+				<td><{$Think.lang.我方仓库}></td>
+				<td class="warehouse_td_select">
+					<select name="warehouse_correct" class="form-control"  >
+						<option selected="" value=""><{:L('请选择仓库')}></option>
+						<volist name="warehouse" id="v">
+							<option <if condition="$detail['warehouse']['CD'] eq $v['CD']">selected</if> value="<{$v.CD}>"><{:L($v['CD_VAL'])}></option>
+                        </volist>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td><{$Think.lang.实际到货/到港时间}></td>
+				<td class="warehouse_td_data common_data">
+					<div class="input-group">
+						<input type="text" name="arrival_date_actual" onfocus="WdatePicker({firstDayOfWeek:1,maxDate:'<{:date("Y-m-d")}>'})" placeholder="<{$Think.lang.请选择日期}>" class="form-control" value="<{:date("Y-m-d")}>">
+						<span class="input-group-btn">
+							<button class="btn btn-secondary" type="button"><i ></i></button>
+						</span>
+					</div>
+				</td>
+                <td><{$Think.lang.清关/商检等费用}></td>
+                <td class="td_extraCharge">
+                    <fieldset class="form-group">
+                        <select class="form-control" name="warehouse_extra_cost_currency" id="warehouse_extra_cost_currency">
+                            <option value="">请选择币种</option>
+                            <volist name="currency" id="v">
+                                <option value="<{$v.CD}>"><{$v.CD_VAL}></option>
+                            </volist>
+                        </select>
+                    </fieldset>
+                    <input type="text" name="warehouse_extra_cost" class="form-control">
+                </td>
+			</tr>
+			<tr>
+				<td>发货附件</td>
+				<td colspan="5" class="ship_enclosure">
+					<volist name="detail['credential']" id="v">
+						<a href="<{:U('download',['file'=>$v['name']])}>" style="margin-left:20px"><{:cdVal($v['type'])}></a>
+					</volist>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+		<table class="table table-bordered table-goodsDetail">
+			<p class="table-p"><{$Think.lang.商品信息}></p>
+			<thead>
+				<th width="">SKUID/条形码</th>
+				<th width=""><{$Think.lang.商品名称}></th>
+				<th width=""><{$Think.lang.SKU信息}></th>
+				<th width=""><{$Think.lang.所属仓库}></th>
+				<th width=""><{$Think.lang.修正SKUID}></th>
+				<th width=""><{$Think.lang.修正后商品名称}></th>
+				<th width=""><{$Think.lang.修正后SKU信息}></th>
+				<th width=""><{$Think.lang.修正后所属仓库}></th>
+				<th width=""><{$Think.lang.税率}></th>
+				<th width=""><{$Think.lang.发货数量}></th>
+				<th width=""><{$Think.lang.生产日期与入库数量}></th>
+				<th width=""><{$Think.lang.差异数}></th>
+				<th width=""><{$Think.lang.差异原因}></th>
+			<tbody>
+			<volist name="detail.goods" id="v">
+                <tr class="goods" warehouse="<{$detail.warehouse.CD}>">
+                    <td><{$v.information.search_information}></td>
+                    <td><{$v.information.goods_name}></td>
+					<td><{$v.information.goods_attribute}></td>
+					<td><{$detail.warehouse.CD_VAL}></td>
+					<td  class="warehouse_td_search common_searchIco">
+						<div class="input-group">
+							<input type="text" name="goods[<{$v.id}>][search_id]"  class="form-control search_id"/>
+							<input type="text" name="goods[<{$v.id}>][sku_id]"  class="form-control sku_id" hidden/>
+							<span class="input-group-btn ">
+                                <button class="btn btn-secondary search_goods" type="button" ><i></i></button>
+                            </span>
+						</div>
+					</td>
+					<td>
+                        <span class="goods_name_show"></span>
+                        <input name="goods[<{$v.id}>][goods_name]" class="goods_name" type="hidden">
+                    </td>
+					<td>
+                        <span class="goods_attribute_show"></span>
+                        <input name="goods[<{$v.id}>][goods_attribute]" class="goods_attribute" type="hidden">
+                    </td>
+					<td>
+                        <span class="warehouse_show"></span>
+                        <input name="goods[<{$v.id}>][warehouse]" class="warehouse" type="hidden">
+                    </td>
+					<td class="warehouse_td_select">
+						<select name="goods[<{$v.id}>][tax_rate]" class="form-control">
+							<option value="">请选择税率</option>
+							<volist name="tax_rate" id="val">
+								<option value="<{$val.CD}>"><{$val.CD_VAL}></option>
+							</volist>
+						</select>
+					</td>
+					<td>
+                        <span class="ship_number_show"><{:number_format($v['ship_number'])}></span>
+                        <input class="ship_number" value="<{$v['ship_number']}>" type="hidden">
+                    </td>
+					<td class="warehouse_td_data td_time_mount">
+						<input type="hidden" name="goods[<{$v.id}>][warehouse_number]" value="<{$v['ship_number']}>" class="warehouse_number_t" />
+						<?php $number_info = json_decode($v['number_info_ship'],true);?>
+						<volist name="number_info" id="vo">
+                            <div class="td_time_mount_main">
+                                <div class="input-group td_time_mount_div ">
+                                    <input type="text" name="goods[<{$v.id}>][number_info][production_date][]" value="<{$vo.production_date}>"  onfocus="WdatePicker({firstDayOfWeek:1,maxDate:'<{:date("Y-m-d")}>'})" placeholder="<{$Think.lang.请选择日期}>" class="form-control">
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+                                </span>
+                                </div>
+                                <div class="td_time_mount_div">
+                                    <input type="text" value="<{:number_format($vo['number'])}>" onchange="numberChange(this)" class="warehouse_number_show form-control"/>
+                                    <input type="hidden" name="goods[<{$v.id}>][number_info][number][]" value="<{$vo['number']}>" class="warehouse_number" />
+                                </div>
+                                <div class="td_time_mount_cor">
+									<a class="production_date_number_minus" onclick="productionDateNumberMinus(this)" href="javascript:void(0)" style="text-decoration:none;">
+										<i class="" ><img src="../Public/images/delete.png" alt=""></i>&nbsp;
+									</a>
+									<a class="production_date_number_plus" onclick="productionDateNumberPlus(this)" href="javascript:void(0)" style="text-decoration:none;">
+										<i class="" ><img src="../Public/images/add.png" alt=""></i>
+									</a>
+                                </div>
+                            </div>
+						</volist>
+					</td>
+					<td>
+                        <span class="difference_number_show">0</span>
+                        <input name="goods[<{$v.id}>][difference_number]" class="difference_number" type="hidden" value="0" />
+                    </td>
+					<td class="warehouse_td_select">
+						<select name="goods[<{$v.id}>][difference_reason]" class="form-control"  >
+                            <option value="">请选择差异原因</option>
+                            <volist name="warehouse_difference" id="val">
+							    <option value="<{$val.CD}>"><{$val.CD_VAL}></option>
+                            </volist>
+						</select>
+					</td>
+                </tr>
+            </volist>
+			<tr>
+				<td><{$Think.lang.合计}> <{:count($detail['goods'])}>SKU</td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td><{:number_format($detail['shipping_number'])}></td>
+				<td>
+					<span class="warehouse_number_total_show"><{:number_format($detail['shipping_number'])}></span>
+					<input class="warehouse_number_total" name="warehouse_number" type="hidden" value="<{$detail['shipping_number']}>">
+				</td>
+				<td>
+                    <span class="difference_number_total_show">0</span>
+                    <input class="difference_number_total" name="difference_number" value="0" type="hidden">
+                </td>
+				<td></td>
+			</tr>
+			</tbody>
+		</table>
+        </form>
+	</div>
+    <div class="row row_btn">
+        <div class="col-lg-12 col-md-12">
+            <button class="btn-sure" type="button" id="submit_button"> <{$Think.lang.确定入库}></button>
+            <button class="btn-cancel" type="button" onclick="location='<{:U("warehouse_list")}>'" ><{$Think.lang.取消}></button>
+        </div>
+
+    </div>
+</div>
+</body>
+</html>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../Public/utils/utils.js"></script>
+<script>
+    function king(e) {
+        var k = e.toString().split('.');
+        if(e.toString().indexOf('.') > 0){
+            var s = '.'+k[1];
+        }else{
+            var s = '';
+        }
+        return k[0].toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')+s;
+    }
+
+    function statisticsNumber() {
+        var warehouse_number_total = 0;
+        var difference_number_total = 0;
+        $('.goods').each(function() {
+            var ship_number = parseFloat($(this).find('.ship_number').val());
+            var warehouse_number = parseFloat($(this).find('.warehouse_number_t').val());
+            var difference_number   = Math.abs(ship_number-warehouse_number);
+            warehouse_number_total += warehouse_number;
+            difference_number_total += difference_number;
+        })
+
+        $('.warehouse_number_total_show').html(king(warehouse_number_total));
+        $('.warehouse_number_total').val(warehouse_number_total);
+        $('.difference_number_total_show').html(king(difference_number_total));
+        $('.difference_number_total').val(difference_number_total);
+    }
+    //输入的是否是数字进行校验
+    function numberCheck(number){
+        return /^(\d+(,\d\d\d)*|\d+)$/.test(number);
+    }
+
+    function productionDateNumberPlus(plus) {
+        var html = $(plus).parents('.td_time_mount_main').prop('outerHTML');
+        $(plus).parents('.td_time_mount').append(html);
+        $(plus).parents('tr').find('.td_time_mount_main').last().find('input').val('');
+    }
+
+    function productionDateNumberMinus(minus) {
+        if($(minus).parents('.td_time_mount_main').siblings('.td_time_mount_main').size()) {
+            var tr = $(minus).parents('tr');
+            $(minus).parents('.td_time_mount_main').remove();
+            numberChange(tr.find('.warehouse_number_show').first());
+        }else {
+            return false;
+        }
+    }
+    function numberChange(ts) {
+        var tr = $(ts).parents('tr');
+        var number = $(ts).val();
+        if(!numberCheck(number)) {
+            alert('请输入正确的数字');
+            return false;
+        }
+        var warehouse_number    = parseFloat(number.replace(/,/g,''));
+        if(warehouse_number == 0) {
+            alert('入库数不能为0');
+            return false;
+        }
+        var ship_number         = parseFloat(tr.find('.ship_number').val());
+        $(ts).val(king(warehouse_number));
+        $(ts).next().val(warehouse_number);
+        var warehouse_number_total = 0;
+        tr.find('.td_time_mount_main').each(function (i,e) {
+            var warehouse_number_e = $(e).find('.warehouse_number').val();
+            if(warehouse_number_e == '') {
+                warehouse_number_e = '0';
+            }
+            warehouse_number_total += parseFloat(warehouse_number_e);
+        })
+        var difference_number   = Math.abs(ship_number-warehouse_number_total);
+        tr.find('.warehouse_number_t').val(warehouse_number_total);
+        tr.find('.difference_number_show').html(king(difference_number));
+        tr.find('.difference_number').val(difference_number);
+        statisticsNumber();
+    }
+	$(function() {
+        $('.search_goods').click(function() {
+            var tr = $(this).parents('tr');
+            var search_id = tr.find('.search_id').val();
+            var url = "<{:U('search_goods')}>";
+            $.post(url,{search_id:search_id},function(res) {
+                if(res.status == 1) {
+                    var goods = res.info;
+                    tr.find('.goods_name').val(goods.goods_name);
+                    tr.attr('warehouse',goods.warehouse);
+                    tr.find('.sku_id').val(goods.sku_id);
+                    tr.find('.goods_name_show').html(goods.goods_name);
+                    tr.find('.goods_attribute').val(goods.val_str);
+                    tr.find('.goods_attribute_show').html(goods.val_str);
+                    tr.find('.warehouse').val(goods.warehouse);
+                    tr.find('.warehouse_show').html(goods.warehouse_name);
+                }
+            })
+        })
+
+        $('#submit_button').click(function() {
+            var warehouse = $('select[name="warehouse_correct"]').val();
+            var n = 0;
+        	$('.goods').each(function() {
+        		if($(this).attr('warehouse') != warehouse) {
+        		    n = 1;
+        		}
+        	})
+            if(n == 1) {
+                utils.modal(true, {width:500,title:"<{$Think.lang.发货结果}>",content:'<{$Think.lang.发货失败：商品仓库和待入库仓库不一致}>'},false)
+                return false;
+        	}
+            var form_data = new FormData($('#warehouse_form')[0]);
+            var url = $('#warehouse_form').prop('action');
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: form_data,
+                processData: false,  // 告诉jQuery不要去处理发送的数据
+                contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
+                success: function(msg) {
+                    if(msg.status == 1){
+                        utils.modal(true, {width:500,title:"<{$Think.lang.发货结果}>",content:msg.info,confirmFn:function(){window.location = "<{:U('warehouse_list')}>";}},false)
+                    }else {
+                        utils.modal(true, {width:500,title:"<{$Think.lang.发货结果}>",content:msg.info},false)
+                    }
+                }
+            });
+        })
+    })
+</script>

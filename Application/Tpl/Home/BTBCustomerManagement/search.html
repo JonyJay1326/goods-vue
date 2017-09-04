@@ -1,0 +1,82 @@
+<div class="row">
+    <form action="" method="get" id="form_btbtc">
+        <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+        <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+        <div class="use-row use-form">
+            <div class="col-5">
+                <label class="label-name">客户名称</label>
+            </div>
+            <div class="col-20 pd-r-70">
+                <input type="text"  name="SP_NAME" value="<{$params.SP_NAME}>"  placeholder="<{$Think.lang.客户名称}>" class=" use-input" />
+            </div>
+            <div class="col-5">
+                <label class="label-name">创建人</label>
+            </div>
+            <div class="col-20 pd-r-70">
+                <input type="text" name="CREATE_USER_ID" value="<{$params.CREATE_USER_ID}>"  placeholder="<{$Think.lang.创建人}>"  class="use-input" />
+            </div>
+            <div class="col-5">
+                <label class="label-name">国家</label>
+            </div>
+            <div class="col-20 pd-r-70">
+                <select name="SP_ADDR1" class="use-input" id="guo_bie">
+                    <option value=""><{$Think.lang.请选择国家}></option>
+                    <?php   foreach (BaseModel::getCountries() as $cd => $nm) { ?>
+                        <option value="<?= $cd ?>" <if condition="$params.SP_ADDR1 eq $cd">selected="selected"</if> ><?= $nm ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="col-5">
+                <label class="label-name">销售团队</label>
+            </div>
+            <div class="col-20 pd-r-70">
+                <select name="SALE_TEAM" class="use-input" id="cai_gou">
+                    <option value=""><{$Think.lang.选择销售团队}></option>
+                    <?php foreach (BaseModel::spTeamCd() as $cd => $nm) { ?>
+                        <option value="<?= $cd ?>" <if condition="$params.SALE_TEAM eq $cd">selected="selected"</if> ><?= $nm ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+        <div class="use-row use-form">
+            <div class="col-5">
+                <label class="label-name">审核状态</label>
+            </div>
+            <div class="col-20 pd-r-70">
+                <select name="AUDIT_STATE" class="use-input" id="audit_state">
+                    <option value=""><{$Think.lang.选择审核状态}></option>
+                    <?php foreach (BaseModel::auditState() as $cd => $nm) { ?>
+                        <option value="<?= $cd ?>" <if condition="$params.AUDIT_STATE eq $cd">selected="selected"</if> ><?= $nm ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+            <div class="col-5">
+                <label class="label-name">风险评级</label>
+            </div>
+            <div class="col-20 pd-r-70">
+                <select name="RISK_RATING" class="use-input" id="risk_rating">
+                    <option value=""><{$Think.lang.选择风险评级}></option>
+                    <?php foreach (BaseModel::riskRating() as $cd => $nm) { ?>
+                        <option value="<?= $cd ?>" <if condition="$params.RISK_RATING eq $cd">selected="selected"</if> ><?= $nm ?></option>
+                    <?php } ?>
+                </select>
+            </div>
+        </div>
+        <div class="use-row use-btn">
+            <div class="col-50">
+                <button name="" class="btn-green" type="submit"><{$Think.lang.搜索}></button>
+                <button type="button" value="" class="btn-default mg-l-10 btn-reset-clear"><{$Think.lang.重置}></button>
+            </div>
+        </div>
+        
+        <!--<span class="select-box inline">
+            <select name="time_type" class="select" id="is_pay">
+                <option value=""><{$Think.lang.是否有待付款订单}></option>
+                <option value="1"><{$Think.lang.是}></option>
+                <option value="0"><{$Think.lang.否}></option>
+            </select>
+        </span>-->
+
+        <input type="hidden" name="CREATE_PLAT_CD" value="<{$params.CREATE_PLAT_CD}>"/>
+    </form>
+</div>

@@ -1,0 +1,267 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/jqeury-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170306" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/supplier.css?v=20170307" />
+    <link rel="stylesheet" href="../Public/utils/css/public.style.css">
+    <title></title>
+</head>
+<body class="pos-r">
+<div style="padding: 10px 20px;">
+    <img src="../Public/images/ajax-loader.gif" width="" height="" alt="" class="img_load-pos hide"/>
+    <!--载入搜索模块-->
+    <include file="search" />
+    <!--<div class="row">
+        <a href="<{:U('BTBCustomerManagement/add_customer')}>" ><span name="" class="btn btn-pink" type="submit"><{$Think.lang.新增客户}>+</span></a>
+        <a href="<{:U('BTBCustomerManagement/upload_contract')}>" ><span name="" class="btn btn-pink" type="submit"><{$Think.lang.新增合同}>+</span></a>
+    </div>-->
+    <div class="baseline"></div>
+    <!--数据列表 -->
+    <div class="row">
+        <div class="use-row">
+            <div class="col-50">
+                <include file="search_result" />
+            </div>
+            <div class="col-50 text-right">
+                <form method="post" enctype="multipart/form-data" class="use-btn">
+                    <input type="hidden" name="m" value="BTBCustomerManagement">
+                    <input type="hidden" name="a" value="mult_import_customer">
+                    <span class="btn-pub btn-file btn-default" href="#supplier_file" id="supplier_file_name"><a id="show_file_name"><{$Think.lang.请选择文件}></a>
+                    <input type="file" name="file"  id="supplier_file" onchange="document.getElementById('show_file_name').innerHTML = this.value?this.value:'<{$Think.lang.请选择文件}>'"/>
+                    </span>
+                    <button type="submit" class="btn-pub btn-blue" style="margin: -2px 0 0 20px "><{$Think.lang.供应商批量导入}></button>
+                </form>
+            </div>
+        </div>
+        <table class="table table-border table-bordered table-bg table-hover table-sort use-table">
+            <thead class="use-head">
+                <tr class="text-c no-wrap">
+                    <th></th>
+                    <foreach name="model:attributes" key="k" item="val">
+                        <th><{$Think.lang.$val}></th>
+                    </foreach>
+                    <th><{$Think.lang.操作}></th>
+                </tr>
+            </thead>
+            <tbody class="use-body show-data">
+                <foreach name="result" key="k" item="vo">
+                    <!--供应商数据-->
+                    <tr>
+                        <empty name="vo.contracts">
+                            <td class="">-</td>
+                            <else /> <td class="cur-s"><span>+</span></td>
+                        </empty>
+                        <foreach name="model:attributes" key="ks" item="val">
+                            <?php
+                                if ($ks == 'SALE_TEAM') {
+                                    $sps = explode(',', $vo['SALE_TEAM']);
+                                    if (count($sps) > 1) {
+                                        $str = '';
+                                        foreach ($sps as $key => $value) {
+                                            $str .= BaseModel::saleTeamCd()[$value] . ',';
+                                        }
+                                        $str = rtrim($str, ',');
+                                        echo '<td class="no-wrap">'. $str .'</td>'; 
+                                    } else {
+                                        echo '<td class="no-wrap">'. BaseModel::saleTeamCd()[$vo['SALE_TEAM']] .'</td>';
+                                    }
+                                } elseif ($ks == 'CREATE_USER_ID') {
+                                    echo '<td class="no-wrap">'. $allUserInfo[$vo['CREATE_USER_ID']] .'</td>';
+                                } elseif ($ks == 'SP_ADDR1') {
+                                    echo '<td class="no-wrap">'. $allCountryInfo[$vo['SP_ADDR1']] .'</td>';
+                                } elseif ($ks == 'contract') {
+                                    echo '<td class="no-wrap">'. count($vo['contracts']) .'</td>';
+                                } elseif ($ks == 'AUDIT_STATE') {
+                                    echo '<td class="no-wrap">' . BaseModel::auditState()[$vo['AUDIT_STATE']] . '</td>';
+                                } elseif ($ks == 'RISK_RATING') {
+                                    $c_v = '-';
+                                    switch ($vo['audit']['RISK_RATING']) {
+                                        case 1:
+                                            $c_v = '低风险';
+                                            break;
+                                        case 2:
+                                            $c_v = '中风险';
+                                            break;
+                                        case 3:
+                                            $c_v = '高风险';
+                                            break;
+                                    }
+                                ?>
+                                    <td class="no-wrap"><{$Think.lang.$c_v}></td>
+                                <?php
+                                } elseif ($ks == 'audit_time') {
+                                    $time = $vo['audit']['REV_TIME']?$vo['audit']['REV_TIME']:'-';
+                                ?>
+                                    <td class="no-wrap"><{$time}></td>
+                                <?php
+                                } else {
+                                    echo '<td class="no-wrap">'. $vo[$ks] .'</td>';
+                                }
+                            ?>
+                        </foreach>
+                        <td class="use-btn" style="text-align: left;">
+                            <a class="btn-pub btn-green" href="<{:U('BTBCustomerManagement/show', array('ID' => $vo[ID]))}>"><{$Think.lang.查看}></a>
+                            <button class="btn-pub btn-default mg-l-10" onclick="del_supplier(<{$vo.ID}>, '<{$vo.SP_NAME}>');"><{$Think.lang.删除}></button>
+                            <!--<a class="btn btn-pink" href="<{:U('BTBCustomerManagement/upload_contract')}>"><{$Think.lang.添加合同}></a>-->
+                            <?php
+                                if (!$vo['audit']) {
+                                    //foreach (BaseModel::regionalClassification() as $key => $value) {
+                                        //if (array_search($vo['SP_ADDR3'], $value) !== false and $key == 1) {
+                                        if (true) {
+                                            if ($auditRule) {
+                            ?>
+                                                <a class="btn-pub btn-blue mg-l-10" href="<{:U('BTBCustomerManagement/audit', array('ID' => $vo[ID]))}>"><{$Think.lang.审核}></a>
+                            <?php
+                                            }
+                                        }
+                                    //}
+                                }
+                            ?>
+                        </td>
+                    </tr>
+                    <!--合同-->
+                    <tr class="hidden">
+                        <td colspan="16" style="padding: 0">
+                            <div class="insert-wrap">
+                                <table class="table table-border table-bordered table-bg use-child-table" >
+                                    <thead class="use-child-head">
+                                        <foreach name="contract:attributes" key="k" item="val">
+                                            <th><{$Think.lang.$val}></th>
+                                        </foreach>
+                                            <th>操作</th>
+                                    </thead>
+                                    <tbody class="td-wrap use-child-body">
+                                        <foreach name="vo.contracts" key="vc" item="voc">
+                                            <tr>
+                                                <foreach name="contract:attributes" key="rs" item="v">
+                                                    <if condition="$rs eq 'IS_RENEWAL'">
+                                                            <if condition="$voc.IS_RENEWAL eq 1">
+                                                                <td class="no-wrap">否</td>
+                                                                <else /><td class="no-wrap">是</td>
+                                                            </if>
+                                                    <elseif condition="$rs eq 'START_TIME'"/><td class="no-wrap"><?= cutting_time($voc[$rs]) ?></td>
+                                                    <elseif condition="$rs eq 'END_TIME'"/><td class="no-wrap"><?= cutting_time($voc[$rs]) ?></td>
+                                                    <elseif condition="$rs eq 'CON_STAT'"/>
+                                                        <if condition="$voc.CON_STAT eq 1">
+                                                            <td class="no-wrap">有效</td>
+                                                        <else /><td class="no-wrap">失效</td>
+                                                        </if>
+                                                    <else /> <td class="no-wrap"><{$voc.$rs}></td>
+                                                    </if>
+                                                </foreach>
+                                                <td class="use-btn" style="text-align: left;">
+                                                    <a class="btn-pub btn-green" href="<{:U('BTBCustomerManagement/show_contract', array('ID' => $voc[ID]))}>"><{$Think.lang.查看}></a>
+                                                    <a class="btn-pub btn-yellow mg-l-10" href="<{:U('BTBCustomerManagement/update_contract', array('ID' => $voc[ID]))}>"><{$Think.lang.编辑}></a>
+                                                    <?php
+                                                        if ($voc['SP_ANNEX_ADDR1']) {
+                                                    ?>
+                                                            <a class="btn-pub btn-default mg-l-10" href="<{:U('BTBCustomerManagement/contract_download', array('ID' => $voc[ID]))}>"><{$Think.lang
+                                                                .下载合同}></a>
+                                                    <?php
+                                                        } else {
+                                                    ?>
+                                                            <button class="btn-pub btn-default mg-l-10" onclick="layer.msg('文件不存在');"><{$Think.lang.下载合同}></button>
+                                                    <?php
+                                                        }
+                                                    ?>
+                                                </td>
+                                            </tr>
+                                        </foreach>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </foreach>
+            </tbody>
+        </table>
+        <ul class="pagination">
+            <{$pages}>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+</body>
+<script>
+    $(".btn-reset-clear").click(function () {
+         $("input[name='SP_NAME']").val("");
+         $("input[name='CON_NO']").val("");
+         $("input[name='CREATE_USER_ID']").val("");
+         $("#cai_gou option:first").prop("selected", 'selected');
+         $("#audit_state option:first").prop("selected", 'selected');
+         $("#risk_rating option:first").prop("selected", 'selected');
+         $("#guo_bie option:first").prop("selected", 'selected');
+         $("#is_pay option:first").prop("selected", 'selected');
+    });
+    $('.show-data tr td span').click(function() {
+        var _this = $(this).parent().parent();
+        if (_this.next().hasClass('hidden')) {
+            _this.next().removeClass('hidden');
+            $(this).text('-');
+        } else {
+            _this.next().addClass('hidden');
+            $(this).text('+');
+        }
+    });
+    
+    function del_supplier(id, supplierSpName)
+    {
+        var id = id;
+        var url = '<{:U("BTBCustomerManagement/del_supplier")}>';
+        var index = 0;
+        
+        layer.confirm('<{$Think.lang.是否删除供应商}>' +  '-' + supplierSpName, {
+            btn: ['确定','取消']
+            }, function(){
+                $.ajax({
+                    'url': url,
+                    'type': 'POST',
+                    'data':{ID: id},
+                    beforeSend:function(XMLHttpRequest){
+                        index = layer.load(2, {
+                            shade: [0.1,'#fff']
+                        });
+                    },
+                    success: function (data) {
+                        layer.close(index);
+                        if (data.status == 1) {
+                            layer.msg(data.info.msg);
+                            setTimeout(function () { 
+                                window.location.reload();
+                            }, 1000);
+                        } else {
+                            layer.msg(data.info.msg);
+                        }
+                    },
+                    error:function(XMLHttpRequest,textStatus,errorThrown){
+                        layer.close(index);
+                        layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                    }
+                });
+            }, function(){
+                
+            }
+        );
+    }
+</script>
+</html>

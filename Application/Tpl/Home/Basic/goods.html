@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>商品档案</title>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.1/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css"/>
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css">
+    <script type="text/javascript">if(document.all)alert('你的浏览器太旧了，恕不奉陪');</script>
+</head>
+
+<body>
+<div id="content">
+
+
+    <div class="ck-wrap">
+        <header>
+            <div><span class="new-add" @click="add()">新增商品</span></div>
+        </header>
+        <article>
+            <div class="data">
+                <table class="tabel table table-border table-bordered table-bg">
+                    <thead>
+                    <tr class="text-c">
+
+                        <th width="5%">序号</th>
+                        <th width="10%">商品编码</th>
+                        <th width="10%">商品名称</th>
+                        <th width="10%">商品类</th>
+                        <th width="10%">商品品牌</th>
+                        <th width="10%">规格</th>
+                        <th width="10%">型号</th>
+                        <th width="10%">单位</th>
+                        <th width="10%">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="text-c " v-for="(good,key) in goods_data">
+                        <td v-cloak><span>{{good.id}}</span> </td>
+                        <td v-cloak><span>{{good.GSKU}}</span> </td>
+                        <td v-cloak><span>{{good.goods_name}}</span> </td>
+                        <td v-if="category[good.goods_class_id]" v-cloak>{{category[good.goods_class_id].CD_VAL}}</td>
+                        <td v-else=""></td>
+                        <td v-if="brand[good.brand]" v-cloak>{{brand[good.brand].brand_name}}</td>
+                        <td v-else=""></td>
+                        <td v-cloak><span>{{good.spec}}</span> </td>
+                        <td v-cloak><span>{{good.model}}</span></td>
+                        <td v-if="metering[good.digit]" v-cloak>{{metering[good.digit].CD_VAL}}</td>
+                        <td v-else=""></td>
+                        <td>
+                            <span class="edit-btn" @click="edit(good)">修改</span>&nbsp;
+                            <span class="edit-btn" @click="del(good,key)">删除</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+
+    <div class="detailInfo-wrap" v-show="show" style="display: none">
+        <div class="row">
+            <div class="col-70"><span class="info-title">详情页</span></div>
+            <div class="col-30 text-r"><i  class="Hui-iconfont Hui-iconfont-close" @click="close()"></i></div>
+        </div>
+        <div class="info-context">
+            <div class="row" v-show="code_show">
+                <div class="col-50"><span>商品编码：</span> <input type="text" v-model="init_data.GSKU"></div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>商品名称：</span> <input type="text" v-model="init_data.goods_name"></div>
+                <div class="col-50"><span>助记码：</span> <input type="text"></div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>英文名称：</span> <input type="text" v-model="init_data.goods_english_name"></div>
+                <div class="col-50">
+                    <span>原产国：</span>
+                    <select v-model="producer_model" class="" name="producer"  datatype="s" errormsg="原产国" >
+                        <option   v-for="p in producer" :value="p.CD" >{{p.CD_VAL}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>品牌：</span>
+                    <select v-model="brand_model" class="" name="brand"  datatype="s" errormsg="商品大类" >
+                        <option   v-for="b in brand" :value="b.id" >{{b.brand_name}}</option>
+                    </select>
+                </div>
+                <div class="col-50">
+                    <span>商品大类：</span>
+                    <select v-model="category_model" class="" name="category"  datatype="s" errormsg="商品大类" >
+                        <option   v-for="c in category" :value="c.CD" >{{c.CD_VAL}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>规格：</span> <input type="text" v-model="init_data.spec"></div>
+                <div class="col-50"><span>型号：</span> <input type="text" v-model="init_data.model"></div>
+            </div>
+            <div class="row">
+                <div class="col-50">
+                    <span>计量单位：</span>
+                    <select v-model="metering_model" class="" name="metering"  datatype="s" errormsg="请选择所属公司" >
+                        <option   v-for="m in metering" :value="m.CD" >{{m.CD_VAL}}</option>
+                    </select>
+                </div>
+                <div class="col-50"><span>重量：</span> <input type="number" class="unit" v-model="init_data.weight">克</div>
+            </div>
+            <!-- 入库时显示 -->
+            <div class="row">
+               <div class="col-50"><span><del>生产日期</del>：</span> <input type="date"></div>
+                <div class="col-50"><span>保质期：</span> <input type="number" class="unit" v-model="init_data.prime_date">天</div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span><del>到期日期</del>：</span> <input type="date"></div>
+                <div class="col-50"><span>参考成本：</span> <input type="number" v-model="init_data.refer_cost"></div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>最低售价：</span> <input type="number" step="0.1" v-model="init_data.min_price"></div>
+                <div class="col-50"><span>参考售价：</span> <input type="number" v-model="init_data.refer_price"></div>
+            </div>
+            <div class="row info-checkbox">
+                <div class="col-50"><span>批次管理：</span><input type="checkbox" v-model="init_data.batch_switch"></div>
+                <div class="col-50"><span>保质期管理：</span><input type="checkbox" v-model="init_data.prime_date_switch"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50 text-c">
+                <button class="button-pink" @click="save()">保存</button>
+            </div>
+            <div class="col-50 text-c">
+                <button class="button-black" @click="close()">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+<script type="text/javascript" >
+    var vm = new Vue({
+        el: '#content',
+        data: {
+            goods_data: <{$goods_data}>,
+            producer:<{$producer}>,
+            brand:<{$brand}>,
+            category:<{$category}>,
+            metering:<{$metering}>,
+            producer_model:'',
+            brand_model:'',
+            category_model:'',
+            metering_model:'',
+            init_data: {"id":'',"GSKU":"","goods_name":"","goods_class_id":"","brand":"","spec":"","model":"","digit":"","batch_switch":"","prime_date_switch":"","refer_price":"","prime_date_switch":"","min_price":"","refer_cost":"","prime_date":"","weight":""},
+            init: {"id":'',"GSKU":"","goods_name":"","goods_class_id":"","brand":"","spec":"","model":"","digit":"","batch_switch":"","prime_date_switch":"","refer_price":"","prime_date_switch":"","min_price":"","refer_cost":"","prime_date":"","weight":""},
+            show:false,
+            code_show:false
+        },
+        methods: {
+            add:function(){
+                this.show = true;
+            },
+            save:function(){
+
+                if(this.init_data.GSKU != ''){
+                    console.log(this.init_data.GSKU)
+                    return false;
+                }
+                var i_data = this.init_data;
+                i_data.producer = this.producer_moder;
+                i_data.brand = this.brand_model;
+                i_data.goods_class_id = this.category_model;
+                i_data.digit = this.metering_model;
+                if (i_data.goods_name == '' || i_data.goods_class_id  == '') {
+                    box.Alert('提示', '商品信息不能为空');
+                    return false;
+                }
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "/index.php?m=basic&a=goods",
+                    data: {
+                        goods_data:this.init_data,
+                        operate:'add'
+                    },
+                    success: function (res) {
+                        var res = JSON.parse(res);
+                        box.Alert('提示', res['info']);
+                        $(".button-black").click();
+                        i_data.id = res['goods_id'];
+                        i_data.GSKU = res['GSKU'];
+                        vm.goods_data.push(i_data)
+                    },
+                    error: function () {
+                        alertNew('网络繁忙，请重试！')
+                    }
+                });
+            },
+            edit:function (e) {
+                this.init_data = e;
+                this.show = true;
+                this.code_show = true;
+            },
+            close:function () {
+                this.init_data = this.init;
+                this.show = false;
+            },
+            del:function(e,key){
+                var remove_key = key;
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "/index.php?m=basic&a=goods",
+                    data: {
+                        goods_id:e.id,
+                        operate:'del'
+                    },
+                    success: function (res) {
+                        var res_info = JSON.parse(res)['info'];
+                        box.Alert('提示', res_info);
+                        vm.goods_data.splice(remove_key,1);
+                    },
+                    error: function () {
+                        alertNew('网络繁忙，请重试！')
+                    }
+                });
+            }
+        }
+    })
+</script>
+
+
+</body>
+
+</html>

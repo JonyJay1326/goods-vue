@@ -1,0 +1,299 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css" />
+    <title></title>
+</head>
+<body class="order-detail">
+<style>
+.bg_blue{background: #f5fafe none repeat scroll 0 0;}
+</style>
+<div class="order-tabs">
+    <ul>
+        <li class="active"><a href="javascript:void()"><{$Think.lang.客户信息}></a></li>
+        <li></li>
+    </ul>
+    <div class="show_btn_edit" style="">
+        <span class="btn btn-pink btn-pink-but"  ><{$Think.lang.编辑}></span>
+    </div>
+    <div class="show_btn_save" style="display:none;">
+        <span class="btn btn-pink-but click_not_edit"  ><{$Think.lang.取消}></span>
+        <span class="btn btn-pink btn-pink-but click_to_submit"  ><{$Think.lang.保存}></span>
+    </div>
+</div>
+
+<form name="form_edit_kehu" method="post" action="<{:U("Customer/submitthirdkehu")}>" >
+<div class="table-wrap">
+    <div class="cus-info">
+        <table class="table table-border table-bg table-bordered">
+            <caption><{$Think.lang.基本信息}></caption>
+            <tbody class="text-c">
+            <tr>
+                <td width="10%" class="bg_blue"><{$Think.lang.用户ID}></td>
+                <td width="40%"><{$kehu_info.CUST_ID}> </td>
+                <td width="10%" class="bg_blue"><{$Think.lang.第三方用户编号}></td>
+                <td width="40%"><{$kehu_info.THIRD_UID}> </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.手机号码}></td>
+                <td><span class="font-tag"><{$kehu_info.CUST_CP_NO}></span> </td>
+                <td class="bg_blue"><{$Think.lang.昵称}></td>
+                <td><{$kehu_info.CUST_NICK_NM}> </td>
+
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.电子邮箱}></td>
+                <td><{$kehu_info.CUST_EML}> </td>
+                <td class="bg_blue"><{$Think.lang.姓名}></td>
+                <td><{$kehu_info.CUST_NM}> </td>
+
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.接收优惠信息}></td>
+                <td>
+                    <span id="show_text_is_recieve" style="display:;">
+                        <?php $ms_cust_obj = new ZZmscustModel(); ?>
+                        <?php echo $ms_cust_obj::$def_recieve[$kehu_info['is_recieve']]; ?>
+                    </span> 
+                    <select id="show_edit_is_recieve" name="kehu[is_recieve]" style="display: none;">
+                        <option value="0" <if condition="$kehu_info.is_recieve eq 0">selected="selected"</if> ><{$Think.lang.否}></option>
+                        <option value="1" <if condition="$kehu_info.is_recieve eq 1">selected="selected"</if> ><{$Think.lang.是}></option>
+                    </select>
+                </td>
+                <td class="bg_blue"><{$Think.lang.接收渠道}></td>
+                <td>
+                    <span id="show_text_recieve_types" style="display:;">
+                    <?php
+                        $recieve_types = $kehu_info['recieve_types'];
+                        $recieve_datas = explode(',',$recieve_types);
+                        $ms_cust_obj = new ZZmscustModel();
+                        foreach( $ms_cust_obj::$def_recieve_types as $key=>$val){
+                            if(in_array($key,$recieve_datas)){
+                                echo $val;
+                                echo '&nbsp;&nbsp;';
+                            }
+                        }
+                    ?>
+                    </span>
+                    <span id="show_edit_recieve_types" style="display: none;">
+                    <?php foreach( $ms_cust_obj::$def_recieve_types as $key=>$val){ ?>
+                    <input type="checkbox" name="kehu[recieve_types][]" value="<?php echo $key; ?>" <?php if(in_array($key,$recieve_datas)){ ?>checked<?php } ?> > <?php echo $val; ?>
+                    <?php } ?>
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="cus-info">
+        <table class="table table-border table-bg table-bordered">
+            <caption><{$Think.lang.状态信息}></caption>
+            <tbody class="text-c">
+            <tr>
+                <td width="10%" class="bg_blue"><{$Think.lang.客户状态}></td>
+                <td width="40%"> 
+                    <?php $show_status_name = D("ZZmscmncd")->getNameFromCode($kehu_info['CUST_STAT_CD']); ?>
+                    <span id="show_text_CUST_STAT_CD" style="display:;">
+                        <?php echo $show_status_name; ?>
+                    </span>
+                    <span id="show_edit_CUST_STAT_CD" style="display: none;">
+                        <select id="" name="kehu[CUST_STAT_CD]" style="">
+                            <?php $ms_cust_obj = new ZZmscustModel(); ?>
+                            <?php foreach( $ms_cust_obj::$stat_cd_thirdkehu as $key=>$val){ ?>
+                                <option value="<?php echo $val; ?>" <if condition="$kehu_info.CUST_STAT_CD eq $val">selected="selected"</if> ><?php echo D("ZZmscmncd")->getNameFromCode($val); ?></option>
+                            <?php } ?>
+                        </select>
+                    </span>
+                </td>
+                <td width="10%" class="bg_blue"><{$Think.lang.所属客户}></td>
+                <td width="40%"><{$kehu_info.parent_cust_id}> </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.所属店铺}></td>
+                <td><?php echo D('ZZmsstore')->gainStoreName($kehu_info['parent_store_id']); ?> </td>
+                <td class="bg_blue"><{$Think.lang.所属平台}></td>
+                <td><?php echo D('ZZmscmncd')->getNameFromCode($kehu_info['parent_plat_cd']); ?> </td>
+            </tr>
+            <tr>
+                <td class="bg_blue"><{$Think.lang.注册时间}></td>
+                <td><?php echo date('Y-m-d H:i',strtotime($kehu_info['SYS_REG_DTTM'])); ?></td>
+                <td> </td>
+                <td> </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="get-info">
+        <table class="table table-border table-bordered">
+            <caption><{$Think.lang.收货信息}></caption>
+            <tbody class="text-c">
+
+            <if condition="empty($kehu_addr_list) eq 1">
+            <tr>
+                <td><{$Think.lang.None}></td>
+            </tr>
+            <else />
+            <foreach name="kehu_addr_list" key="key" item="value">
+            <tr>
+                <td class="bg_blue">
+                    <input type="hidden" name="kehu_addr[ADDR_ID][]" value="<?php echo $value['ADDR_ID']; ?>" >
+                    <?php echo $key+1; ?>
+                </td>
+                <td class="bg_blue"><{$Think.lang.收货人姓名}></td>
+                <td>
+                    <span class="show_text_addr_list" style="display:;">
+                        <?php echo $value['RCVR_NM']; ?> 
+                    </span>
+                    <span class="show_edit_addr_list" style="display: none;">
+                        <input type="text" name="kehu_addr[RCVR_NM][]" value="<?php echo $value['RCVR_NM']; ?>" >
+                    </span>
+                </td>
+                <td class="bg_blue"><{$Think.lang.收货人电话}></td>
+                <td>
+                    <span class="show_text_addr_list" style="display:;">
+                        <?php echo $value['RCVR_TEL']; ?> 
+                    </span>
+                    <span class="show_edit_addr_list" style="display: none;">
+                        <input type="text" name="kehu_addr[RCVR_TEL][]" value="<?php echo $value['RCVR_TEL']; ?>" >
+                    </span>
+                </td>
+                <td class="bg_blue"><{$Think.lang.收货地址}></td>
+                <td>
+                    <span class="show_text_addr_list" style="display:;">
+                        <?php echo $value['ADDR_DTL']; ?> 
+                    </span>
+                    <span class="show_edit_addr_list" style="display: none;">
+                        <input type="text" name="kehu_addr[ADDR_DTL][]" value="<?php echo $value['ADDR_DTL']; ?>" >
+                    </span>
+                </td>
+            </tr>
+            </foreach>
+            </if>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<input type="hidden" name="cust_id" value="<{$kehu_info.CUST_ID}>">
+<input type="hidden" name="issubmit" value="1">
+</form>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script>
+function btn_form_show(){
+    $('.show_btn_edit').hide();
+    $('.show_btn_save').show();
+    $('#show_text_is_recieve').hide();
+    $('#show_edit_is_recieve').show();
+    $('#show_text_recieve_types').hide();
+    $('#show_edit_recieve_types').show();
+    $('#show_text_CUST_STAT_CD').hide();
+    $('#show_edit_CUST_STAT_CD').show();
+    $('.show_text_addr_list').hide();
+    $('.show_edit_addr_list').show();
+    //other
+    recieve_types_js_disabled($('#show_edit_is_recieve').val());
+}
+function btn_form_hide(){
+    $('.show_btn_edit').show();
+    $('.show_btn_save').hide();
+    $('#show_text_is_recieve').show();
+    $('#show_edit_is_recieve').hide();
+    $('#show_text_recieve_types').show();
+    $('#show_edit_recieve_types').hide();
+    $('#show_text_CUST_STAT_CD').show();
+    $('#show_edit_CUST_STAT_CD').hide();
+    $('.show_text_addr_list').show();
+    $('.show_edit_addr_list').hide();
+}
+// show or not : types
+function recieve_types_js_show(tmp){
+    if(tmp==1){
+        $("input").each(function(i,val){
+            if(val.name=='kehu[recieve_types][]'){
+                val.removeAttribute('disabled');
+                val.checked='checked';
+            }
+        });
+    }else{
+        $("input").each(function(i,val){
+            if(val.name=='kehu[recieve_types][]'){
+                val.setAttribute('disabled','disabled');
+                val.checked='';
+            }
+        });
+    }
+}
+function recieve_types_js_disabled(tmp){
+    if(tmp==1){
+        $("input").each(function(i,val){
+            if(val.name=='kehu[recieve_types][]'){
+                val.removeAttribute('disabled');
+            }
+        });
+    }else{
+        $("input").each(function(i,val){
+            if(val.name=='kehu[recieve_types][]'){
+                val.setAttribute('disabled','disabled');
+            }
+        });
+    }
+}
+$(document).ready(function (){
+
+    $('.show_btn_edit').click(function(){
+        btn_form_show();
+    });
+    $('.click_not_edit').click(function(){
+        btn_form_hide();
+    });
+    $('.click_to_submit').click(function(){
+        //check submit
+        var count = 0;
+        var is_recieve = $('#show_edit_is_recieve').val();
+        if(is_recieve==1){
+            $("input").each(function(i,val){
+                if(val.name=='kehu[recieve_types][]'){
+                    if(val.checked){
+                        ++count;
+                    }
+                }
+            });
+        }
+        if(is_recieve==1 && count==0){
+            alert('<{$Think.lang.请勾选任意优惠信息接收渠道}>');
+            return null;
+        }
+        document.form_edit_kehu.submit();
+    });
+    //接收优惠信息click
+    $('#show_edit_is_recieve').change(function(){
+        var tmp=$(this).val();
+        recieve_types_js_show(tmp);
+    });
+
+});
+</script>
+
+</body>
+</html>
+

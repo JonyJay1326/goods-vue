@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/H-ui.admin.css" />
+    <link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="skin/default/skin.css" id="skin" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
+    <link rel="stylesheet" href="style.css">
+
+    <title>供应商</title>
+    <style media="screen">
+        input,
+        select {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .gys-wrap {
+            box-sizing: border-box;
+        }
+        .basis-info td:nth-of-type(odd),
+        .com-info td:nth-of-type(odd) {
+            width: 15%;
+        }
+
+        .basis-info td>input[type="text"],
+        .basis-info td>select,
+        .basis-info td>textarea {
+            width: 65%;
+            height: 26px;
+            border: 1px solid #ccc;
+            vertical-align: top;
+            border-radius: 2px;
+            padding: 0 10px
+        }
+
+        .basis-info .sel-map>select {
+            width: 25%;
+            height: 26px;
+            border: 1px solid #ccc;
+            vertical-align: top;
+            border-radius: 2px;
+            padding: 0 10px
+        }
+
+        .basis-info td>input[type="file"] {
+            width: 65%;
+            height: 26px;
+            border: 1px solid #ccc;
+            vertical-align: top;
+            border-radius: 2px;
+        }
+
+        .basis-info td span {
+            display: inline-block;
+            width: 80px;
+            height: 26px;
+            border: 1px solid #b3b3b3;
+            text-align: center;
+            line-height: 26px;
+            border-radius: 2px;
+            background: #dddddd;
+            margin-right: 10px;
+        }
+
+        .table caption {
+            text-align: left;
+            background: #F0FFFF;
+            border: 1px solid #e5e5e5;
+            margin-bottom: -1px;
+            font-size: 15px;
+            font-weight: 500;
+            padding: 5px 10px;
+            margin-top: -1px;
+        }
+
+        .gys-btn {
+            width: 100%;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .gys-btn>button {
+            margin: 0 50px;
+        }
+
+        .table td {
+            padding: 5px 10px;
+        }
+        .text-le td {
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+<div class="commom_wrap">
+    <div class="gys-wrap">
+        <div class="supplier-info row common_row_title ">
+            <span class="active"><a>供应商详情</a></span>
+        </div>
+        <div class="row row_title_line"><a href="" class="line1"></a></div>
+        <div class="basis-info">
+            <table class="table table-border table-bordered table-bg">
+                <thead>
+                <tr>
+                    <th width="10%"></th>
+                    <th width="40%"></th>
+                    <th width="10%"></th>
+                    <th width="40%"></th>
+                </tr>
+                <tbody class="text-le">
+                    <tr>
+                        <td colspan="4"><{$Think.lang.基本信息}></td>
+                    </tr>
+                    <tr>
+                        <td>供应商名称</td>
+                        <td>
+                            <input type="text" value="xxxxxxxxxx公司">
+                        </td>
+                        <td>公司</td>
+                        <td>
+                            <input type="text" value="爱萝莉">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>英文名称</td>
+                        <td>
+                            <input type="text" value="abcdefg">
+                        </td>
+                        <td>英文简称</td>
+                        <td>
+                            <input type="text" value="abcdefg">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>营业执照号</td>
+                        <td>
+                            <input type="text" value="1213213213213">
+                        </td>
+                        <td>上传营业执照</td>
+                        <td>
+                            <input type="file">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>企业类型</td>
+                        <td>
+                            <span>品牌</span>
+                            <span>品牌</span>
+                            <span>品牌</span>
+                            <span>品牌</span>
+                        </td>
+                        <td>供应商地址</td>
+                        <td class="sel-map">
+                            <select>
+                                <option value="0">中国</option>
+                                <option value="1">韩国</option>
+                            </select>
+                            <select>
+                                <option value="0">上海</option>
+                                <option value="1">北京</option>
+                            </select>
+                            <select>
+                                <option value="0">浦东新区</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>供应商年业务规模</td>
+                        <td>
+                            <span>品牌</span>
+                            <span>品牌</span>
+                            <span>品牌</span>
+                            <span>品牌</span>
+                        </td>
+                        <td>供货品类</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>采购团队</td>
+                        <td>
+                            <select>
+                                <option value="0">上海</option>
+                                <option value="1">北京</option>
+                            </select>
+                        </td>
+                        <td>介绍团队</td>
+                        <td>
+                            <select>
+                                <option value="0">无</option>
+                                <option value="1">北京</option>
+                             </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>运费</td>
+                        <td colspan="3"> <textarea></textarea></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-border table-bordered table-bg">
+                <caption>合作概览</caption>
+                <tbody class="text-c">
+                    <tr>
+                        <td>合同数</td>
+                        <td>
+                            12
+                        </td>
+                        <td>生效合同</td>
+                        <td>
+                            123
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>进行中订单数</td>
+                        <td>
+                            啊是的撒
+                        </td>
+                        <td>进行中订单金额</td>
+                        <td>
+                            ￥13213132131232
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>累计订单数</td>
+                        <td>
+                            10
+                        </td>
+                        <td>累计订单金额</td>
+                        <td>￥1231321</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+</body>
+
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+</head>
+<style>
+    .main {
+        width: 80%;
+        margin: 0 auto;
+    }
+    .show {
+        padding: 0;
+        margin: 0;
+    }
+    table {
+        margin: 10px;
+    }
+    table td {
+        width: 200px;
+        border-bottom: 1px solid black;
+    }
+    p {
+        margin: 10px;
+    }
+</style>
+<body>
+    <div class="main">
+        <div class="Hui-article">
+            <pre class="show">
+                <h3><{$title}></h3>
+                <table>
+                    <th>字段名</th>
+                    <th>什么时候必填(in写入,out写出,both同时,none不必填)</th>
+                    <th>字段介绍</th>
+                <?php
+                    foreach ($bill as $key => $value) {
+                        echo '<tr/>';
+                        echo '<td>';
+                        echo $value [0]; 
+                        echo '</td>';
+                        echo '<td>';
+                        echo $value ['require']; 
+                        echo '</td>';
+                        echo '<td>';
+                        echo $value ['message']; 
+                        echo '</td>';
+                    }
+                ?>
+                </table>
+                
+                <table>
+                    <th>字段名</th>
+                    <th>什么时候必填(in入库,out出库,both出入库都必填,none不必填)</th>
+                    <th>字段介绍</th>
+                <?php
+                    foreach ($guds as $key => $value) {
+                        echo '<tr/>';
+                        echo '<td>';
+                        echo $value [0]; 
+                        echo '</td>';
+                        echo '<td>';
+                        echo $value ['require']; 
+                        echo '</td>';
+                        echo '<td>';
+                        echo $value ['message']; 
+                        echo '</td>';
+                    }
+                ?>
+                </table>
+                <h3>请求数据格式</h3>
+                <p><?= print_r($exampleRequestFormat, true) ?></p>
+                <h3>接口返回@return JSON</h3>
+                <p>成功：<{$example}></p>
+                <h3>状态码：</h3>
+                <table>
+                    <th>状态码：</th>
+                    <th>介绍</th>
+                <?php
+                    foreach ($msgCode as $key => $value) {
+                        echo '<tr/>';
+                        echo '<td>';
+                        echo $key; 
+                        echo '</td>';
+                        echo '<td>';
+                        echo $value; 
+                        echo '</td>';
+                    }
+                ?>
+                </table>
+            </pre>
+        </div>
+    </div>
+</body>
+</html>

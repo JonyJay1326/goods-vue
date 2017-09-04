@@ -1,0 +1,130 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE_IE678.js"></script>
+    <![endif]-->
+    <link href="../Public/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/icheck/icheck.css" rel="stylesheet" type="text/css" />
+    <link href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" rel="stylesheet" type="text/css" />
+    <title>添加管理员</title>
+</head>
+<body>
+<div class="pd-20">
+    <form action="<{:U('Admin/admin_add')}>" method="post" class="form form-horizontal" id="form-admin-add">
+        <div class="row cl">
+            <label class="form-label col-3"><span class="c-red">*</span>用户名：</label>
+            <div class="formControls col-5">
+                <input type="text" class="input-text" value="" placeholder="" id="user-name" name="login_name" datatype="*2-16" nullmsg="用户名不能为空">
+            </div>
+            <div class="col-4"> </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-3"><span class="c-red">*</span>登陆密码：</label>
+            <div class="formControls col-5">
+                <input type="password" placeholder="密码" name="newpassword" autocomplete="off" value="" class="input-text" datatype="*6-20" nullmsg="密码不能为空">
+            </div>
+            <div class="col-4"> </div>
+        </div>
+
+        <div class="row cl">
+            <label class="form-label col-3"><span class="c-red">*</span>性别：</label>
+            <div class="formControls col-5 skin-minimal">
+                <div class="radio-box">
+                    <input type="radio" id="sex-1" name="m_sex" value="0" datatype="*" nullmsg="请选择性别！">
+                    <label for="sex-1">男</label>
+                </div>
+                <div class="radio-box">
+                    <input type="radio" id="sex-2" value="1" name="m_sex">
+                    <label for="sex-2">女</label>
+                </div>
+            </div>
+            <div class="col-4"> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">手机：</label>
+            <div class="formControls col-5">
+                <input type="text" class="input-text" value="" placeholder="" id="user-tel" name="m_mobile"   nullmsg="手机不能为空">
+            </div>
+            <div class="col-4"> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">邮箱：</label>
+            <div class="formControls col-5">
+                <input type="text" class="input-text" placeholder="@" name="email" id="email" nullmsg="请输入邮箱！">
+            </div>
+            <div class="col-4"> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">角色：</label>
+            <div class="formControls col-5"> <span class="select-box" style="width:150px;">
+				<select class="select" name="role_id" size="1">
+                    <volist name="role_list" id="vo">
+                        <option value="<{$vo.ROLE_ID}>"><{$vo.ROLE_NAME}></option>
+                    </volist>
+
+                </select>
+				</span> </div>
+        </div>
+        <div class="row cl">
+            <label class="form-label col-3">备注：</label>
+            <div class="formControls col-5">
+                <textarea name="m_remark" cols="" rows="" class="textarea"  placeholder="说点什么...100个字符以内" dragonfly="true" onKeyUp="textarealength(this,100)"></textarea>
+                <p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
+            </div>
+            <div class="col-4"> </div>
+        </div>
+        <div class="row cl">
+            <div class="col-9 col-offset-3">
+                <input class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+                <button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/icheck/jquery.icheck.min.js"></script>
+<script type="text/javascript" src="../Public/lib/Validform/5.3.2/Validform.min.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript">
+    $(function(){
+        $('.skin-minimal input').iCheck({
+            checkboxClass: 'icheckbox-blue',
+            radioClass: 'iradio-blue',
+            increaseArea: '20%'
+        });
+
+        $("#form-admin-add").Validform({
+            tiptype:2,
+            ajaxPost:true,
+            callback:function(data){
+                //var index = parent.layer.getFrameIndex(window.name);
+                if (data.status == "y") {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    parent.$('.btn-refresh').click();
+                    setTimeout("parent.layer.close("+index+")",1000)
+//                    parent.layer.close(index);
+//                    parent.location.replace(location.href);
+//                    layer.msg(data.info);
+                } else {
+                    var index = parent.layer.getFrameIndex(window.name);
+                    setTimeout("parent.layer.close("+index+")",1000)
+//                    layer.msg(data.info);
+                }
+            }
+        });
+    });
+</script>
+</body>
+</html>

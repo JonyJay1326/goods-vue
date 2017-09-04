@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>供应商档案</title>
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="<{$HI_PATH}>lib/html5.js"></script>
+    <script type="text/javascript" src="<{$HI_PATH}>lib/respond.min.js"></script>
+    <script type="text/javascript" src="<{$HI_PATH}>lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/Hui-iconfont/1.0.1/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="<{$HI_PATH}>css/style.css"/>
+    <link rel="stylesheet" href="<{$HI_PATH}>css/stock.css?v=20170224">
+    <script type="text/javascript">if (document.all)alert('你的浏览器太旧了，恕不奉陪');</script>
+    <style>
+        .ksfIle-wrap {
+            background: white;
+            width: 818px;
+            height: 660px;
+            border: 1px solid #dedede;
+            padding: 15px;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            position: absolute;
+            top: 20%;
+            left: calc((100% - 818px) / 2);
+            cursor: all-scroll;
+        }
+
+        .ksfIle-wrap .info-title {
+            font-family: "Microsoft Yahei";
+            font-size: 3rem;
+            font-weight: 500;
+        }
+
+        .ksfIle-wrap .Hui-iconfont-close {
+            background: darkgray;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 600;
+            padding: 3px;
+            cursor: pointer;
+        }
+
+        .ksfIle-wrap .info-context {
+            background: rgba(240, 255, 255, 1);
+            padding: 15px;
+            border: 1px solid #e5e5e5;
+            margin: 10px 0;
+        }
+
+        .ksfIle-wrap .info-context .row {
+            margin: 10px 0;
+        }
+
+        .ksfIle-wrap .info-context .row span {
+            display: inline-block;
+            width: 105px;
+            font-size: 1.45rem;
+        }
+
+        .ksfIle-wrap .info-context .col-50 input[type="text"] {
+            display: inline-block;
+            width: 233px;
+            height: 25px;
+            border: 1px solid #ccc;
+            padding-left: 10px;
+        }
+
+        .ksfIle-wrap .info-context .col-100 input[type="text"] {
+            display: inline-block;
+            width: calc(100% - 143px);
+            height: 25px;
+            border: 1px solid #ccc;
+            padding-left: 10px;
+        }
+
+        .ksfIle-wrap .info-context .col-50 select {
+            display: inline-block;
+            width: 245px;
+            height: 28px;
+            border: 1px solid #ccc;
+            padding-left: 5px;
+            font-size: 13px;
+        }
+
+        .ksfIle-wrap .info-context .col-100 textarea {
+            border: 1px solid #ccc;
+            width: calc(100% - 132px);
+            height: 60px;
+            vertical-align: top;
+        }
+
+        .ksfIle-wrap .info-context .row .col-50 .unit {
+            display: inline-block;
+            width: 210px;
+            height: 25px;
+            border: 1px solid #ccc;
+            margin-right: 10px;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+<div id="content">
+    <div class="ck-wrap rk-wrap">
+        <div class="enter-line ">
+            <form action="" method="post" id="thisform">
+                <div class="row">
+                    <div class="col-15 text-c">
+                        <select v-model="search" name="search">
+                            <option value="suppli_name">供应商名称</option>
+                            <option value="bank_code">银行账户</option>
+                            <option value="contact_1">联系人</option>
+                            <option value="phone_1">电话</option>
+                        </select>
+                    </div>
+                    <div class="col-15"><input type="text" name="search_val" :value="search_val" placeholder="请输入关键字"></div>
+                    <div class="col-40">
+                        <div class="row">
+                            <div class="col-50 text-c">
+                                <input type="hidden" name="type"  value="see">
+                                <input type="submit" name="submit" value="<{$Think.lang.查询}>" class="button-pink"></div>
+                        </div>
+                    </div>
+                    <div class="col-20"></div>
+                </div>
+            </form>
+        </div>
+        <header>
+            <div><span class="new-add" @click="add()"><{$Think.lang.<{$Think.lang.新增}>}></span></div>
+        </header>
+        <article>
+            <div class="data">
+                <table class="tabel table table-border table-bordered table-bg">
+                    <thead>
+                    <tr class="text-c">
+                        <th width="5%"><{$Think.lang.序号}></th>
+                        <th width="10%">供应商名称</th>
+                        <th width="10%">银行账户</th>
+                        <th width="10%">国别</th>
+                        <th width="10%">联系人</th>
+                        <th width="10%">电话</th>
+                        <th width="10%"><{$Think.lang.操作}></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <tr class="text-c" v-for="(s,index) in supplier" v-cloak>
+                        <td>{{index+1}}</td>
+                        <td>{{s.suppli_name}}</td>
+                        <td v-if="s.bank_account">{{s.bank_code}}</td>
+                        <td v-else></td>
+                        <td v-if="s.countries">{{producer[s.countries].CD_VAL}}</td>
+                        <td v-else></td>
+                        <td>{{s.contact_1}}</td>
+                        <td>{{s.phone_1}}</td>
+
+                        <td>
+                            <span class="edit-btn" @click="edit(s,index)">编辑</span>&nbsp;
+                            <span class="edit-btn" @click="del(s.id,index)">删除</span>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+
+    <div class="ksfIle-wrap ui-widget-content" v-show="is_show" v-cloak style="cursor:move" >
+        <div class="row">
+            <div class="col-70"><span class="info-title">详情页</span></div>
+            <div @click="close" class="col-30 text-r"><i class="Hui-iconfont Hui-iconfont-close"></i></div>
+        </div>
+        <div class="info-context">
+            <div class="row">
+                <div class="col-50"><span>供应商名称：</span> <input type="text" v-model="add_data.suppli_name"></div>
+                <div class="col-50"><span>简称：</span> <input type="text" v-model="add_data.abbreviation"></div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>英文名称：</span> <input type="text" v-model="add_data.en_name"></div>
+                <div class="col-50"><span>英文简称：</span> <input type="text" v-model="add_data.en_ab"></div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>供应商分类：</span>
+                    <select v-model="add_data.classify">
+                        <option v-for="c in classify" :value="c.id">{{c.val}}</option>
+                    </select>
+                </div>
+                <div class="col-50">
+                    <span>国别：</span>
+                    <select v-model="add_data.countries"  >
+                        <option   v-for="p in producer" :value="p.CD" >{{p.CD_VAL}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-50">
+                    <span>默认收货仓：</span>
+                    <select v-model="add_data.warehouse" v-cloak>
+                        <option v-for="house in house_list"  :value="house.CD" >{{house.warehouse}}</option>
+                    </select>
+                </div>
+                <div class="col-50"><span>账期：</span> <input type="number" class="unit" v-model="add_data.account_day">天
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>法人代表：</span> <input type="text" v-model="add_data.legaler"></div>
+                <div class="col-50"><span>纳税人登记号：</span> <input type="text" v-model="add_data.registration_number">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-50">
+                    <span>开户银行：</span>
+                    <input type="text" v-model="add_data.bank_account">
+                </div>
+                <div class="col-50"><span>银行账号：</span> <input type="text" v-model="add_data.bank_code"></div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>第一联系人：</span> <input type="text" v-model="add_data.contact_1"></div>
+                <div class="col-50"><span>电话一：</span> <input type="text" v-model="add_data.phone_1"></div>
+            </div>
+            <div class="row">
+                <div class="col-50"><span>第二联系人：</span> <input type="text" v-model="add_data.contact_2"></div>
+                <div class="col-50"><span>电话二：</span> <input type="text" v-model="add_data.phone_2"></div>
+            </div>
+            <div class="row">
+                <div class="col-100"><span>网址：</span> <input type="text" v-model="add_data.URL"></div>
+            </div>
+            <div class="row">
+                <div class="col-100"><span>地址：</span> <textarea v-model="add_data.address"></textarea></div>
+            </div>
+            <div class="row">
+                <div class="col-100"><span>备注：</span> <textarea v-model="add_data.remarks"></textarea></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-50 text-c">
+                <button class="button-pink" @click="save">保存</button>
+            </div>
+            <div class="col-50 text-c">
+                <button class="button-black" @click="close"><{$Think.lang.取消}></button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="<{$HI_PATH}>/lib/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/stock/alert.js"></script>
+<script type="text/javascript" src="<{$HI_PATH}>/js/vue.js"></script>
+
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#content',
+        data: {
+            supplier: <{$supplier}>,
+            producer:<{$producer}>,
+            classify:[{id:0,val:'出口贸易供应商'},{id:1,val:'进口贸易供应商'}],
+            house_list:<{$house_list}>,
+            search_val:"<{$search_val}>",
+            search:"<{$search}>",
+            add_data: {"classify":0,"countries":"N000410100","warehouse":"N000680100"},
+            is_show: 0,
+            del_id:'',
+            remove_id:'',
+            this_type:'add',
+            index:'',
+            old_data:[]
+
+        },
+        methods:{
+            add:function () {
+                this.this_type = 'add';
+                this.is_show = 1;
+            },
+            del:function(e,index){
+                this.del_id = e;
+                this.remove_id = index;
+                console.log(e)
+                console.log(index)
+                box.Confirm('是否删除','是否确认删除',this.del_this)
+            },
+            del_this:function(){
+                $.ajax({
+                    type:"POST",
+                    async:false,
+                    url: "/index.php?m=stock&a=supplier",
+                    data:{type: 'del',id:vm.del_id},
+                    success:function(GetRes){
+                        if(JSON.parse(GetRes)['status'] == 'y'){
+                            vm.supplier.splice(vm.remove_id,1);
+                            vm.del_id = '';
+                        }
+                        box.Alert('<{$Think.lang.提示}>',JSON.parse(GetRes)['info'])
+                    },
+                    error:function(){
+                        alertNew('网络繁忙，请重试！')
+                    }
+                });
+
+            },
+            save:function () {
+
+                if( this.add_data['suppli_name'] == '' || this.add_data['legaler'] == '' || this.add_data['bank_account'] == '' || this.add_data['contact_1'] == '' || typeof(this.add_data['suppli_name']) == 'undefined' || typeof(this.add_data['legaler']) == 'undefined' || typeof(this.add_data['bank_account']) == 'undefined' || typeof(this.add_data['contact_1']) == 'undefined'){
+                    box.Alert('<{$Think.lang.提示}>', '请填写信息');
+                    return false;
+                }
+                if(this.add_data['phone_1'] != '' && typeof(this.add_data['phone_1']) != 'undefined' ){
+                    var myreg = /^((1[3-8]{1})+\d{9})$/;
+                    if(!myreg.test(this.add_data['phone_1']))
+                    {
+                        box.Alert('<{$Think.lang.提示}>', '请输入有效的手机号码');
+                        return false;
+                    }
+                }
+                if(this.add_data['phone_2'] != '' && typeof(this.add_data['phone_2']) != 'undefined' ){
+                    var myreg = /^(((13[0-9]{1})|(15[0-9]{1}))+\d{8})$/;
+                    if(!myreg.test(this.add_data['phone_2']))
+                    {
+                        box.Alert('<{$Think.lang.提示}>', '请输入有效的手机号码');
+                        return false;
+                    }
+                }
+                var add_data = this.add_data;
+                var this_type = this.this_type;
+
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: "/index.php?m=stock&a=supplier",
+                    data: {
+                        add_data: add_data,
+                        type: this_type
+                    },
+                    success: function (GetRes) {
+                        if(JSON.parse(GetRes)['status'] == 'y'){
+                            vm.is_show = 0;
+                            if('add' == this_type) {
+                                vm.add_data.id = JSON.parse(GetRes)['data']['id'];
+                                vm.supplier.push(vm.add_data);
+                            }
+                            vm.add_data = {"classify":0,"countries":"N000410100","warehouse":"N000680100"};
+                        }
+                        box.Alert('<{$Think.lang.提示}>',JSON.parse(GetRes)['info'])
+
+                    },
+                    error: function () {
+                        alertNew('网络繁忙，请重试！')
+                    }
+                });
+
+            },
+            edit:function (e,index) {
+                this.add_data = e;
+                console.log(e);
+//                this.old_data = this.add_data;
+                this.old_data.suppli_name = this.add_data.suppli_name;
+                this.old_data.classify = this.add_data.classify;
+                this.old_data.countries = this.add_data.countries;
+                this.old_data.contact_1 = this.add_data.contact_1;
+                this.old_data.phone_1 = this.add_data.phone_1;
+                this.index = index;
+                this.is_show = 1;
+                this.this_type = 'upd';
+                console.log(this.old_data)
+
+            },
+            close:function () {
+                this.is_show = 0;
+                if(this.this_type == 'upd'){
+//                    this.supplier[this.index] = this.old_data;
+                    this.supplier[this.index].suppli_name = this.old_data.suppli_name;
+                    this.supplier[this.index].classify = this.old_data.classify;
+                    this.supplier[this.index].countries = this.old_data.countries;
+                    this.supplier[this.index].contact_1 = this.old_data.contact_1;
+                    this.supplier[this.index].phone_1 = this.old_data.phone_1;
+                }
+                this.this_type = 'add';
+                vm.add_data = {"classify":0,"countries":"N000410100","warehouse":"N000680100"};
+            }
+        }
+    });
+
+    $(function() {
+        $( ".ksfIle-wrap" ).draggable();
+    });
+</script>
+<script>
+    $(function(){
+        $(".ksfIle-wrap").draggable();
+    });
+</script>
+</body>
+
+</html>

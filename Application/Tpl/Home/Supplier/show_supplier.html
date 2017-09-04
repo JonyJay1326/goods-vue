@@ -1,0 +1,173 @@
+<div class="gys-wrap" >
+    <div class="basis-info">
+        <table class="table table-border table-bordered table-bg">
+            <thead>
+            <tr>
+                <th width="10%"></th>
+                <th width="40%"></th>
+                <th width="10%"></th>
+                <th width="40%"></th>
+            </tr>
+            </thead>
+            <tbody class="text-le">
+            <tr>
+                <td colspan="4"><{$Think.lang.基本信息}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.供应商名称}></td>
+                <td>
+                    <{$result.SP_NAME}>
+                </td>
+                <td><{$Think.lang.供应商简称}></td>
+                <td>
+                    <{$result.SP_RES_NAME}>
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.英文名称}></td>
+                <td>
+                    <{$result.SP_NAME_EN}>
+                </td>
+                <td><{$Think.lang.英文简称}></td>
+                <td>
+                    <{$result.SP_RES_NAME_EN}>
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.营业执照号}></td>
+                <td>
+                    <{$result.SP_CHARTER_NO}>
+                </td>
+                <td><{$Think.lang.营业执照}></td>
+                <td>
+                    <?php
+                            if ($result['SP_ANNEX_NAME']) {
+                        ?>
+                    <a class="btn btn-download" style="width: auto;padding-right: 10px;"  href="<{:U('Supplier/business_license_download', array('ID' => $result[ID]))}>"><{$Think.lang.下载主体营业执照}></a>
+                    <?php
+                            } else {
+                        ?>
+                    <a class="btn btn-download" style="width: auto;padding-right: 10px;" ><{$Think.lang.未上传主体营业执照}></a>
+                    <?php
+                            }
+                        ?>
+                    <?php
+                            if ($result['SP_ANNEX_NAME2']) {
+                        ?>
+                    <a class="btn btn-download" style="width: auto;padding-right: 10px;"  href="<{:U('Supplier/business_license_download', array('ID' => $result[ID]))}>"><{$Think.lang.下载关联公司营业执照}></a>
+                    <?php
+                            } else {
+                        ?>
+                    <a class="btn btn-download" style="width: auto;padding-right: 10px;" ><{$Think.lang.未上传关联公司营业执照}></a>
+                    <?php
+                            }
+                        ?>
+                    <!--<input type="file" name="SP_ANNEX_ADDR" id="SP_ANNEX_ADDR">-->
+                </td>
+
+            </tr>
+            <tr class="ctcd">
+                <td><{$Think.lang.企业类型}></td>
+                <td class="company_type" id="company_type">
+                    <?php
+                            $copanyTypeCd = BaseModel::companyTypeCd();
+                            $conTypeCds = explode(',', $result['COPANY_TYPE_CD']);
+                            foreach ($copanyTypeCd as $key => $value) {
+                    if (array_keys($conTypeCds, $key)) {
+                    ?>
+                    <span><{$Think.lang.$value}></span>
+                    <?php
+                                }
+                            }
+                        ?>
+                    <!--<?php $copanyTypeCd = BaseModel::companyTypeCd() ?>
+                    <foreach name="copanyTypeCd" key="k" item="val">
+                            <if condition="$result.COPANY_TYPE_CD eq $k"><span value="<{$k}>" style="background: #ff6600;"><{$val}></span>
+                                <else /><span value="<{$k}>" ><{$val}></span>
+                            </if>
+                    </foreach>
+                    -->
+                    <input type="hidden" name="COPANY_TYPE_CD" class="COPANY_TYPE_CD" value=""/>
+                </td>
+                <td><{$Think.lang.供应商年业务规模}></td>
+                <td>
+                    <?php $spYearScaleCd = BaseModel::spYearScaleCd() ?>
+                    <foreach name="spYearScaleCd" key="k" item="val">
+                        <if condition="$result.SP_YEAR_SCALE_CD eq $k"><{$val}>
+
+                        </if>
+                    </foreach>
+                    <input type="hidden" name="SP_YEAR_SCALE_CD" class="SP_YEAR_SCALE_CD" value=""/>
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.采购团队}></td>
+                <td class="multiple_team">
+                    <?php
+                            $sps = explode(',', $result['SP_TEAM_CD']);
+                            if (count($sps) > 1) {
+                    $str = '';
+                    foreach ($sps as $key => $value) {
+                    $str .= $spTeamCd[$value] . ',';
+                    }
+                    $str = rtrim($str, ',');
+                    echo $str;
+                    } else {
+                    echo $spTeamCd[$result['SP_TEAM_CD']];
+                    }
+                    ?>
+                </td>
+                <td><{$Think.lang.介绍团队}></td>
+                <td class="multiple_spt">
+                    <{$spJsTeamCd[$result[SP_JS_TEAM_CD]]}>
+                </td>
+            </tr>
+            <tr class="sysc" id="goods_type-td">
+                <td><{$Think.lang.注册地址}></td>
+                <td class="sel-map">
+                    <?= BaseModel::getLocalName()[$result['SP_ADDR1']] ?>
+                    <?= BaseModel::getLocalName()[$result['SP_ADDR3']] ?>
+                    <?= BaseModel::getLocalName()[$result['SP_ADDR4']] ?>
+                </td>
+                <td><{$Think.lang.供货品类}></td>
+                <td><?php
+                            $list = explode(',', $result['SP_CAT_CD']);
+                            foreach ($list as $k => $v) {
+                    echo "<span>" . L(BaseModel::$cmnCat[$v]) . "</span>";
+                    }
+                    ?></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.办公地址}></td>
+                <td>
+                    <?= BaseModel::getLocalName()[$result['SP_ADDR5']] ?>
+                    <?= BaseModel::getLocalName()[$result['SP_ADDR7']] ?>
+                    <?= BaseModel::getLocalName()[$result['SP_ADDR8']] ?>
+                </td>
+                <td><{$Think.lang.供应商详细地址}></td>
+                <td><{$result.COMPANY_ADDR_INFO}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.公司与市场地位简述}></td>
+                <td colspan="3"><{$result.COMPANY_MARKET_INFO}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.备注}></td>
+                <td colspan="3"><{$result.SP_REMARK}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.创建人}></td>
+                <td><?= BaseModel::getAdmin()[$result['CREATE_USER_ID']] ?></td>
+                <td><{$Think.lang.创建时间}></td>
+                <td><{$result.CREATE_TIME}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.最新修改人}></td>
+                <td><?= BaseModel::getAdmin()[$result['UPDATE_USER_ID']] ?></td>
+                <td><{$Think.lang.修改时间}></td>
+                <td><{$result.UPDATE_TIME}></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

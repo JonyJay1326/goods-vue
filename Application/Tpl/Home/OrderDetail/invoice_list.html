@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8"/>
+	<title>发票列表</title>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css"/>
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../Public/css/purchase.css?=20170508"/>
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css?=201705026"/>
+	<link rel="stylesheet" href="../Public/css/common.css?=20170508"/>
+	<style>
+		a span{color: white;font-size: 13px;}
+		.form-group{margin-bottom: 0px}
+		.form-control{font-size:13px;height:34px;padding-left:5px;}
+		.card table th,.card table td{text-align: center;vertical-align: middle}
+		.td_operation .btn{margin-bottom:2px}
+		form .card table tbody td{background:white;}
+		.form-group .form-control{height:34px !important;color: #90A4AE;}
+		form .row_search .col-lg-12{margin-left: -12px;}
+	</style>
+</head>
+<body>
+<div class="wrap">
+	<div class="enter-line">
+		<form method="get" id="thisform" action="" class="invoice_list_form">
+			<div class="row row_menu">
+                <a href="javascript:void(0)" class="ship_status_check active "><{$Think.lang.未开票}></a>
+				<a href="javascript:void(0)" class="ship_status_check"><{$Think.lang.部分开票}></a>
+				<a href="javascript:void(0)" class="ship_status_check"><{$Think.lang.已开票}></a>
+			</div>
+				<div class="card order_list_row_top_input">
+					<div class="card-block" >
+						<blockquote class="card-blockquote">
+							<div class="table-responsive">
+								<table class="table invoice_list_table">
+									<thead>
+									<tr>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+										<th width="2%"></th>
+										<th width="2%"></th>
+										<th width="21%"></th>
+									</tr>
+									</thead>
+									<tbody>
+									<tr>
+										<td><{$Think.lang.采购单号}></td>
+										<td><input type="text" class="form-control" placeholder="" name="" value="" id="" /></td>
+										<td></td>
+										<td ><{$Think.lang.供应商名称}></td>
+										<td><input type="text" class="form-control" placeholder="" name="" value="" id="" /></td>
+										<td></td>
+										<td><{$Think.lang.我方公司}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="" id="" >
+													<option value=""><{$Think.lang.请选择}></option>
+												</select>
+											</fieldset>
+										</td>
+										<td></td>
+										<td><{$Think.lang.采购团队}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="" id="" >
+													<option value=""><{$Think.lang.请选择}></option>
+												</select>
+											</fieldset>
+										</td>
+									</tr>
+									<tr>
+										<td><{$Think.lang.采购同事}></td>
+										<td><input type="text" class="form-control" placeholder="" name="" value="" id="" /></td>
+										<td></td>
+										<td><{$Think.lang.发票类型}></td>
+										<td>
+											<fieldset class="form-group perchase_list_select">
+												<select class="form-control" name="" id="" >
+													<option value=""><{$Think.lang.请选择}></option>
+												</select>
+											</fieldset>
+										</td>
+										<td></td>
+										<td class="invoice_list_menu_select">
+											<fieldset class="form-group ">
+												<select class="form-control" name="" id="" >
+													<option value=""><{$Think.lang.采购时间}></option>
+													<option value=""><{$Think.lang.开票时间}></option>
+												</select>
+											</fieldset>
+										</td>
+										<td class="common_data">
+											<input type="text" name="start_time" id="start_time"  value="" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.起始日期}>" class="form-control">
+											<span class="input-group-btn">
+													<button class="btn btn-secondary" type="button"><i ></i></button>
+												</span>
+										</td>
+										<td colspan="2" class="text-center"><div class="col-data_l">一</div></td>
+										<td class="common_data">
+											<input type="text" name="end_time" id="end_time" value="" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="<{$Think.lang.结束时间}>" class="form-control">
+											<span class="input-group-btn">
+												<button class="btn btn-secondary" type="button"><i></i></button>
+											</span>
+										</td>
+									</tr>
+									</tbody>
+								</table>
+							</div>
+						</blockquote>
+					</div>
+				</div>
+				<div class="row row_search">
+					<div class="col-lg-12 text-left col-md-12 col-sm-12">
+						<input name="search" value="1" type="hidden">
+						<button type="button" class="btn-search" id="search"><{$Think.lang.查询}></button>
+						<button type="button" class="btn-reset" id="resetForm"><{$Think.lang.重置}></button>
+					</div>
+				</div>
+		</form>
+	<p class="purchase_list_p"></p>
+	<div class="card purchase_list_card invoice_list_card">
+		<div class="invoice_list_head">
+			<b><{$Think.lang.发票列表}></b>
+			<div>
+				<span>结果：共 <i>12</i>条记录</span>
+				<div>
+					<button type="button">下载导入模板</button>
+					<button type="button">导入线上发票信息</button>
+					<button class="invoice_btn_reload" type="button">刷新</button>
+				</div>
+			</div>
+		</div>
+		<div class="card-block">
+			<blockquote class="card-blockquote">
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+						<tr class="text-center">
+							<!--<th width=""><input type="checkbox"></th>-->
+							<th width=""><{$Think.lang.采购单号}></th>
+							<th width=""><{$Think.lang.供应商名称}></th>
+							<th width=""><{$Think.lang.我方公司}></th>
+							<th width=""><{$Think.lang.采购金额}></th>
+							<th width=""><{$Think.lang.采购团队}></th>
+							<th width=""><{$Think.lang.采购时间}></th>
+							<th width=""><{$Think.lang.开票情况}></th>
+							<th width=""><{$Think.lang.操作}></th>
+						</tr>
+						</thead>
+						<tbody>
+						<tr>
+							<td>PO2017070073</td>
+							<td>株式会社流久商事</td>
+							<td>iZene Japan G.K.</td>
+							<td><span>JPY</span>8820.00</td>
+							<td>yuzhen(JP-日本)</td>
+							<td>2017-08-16</td>
+							<td>未开票</td>
+							<td class="invoice_list_cor"><a href="" class="btn-check">查看</a></td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+			</blockquote>
+		</div>
+	</div>
+</div>
+<!--模态框-->
+</div>
+<div class="modal fade" id="delete-modal">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content" style="width: 360px;">
+			<div class="modal-header">
+				<h4 class="modal-title"><{$Think.lang.提示}></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span class="sr-only">Close</span>
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<p><{$Think.lang.确认要删除吗}>？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" onclick="order_del()"><{$Think.lang.确定}></button>
+				<input type="hidden" id="order_del"><!-- 隐藏域用来保存需要删除的订单ID-->
+				<button type="button" class="btn btn-secondary" data-dismiss="modal"><{$Think.lang.取消}></button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+</body>
+<script>
+	$(function () {
+		$(".wrap .invoice_list_form .row_menu a").click(function () {
+			$(this).addClass("active").siblings().removeClass("active")
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css"/>
+    <link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<title><{$Think.lang.采购信息}></title>
+    <link rel="stylesheet" href="../Public/css/purchase.css"/>
+    <link rel="stylesheet" href="../Public/css/purchaseDetail.css?v=2017028"/>
+    <style>
+        .table-bg thead{visibility: hidden !important;height:0px;margin-top: -10px;}
+        .table{margin-bottom:0px;}.card{margin-top: 20px}.upload-box{padding:0px;}
+        .table tbody tr td{vertical-align: middle}
+    </style>
+</head>
+<body>
+<div class="col-lg-12 col-md-12 col-sm-12 purchase_detail">
+    <div class="row row_title">
+       <a class="active">订单详情</a>
+       <a  href="<{:U('ship_detail',['id'=>$relevance_info['relevance_id']])}>">采购发货</a>
+       <a>操作日志</a>
+    </div>
+    <div class="row row_title_line"><a href="" class="line1"></a></div>
+    <div class="detail_form">
+        <table class="table table-bg">
+            <thead>
+                <th width="11%"></th>
+                <th width="23%"></th>
+                <th width="13%"></th>
+                <th width="20%"></th>
+                <th width="11%"></th>
+                <th width="22%"></th>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="6"><{$Think.lang.采购信息}></td>
+            </tr>
+            <tr>
+                <td class="must"><{$Think.lang.采购PO}></td>
+                <td class="td_span">
+                    <span <if condition="$order_info['has_po'] eq 1">style="display:block"</if>><{$Think.lang.有采购PO}></span>
+                    <span <if condition="$order_info['has_po'] neq 1">style="display:block"</if>><{$Think.lang.无采购PO}></span>
+                </td>
+                <td class="must"><{$Think.lang.PO单号或采购单号}></td>
+                <td><{$order_info.procurement_number}></td>
+                <td class="must"><{$Think.lang.供应商}></td>
+                <td class="td_switch">
+                    <?php echo $order_info['supplier_id'];?>
+                    <if condition="$order_info['sp_charter_no'] eq ''">
+                        <span></span>
+                        <elseif condition="$has_cooperate eq 1" />
+                        <span style="color: #1E7EB4;border-color:#1E7EB4;border-radius: 4px;"><{$Think.lang.已合作}></span>
+                        <else />
+                        <span style="color: black;border-radius: 4px;"><{$Think.lang.新合作}></span>
+                    </if>
+                    <switch name="risk_rating">
+                        <case value="1">
+                            <span style="color:black;border-radius: 4px;"><{$Think.lang.低}></span>
+                        </case>
+                        <case value="2">
+                            <span style="color: red;border-color:red;border-radius: 4px;"><{$Think.lang.中}></span>
+                        </case>
+                        <case value="3">
+                            <span style="color: #C31207;border-color: #C31207;border-radius: 4px; "><{$Think.lang.高}></span>
+                        </case>
+                        <default />
+                    </switch>
+                </td>
+            </tr>
+            <tr>
+                <td class="must"><{$Think.lang.采购金额}></td>
+                <td><{$order_info['amount_currency']}> &nbsp;&nbsp;  <?php echo number_format($order_info['amount'],2);?></td>
+                <td class="must"><{$Think.lang.采购团队}></td>
+                <td><{$order_info['payment_company']}></td>
+                <td class="must"><{$Think.lang.采购合同}></td>
+                <td class="td_select">
+                    <select  disabled>
+                        <option value=""><{$Think.lang.无采购合同}></option>
+                        <volist name="contracts" id="v">
+                            <option value="<{$v.CON_NO}>" contract="{SP_BANK_CD:'<{$v.SP_BANK_CD}>',BANK_ACCOUNT:'<{$V.BANK_ACCOUNT}>',BANK_ACCOUNT:'<{$v.BANK_ACCOUNT}>',SWIFT_CODE:'<{$v.SWIFT_CODE}>'}" <if condition="$v['CON_NO'] eq $order_info['contract_number']">selected</if>><{$v.CON_NO}></option>
+                        </volist>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="must"><{$Think.lang.供应商开户行}></td>
+                <td><{$order_info.supplier_opening_bank}></td>
+                <td class="must"><{$Think.lang.银行账号}></td>
+                <td><{$order_info.supplier_card_number}></td>
+                <td>SWIFT CODE</td>
+                <td><{$order_info.supplier_swift_code}></td>
+            </tr>
+            <tr>
+                <td class="must"><{$Think.lang.发票类型}></td>
+                <td>
+                    <volist name="invoice_type" id="v" key="k">
+                        <if condition="$order_info['invoice_type'] eq $v['CD']"><{$v.CD_VAL}></if>
+                    </volist>
+                </td>
+                <td class="must"><{$Think.lang.含税}> </td>
+                <td class="td_span">
+                    <span <if condition="$order_info['has_tax'] === '0'">style="display:block"</if>><{$Think.lang.是}></span>
+                    <span <if condition="$order_info['has_tax'] === '1'">style="display:block"</if>><{$Think.lang.否}></span>
+                </td>
+                <td class="must"><{$Think.lang.税点}></td>
+                <td class="td_select">
+                    <{:cdVal($order_info['tax_rate'])}>
+                </td>
+            </tr>
+            <tr>
+                <td class="must"><{$Think.lang.我方公司}></td>
+                <td class="td_select">
+                    <volist name="our_company" id="v" key="k">
+                        <if condition="$order_info['our_company'] eq $v['CD']"><{$v.CD_VAL}></if>
+                    </volist>
+                </td>
+                <td class="must"><{$Think.lang.交货方式}></td>
+                <td><{$order_info['delivery_type']}></td>
+                <td><{$Think.lang.采购端物流费用}></td>
+                <td><{$order_info['currency']}>&nbsp;&nbsp;<?php echo number_format($order_info['expense'],2);?></td>
+            </tr>
+            <tr>
+                <td class="must"><{$Think.lang.业务方向}></td>
+                <td class="td_select">
+                    <select disabled="disabled">
+                        <?php foreach($business_direction as $key=>$v){ ?>
+                        <option value="<?=$v['CD_VAL'];?>"
+                        <?php if($order_info['business_direction']==$v['CD_VAL']){
+                                            echo "selected=selected";
+                                        };?>
+                        ><?=$v['CD_VAL'];?></option>
+                        <?php } ?>
+                    </select>
+                </td>
+                <td class="must"><{$Think.lang.预计采购日期}> </td>
+                <td><?php echo $order_info['procurement_date']; ?></td>
+                <td class="must"><{$Think.lang.预计到货日期}></td>
+                <td><?php echo $order_info['arrival_date'];?></td>
+            </tr>
+            <tr class="purchase_detail_period">
+                <td class="must"><{$Think.lang.付款账期}></td>
+                <td class="purchase_detail_period_time">
+                    <div>
+                        <span><{$order_info['payment_type']==0?'指定时间付款':'按实际情况付款'}></span>&nbsp;&nbsp;-&nbsp;&nbsp;
+                        <span>
+                            <switch name="order_info.payment_period" >
+                                <case value="1">一次性付清</case>
+                                <case value="2">分两期付清</case>
+                                <case value="3">分三期付清</case>
+                            </switch>
+                        </span>
+                    </div>
+                </td>
+                <td><{$Think.lang.具体节点}></td>
+                <td class="purchase_detail_period_concrete" colspan="3">
+                    <if condition="$order_info['payment_type'] eq 0">
+                        <ul>
+                            <volist name="order_info['payment_info']" id="v">
+                                <li>
+                                    <{$Think.lang.预计付款时间：}><span><{$v.payment_date}></span>
+                                    <{$Think.lang.付款比例：}><span><{$v.payment_percent}>%</span>
+                                </li>
+                            </volist>
+                        </ul>
+                        <else />
+                        <ul>
+                            <volist name="order_info['payment_info']" id="v">
+                            <li>
+                                <span><{:cdVal($v['payment_node'])}></span>
+                                <span><{$v.payment_days}><{$Think.lang.天}></span>
+                                <span><{$Think.lang.付款}><{$v.payment_percent}>%</span>
+                                <span><{$Think.lang.预估时间}> <{$v.payment_date_estimate}></span>
+                            </li>
+                            </volist>
+                        </ul>
+                    </if>
+                </td>
+            </tr>
+            <tr>
+                <td class="must"><{$Think.lang.附件}></td>
+                <td colspan="5" style="text-align: left !important;">
+                    <div class="col-lg-4 upload-box" style="display: inline-block;">
+                        <?php
+                                  if($order_info['attachment']){
+                                      $attachment = explode(',',$order_info['attachment']);
+                                          foreach($attachment as $v) {
+                            ?>
+                        <div class="upload-box-child">
+                            <a id="download-url" class="col-xl-8" style="float: left" href="<{:U('download',['file'=>$v])}>"><{$v}></a>
+                        </div>
+                        <?php
+                                       }
+                                        }else {
+                                    ?>
+                        <?php }?>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.备注}></td>
+                <td colspan="5"><?php echo $order_info['order_remark'];?></td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-bg">
+            <thead>
+            <th width="11%"></th>
+            <th width="23%"></th>
+            <th width="11%"></th>
+            <th width="22%"></th>
+            <th width="11%"></th>
+            <th width="22%"></th>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="6"><{$Think.lang.销售信息}></td>
+            </tr>
+            <tr>
+                <td ><{$Think.lang.采购销售类型}></td>
+                <td>
+                    <if condition="$sell_info['has_sell_number'] eq 1">
+                        <{$Think.lang.有销售PO}>
+                        <else />
+                        <{$Think.lang.无销售PO/提前销售}>
+                    </if>
+                </td>
+                <td ><{$Think.lang.销售PO}></td>
+                <td><{$sell_info['sell_number']}></td>
+                <td><{$Think.lang.对应客户}></td>
+                <td><{$sell_info['supp_id']}></td>
+            </tr>
+            <tr>
+                <td ><{$Think.lang.销售合同}></td>
+                <td>
+                    <if condition="$sell_info['has_sell_contract'] eq 1">
+                        <{$Think.lang.有销售合同}>
+                        <else />
+                        <{$Think.lang.无销售合同}>
+                    </if>
+                </td>
+                <td><{$Think.lang.合同编号}></td>
+                <td>
+                    <if condition="$sell_info['has_sell_contract'] eq 1">
+                        <{$sell_info['sell_contract']}>
+                    <else />
+                        <if condition="$sell_info['approve_credential'] neq ''">
+                                <a class="approve_credential_download"  style="float: left;" href="<{:U('download',['file'=>$sell_info['approve_credential']])}>"><{$sell_info['approve_credential']}></a>
+                        </if>
+                    </if>
+                </td>
+                <td><{$Think.lang.销售团队}></td>
+                <td><{:cdVal($sell_info['sell_team'])}></td>
+            </tr>
+            <tr>
+                <td class="must"><{$Think.lang.销售金额}></td>
+                <td class="td_select"><{$sell_info['curr']}> &nbsp;&nbsp;<?php echo number_format($sell_info['sell_money'],2);?></td>
+                <td><{$Think.lang.销售端物流费用}></td>
+                <td  class="td_select">
+                    <{$sell_info['sell_logistics_currency']}>&nbsp;&nbsp;<?php echo number_format($sell_info['sell_logistics'],2);?>
+                </td>
+                <td><{$Think.lang.销售方式}></td>
+                <td><{:cdVal($sell_info['sell_mode'])}></td>
+            </tr>
+            <tr>
+                <td class="must"><{$Think.lang.预计销售日期}></td>
+                <td><{$sell_info['sell_date']}></td>
+                <td class="must"><{$Think.lang.业务类型}></td>
+                <td class="td_select">
+                    <{$order_info['business_type']}>
+                </td>
+                <td><{$Think.lang.采购与销售订单关联}></td>
+                <td class="td_span">
+                    <span <if condition="$sell_info['purchase_relate_sell'] eq 0">style="display:block"</if>><{$Think.lang.不关联}></span>
+                    <span <if condition="$sell_info['purchase_relate_sell'] eq 1">style="display:block"</if>><{$Think.lang.一对一关联}></span>
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.收款-首期款}></td>
+                <td>
+                    <if condition="($sell_info['pre_receivable_date'] neq '0000-00-00') and ($sell_info['pre_receivable_percent'] neq 0)">
+                        <{$sell_info['pre_receivable_date']}> 收款比例：<{$sell_info['pre_receivable_percent']}>%
+                        <else />
+                        0
+                    </if>
+                </td>
+                <td><{$Think.lang.收款-中间款}></td>
+                <td>
+                    <if condition="($sell_info['mid_receivable_date'] neq '0000-00-00') and ($sell_info['mid_receivable_percent'] neq 0)">
+                        <{$sell_info['mid_receivable_date']}> 收款比例：<{$sell_info['mid_receivable_percent']}>%
+                        <else />
+                        0
+                    </if>
+                </td>
+                <td><{$Think.lang.收款-尾款}></td>
+                <td>
+                    <if condition="($sell_info['end_receivable_date'] neq '0000-00-00') and ($sell_info['end_receivable_percent'] neq 0)">
+                        <{$sell_info['end_receivable_date']}> 收款比例：<{$sell_info['end_receivable_percent']}>%
+                        <else />
+                        0
+                    </if>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table  table-bg">
+            <thead>
+            <th width="11%"></th>
+            <th width="23%"></th>
+            <th width="11%"></th>
+            <th width="22%"></th>
+            <th width="11%"></th>
+            <th width="22%"></th>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="6"><{$Think.lang.退税信息}></td>
+            </tr>
+            <tr>
+                <td ><{$Think.lang.预计退税日期}></td>
+                <td><{$drawback_info['drawback_date']}></td>
+                <td><{$Think.lang.预计退税金额}></td>
+                <td class="td_select">
+
+                    <{$drawback_info['moneytype']}>&nbsp;&nbsp;
+                    <?php echo number_format($drawback_info['drawback_money'],2);?>
+                </td>
+                <td><{$Think.lang.退税周期}></td>
+                <td><{$drawback_info['drawback_period']}></td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-goodsDetail">
+            <p class="table-p"><{$Think.lang.商品信息}></p>
+            <thead>
+            <th width="3%">No</th>
+            <th width="13%" class="must"><{$Think.lang.SKU编码}>/<{$Think.lang.条形码}></th>
+            <th width="24%"><{$Think.lang.商品名称}></th>
+            <th width="14%"><{$Think.lang.属性}></th>
+            <th width="9%" class="must"><{$Think.lang.单价}></th>
+            <th width="9%" class="must"><{$Think.lang.数量}></th>
+            <th width="10%"><{$Think.lang.金额}></th>
+            <th width="9%"><{$Think.lang.已发货}></th>
+            <th width="9%"><{$Think.lang.待发货}></th>
+            </thead>
+            <tbody>
+            <?php
+                foreach($goods_info as $key=>$v){
+            ?>
+            <tr>
+                <td><?php echo $key+1;?></td>
+                <td><?php echo $v['search_information'];?></td>
+                <td><?php echo $v['goods_name'];?></td>
+                <td><?php echo $v['goods_attribute'];?></td>
+                <td><?php echo number_format($v['unit_price'],2);?></td>
+                <td><?php echo number_format($v['goods_number'],2);?> </td>
+                <td><?php echo number_format($v['goods_money'],2);?></td>
+                <td class="detail_td_yet"><{:number_format($v['shipped_number'])}></td>
+                <td class="detail_td_wait"><{:number_format($v['goods_number']-$v['shipped_number'])}></td>
+            </tr>
+            <?php } ?>
+            <tr class="total">
+                <td  style="text-align: left;font-weight: bold;"><{$Think.lang.合计}></td>
+                <td colspan="3"></td>
+                <td><{$relevance_info.curType}></td>
+                <td><span class="number_totals"><?php echo number_format($relevance_info['number_total'],2);?></span></td>
+                <td>
+                    <span class="money_totals"><?php echo number_format($relevance_info['money_total'],2);?></span>
+                </td>
+                <td class="detail_td_yet_total"><{:number_format($relevance_info['shipped_number'])}></td>
+                <td class="detail_td_wait_total"><{:number_format($relevance_info['number_total']-$relevance_info['shipped_number'])}></td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table table-bg">
+            <thead>
+            <th width="11%"></th>
+            <th width="23%"></th>
+            <th width="11%"></th>
+            <th width="22%"></th>
+            <th width="11%"></th>
+            <th width="22%"></th>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="6"><{$Think.lang.预计利润}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.收款账期}></td>
+                <td><{$sell_info['payment_days']}><{$Think.lang.天}></td>
+                <td ><{$Think.lang.总收入金额}></td>
+                <td>￥<{:number_format($predict_info['total_money'],2)}></td>
+                <td ><{$Think.lang.采购总金额(含税)}></td>
+                <td>￥<?php echo number_format($predict_info['purchase_total_money'],2);?></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.纯利润(退税前)}></td>
+                <td>￥<{:number_format($predict_info['pure_profit'],2)}></td>
+                <td ><{$Think.lang.纯利润率(退税前)}></td>
+                <td><{$profit_margin}></td>
+                <td><{$Think.lang.总利润(退税后)}></td>
+                <td>￥<{:number_format($predict_info['total_profit'],2)}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.总利润率(退税后)}></td>
+                <td><{$total_profit_margin}></td>
+                <td ><{$Think.lang.净利润}></td>
+                <td>￥<{:number_format($predict_info['net_profit'],2)}></td>
+                <td><{$Think.lang.净利润率}></td>
+                <td><{$retained_profits}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.利息总额}></td>
+                <td>￥<{:number_format($predict_info['interest_total'],2)}></td>
+                <td><{$Think.lang.账期利息}></td>
+                <td>￥<{:number_format($predict_info['payment_interest'],2)}></td>
+                <td><{$Think.lang.退税利息}></td>
+                <td>￥<{:number_format($predict_info['drawback_interest'],2)}></td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <table class="table table-bg">
+            <thead>
+            <th width="10%"></th>
+            <th width="12%"></th>
+            <th width="10%"></th>
+            <th width="12%"></th>
+            <th width="10%"></th>
+            <th width="18%"></th>
+            <th width="10%"></th>
+            <th width="18%"></th>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="8"><{$Think.lang.业务进度}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.发货情况}></td>
+                <td>
+                    <if condition="$relevance_info['ship_status'] eq 0">待发货</if>
+                    <if condition="$relevance_info['ship_status'] eq 1">部分发货</if>
+                    <if condition="$relevance_info['ship_status'] eq 2">完成发货</if>
+                </td>
+                <td><{$Think.lang.已发数量}></td>
+                <td><{:number_format($relevance_info['shipped_number'])}></td>
+                <td><{$Think.lang.剩余发货数}></td>
+                <td><{:number_format($relevance_info['number_total']-$relevance_info['shipped_number'])}></td>
+                <td><{$Think.lang.操作}></td>
+                <td class="td_operation">
+                    <a href="<{:U('ship_detail',['id'=>$relevance_info['relevance_id']])}>" class="btn-edit"><{$Think.lang.查看}></a>
+                    <if condition="($relevance_info['order_status'] eq 'N001320300') AND ($relevance_info['ship_status'] neq '2')">
+                        <a href="<{:U('ship',['id'=>$relevance_info['relevance_id']])}>" class="btn-check"><{$Think.lang.发货}></a>
+                    </if>
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.付款情况}></td>
+                <td></td>
+                <td><{$Think.lang.已付金额}></td>
+                <td></td>
+                <td><{$Think.lang.待付款金额}></td>
+                <td></td>
+                <td><{$Think.lang.操作}></td>
+                <td class="td_operation">
+                    <a href="" class="btn-edit"><{$Think.lang.查看}></a>
+                </td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.入库情况}></td>
+                <td></td>
+                <td><{$Think.lang.已入库数量}></td>
+                <td></td>
+                <td><{$Think.lang.剩余入库数}></td>
+                <td></td>
+                <td><{$Think.lang.操作}></td>
+                <td class="td_operation">
+                    <a href="" class="btn-edit"><{$Think.lang.查看}></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+        <table class="table  table-bg">
+            <thead>
+            <th width="15%"></th>
+            <th width="35%"></th>
+            <th width="15%"></th>
+            <th width="35%"></th>
+            </thead>
+            <tbody>
+            <tr>
+                <td colspan="6"><{$Think.lang.流程信息}></td>
+            </tr>
+            <tr>
+                <td><{$Think.lang.采购人}></td>
+                <td><{$relevance_info['prepared_by']}></td>
+                <td><{$Think.lang.创建时间}></td>
+                <td><{$relevance_info['prepared_time']}></td>
+
+            </tr>
+            <tr>
+                <td ><{$Think.lang.审批人}></td>
+                <td><{$approve['actual_approve_user']?$approve['actual_approve_user']:'无'}>-[<{:cdVal($relevance_info['order_status'])}>]</td>
+                <td ><{$Think.lang.审批时间}></td>
+                <td><{$approve.approve_time}></td>
+
+            </tr>
+            <tr>
+                <td><{$Think.lang.最新修改人}></td>
+                <td><{$relevance_info.last_update_user}></td>
+                <td ><{$Think.lang.更新时间}></td>
+                <td><{$relevance_info.last_update_time}></td>
+
+            </tr>
+            </tbody>
+        </table>
+        <div class="col-lg-12  col-md-12 col-xs-12 col-lg-12-btn">
+            <button type="button" class="btn-back" onclick="location='<{:U(\'order_list\')}>'"><{$Think.lang.返回列表}></button>
+        </div>
+    </div>
+</div>
+</body>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../Public/utils/utils.js"></script>
+<script type="text/javascript" src="../Public/lib/jquery.form.min.js"></script>
+<script>
+    /***********************************
+     ***复选框选项
+     ***********************************/
+    function editCheck(param1,param2){
+        param1.click(function () {
+            var checkAll= $(this).prop('checked');
+            if(checkAll == true){
+                param2.prop("checked",true).change();
+            }else{
+                param2.prop("checked",false).change();
+            }
+        });
+        param2.each(function () {
+            $(this).change(function () {
+                if($(this).prop("checked") != true){
+                    param1.prop("checked",false);
+                }else{
+                    var flag = true;
+                    for(var j=0;j<param2.length;j++){
+                        if($(param2[j]).prop("checked") == false){
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if(!flag){
+                        param1.prop("checked",false);
+                    }else{
+                        param1.prop("checked",true);
+                    }
+                }
+
+            })
+        });
+
+    }
+
+    function king(e) {
+        var k = e.toString().split('.');
+        if(e.toString().indexOf('.') > 0){
+            var s = '.'+k[1];
+        }else{
+            var s = '';
+        }
+        return k[0].toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')+s;
+    }
+
+    //输入的是否是数字进行校验
+    function numberCheck(ts){
+        var check_all = Number($(ts).val().replace(/,/g,''));
+        var check_all = parseInt(check_all);
+        var is_number = /^\d*$/;
+        if (!is_number.test(check_all)){
+            alert('<{$Think.lang.请输入正确数字}>');
+            $(ts).val('');
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    function calculateNumber(tr) {
+        var goods_number = parseFloat($(tr).find('.goods_number').val());
+        var shipped_number = parseFloat($(tr).find('.shipped_number').val());
+        if($(tr).find('.ship_all').prop('checked')) {
+            var ship_number = goods_number-shipped_number;
+            $(tr).find('.ship_number').val(ship_number);
+            $(tr).find('.remainder').html(0);
+            $(tr).addClass('ship_goods');
+        }else if($(tr).find('.ship_part').prop('checked')) {
+            var ship_number_input = $(tr).find('.ship_number_input');
+            if(numberCheck(ship_number_input)) {
+                if(ship_number_input.val()=='') {
+                    var ship_number = 0;
+                }else {
+                    var ship_number = parseFloat(ship_number_input.val().replace(/,/g,''));
+                }
+                var remainder;
+                if((remainder=goods_number-shipped_number-ship_number)<0) {
+                    alert('本次发货不能超过剩余总数');
+                    ship_number_input.val('');
+                    ship_number_input.next().val('');
+                    calculateNumber(tr);
+                    return false;
+                }
+                ship_number_input.next().val(ship_number);
+                ship_number_input.val(king(ship_number));
+                $(tr).find('.remainder').html(king(remainder));
+                $(tr).addClass('ship_goods');
+            }
+        }else {
+            $(tr).find('.ship_number').val(0);
+            $(tr).find('.remainder').html(king(goods_number-shipped_number));
+            $(tr).removeClass('ship_goods');
+        }
+        statistic();
+    }
+
+    function statistic() {
+        var warehouse = $('.ship_goods:eq(0)').find('.warehouse_cd').val();
+        var warehouse_show = $('.ship_goods:eq(0)').find('.warehouse').html();
+        $('.warehouse_save').val(warehouse);
+        $('.warehouse_show').html(warehouse_show);
+        var ship_number_total = 0;
+        $('.ship_goods').each(function() {
+            if($(this).find('.ship_number').val() == '') {
+                var ship_number = 0;
+            }else {
+                var ship_number = parseFloat($(this).find('.ship_number').val());
+            }
+            ship_number_total += ship_number;
+        })
+        var shipped_number_total = parseFloat($('.shipped_number_total').val());
+        $('.ship_number_total_show').html(king(ship_number_total));
+        $('.ship_number_total').val(ship_number_total);
+        $('.ship_number_total_1').html(king(ship_number_total));
+        var number_total = parseFloat($('.number_total').html().replace(/,/,''));
+        $('.remainder_total').html(king(number_total-shipped_number_total-ship_number_total));
+    }
+
+    $(function () {
+//        $(".row_title a").click(function () {
+//            if($(this).html()=="订单详情"){
+//                $(this).addClass("active");
+//                $(this).siblings().removeClass("active")
+//                $(".detail_form").show();
+//                $(".shipping_form").hide();
+//            }else if($(this).html()=="采购发货"){
+//                $(this).addClass("active");
+//                $(this).siblings().removeClass("active")
+//                $(".detail_form").hide();
+//                $(".shipping_form").show();
+//            }
+//        })
+        //多选
+        editCheck($(".check_all"),$(".check"));
+        $('.check').change(function() {
+            if($(this).prop('checked')) {
+                $(this).parents('tr').find('.ship_all').prop('checked',true);
+                $(this).parents('tr').find('.ship_part').prop('checked',false);
+                $(this).parents('tr').find('.ship_number_input').val('').hide();
+                $(this).parents('tr').find('.ship_number').val('');
+                $(this).parents('tr').find('.remainder').html(0);
+            }else {
+                $(this).parents('tr').find('.ship_all').prop('checked',false);
+                $(this).parents('tr').find('.surplus').html();
+            }
+            calculateNumber($(this).parents('tr'));
+        })
+        $('.ship_all').change(function() {
+            if($(this).prop('checked')) {
+                $(this).parents('tr').find('.check').prop('checked',true).change();
+            }else {
+                $(this).parents('tr').find('.check').prop('checked',false).change();
+            }
+        })
+        $('.ship_part').change(function() {
+            if($(this).prop('checked')) {
+                $(this).parents('tr').find('.ship_all').prop('checked',false).change();
+                $(this).parents('tr').find('.ship_number_input').show();
+            }else {
+                $(this).parents('tr').find('.ship_number_input').val('').hide();
+                $(this).parents('tr').find('.ship_number').val('');
+                $(this).parents('tr').find('.check').prop('checked',false).change();
+            }
+        })
+        $('.ship_number_input').change(function(){
+            if(numberCheck($(this))) {
+                calculateNumber($(this).parents('tr'));
+            }
+        })
+
+        $('#ship_confirm').click(function() {
+            if($('.ship_goods').length < 1) {
+                alert('请选择发货商品');
+                return false;
+            }
+            //var form_data = $('.shipping_form').serializeArray();
+            var form_data = new FormData($('.shipping_form')[0]);
+            $('.ship_goods').each(function(k,v) {
+                var shipped_goods = $(this).find('.check').attr('information_id')+','+$(this).find('.ship_number').val();
+                //form_data.push({'name':'shipped_goods[]','value':shipped_goods});
+                form_data.append("shipped_goods[]", shipped_goods);
+            })
+            var url = $('.shipping_form').prop('action');
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: form_data,
+                processData: false,  // 告诉jQuery不要去处理发送的数据
+                contentType: false,   // 告诉jQuery不要去设置Content-Type请求头
+                success: function(msg) {
+                    if(msg.status == 1){
+                        utils.modal(true, {width:500,title:"<{$Think.lang.发货结果}>",content:msg.info,confirmFn:function(){window.location = "<{:U('order_list')}>";}},false)
+                    }else {
+                        utils.modal(true, {width:500,title:"<{$Think.lang.发货结果}>",content:msg.info},false)
+                    }
+                }
+            });
+        })
+
+
+
+
+    })
+</script>
+</html>

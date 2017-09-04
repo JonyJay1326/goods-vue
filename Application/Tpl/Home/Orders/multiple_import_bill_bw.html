@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>数据显示</title>
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.admin.css"/>
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css"/>
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css"/>
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css" id="skin"/>
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css"/>
+    <link rel="stylesheet" href="../Public/css/stock.css">
+    <style>
+        .box-parent {
+            position: relative;
+        }
+
+        .xcl-box {
+            width: 300px;
+            height: 400px;
+            position: absolute;
+            top: 40px;
+            right: -132px;
+            background: white;
+            box-shadow: 2px 2px 18px #c3bebe;
+            border: 1px solid azure;
+            padding: 10px;
+            z-index: 50;
+            overflow: auto;
+        }
+
+        .xcl-box .search-row {
+            margin: 10px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .xcl-box .search-row input {
+            border: 1px solid #dedede;
+            height: 24px;
+            padding: 0 10px;
+            width: 180px;
+            border-radius: 2px;
+        }
+
+        .xcl-box .search-row input:focus {
+            box-shadow: 0 0 5px #33ccff;
+            border: 1px solid transparent;
+        }
+
+        .xcl-box .search-row .Hui-iconfont-search {
+            color: white;
+            font-size: 20px;
+            background: #ec2d64;
+            vertical-align: middle;
+            margin-left: -15px;
+            padding: 3px 4px;
+            border-radius: 0 2px 2px 0;
+            cursor: pointer;
+        }
+
+        .xcl-box .search-row .btn-close {
+            position: absolute;
+            top: 1px;
+            right: 1px;
+            color: #666;
+            font-size: 20px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+
+        .xcl-box .search-row .btn-close:hover {
+            color: #ec2d64;
+        }
+
+        .xcl-box .search-row button {
+            border: 1px solid #999;
+            padding: 0 5px;
+            height: 26px;
+            font-size: 14px;
+            width: auto;
+            margin-left: 15px;
+            background: #b3b3b3;
+            color: white;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+
+        .xcl-box table thead th {
+            height: 25px;
+            line-height: 25px;
+            padding: 0 8px;
+        }
+
+        .xcl-box table tbody td {
+            height: 20px;
+            line-height: 20px;
+            padding: 0 8px;
+        }
+
+        .showbg {
+            background-color: #ddd;
+        }
+
+        .td-linknum > a > span {
+            text-decoration: underline;
+        }
+
+        .x-error li {
+            margin: 10px 0;
+        }
+
+        .x-error li span {
+            margin: 5px;
+            background: #eee;
+
+            display: inline-block;
+        }
+        .bot_line {
+            border-bottom: #eee solid 1px;
+        }
+    </style>
+</head>
+
+<body>
+<div class="xcl-wrap" id="xcl-wrap">
+    <div class="select-line">
+        <a href="<{:U('Orders/orders_bw')}>"><button type="button" name="out"  class="button-sky">返回</button></a>
+    </div>
+    <div class="xcl-tabel x-success" id="xcl-table">
+        <strong>共 <?= count($success_data) ?> 条数据po成功：</strong>
+        
+        <table  class="table table-bordered table-striped">
+                <thead>
+                    <td class="bot_line">B5C订单号&支付号</td>
+                    <td class="bot_line">信息</td>
+                </thead>
+            <?php
+                foreach ($success_data as $key => $value) {
+            ?>
+                <tr>
+                    <?php
+                        foreach ($value as $key_index => $info) {
+                    ?>
+                        <td class="bot_line">
+                            <?= $info['ord_id'] ?>
+                        </td>
+                        <td class="bot_line">
+                            <?= $info['message'] ?>
+                        </td>
+                    <?php
+                        }
+                    ?>
+                </tr>
+            <?php
+                }
+            ?>
+        </table>
+        <ul>
+            
+        </ul>
+    </div>
+    
+    <div class="xcl-tabel x-error" id="xcl-table">
+        <strong>共 <?= count($check_data) ?> 条数据po失败：</strong>
+        
+        <table class="table table-bordered table-striped">
+                <thead>
+                    <td class="bot_line">坐标信息</td>
+                    <td class="bot_line">B5C订单号&支付号</td>
+                    <td class="bot_line">异常信息</td>
+                </thead>
+            <?php
+                foreach ($check_data as $key => $value) {
+            ?>
+                <tr>
+                    <?php
+                        foreach ($value as $key_index => $info) {
+                    ?>
+                        <td class="bot_line">
+                            <?= $key_index ?>
+                        </td>
+                        <td class="bot_line">
+                            <?= $info['ord_id'] ?>
+                        </td>
+                        <td class="bot_line">
+                            <?= $info['message'] ?>
+                        </td>
+                    <?php
+                        }
+                    ?>
+                </tr>
+            <?php
+                }
+            ?>
+        </table>
+        <ul>
+            
+        </ul>
+    </div>
+    
+    <div class="xcl-tabel x-error" id="xcl-table">
+        <strong>共 <?= count($n_search_data) ?> 条数据未查询到：</strong>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <td class="bot_line">坐标信息</td>
+                <td class="bot_line">B5C订单号&支付号</td>
+                <td class="bot_line">异常信息</td>
+            </thead>
+            <?php
+                foreach ($n_search_data as $key => $value) {
+            ?>
+                    <tr>
+                        <td class="bot_line">
+                            坐标信息：<?= $key ?>
+                        </td>
+                        <td class="bot_line">
+                            <?= $value ?>
+                        </td>
+                        <td class="bot_line">
+                            未查询到的单号
+                        </td>
+                    </tr>
+            <?php
+                }
+            ?>
+        </table>
+        <ul>
+            
+        </ul>
+    </div>
+</div>
+
+</body>
+
+</html>

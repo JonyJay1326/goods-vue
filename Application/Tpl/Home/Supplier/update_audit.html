@@ -1,0 +1,323 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <!--[if lt IE 9]>
+    <script type="text/javascript" src="../Public/lib/html5.js"></script>
+    <script type="text/javascript" src="../Public/lib/respond.min.js"></script>
+    <script type="text/javascript" src="../Public/lib/PIE-2.0beta1/PIE_IE678.js"></script>
+    <![endif]-->
+    <link rel="stylesheet" type="text/css" href="../Public/lib/Hui-iconfont/1.0.1/iconfont.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/lib/icheck/icheck.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/skin/default/skin.css?v=20170117" id="skin" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/H-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/jqeury-ui.min.css" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/style.css?v=20170306" />
+    <link rel="stylesheet" type="text/css" href="../Public/css/common.css?v=2017030612" />
+    <title></title>
+</head>
+<style>
+    .error{
+        background-color: #fbe2e2;
+        border-color: #c66161;
+        color: #c00;
+    }
+    label.error {
+        right: 18px;
+        top: 5px;
+        color: #ef392b;
+        font-size: 12px;
+    }
+    .text-c-left{
+        text-align: left;
+    }
+</style>
+<body>
+<div class="commom_wrap">
+    <form action="" method="post" id="audit" enctype="multipart/form-data">
+        <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+        <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+        <include file="show_supplier" />
+        <include file="audit_model" />
+        <div class="gys-wrap">
+            <div class="gys_wrap_btn">
+                <button class="btn gys_btn_submit" type="submit"><{$Think.lang.提交}></button>
+                <button class="btn gys_btn_reset" type="reset" id="reset"><{$Think.lang.重置}></button>
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js"></script>
+<script type="text/javascript" src="../Public/js/jquery.validate.min.js"></script>
+<script type="text/javascript" src="../Public/js/validate-methods.js"></script>
+<script type="text/javascript" src="../Public/js/messages_zh.min.js"></script>
+<script type="text/javascript" src="../Public/js/jquery.form.min.js"></script>
+</body>
+<script>
+    $(function() {
+        // 动态生成负面信息项
+        var dynamicGenerate = function () {
+            var dy = this;
+            // 选中的选项
+            var options = [];
+            // 选项所映射的value值
+            var nagetiveVals;
+            // 主函数
+            dy.main = function () {
+                
+            };
+            // 需要生成的模板，前段文案自动填充
+            dy.template = function (nagetiveCode, time, value) {
+                var shtml = '<tr class="compun" id="template_show_' + nagetiveCode + '">';
+                var tconfig = "{skin:'whyGreen',maxDate:'%y-%M-%d'}";
+                shtml += '<td>' + nagetiveVals[nagetiveCode] + '时间</td>';
+                shtml += '<td>'; 
+                shtml += '<div class="COM_TIME_C">';
+                shtml += '<input required style="width: 100%;text-align:left;" type="text" onfocus="WdatePicker(' + tconfig + ')"  name="TIME_' + nagetiveCode + '" value="' + time + '" class="input-text Wdate" style="width:120px;" />';
+                shtml += '</div>';
+                shtml += '</td>';
+                shtml += '<td><{$Think.lang.简介}></td>'; 
+                shtml += '<td colspan="3">'; 
+                shtml += '<div class="COM_TIME_C">';
+                shtml += '<input class="input-text" required type="text" name="DUC_' + nagetiveCode + '" value="' + value + '"/>';
+                shtml += '</div>';
+                shtml += '</td>';
+                shtml += '</tr>';
+                return shtml;
+            };
+            // 根据模板生成对应的负面项填选框
+            dy.create = function (checkedNagetiveCode, time, value) {
+                $(dy.template(checkedNagetiveCode, time, value)).insertBefore($('.grade_standard'));
+            };
+            // 删除已生成的负面选项
+            dy.clean = function (checkedNagetiveCode) {
+                $('#template_show_' + checkedNagetiveCode).unbind('click');
+                $('#template_show_' + checkedNagetiveCode).remove();
+            };
+            // 删除全部已生成的负面选项
+            dy.cleanAll = function () {
+                for (var i = 0; i < options.length; i++) {
+                    $('#template_show_' + options[i]).unbind('click');
+                    $('#template_show_' + options[i]).remove();
+                }
+                options = [];
+            };
+            // 检测是否重复选择
+            dy.checkIsAgainChoise = function (opt) {
+                for (var i = 0; i < options.length; i ++) {
+                    if (options[i] == opt) {
+                        options.splice(i, 1);
+                        return false;
+                    }
+                }
+                return true;
+            };
+            // 检测选择是否有负面信息
+            dy.checkIsHaveNagetiveInfo = function () {
+                $(".is-have-nagetive-info")  
+            };
+            // 生成验证规则
+            dy.generateRules = function () {
+                
+            };
+            // 初始化，用于修改
+            dy.init = function () {
+                try {
+                    var todo = eval('(' + '<?= json_encode($result['audit']['C_NAGETIVE_OPTIONS'], JSON_FORCE_OBJECT) ?>' + ')');
+                    //var todo = eval('(' + '<?= json_encode($result['audit']['C_NAGETIVE_OPTIONS'], JSON_FORCE_OBJECT) ?>' + ')');
+                    if (todo != "") {
+                        dy.initOptions();
+                        dy.initValue();
+                    }
+                } catch(e) {
+                    layer.msg('<{$Think.lang.数据格式化异常，无法加载}>');
+                    return;
+                }
+            };
+            // 选项初始化
+            dy.initOptions = function () {
+                var opts = eval('(' + '<?= json_encode($result['audit']['C_NAGETIVE_OPTIONS'], JSON_FORCE_OBJECT) ?>' + ')');
+                var optionsArr = opts.split(',');
+                for (var i = 0; i < optionsArr.length; i ++) {
+                    options.push(optionsArr[i]);
+                }
+            };
+            // 内容初始化
+            dy.initValue = function () {
+                var optionsVal = eval('(' + '<?= $result['audit']['C_NAGETIVE_VAL'] ?>' + ')');
+                for (var i = 0; i < options.length; i ++) {
+                    dy.create(options[i], optionsVal['TIME_' + options[i]], optionsVal['DUC_' + options[i]]);
+                }
+            };
+            // construct
+            (function() {
+                // 得到负面选项所映射的value值
+                nagetiveVals = eval('(' + '<?= json_encode($nagetiveOptions, JSON_FORCE_OBJECT) ?>' + ')');
+                $(".choice-nagetive-option span").bind('click', function () {
+                    if ($('.IS_HAVE_NAGETIVE_INFO').val() == '') {
+                        layer.msg('<{$Think.lang.请先选择是否有负面信息}>');
+                        return false;
+                    }
+                    if ( $('.IS_HAVE_NAGETIVE_INFO').val() == 0) {
+                        layer.msg('<{$Think.lang.无负面信息不能选择负面信息项'}>);
+                        return false;
+                    }
+                    _this = $(this);
+                    var checkedNagetiveCode = _this.attr('value');
+                    if (dy.checkIsAgainChoise(checkedNagetiveCode) == true) {
+                        options.push(checkedNagetiveCode);
+                        _this.css({"background":"#FF5224","color":"white"})
+                        dy.create(checkedNagetiveCode, '', '');
+                    } else {
+                        _this.css({"background":"#C8D2D7 100%","color":"#546E7A"})
+                        dy.clean(checkedNagetiveCode);
+                    }
+                    $('.C_NAGETIVE_OPTIONS').val(options);
+                    if (options.length == 0 &&  $('.C_NAGETIVE_OPTIONS').val() == '') {
+                        $("#C_NAGETIVE_OPTIONS-error").css('display', 'block');
+                    } else {
+                        $("#C_NAGETIVE_OPTIONS-error").css('display', 'none');
+                    }
+                });
+            })();
+        };
+        
+        var dy = new dynamicGenerate();
+        dy.init();
+        
+        $(".riskpun span").click(function() {
+            $(this).addClass("gys_check_item_active").siblings().removeClass('gys_check_item_active');
+            $(".risk").val($(this).attr('value'));
+            $("#RISK_PUN-error").css('display', 'none');
+        });
+        
+        $(".is-have-nagetive-info span").click(function() {
+            $(this).addClass("gys_check_item_active").siblings().removeClass('gys_check_item_active');
+            $(".IS_HAVE_NAGETIVE_INFO").val($(this).attr('value'));
+            $("#IS_HAVE_NAGETIVE_INFO-error").css('display', 'none');
+            if ($(this).attr('value') == 0) {
+                $("#C_NAGETIVE_OPTIONS").val('');
+                $("#C_NAGETIVE_OPTIONS-error").css('display', 'none');
+                dy.cleanAll();
+                $(".choice-nagetive-option span").css('background', '#C8D2D7');
+                $(".choice-nagetive-option span").css('color', '#546E7A');
+            }
+        });
+        $(".credit-grade span").click(function() {
+            $(this).addClass("gys_check_item_active").siblings().removeClass('gys_check_item_active');
+            $(".CREDIT_GRADE").val($(this).attr('value'));
+            $("#CREDIT_GRADE-error").css('display', 'none');
+            if ($(this).attr('value') == 0) {$("#C_NAGETIVE_OPTIONS-error").css('display', 'none');}
+        });
+        //页面展示，一些js方法
+        $(".commom_wrap .gys-wrap .is-have-nagetive-info").each(function () {
+            var input_value=$(this).find("input").val();
+            $(this).find("span[value="+input_value+"]").addClass("gys_check_item_active")
+        })
+        $(".commom_wrap .gys-wrap .credit-grade").each(function () {
+            var input_value=$(this).find("input").val();
+            $(this).find("span[value="+input_value+"]").addClass("gys_check_item_active")
+        })
+        $(".commom_wrap .gys-wrap .riskpun_next").each(function () {
+            var input_value=$(this).find("input").val();
+            $(this).find("span[value="+input_value+"]").addClass("gys_check_item_active")
+        })
+
+
+        $("#audit").validate({
+            rules: {
+                EST_TIME: "required",
+                SUB_CAPITAL: {required: true, min: 0},
+                LG_REP: "required",
+                SHARE_NAME: "required",
+                RISK_RATING: "required",
+                IS_HAVE_NAGETIVE_INFO: "required",
+                CREDIT_SCORE: {
+                     required: function () {
+                        var area = eval('(' + '<?= json_encode(BaseModel::regionalClassification(), JSON_FORCE_OBJECT) ?>' + ')');
+                        var addr = '<?= $result['SP_ADDR3'] ?>';
+                        for (var i in area) {
+                            for (var j in area[i]) {
+                                if (addr == area[i][j]) {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                     },
+                     min: 0,
+                     max: 100
+                },
+                C_NAGETIVE_OPTIONS: {
+                    required: function() {
+                        if ($("#IS_HAVE_NAGETIVE_INFO").val() == 1) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                },
+                CREDIT_GRADE: {
+                    required: function () {
+                        var area = eval('(' + '<?= json_encode(BaseModel::regionalClassification(), JSON_FORCE_OBJECT) ?>' + ')');
+                        var addr = '<?= $result['SP_ADDR3'] ?>';
+                        for (var i in area) {
+                            for (var j in area[i]) {
+                                if (addr == area[i][j]) {
+                                    return false;
+                                }
+                            }
+                        }
+                        return true;
+                     },
+                }
+            },
+            messages: {
+                EST_TIME: "<{$Think.lang.请输入成立时间}>",
+                SUB_CAPITAL: "<{$Think.lang.请输入认缴金额}>",
+                LG_REP: "<{$Think.lang.请输入法人代表}>",
+                SHARE_NAME: "<{$Think.lang.请输入股东}>",
+                RISK_RATING: "<{$Think.lang.请进行风险评级}>",
+                IS_HAVE_NAGETIVE_INFO: "请选择是否有负面信息",
+                C_NAGETIVE_OPTIONS: "请选择负面信息项"
+            },
+            submitHandler:function(form){
+                var url = '<{:U("BTBCustomerManagement/update_audit")}>';
+                $.ajax({
+                    'url':url,
+                    'type':'POST',
+                    'data':$("#audit").serialize(),
+                    beforeSend:function(XMLHttpRequest){
+                          index = layer.load(2, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                     },
+                    success: function (data) {
+                        data = eval("(" + data + ")");
+                        if (data.status == 1) {
+                            layer.msg(data.msg);
+                        } else {
+                            layer.msg(data.data);
+                        }
+                        layer.close(index);
+                    },
+                    error:function(XMLHttpRequest,textStatus,errorThrown){
+                        layer.close(index);
+                        layer.msg('error...状态文本值：'+textStatus+" 异常信息："+errorThrown);
+                    }
+                },'json');
+            }
+        });
+    });
+</script>
+</html>

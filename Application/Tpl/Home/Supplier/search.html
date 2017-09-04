@@ -1,0 +1,114 @@
+<form action="" method="get" id="form_btbtc" class="row">
+    <div class="card common_top_menu">
+        <div class="card-block" >
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th width="2%"></th>
+                            <th width="21%"></th>
+                            <th width="2%"></th>
+                            <th width="2%"></th>
+                            <th width="21%"></th>
+                            <th width="2%"></th>
+                            <th width="2%"></th>
+                            <th width="21%"></th>
+                            <th width="2%"></th>
+                            <th width="2%"></th>
+                            <th width="21%"></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td><{$Think.lang.供应商}></td>
+                            <td><input type="text" name="SP_NAME" value="<{$params.SP_NAME}>"  placeholder="<{$Think.lang.供应商名称}>" class="input-text keywords form-control" /></td>
+                            <td></td>
+                            <td><{$Think.lang.创建人}></td>
+                            <td> <input type="text" name="CREATE_USER_ID" value="<{$params.CREATE_USER_ID}>"  placeholder="<{$Think.lang.创建人}>" class="input-text keywords form-control" /></td>
+                            <td></td>
+                            <td><{$Think.lang.国家}></td>
+                            <td>
+                                <fieldset class="form-group">
+                                    <select name="SP_ADDR1" class="select form-control" id="guo_bie">
+                                        <option value=""><{$Think.lang.请选择国家}></option>
+                                        <?php
+                                            foreach (BaseModel::getCountries() as $cd => $nm) {
+                                                ?>
+                                                    <option value="<?= $cd ?>" <if condition="$params.SP_ADDR1 eq $cd">selected="selected"</if> ><?= $nm ?></option>
+                                                <?php
+                                            }
+                                        ?>
+                                    </select>
+                                </fieldset>
+                            </td>
+                            <td></td>
+                            <td><{$Think.lang.采购团队}></td>
+                            <td>
+                                <fieldset class="form-group">
+                                    <select name="SP_TEAM_CD" class="select form-control" id="cai_gou">
+                                        <option value=""><{$Think.lang.请选择采购团队}></option>
+                                        <?php
+                                            foreach (BaseModel::spTeamCd() as $cd => $nm) {
+                                                                    ?>
+                                                <option value="<?= $cd ?>" <if condition="$params.SP_TEAM_CD eq $cd">selected="selected"</if> ><?= $nm ?></option>
+                                                <?php
+                                            }
+                                        ?>
+                                    </select>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><{$Think.lang.审核状态}></td>
+                            <td>
+                                <fieldset class="form-group">
+                                    <select name="AUDIT_STATE" class="select form-control" id="AUDIT_STATE">
+                                        <option value=""><{$Think.lang.选择审核状态}></option>
+                                        <?php
+                                            foreach (BaseModel::auditState() as $cd => $nm) {
+                                                ?>
+                                            <option value="<?= $cd ?>" <if condition="$params.AUDIT_STATE eq $cd">selected="selected"</if>><{$Think.lang.$nm}></option>
+                                        <?php
+                                            }
+                                        ?>
+                                    </select>
+                                </fieldset>
+                            </td>
+                            <td></td>
+                            <td><{$Think.lang.风险评级}></td>
+                            <td>
+                                <fieldset class="form-group">
+                                    <select name="RISK_RATING" class="select form-control" id="RISK_RATING">
+                                        <option value=""><{$Think.lang.选择风险评级}></option>
+                                        <?php
+                                            foreach (BaseModel::riskRating() as $cd => $nm) {
+                                          ?>
+                                            <option value="<?= $cd ?>" <if condition="$params.RISK_RATING eq $cd">selected="selected"</if> ><?= $nm ?></option>
+                                            <?php
+                                            }
+                                        ?>
+                                    </select>
+                                </fieldset>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+                        <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+    </div>
+    <div class="row common_row_search ">
+        <div class="col-lg-12 text-left col-md-12 col-sm-12">
+            <button name="" class="btn btn-search" type="submit"><{$Think.lang.搜索}></button>
+            <button type="button" value="" class="btn btn-clear btn-reset-clear"><{$Think.lang.重置}></button>
+            <input type="hidden" name="CREATE_PLAT_CD" value="<{$params.CREATE_PLAT_CD}>"/>
+        </div>
+    </div>
+</form>

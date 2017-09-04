@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta charset="utf-8" />
+	<title>采购应付列表</title>
+	<link rel="stylesheet" href="../Public/css/purchase.css" />
+	<link rel="stylesheet" href="../Public/css/purchaseDetail.css" />
+	<link rel="stylesheet" href="../Public/lib/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../Public/lib/icon/css/font-awesome.min.css">
+	<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/tether.min.js"></script>
+	<script type="text/javascript" src="../Public/lib/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../Public/js/H-ui.js"></script>
+	<script type="text/javascript" src="../Public/js/H-ui.admin.js"></script>
+	<script type="text/javascript" src="../Public/js/common.js"></script>
+	<style>
+		.row {
+			display: flex;
+		}
+		.table-bordered th {
+			white-space: nowrap;
+		}
+		.table-bordered td,
+		.table-bordered th {
+			border: 1px solid #eceeef;
+			vertical-align: middle;
+			text-align: center;
+		}
+		.btn-danger {
+			color: #fff;
+			background-color: #ec2d64;
+			border-color: #d82c5d;
+		}
+		.btn-sm {
+			font-size: 12px;
+		}
+		.td-icon div i {
+			padding-right: 5px;
+			color: #ec2d64;
+		}
+		td div+div {
+			margin: 3px 0;
+		}
+
+		a span {
+			color: white;
+			font-size: 13px;
+		}
+
+		.wrap {
+			padding: 20px;
+		}
+		.th-wrap th{
+			text-align: center;
+		}
+		.input-group .form-control,form-group .form-control{
+			padding-left:2px !important;
+			padding-right: 0px !important;
+			height:30px;
+		}
+		.row .input-group .input-group-btn .btn-secondary{
+			padding: 0.5rem 0.6rem !important;
+		}
+		.form-group .form-control{
+			padding:0px;}
+	</style>
+</head>
+<body>
+<div id="op-wrap" class="op-wrap">
+	<div>
+		<form action="" method="post" id="thisform" class="payable_form">
+			<div class="row">
+				<div class="col-lg-2 col-md-2 col-sm-2">
+					<div class="input-group input-group-lg">
+						<input type="text" id="procurement_number" name="procurement_number"  value="<?php echo $procurement_number;?>" placeholder="应付单号" class="payable_list_code form-control">
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2">
+					<div class="input-group input-group-lg">
+						<input type="text" class="form-control payable_list_goods" value="<?php echo $goods_name;?>" placeholder="商品" name="goods_name" id="goods_name">
+                        <span class="input-group-btn">
+		                                <button class="btn btn-secondary" type="button"><i class="fa fa-search fa-lg"></i></button>
+		                        </span>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2">
+					<fieldset class="form-group">
+						<select class="form-control" name="business_direction" id="business_direction">
+							<option value="">业务方向</option>
+							<?php foreach($business_directions as $key=>$v){ ?>
+							<option value="<?=$v['CD_VAL'];?>"
+							<?php if($v['CD_VAL']==$business_direction){
+							echo "selected=selected";
+							};?>
+
+							><?=$v['CD_VAL'];?></option>
+							<?php } ?>
+						</select>
+					</fieldset>
+				</div>
+				<div class="text-c col-lg-2 col-md-2 col-sm-2">
+					<div class="input-group input-group-lg">
+						<!--<input type="text" class="form-control"  name="start_time" id="start_time" placeholder="单据结束日期">-->
+						<input type="text" name="start_time" id="start_time" value="<?php echo $start_time;?>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="单据起始日期" class="form-control">
+                        <span class="input-group-btn">
+		                            <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+		                        </span>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-2 col-md-2 col-sm-2">
+					<fieldset class="form-group">
+						<select class="form-control" name="pur_dep" id="pur_dep">
+							<option value="">采购团队</option>
+							<?php foreach($cmn_cd_info as $key=>$v){ ?>
+							<option value="<?=$v['CD_VAL'];?>"
+							<?php if($v['CD_VAL']==$pur_dep){
+							echo "selected=selected";
+							};?>
+
+							><?=$v['CD_VAL'];?></option>
+							<?php } ?>
+						</select>
+					</fieldset>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2">
+					<div class="input-group input-group-lg">
+						<input type="text" class="form-control" value="<?php echo $prepared_by;?>" placeholder="采购员" name="prepared_by" id="prepared_by">
+                        <span class="input-group-btn ">
+		                            <button class="btn btn-secondary" type="button"><i class="fa fa-search fa-lg"></i></button>
+		                        </span>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-2 col-sm-2">
+					<fieldset class="form-group">
+						<select class="form-control" name="business_type" id="business_type" >
+							<option value="">业务类型</option>
+							<?php foreach($business_types as $key=>$v){ ?>
+							<option value="<?=$v['CD_VAL'];?>"
+							<?php if($v['CD_VAL']==$business_type){
+							echo "selected=selected";
+							};?>
+
+							><?=$v['CD_VAL'];?></option>
+							<?php } ?>
+						</select>
+					</fieldset>
+				</div>
+				<div class="col-15 col-lg-2 col-md-2 col-sm-2">
+					<div class="input-group input-group-lg">
+						<input type="text" name="end_time" id="end_time" value="<?php echo $end_time;?>" onfocus="WdatePicker({firstDayOfWeek:1})" placeholder="单据结束日期" class="form-control">
+                        <span class="input-group-btn">
+		                            <button class="btn btn-secondary" type="button"><i class="fa  fa-calendar fa-lg"></i></button>
+		                        </span>
+					</div>
+				</div>
+				<div class="col-15 col-lg-4 col-md-4 col-sm-4">
+					<div class="row">
+						<div class="col-lg-12 text-center col-md-12 col-sm-12">
+							<button type="button" name="submit" class="btn  btn-success btn-lg" onclick="sou()">查询</button>
+							<button type="button" class="btn  btn-secondary btn-lg payable_list_search_reset" onclick="chongzhi()">重置</button>
+						</div>
+
+					</div>
+				</div>
+
+			</div>
+		</form>
+	</div>
+	<div class="op-button-wrap" style="height: 36px;">
+		<div class="row">
+			<div class="col-100 text-r pos" style="padding:0px 5px;">
+			<!--	<a class="btn btn-danger" href="<{:U('Payable/payable_add')}>">
+					<i class="fa fa-plus-square fa-lg" style="vertical-align: baseline; margin-right: 5px;"></i>
+					<span>手工创建</span>
+				</a>-->
+			</div>
+		</div>
+	</div>
+	<div class="op-tabel">
+		<table class="td-pur_ord" >
+			<thead class="th-wrap text-c">
+			<tr>
+				<th width="">序号</th>
+				<th width="">单据编号</th>
+				<th width="">采购单号</th>
+				<th width="">供应商</th>
+				<th width="">币种</th>
+				<th width="">应付金额</th>
+				<th width="">支付状态</th>
+				<th width="">应付生成时间</th>
+				<th width="">开票状态</th>
+				<th width="">操作</th>
+			</tr>
+			</thead>
+			<tbody class="td-wrap">
+			<?php if($purchase_info){ ?> <!--start 如果搜索的数据不存在，不让其显示分页-->
+			<?php foreach($purchase_info as $key=>$v){ ?>
+			<tr class="text-c text-b" id="<?php echo $v['payable_id'];?>">
+				<td style="background:#f2f2f2"><?php echo $key+$firstRow+1;?></td>
+				<td><a  onclick="opennewtab(this,'<{$v.receipt_number}>')" _href="<{:U('Payable/payable_detail',['id'=>$v['payable_id']])}>" ><?php echo $v['receipt_number'];?></a></td>
+				<td><?php echo $v['procurement_number'];?></a></td>
+				<td class="td-linknum">
+					<?php echo $v['supplier_id'];?>
+				</td>
+				<td class="td-linknum"><?php echo $v['curType'];?></td>
+				<td class="td-linknum">
+					<input type="text" style="border:none;text-align: center;" readonly="readonly" class="money_total" value="<?php echo $v['money_total'];?>">
+				</td>
+				<td class="td-rela"><if condition="$v['payable_status'] eq 1">已支付<else />未支付</if></td>
+
+				<td><?php echo $v['prepared_time'];?></td>
+				<td></td>
+				<td class="td-auditing" style="white-space: nowrap;text-align: left">
+					<button type="button" class="btn btn-success btn-sm">已通知</button>
+					<?php if($v['payable_status']==1){ ?>
+					<!--
+					<button type="button" class="btn btn-success btn-sm">审核</button>
+					<button class="td-auditing_delete btn btn-danger btn-sm" type="button">删除</button>
+					-->
+					<?php   }else{ ?>
+					<button type="button" onclick="location='<{:U(\'payment_write_off\',[\'id\'=>$v[\'payable_id\']])}>'" class="btn btn-success btn-sm">支付核销</button>
+					<?php    } ?>
+				</td>
+			</tr>
+			<!--删除遮罩层-->
+			<div style="" class="order_cover"></div>
+			<div class="order_Popup">
+				<div class="order_Popup_main">
+					<p>提示<span class="order_Popup_x">X</span></p>
+					<div class="order_Popup_main_content">
+						<span></span>
+					</div>
+					<div  class="order_Popup_main_button">
+						<!-- <span class="order_Popup_main_button_kn">知道了</span>-->
+						<span class="order_Popup_main_button_oc order_Popup_main_button_ok" onclick="payable_del(<?php echo $v['payable_id'];?>)">确定</span>
+						<span class="order_Popup_main_button_oc order_Popup_main_button_cancel">取消</span>
+					</div>
+				</div>
+			</div>
+			<?php } ?>
+			</tbody>
+		</table>
+		<div class="col-md-7 padding10-0">
+			<ul class="pagination">
+				<?php echo $show;?>
+			</ul>
+		</div>
+		<?php } ?> <!--end 如果搜索的数据不存在，不让其显示分页-->
+	</div>
+
+	<div class="modal fade" id="delete-modal">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" style="width: 360px;">
+				<div class="modal-header">
+					<h4 class="modal-title">提示</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span class="sr-only">Close</span>
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>确认要删除吗？</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" onclick="payable_del(<?php echo $v['payable_id'];?>)">确定</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+				</div>
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+</div>
+</body>
+<script>
+	//搜索
+
+
+	$(".basis-info table tbody").on("mouseover","tr .slect_hover div",function(){
+		$(this).find("ul").show()
+	})
+	$(".basis-info table tbody").on("mouseleave","tr .slect_hover div",function(){
+		$(this).find("ul").hide();
+	})
+	$(".basis-info table tbody").on("click","tr .slect_hover div ul li",function(){
+		var paymentCompany_li=$(this).html()
+		$(this).parent().parent().find("input").val(paymentCompany_li);
+		$(this).parent().hide();
+	})
+	function sou(){
+		var procurement_number = $('#procurement_number').val(); //应付单号
+		var goods_name = $('#goods_name').val(); //商品
+		var pur_dep = $('#pur_dep').val(); //采购部门
+		var prepared_by = $('#prepared_by').val(); //采购员
+		var business_direction = $('#business_direction option:selected').val(); //业务方向
+		var business_type = $('#business_type option:selected').val(); //业务类型
+		var start_time = $('#start_time').val(); //单据开始日期
+		var end_time = $('#end_time').val(); //单据结束日期
+		var data = {
+			procurement_number:procurement_number,
+			goods_name:goods_name,
+			pur_dep:pur_dep,
+			prepared_by:prepared_by,
+			business_direction:business_direction,
+			business_type:business_type,
+			start_time:start_time,
+			end_time:end_time,
+			go:'go'
+		}
+
+		var url = "<{:U('Payable/payable_list')}>";
+		$.get(url,data, function(msg){
+			$("body").html(msg);
+		})
+
+	}
+	/* 删除订单的弹窗*/
+	$("td button.btn-danger").click(function () {
+		$("#delete-modal").modal('show');
+	});
+	function payable_del(payable_id) {
+		var payable_id = payable_id;
+		var data = {payable_id: payable_id};
+		var url = "<{:U('Payable/payable_del')}>";
+		$.get(url, data, function (msg) {
+			if (msg == 1) {
+				$('#' + payable_id).remove(); //删除节点
+				$("#delete-modal").modal('hide');
+			}
+		})
+	}
+
+	/*
+			$(".td-auditing_delete").click(function(){
+				$(".order_Popup").show();
+				$(".order_cover").show();
+				$(".order_Popup_main_content span").html("确定要删除？")
+			})
+
+
+			function payable_del(payable_id){
+				var data = {payable_id:payable_id};
+				var url = "<{:U('Payable/payable_del')}>";
+				$.get(url,data,function(msg){
+					if(msg==1){
+						$('#'+payable_id).remove(); //删除节点
+					}
+				})
+
+			}
+*/
+
+	$(".order_Popup_x,.order_Popup_main_button_cancel,.order_Popup_main_button_ok,order_Popup_main_button_kn").click(function(){
+		$(".order_Popup").hide();
+		$(".order_cover").hide();
+	})
+
+
+	function chongzhi(){
+
+		$('#procurement_number').val('');
+		$('#goods_name').val('');
+		$('#business_direction').val('');
+		$('#prepared_by').val('');
+		$('#pur_dep').val(''); //采购部门
+		$('#business_type').val('');
+		$('#start_time').val('');
+		$('#end_time').val('');
+		$('#goods_name').val('');
+	}
+
+	//给金额加千分位
+	$(document).ready(function(){
+		$('.money_total').each(function(){
+			var money_total = $(this).val();
+			$(this).val(king(money_total));
+		})
+
+	})
+	function king(e) {
+		var k = e.toString().split('.')
+		if(e.toString().indexOf('.') > 0){				var s = '.'+k[1]
+		}else{				var s = ''
+		}			return k[0].toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')+s;
+	}
+
+
+</script>
+</html>

@@ -1,0 +1,259 @@
+<include file="Public:page_header_list" />
+<body class="pos-r mr-20 ml-20">
+<style>
+    html,body,div,span,table,tr,td,em,input,th{
+        font-family: "微软雅黑 Bold","微软雅黑";
+    }
+    .col-md-11 ul li{
+        font-family: "微软雅黑" !important;
+    }
+    .new-kehu .col-md-1 {
+        width: 65px;
+    }
+    .new-kehu .col-md-1 span {
+        color: #333333;
+        display: inline-block;
+        font-family: "微软雅黑 Bold","微软雅黑";
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        margin: 10px 0;
+        padding: 3px 0;
+    }
+    .link_blue{text-decoration:underline;color:#06c;}
+    .menu-state .active a {
+        background: #ed2d65 none repeat scroll 0 0;
+        color: white;
+    }
+    .menu-state a {
+        color: #ed2d65;
+    }
+    .menu-state ul li {
+        display:inline-block;
+    }
+    .btn-pink a {
+        color: #fff;
+    }
+    select,input,button,.btn,.block_p_s{border-radius: 5px}
+    .input-text{font-size: 13px}
+</style>
+    <div>
+        <div class="">
+            <form action="" method="get" id="form_search">
+            <input type="hidden" name="m" value="<{$Think.MODULE_NAME}>">
+            <input type="hidden" name="a" value="<{$Think.ACTION_NAME}>">
+
+            <div class="row " style="border-bottom:1px solid #dddddd;">
+                <div class="col-lg-10 col-md-12 col-xs-12 menu-state ">
+                    <ul>
+                        <li class="">
+                            <b><{$Think.lang.APP_Push_List}></b>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-12 col-xs-12 text-r padding5-0 no-wrap" style="height: 36px;">
+                    <span id="" class="inline-block">
+                        <span class="btn btn-pink"><a href="<{:U("message/add",array('id'=>''))}>"><{$Think.lang.新建}>十</a> </span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row ">
+                <div class="col-lg-4 col-md-12 col-xs-12 text-l padding5-0 no-wrap" style="height: 36px;">
+                    <span id="" class="inline-block">
+                        <select name="by_plat_cd" class="input-text">
+                            <option value=""><{$Think.lang.Please_select}></option>
+                            <foreach name="plat_list" key="key" item="value">
+                            <?php $selected=$filterArr['by_plat_cd']==$key?"selected":""; ?>
+                            <option value="<{$key}>" <{$selected}> ><{$value}></option>
+                            </foreach>
+                        </select>
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-12 col-xs-12 text-l padding5-0 no-wrap" style="height: 36px;">
+                    <span id="" class="inline-block">
+                        <{$Think.lang.消息标题}><input type="text" name="by_title" value="<?php echo $filterArr['by_title']; ?>" class="input-text" >
+                    </span>
+                </div>
+                <div class="col-lg-4 col-md-12 col-xs-12 text-l padding5-0 no-wrap" style="height: 36px;">
+                    <span id="" class="inline-block">
+                        <?php $some_list = D('ZZmsmessages')->getStatusForMsg(); ?>
+                        <select name="by_status" class="input-text">
+                            <option value=""><{$Think.lang.Please_select_status}></option>
+                            <foreach name="some_list" key="key" item="value">
+                            <?php $selected=$filterArr['by_status']===$key?"selected":""; ?>
+                            <option value="<{$key}>" <{$selected}> ><{$value}></option>
+                            </foreach>
+                        </select>
+                    </span>
+                </div>
+            </div>
+
+            <div class="row col-search">
+                <div class="col-lg-8 col-md-12 col-xs-12 text-l padding5-0 no-wrap" style="height: 36px;">
+                    <span class="class_choose_time">
+                        <{$Think.lang.发送时间}>：
+                        <input type="text" onfocus="WdatePicker({lang:'en',dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="logmin"  name="starttime" value="<{$filterArr.starttime}>" class="input-text Wdate" style="width:120px;">
+                        -
+                        <input type="text" onfocus="WdatePicker({lang:'en',dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="logmax"  name="endtime" value="<{$filterArr.endtime}>" class="input-text Wdate" style="width:120px;">
+                        <span class="btn <?php if($filterArr['by_choose_time']===1){ ?>btn-pink<?php } ?>" onclick="click_choose_time(1,this);" ><a href="javascript:;"><{$Think.lang.今天}></a></span>
+                        <span class="btn <?php if($filterArr['by_choose_time']===2){ ?>btn-pink<?php } ?>" onclick="click_choose_time(2,this);" ><a href="javascript:;"><{$Think.lang.一周内}></a></span>
+                        <span class="btn <?php if($filterArr['by_choose_time']===3){ ?>btn-pink<?php } ?>" onclick="click_choose_time(3,this);" ><a href="javascript:;"><{$Think.lang.一月内}></a></span>
+                        <span class="btn <?php if($filterArr['by_choose_time']===4){ ?>btn-pink<?php } ?>" onclick="click_choose_time(4,this);" ><a href="javascript:;"><{$Think.lang.三月内}></a></span>
+                        <span class="btn <?php if($filterArr['by_choose_time']===5){ ?>btn-pink<?php } ?>" onclick="click_choose_time(5,this);" ><a href="javascript:;"><{$Think.lang.半年内}></a></span>
+                        <span class="btn <?php if($filterArr['by_choose_time']===6){ ?>btn-pink<?php } ?>" onclick="click_choose_time(6,this);" ><a href="javascript:;"><{$Think.lang.一年内}></a></span>
+                        <input type="hidden" name="by_choose_time" value="<?php echo $filterArr['by_choose_time']; ?>" >
+                    </span>
+                </div>
+                <div class="col-lg-2 col-md-12 col-xs-12 text-l padding5-0 no-wrap" style="height: 36px;">
+                    <span id="" class="">
+                        <{$Think.lang.发送客户}>
+                        <span class="btn class_is_all_user <?php if($filterArr['by_is_all']===1){ ?>btn-pink<?php } ?>" onclick="click_is_all_user(1,this);" ><a href="javascript:;"><{$Think.lang.所有用户}></a></span>
+                        <span class="btn class_is_all_user <?php if($filterArr['by_is_all']===0){ ?>btn-pink<?php } ?>" onclick="click_is_all_user(0,this);" ><a href="javascript:;"><{$Think.lang.部分用户}></a></span>
+                        <input type="hidden" name="by_is_all" value="<?php echo $filterArr['by_is_all']; ?>" >
+                    </span>
+                </div>
+                <div class="col-lg-2 col-md-12 col-xs-12 text-r padding5-0 no-wrap" style="height: 36px;">
+                    <span id="" class="">
+                        <button name="" class="btn btn-pink" type="submit"><{$Think.lang.搜索}></button>
+                        <button name="" class="btn btn-clear" type="reset"><{$Think.lang.重置}></button>
+                    </span>
+                </div>
+            </div>
+
+            </form>
+        </div>
+
+        <div class="row" style="height:10px;">
+            <div>
+                <div class="col-md-5 search-num-wrap">
+                    <span class="search-num"><{$Think.lang.搜索结果}>：&nbsp;&nbsp;<{$Think.lang.共}></span>
+                    <span class="search-num-t"><{$count}></span>
+                    <span class="search-num"><{$Think.lang.条记录}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                </div>
+                <ul class="pagination" style="margin:0px auto;">
+                    <{$pages}>
+                </ul>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-border table-bordered table-bg table-hover table-sort" >
+                <thead>
+                <tr class="text-c no-wrap">
+                    <th><{$Think.lang.ID}></th>
+                    <th><{$Think.lang.平台}></th>
+                    <th><{$Think.lang.消息标题}></th>
+                    <th><{$Think.lang.图片}></th>
+                    <th><{$Think.lang.发送客户}></th>
+                    <th><{$Think.lang.状态}></th>
+                    <th><{$Think.lang.发送时间}></th>
+                    <th><{$Think.lang.成功数量}></th>
+                    <th><{$Think.lang.编辑时间}></th>
+                    <th><{$Think.lang.编辑人}></th>
+                    <th><{$Think.lang.操作}></th>
+                </tr>
+                </thead>
+                <tbody>
+
+<if condition="empty($list) eq 1">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap" colspan="19"><{$Think.lang.None}></td>
+                </tr>
+<else />
+<foreach name="list" key="key" item="value">
+                <tr class="text-c va-m "  >
+                    <td class="no-wrap"><{$value.id}></td>
+                    <td class="no-wrap"><?php echo D('ZZmscmncd')->getNameFromCode($value['plat_cd']); ?></td>
+                    <td class="no-wrap"><{$value.title}></td>
+                    <td class="no-wrap">
+                        <?php if($value['pic']){ ?>
+                        <img src="<{$value.pic}>" style="max-height:34px;">
+                        <?php }else{ ?>
+                        <{$Think.lang.无}>
+                        <?php } ?>
+                    </td>
+                    <td class="no-wrap">
+                        <?php echo D('ZZmsmessages')->getSendForUser($value['is_all_send']); ?>
+                        (<{$value.user_num}>)
+                    </td>
+                    <td class="no-wrap"><?php echo D('ZZmsmessages')->getStatusForMsg($value['send_status']); ?></td>
+                    <td class="no-wrap"><?php echo date('Y-m-d H:i:s',($value['send_time'])); ?></td>
+                    <td class="no-wrap"><?php echo D('ZZmsmessagesend')->countUserSendNumByMsg($value['id']); ?></td>
+                    <td class="no-wrap"><?php echo date('Y-m-d H:i:s',($value['update_time'])); ?></td>
+                    <td class="no-wrap"><?php echo DataMain::gainAdminName($value['update_admin_id']); ?></td>
+                    <td class="no-wrap">
+                        <a class="link_blue" _href="<{:U("Message/edit",array('edit_id'=>$value['id']))}>" onclick="opennewtab(this,'<{$Think.lang.编辑}>')" ><{$Think.lang.编辑}></a>
+                        &nbsp;&nbsp;
+                        <a class="link_blue" href="<{:U("Message/submitdelete",array('edit_id'=>$value['id']))}>" ><{$Think.lang.删除}></a>
+                    </td>
+                </tr>
+</foreach>
+</if>
+
+                </tbody>
+            </table>
+
+        </div>
+        <div class="row">
+            <div>
+                <div class="col-md-5 search-num-wrap">
+                    <{$show_perpage_block}>
+                </div>
+                <ul class="pagination">
+                    <{$pages}>
+                </ul>
+            </div>
+        </div>
+        <div class="row" style="margin:40px auto;">
+            &nbsp;
+        </div>
+    </div>
+
+
+<script type="text/javascript" src="../Public/lib/jquery/1.9.1/jquery.min.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/My97DatePicker/WdatePicker.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/layer/1.9.3/layer.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/lib/laypage/1.2/laypage.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/H-ui.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/H-ui.admin.js?v=<{$Think.config.VER_NUM}>"></script>
+<script type="text/javascript" src="../Public/js/jquery-ui.min.js?v=<{$Think.config.VER_NUM}>"></script>
+<script>
+$(document).ready(function (){
+
+    //form reset
+    $("button[type='reset']").click(function(){
+        $("#form_search").get(0).reset();
+        $('.class_is_all_user').removeClass('btn-pink');
+        document.getElementsByName('by_is_all')[0].value='';
+        $('.class_choose_time span').removeClass('btn-pink');
+        document.getElementsByName('by_choose_time')[0].value='';
+        return false;
+    });
+
+});
+
+function click_is_all_user(type,obj){
+    if($(obj).hasClass('btn-pink')){
+        $(obj).removeClass('btn-pink');
+        document.getElementsByName('by_is_all')[0].value='';
+        return false;
+    }
+    $('.class_is_all_user').removeClass('btn-pink');
+    $(obj).addClass('btn-pink');
+    document.getElementsByName('by_is_all')[0].value=type;
+}
+
+function click_choose_time(type,obj){
+    if($(obj).hasClass('btn-pink')){
+        $(obj).removeClass('btn-pink');
+        document.getElementsByName('by_choose_time')[0].value='';
+        return false;
+    }
+    $('.class_choose_time span').removeClass('btn-pink');
+    $(obj).addClass('btn-pink');
+    document.getElementsByName('by_choose_time')[0].value=type;
+}
+</script>
+</body>
+</html>
